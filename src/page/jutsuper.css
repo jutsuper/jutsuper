@@ -1,0 +1,29 @@
+@keyframes jutsuper-bottom-top-appear {
+    0% {
+      opacity: 1;
+      transform: translateY(30px);
+    }
+    75% {
+        opacity: 1;
+        transform: translateY(3px);
+    }
+    90% {
+        opacity: 1;
+        transform: translateY(1px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+}
+
+.jutsuper-bottom-top-anim-025 {
+    animation-duration: 0.25s;
+    animation-name: jutsuper-bottom-top-appear;
+}
+
+.jutsuper-bottom-margin-right-5 {
+    display: inline-block;
+    vertical-align: bottom;
+    margin-right: 5px;
+}

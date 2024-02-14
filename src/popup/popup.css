@@ -1,0 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.bold-font {
+    font-weight: bold;
+}
+
+.dark-gradient {
+    background: linear-gradient(to bottom, #334633 0%,#1c341c 100%)
+}
+
+.dark-font {
+    color: #b0c0b2
+}
+
+.bright-gradient {
+    background: linear-gradient(to bottom, #9bc76c 0%,#c3e062 100%);
+}
+
+.bright-font {
+    color: #617c42;
+}

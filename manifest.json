@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+  "default_locale": "ru",
+  "name": "__MSG_extName__",
+  "version": "1.0",
+  "description": "__MSG_extDescription__",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "https://*.jut.su/*"
+  ],
+  "background": {
+    "scripts": ["/src/background/background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_icon": {
+      "128": "/src/assets/icon128.png"
+    },
+    "default_title": "JutSuper",
+    "default_popup": "/src/popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.jut.su/*"
+      ],
+      "js": [
+        "/src/content/content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    "/src/ipc.js",
+    "/src/page/jutsuper.js",
+    "/src/page/jutsuper.css",
+    "/src/assets/gear.svg"
+  ],
+  "icons": {
+    "128": "/src/assets/icon128.png"
+  }
+}
