@@ -23,7 +23,7 @@ class JutSuperIpc {
 
         if (!ipcNode) {
             throw new Error(
-                `JutSuperIpc(): doCreateNode is ${doCreateNode},` +
+                `JutSuperIpc(): doCreateNode is ${doCreateNode}, ` +
                 `but the node does not exist.`
             );
         }

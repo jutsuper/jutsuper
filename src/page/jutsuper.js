@@ -23,7 +23,7 @@ class JutSuper {
         this.GEAR_SVG_ID = "jutsuper-gear-svg";
 
         /** @type {JutSuperIpc} */
-        this.ipc = new JutSuperIpc(null, true);
+        this.ipc = new JutSuperIpc(null, false);
         /** @type {unknown} */
         this.player = player;
         /** @type {boolean} */
