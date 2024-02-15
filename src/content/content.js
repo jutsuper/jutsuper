@@ -17,6 +17,8 @@ class JutSuperContent {
     constructor() {
         this.currentlyFullscreen = false;
         this.ipc = new JutSuperIpc(null, true);
+        this.ipc.onFullscreenChange(this, this.handleOnFullscreenChange);
+        this.ipc.listen();
 
         this.idGearSvg = "jutsuper-gear-svg";
         this.idJutsuperCss = "jutsuper-css";
@@ -98,6 +100,14 @@ class JutSuperContent {
         node.appendChild(elm);
 
         return null;
+    }
+
+    /**
+     * @param {boolean} state 
+     */
+    handleOnFullscreenChange(state) {
+        console.log("content script caught fullscreenchange!");
+        this.currentlyFullscreen = state;
     }
 
     /**
