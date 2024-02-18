@@ -1,12 +1,13 @@
 {
   "manifest_version": 2,
-  "default_locale": "ru",
+  "default_locale": "en",
   "name": "__MSG_extName__",
   "version": "1.0",
   "description": "__MSG_extDescription__",
   "permissions": [
     "activeTab",
     "tabs",
+    "storage",
     "https://*.jut.su/*"
   ],
   "background": {
@@ -32,6 +33,7 @@
     }
   ],
   "web_accessible_resources": [
+    "/src/consts.js",
     "/src/ipc.js",
     "/src/page/jutsuper.js",
     "/src/page/jutsuper.css",

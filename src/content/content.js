@@ -1,41 +1,74 @@
-/** @type {typeof import("/src/ipc.js").JutSuperIpc} */
+/**
+ * @type {import("/src/consts.js").JutSuperIds}
+ * @typedef {import("/src/consts.js").JutSuperIds} JutSuperIds
+ */
+var JutSuperIds;
+
+/**
+ * @type {import("/src/consts.js").JutSuperPaths}
+ * @typedef {import("/src/consts.js").JutSuperPaths} JutSuperPaths
+ */
+var JutSuperPaths;
+
+/**
+ * @type {typeof import("/src/ipc.js").JutSuperIpc}
+ * @typedef {import("/src/ipc.js").JutSuperIpc} JutSuperIpc
+ */
 var JutSuperIpc;
+
+
 /** @type {JutSuperContent} */
 var jutsuperContent;
 
 
-async function importModules() {
+/** Import modules */
+(async function() {
+    /** @type {typeof import("/src/consts.js")} */
+    const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
+    /** @type {typeof import("/src/ipc.js")} */
     const ipcModule = await import(browser.runtime.getURL("/src/ipc.js"));
+
+    JutSuperIds = constsModule.JutSuperIds;
+    JutSuperPaths = constsModule.JutSuperPaths;
     JutSuperIpc = ipcModule.JutSuperIpc;
-}
-importModules().then(() => {
+})().then(() => {
     jutsuperContent = new JutSuperContent();
-});
+})
 
 
 class JutSuperContent {
     constructor() {
+        /** @type {boolean} */
         this.currentlyFullscreen = false;
+        /** @type {boolean} */
+        this.currentlySwitchingEpisode = false;
+
+        /** @type {JutSuperIpc} */
         this.ipc = new JutSuperIpc(null, true);
-        this.ipc.onFullscreenChange(this, this.handleOnFullscreenChange);
+        this.ipc.onFullscreenChange(
+            this, this.handleOnFullscreenChange
+        );
+        this.ipc.onEpisodeSwitchPrep(
+            this, this.handleOnCurrentlySwitchingEpisode
+        );
         this.ipc.listen();
 
-        this.idGearSvg = "jutsuper-gear-svg";
-        this.idJutsuperCss = "jutsuper-css";
-        this.idJutsuperIpcJs = "jutsuper-ipc-js";
-        this.idJutsuperJs = "jutsuper-js";
+        /** @type {JutSuperIds} */
+        this.ids = new JutSuperIds();
+        /** @type {JutSuperPaths} */
+        this.paths = new JutSuperPaths();
 
-        this.urlGearSvg = browser.runtime.getURL("/src/assets/gear.svg");
-        this.urlJutsuperCss = browser.runtime.getURL("/src/page/jutsuper.css");
-        this.urlJutsuperIpcJs = browser.runtime.getURL("/src/ipc.js");
-        this.urlJutsuperJs = browser.runtime.getURL("/src/page/jutsuper.js");
+        this.urlGearSvg = browser.runtime.getURL(this.paths.gearSvg);
+        this.urlJutsuperIpcJs = browser.runtime.getURL(this.paths.ipcJs);
+        this.urlJutsuperCss = browser.runtime.getURL(this.paths.jutsuperCss);
+        this.urlJutsuperJs = browser.runtime.getURL(this.paths.jutsuperJs);
 
         const body = document.getElementsByTagName("body")[0];
 
-        this.injectImage(body, this.urlGearSvg, this.idGearSvg);
-        this.injectCss(body, this.urlJutsuperCss, this.idJutsuperCss);
-        this.injectModule(body, this.urlJutsuperIpcJs, this.idJutsuperIpcJs);
-        this.injectModule(body, this.urlJutsuperJs, this.idJutsuperJs);
+        this.injectImage(body, this.urlGearSvg, this.ids.gearSvg);
+        this.injectCss(body, this.urlJutsuperCss, this.ids.jutsuperCss);
+        this.injectModule(body, this.urlJutsuperIpcJs, this.ids.jutsuperIpcJs);
+        this.injectModule(body, this.urlJutsuperJs, this.ids.jutsuperJs);
     }
 
     /**
@@ -106,8 +139,31 @@ class JutSuperContent {
      * @param {boolean} state 
      */
     handleOnFullscreenChange(state) {
-        console.log("content script caught fullscreenchange! isFullscreen:", state);
+        console.debug("content script caught fullscreenchange! isFullscreen:", state);
         this.currentlyFullscreen = state;
+
+        browser.storage.local.set({ isFullscreen: state }).then(
+            () => { console.debug("set isFullscreen state") }
+        );
+    }
+
+    handleOnCurrentlySwitchingEpisode(state) {
+        console.debug(
+            "content script caught currentlyswitchingepisode! isCurrentlySwitchingEpisode:", state
+        );
+        this.currentlySwitchingEpisode = state;
+
+        browser.storage.local.set({ isCurrentlySwitchingEpisode: state }).then(
+            () => { console.debug("set isCurrentlySwitchingEpisode state") }
+        );
+    }
+
+    requestPlay() {
+
+    }
+
+    requestFullscreen() {
+
     }
 
     /**

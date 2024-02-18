@@ -1,4 +1,5 @@
 import { JutSuperIpc } from "/src/ipc.js";
+import { JutSuPage, JutSuperIds } from "/src/consts.js";
 
 
 /** @type {JutSuper} */
@@ -18,33 +19,36 @@ class JutSuper {
             );
         }
 
-        this.JS_ID = "jutsuper-js";
-        this.CSS_ID = "jutsuper-css";
-        this.GEAR_SVG_ID = "jutsuper-gear-svg";
+        /** @type {JutSuperIds} */
+        this.ids = new JutSuperIds();
+        /** @type {JutSuPage} */
+        this.jutsu = new JutSuPage();
 
         /** @type {JutSuperIpc} */
         this.ipc = new JutSuperIpc(null, false);
         /** @type {unknown} */
         this.player = player;
         /** @type {HTMLDivElement} */
-        this.playerDiv = document.getElementById("my-player");
+        this.playerDiv = document.getElementById(this.jutsu.playerDivId);
         /** @type {boolean} */
         this.openingTriggered = false;
         /** @type {boolean} */
         this.endingTriggered = false;
         /** @type {number[]} something like `[ 83, 98 ]` */
         this.openingSkipperRng = this.getOverlayRngByFunctionName(
-            "skip_video_intro"
+            this.jutsu.skipOpeningFnName
         );
         /** @type {number[]} someting like `[ 1405, 1425 ]` */
         this.endingSkipperRng = this.getOverlayRngByFunctionName(
-            "video_go_next_episode"
+            this.jutsu.skipEndingFnName
         );
         
         this.initializeIpcValues();
         this.injectFullscreenChangeListener();
         this.injectTimeupdateListener();
         this.injectSettingsTab();
+
+        this.ipc.listen();
         
         console.debug("JutSuper: constructed");
     }
@@ -111,7 +115,8 @@ class JutSuper {
         }
 
         console.debug("JutSuper: able to skip opening");
-        skip_video_intro();
+
+        window[this.jutsu.skipOpeningFnName]();
 
         return null;
     }
@@ -141,7 +146,11 @@ class JutSuper {
         }
 
         console.debug("JutSuper: able to skip ending");
-        video_go_next_episode();
+
+        this.ipc.isEpisodeSwitchPrep = true;
+        
+
+        window[this.jutsu.skipEndingFnName]();
 
         return null;
     }
@@ -214,7 +223,7 @@ class JutSuper {
      */
     generateSettingsTab() {
         const gearIconUri = document
-            .getElementById(this.GEAR_SVG_ID)
+            .getElementById(this.ids.gearSvg)
             .getAttribute("href");
 
         const gearImage = document.createElement("img");
@@ -239,7 +248,7 @@ class JutSuper {
     */
     initializeIpcValues() {
         this.ipc.isFullscreen = this.playerDiv.classList.contains(
-            "vjs-fullscreen"
+            this.jutsu.playerFullscreenClassName
         );
         return null;
     }
@@ -256,7 +265,9 @@ class JutSuper {
          * but the value returned by `isFullscreen()`
          * would still be `true`
          */
-        const isFullscreen = this.playerDiv.classList.contains("vjs-fullscreen");
+        const isFullscreen = this.playerDiv.classList.contains(
+            this.jutsu.playerFullscreenClassName
+        );
 
         if (this.ipc.isFullscreen !== isFullscreen) {
             this.ipc.isFullscreen = isFullscreen;
@@ -281,17 +292,21 @@ class JutSuper {
     injectFullscreenChangeListener() {
         const options = { attributes: true };
 
-        this._fullscreenMutationObserver = new MutationObserver((mutations, observer) => {
-            for (const record of mutations) {
-                if (record.attributeName !== "class") {
-                    return null;
+        this._fullscreenMutationObserver = new MutationObserver(
+            (mutations, observer) => {
+                for (const record of mutations) {
+                    if (record.attributeName !== "class") {
+                        return null;
+                    }
+
+                    this.handlePlayerClassChange();
                 }
-
-                this.handlePlayerClassChange();
             }
-        });
+        );
 
-        this._fullscreenMutationObserver.observe(this.playerDiv, options);
+        this._fullscreenMutationObserver.observe(
+            this.playerDiv, options
+        );
         
         return null;
     }
