@@ -26,6 +26,8 @@ class JutSuper {
         this.ipc = new JutSuperIpc(null, false);
         /** @type {unknown} */
         this.player = player;
+        /** @type {HTMLDivElement} */
+        this.playerDiv = document.getElementById("my-player");
         /** @type {boolean} */
         this.openingTriggered = false;
         /** @type {boolean} */
@@ -38,7 +40,8 @@ class JutSuper {
         this.endingSkipperRng = this.getOverlayRngByFunctionName(
             "video_go_next_episode"
         );
-
+        
+        this.initializeIpcValues();
         this.injectFullscreenChangeListener();
         this.injectTimeupdateListener();
         this.injectSettingsTab();
@@ -233,10 +236,31 @@ class JutSuper {
 
     /**
      * @returns {null}
+    */
+    initializeIpcValues() {
+        this.ipc.isFullscreen = this.playerDiv.classList.contains(
+            "vjs-fullscreen"
+        );
+        return null;
+    }
+
+    /**
+     * @returns {null}
      */
-    handleFullscreenChange() {
-        const isFullscreen = this.player.isFullscreen();
-        this.ipc.isFullscreen = isFullscreen;
+    handlePlayerClassChange() {
+        /**
+         * `classList.contains("vjs-fullscreen")` is better
+         * than `player.isFullscreen()`,
+         * because when pressing F11 (going out of fullscreen),
+         * the `fullscreenchange` event will be fired,
+         * but the value returned by `isFullscreen()`
+         * would still be `true`
+         */
+        const isFullscreen = this.playerDiv.classList.contains("vjs-fullscreen");
+
+        if (this.ipc.isFullscreen !== isFullscreen) {
+            this.ipc.isFullscreen = isFullscreen;
+        }
 
         return null;
     }
@@ -255,11 +279,20 @@ class JutSuper {
      * @returns {null}
      */
     injectFullscreenChangeListener() {
-        const playerDiv = document.getElementById("my-player");
-        playerDiv.addEventListener("fullscreenchange", () => {
-            JutSuper.prototype["handleFullscreenChange"].call(this, []);
+        const options = { attributes: true };
+
+        this._fullscreenMutationObserver = new MutationObserver((mutations, observer) => {
+            for (const record of mutations) {
+                if (record.attributeName !== "class") {
+                    return null;
+                }
+
+                this.handlePlayerClassChange();
+            }
         });
 
+        this._fullscreenMutationObserver.observe(this.playerDiv, options);
+        
         return null;
     }
 

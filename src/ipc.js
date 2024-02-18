@@ -58,11 +58,11 @@ class JutSuperIpc {
     }
 
     listen() {
-        const config = { attributes: true };
+        const options = { attributes: true };
         this._mutationObserver = new MutationObserver((mutations, observer) => {
             this._mutationObserverCallback(mutations, observer);
         });
-        this._mutationObserver.observe(this._ipcNode, config);
+        this._mutationObserver.observe(this._ipcNode, options);
     }
 
     stopListen() {
@@ -104,9 +104,8 @@ class JutSuperIpc {
     }
     broadcastFullscreenChange() {
         for (const fnMap of this._onFullscreenChangeEvents) {
-            console.log(fnMap);
             try {
-                fnMap.fn.call(fnMap.thisArg, [this.isFullscreen]);
+                fnMap.fn.call(fnMap.thisArg, this.isFullscreen);
             } catch (error) {
                 console.error("JutSuper IPC: error broadcasting", error);
             }

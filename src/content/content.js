@@ -106,7 +106,7 @@ class JutSuperContent {
      * @param {boolean} state 
      */
     handleOnFullscreenChange(state) {
-        console.log("content script caught fullscreenchange!");
+        console.log("content script caught fullscreenchange! isFullscreen:", state);
         this.currentlyFullscreen = state;
     }
 
