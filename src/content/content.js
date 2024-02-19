@@ -5,6 +5,12 @@
 var JutSuperIds;
 
 /**
+ * @type {typeof import("/src/consts.js").JutSuperIpcKeys}
+ * @typedef {import("/src/consts.js").JutSuperIpcKeys} JutSuperIpcKeys
+ */
+var JutSuperIpcKeys;
+
+/**
  * @type {import("/src/consts.js").JutSuperPaths}
  * @typedef {import("/src/consts.js").JutSuperPaths} JutSuperPaths
  */
@@ -29,6 +35,7 @@ var jutsuperContent;
     const ipcModule = await import(browser.runtime.getURL("/src/ipc.js"));
 
     JutSuperIds = constsModule.JutSuperIds;
+    JutSuperIpcKeys = constsModule.JutSuperIpcKeys;
     JutSuperPaths = constsModule.JutSuperPaths;
     JutSuperIpc = ipcModule.JutSuperIpc;
 })().then(() => {
@@ -38,13 +45,14 @@ var jutsuperContent;
 
 class JutSuperContent {
     constructor() {
-        /** @type {boolean} */
-        this.currentlyFullscreen = false;
-        /** @type {boolean} */
-        this.currentlySwitchingEpisode = false;
+        /** @type {JutSuperIpcKeys} */
+        let ipcKeys = new JutSuperIpcKeys();
 
         /** @type {JutSuperIpc} */
-        this.ipc = new JutSuperIpc(null, true);
+        this.ipc = new JutSuperIpc(ipcKeys.contentCtxId, null, true);
+        this.ipc.onEssentialsReady(
+            this, this.handleOnEssentialsReady
+        )
         this.ipc.onFullscreenChange(
             this, this.handleOnFullscreenChange
         );
@@ -54,21 +62,21 @@ class JutSuperContent {
         this.ipc.listen();
 
         /** @type {JutSuperIds} */
-        this.ids = new JutSuperIds();
+        let ids = new JutSuperIds();
         /** @type {JutSuperPaths} */
-        this.paths = new JutSuperPaths();
+        let paths = new JutSuperPaths();
 
-        this.urlGearSvg = browser.runtime.getURL(this.paths.gearSvg);
-        this.urlJutsuperIpcJs = browser.runtime.getURL(this.paths.ipcJs);
-        this.urlJutsuperCss = browser.runtime.getURL(this.paths.jutsuperCss);
-        this.urlJutsuperJs = browser.runtime.getURL(this.paths.jutsuperJs);
+        this.urlGearSvg = browser.runtime.getURL(paths.gearSvg);
+        this.urlJutsuperIpcJs = browser.runtime.getURL(paths.ipcJs);
+        this.urlJutsuperCss = browser.runtime.getURL(paths.jutsuperCss);
+        this.urlJutsuperJs = browser.runtime.getURL(paths.jutsuperJs);
 
         const body = document.getElementsByTagName("body")[0];
 
-        this.injectImage(body, this.urlGearSvg, this.ids.gearSvg);
-        this.injectCss(body, this.urlJutsuperCss, this.ids.jutsuperCss);
-        this.injectModule(body, this.urlJutsuperIpcJs, this.ids.jutsuperIpcJs);
-        this.injectModule(body, this.urlJutsuperJs, this.ids.jutsuperJs);
+        this.injectImage(body, this.urlGearSvg, ids.gearSvg);
+        this.injectCss(body, this.urlJutsuperCss, ids.jutsuperCss);
+        this.injectModule(body, this.urlJutsuperIpcJs, ids.jutsuperIpcJs);
+        this.injectModule(body, this.urlJutsuperJs, ids.jutsuperJs);
     }
 
     /**
@@ -138,24 +146,44 @@ class JutSuperContent {
     /**
      * @param {boolean} state 
      */
+    async handleOnEssentialsReady(state) {
+        console.debug("content script caught essentialsready! isEssentialsReady:", state);
+
+        /** @type {{isFullscreen: boolean, isCurrentlySwitchingEpisode: boolean}} */
+        const keys = await browser.storage.local.get(
+            ["isFullscreen", "isCurrentlySwitchingEpisode"]
+        );
+
+        if (keys.isCurrentlySwitchingEpisode) {
+            console.log("CURRENTLY SWITCHING EPISODE!!!");
+        }
+        if (keys.isFullscreen) {
+            console.log("DON'T FORGET FULLSCREEN!!!");
+        }
+    }
+
+    /**
+     * @param {boolean} state 
+     */
     handleOnFullscreenChange(state) {
         console.debug("content script caught fullscreenchange! isFullscreen:", state);
-        this.currentlyFullscreen = state;
 
         browser.storage.local.set({ isFullscreen: state }).then(
-            () => { console.debug("set isFullscreen state") }
+            () => {
+                console.debug("set isFullscreen state")
+            }
         );
     }
 
-    handleOnCurrentlySwitchingEpisode(state) {
+    async handleOnCurrentlySwitchingEpisode(state) {
         console.debug(
             "content script caught currentlyswitchingepisode! isCurrentlySwitchingEpisode:", state
         );
-        this.currentlySwitchingEpisode = state;
 
-        browser.storage.local.set({ isCurrentlySwitchingEpisode: state }).then(
-            () => { console.debug("set isCurrentlySwitchingEpisode state") }
-        );
+        await browser.storage.local.set({ isCurrentlySwitchingEpisode: state });
+
+        console.debug("set isCurrentlySwitchingEpisode state");
+        this.ipc.isEpisodeSwitchPrep = false;
     }
 
     requestPlay() {

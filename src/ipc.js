@@ -3,6 +3,7 @@ export { JutSuperIpc };
 
 
 /** @typedef {{thisArg: any, fn: function(any)}} Subscriber */
+/** @typedef {{value: string, sender: string}} ValueDescriptor */
 
 
 /**
@@ -11,19 +12,26 @@ export { JutSuperIpc };
  */
 class JutSuperIpc {
     /**
+     * @param {string} ctxId
      * @param {string | null} ipcId 
      * @param {boolean} doCreateNode
      * @returns {JutSuperIpc}
      */
-    constructor(ipcId = null, doCreateNode = false) {
+    constructor(ctxId, ipcId = null, doCreateNode = false) {
+        /** @type {attributes: boolean} */
+        this.defaultObserverOptions = { attributes: true };
         /** @type {JutSuperIpcKeys} */
         this.keys = new JutSuperIpcKeys();
 
+        /** @type {Subscriber[]} */
+        this._onEssentialsReadyEvents = [];
         /** @type {Subscriber[]} */
         this._onFullscreenChangeEvents = [];
         /** @type {Subscriber[]} */
         this._onEpisodeSwitchPrepEvents = [];
 
+        /** @type {string} */
+        this._ctxId = ctxId;
         /** @type {string} */
         this._ipcId = ipcId ? ipcId : this.keys.defaultIpcId;
 
@@ -59,6 +67,15 @@ class JutSuperIpc {
     }
 
     /**
+     * @param {string} rawValue
+     * @returns {ValueDescriptor}
+     */
+    static _parseValue(rawValue) {
+        const splits = rawValue.split(";sender=");
+        return { value: splits[0], sender: splits[1] }
+    }
+
+    /**
      * 
      * @param {Subscriber[]} fnMaps 
      * @param {any} value
@@ -66,6 +83,8 @@ class JutSuperIpc {
      */
     _broadcast(fnMaps, value) {
         for (const fnMap of fnMaps) {
+            console.debug(`IPC:${this._ctxId} broadcasts`, fnMap);
+
             try {
                 fnMap.fn.call(fnMap.thisArg, value);
             } catch (error) {
@@ -87,11 +106,20 @@ class JutSuperIpc {
     _mutationObserverCallback(mutations, observer) {
         for (const mutation of mutations) {
             switch (mutation.attributeName) {
+                case this.keys.isEssentialsReady:
+                    if (this.rawIsEssentialsReady.sender !== this._ctxId) {
+                        this.broadcastEssentialsReady();
+                    }
+                    break;
                 case this.keys.isFullscreen:
-                    this.broadcastFullscreenChange();
+                    if (this.rawIsFullscreen.sender !== this._ctxId) {
+                        this.broadcastFullscreenChange();
+                    }
                     break;
                 case this.keys.isEpisodeSwitchPrep:
-                    this.broadcastEpisodeSwitchPrep();
+                    if (this.rawIsEpisodeSwitchPrep.sender !== this._ctxId) {
+                        this.broadcastEpisodeSwitchPrep();
+                    }
                     break;
             }
         }
@@ -103,11 +131,10 @@ class JutSuperIpc {
      * @returns {null}
      */
     listen() {
-        const options = { attributes: true };
         this._mutationObserver = new MutationObserver((mutations, observer) => {
             this._mutationObserverCallback(mutations, observer);
         });
-        this._mutationObserver.observe(this._ipcNode, options);
+        this._mutationObserver.observe(this._ipcNode, this.defaultObserverOptions);
 
         return null;
     }
@@ -129,6 +156,85 @@ class JutSuperIpc {
         return null;
     }
 
+
+    //////////////////////////
+    /** IS ESSENTIALS READY */
+    //////////////////////////
+
+    /**
+     * @returns {boolean | null}
+     */
+    get isEssentialsReady() {
+        const state = this._ipcNode.getAttribute(
+            this.keys.isEssentialsReady
+        );
+        return JutSuperIpc._parseStrBool(
+            JutSuperIpc._parseValue(state).value
+        );
+    }
+    /**
+     * @returns {ValueDescriptor}
+     */
+    get rawIsEssentialsReady() {
+        const state = this._ipcNode.getAttribute(
+            this.keys.isEssentialsReady
+        );
+        return JutSuperIpc._parseValue(state);
+    }
+    /**
+     * @param {boolean} value
+     * @returns {null}
+     */
+    set isEssentialsReady(value) {
+        this._ipcNode.setAttribute(
+            this.keys.isEssentialsReady,
+            `${value};sender=${this._ctxId}`
+        );
+        return null;
+    }
+    /**
+     * @param {any} thisArg
+     * @param {Function} fn
+     * @return {null}
+     */
+    onEssentialsReady(thisArg, fn) {
+        this._onEssentialsReadyEvents.push(
+            {thisArg: thisArg, fn: fn}
+        );
+        return null;
+    }
+    /**
+     * @returns {Promise<boolean>}
+     */
+    async essentialsReadyPromise() {
+        return new Promise((resolve) => {
+            new MutationObserver((mutations, observer) => {
+                for (const mutation of mutations) {
+                    if (mutation.attributeName !== this.keys.isEssentialsReady) {
+                        continue;
+                    }
+
+                    if (this.rawIsEssentialsReady.sender === this._ctxId) {
+                        continue;
+                    }
+
+                    return resolve(this.isEssentialsReady)
+                }
+            }).observe(this._ipcNode, this.defaultObserverOptions);
+        });
+    }
+    /**
+     * @returns {null}
+     */
+    broadcastEssentialsReady() {
+        this._broadcast(
+            this._onEssentialsReadyEvents,
+            this.isEssentialsReady
+        );
+        return null;
+    }
+
+
     ////////////////////
     /** IS FULLSCREEN */
     ////////////////////
@@ -140,7 +246,18 @@ class JutSuperIpc {
         const state = this._ipcNode.getAttribute(
             this.keys.isFullscreen
         );
-        return JutSuperIpc._parseStrBool(state);
+        return JutSuperIpc._parseStrBool(
+            JutSuperIpc._parseValue(state).value
+        );
+    }
+    /**
+     * @returns {ValueDescriptor}
+     */
+    get rawIsFullscreen() {
+        const state = this._ipcNode.getAttribute(
+            this.keys.isFullscreen
+        );
+        return JutSuperIpc._parseValue(state);
     }
     /**
      * @param {boolean} value
@@ -149,9 +266,8 @@ class JutSuperIpc {
     set isFullscreen(value) {
         this._ipcNode.setAttribute(
             this.keys.isFullscreen,
-            String(value)
+            `${value};sender=${this._ctxId}`
         );
-        this.broadcastFullscreenChange();
         return null;
     }
     /**
@@ -166,11 +282,23 @@ class JutSuperIpc {
         return null;
     }
     /**
-     * @returns {boolean | null}
+     * @returns {Promise<boolean>}
      */
     async fullscreenChangePromise() {
         return new Promise((resolve) => {
-            
+            new MutationObserver((mutations, observer) => {
+                for (const mutation of mutations) {
+                    if (mutation.attributeName !== this.keys.isFullscreen) {
+                        continue;
+                    }
+
+                    if (this.rawIsFullscreen.sender === this._ctxId) {
+                        continue;
+                    }
+
+                    return resolve(this.isFullscreen)
+                }
+            }).observe(this._ipcNode, this.defaultObserverOptions);
         });
     }
     /**
@@ -184,6 +312,7 @@ class JutSuperIpc {
         return null;
     }
 
+
     /////////////////////////////////////
     /** IS EPISODE SWITCH PREPARATIONS */
     /////////////////////////////////////
@@ -195,7 +324,18 @@ class JutSuperIpc {
         const state = this._ipcNode.getAttribute(
             this.keys.isEpisodeSwitchPrep
         );
-        return JutSuperIpc._parseStrBool(state);
+        return JutSuperIpc._parseStrBool(
+            JutSuperIpc._parseValue(state).value
+        );
+    }
+    /**
+     * @returns {ValueDescriptor}
+     */
+    get rawIsEpisodeSwitchPrep() {
+        const state = this._ipcNode.getAttribute(
+            this.keys.isEpisodeSwitchPrep
+        );
+        return JutSuperIpc._parseValue(state);
     }
     /**
      * @param {boolean} value
@@ -204,9 +344,9 @@ class JutSuperIpc {
     set isEpisodeSwitchPrep(value) {
         this._ipcNode.setAttribute(
             this.keys.isEpisodeSwitchPrep,
-            String(value)
+            `${value};sender=${this._ctxId}`
         );
-        this.broadcastEpisodeSwitchPrep();
+        return null;
     }
     /**
      * @param {any} thisArg
@@ -219,11 +359,23 @@ class JutSuperIpc {
         );
     }
     /**
-     * @returns {boolean | null}
+     * @returns {Promise<boolean>}
      */
     async episodeSwitchPrepPromise() {
         return new Promise((resolve) => {
-            
+            new MutationObserver((mutations, observer) => {
+                for (const mutation of mutations) {
+                    if (mutation.attributeName !== this.keys.isEpisodeSwitchPrep) {
+                        continue;
+                    }
+
+                    if (this.rawIsEpisodeSwitchPrep.sender === this._ctxId) {
+                        continue;
+                    }
+
+                    return resolve(this.isEpisodeSwitchPrep)
+                }
+            }).observe(this._ipcNode, this.defaultObserverOptions);
         });
     }
     /**

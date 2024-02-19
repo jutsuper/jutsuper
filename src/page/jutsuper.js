@@ -1,5 +1,5 @@
 import { JutSuperIpc } from "/src/ipc.js";
-import { JutSuPage, JutSuperIds } from "/src/consts.js";
+import { JutSuPage, JutSuperIds, JutSuperIpcKeys } from "/src/consts.js";
 
 
 /** @type {JutSuper} */
@@ -19,13 +19,16 @@ class JutSuper {
             );
         }
 
+        /** @type {JutSuperIpcKeys} */
+        let ipcKeys = new JutSuperIpcKeys();
+
         /** @type {JutSuperIds} */
         this.ids = new JutSuperIds();
         /** @type {JutSuPage} */
         this.jutsu = new JutSuPage();
 
         /** @type {JutSuperIpc} */
-        this.ipc = new JutSuperIpc(null, false);
+        this.ipc = new JutSuperIpc(ipcKeys.pageCtxId, null, false);
         /** @type {unknown} */
         this.player = player;
         /** @type {HTMLDivElement} */
@@ -43,6 +46,7 @@ class JutSuper {
             this.jutsu.skipEndingFnName
         );
         
+        this.ipc.listen();
         this.initializeIpcValues();
         this.injectFullscreenChangeListener();
         this.injectTimeupdateListener();
@@ -134,7 +138,7 @@ class JutSuper {
      * # Start ending skip countdown
      * @returns {null}
      */
-    startSkippingEnding() {
+    async startSkippingEnding() {
         if (!cur_time_cookie) {
             console.debug(
                 "JutSuper: cannot start skipping ending, " +
@@ -149,8 +153,13 @@ class JutSuper {
 
         this.ipc.isEpisodeSwitchPrep = true;
         
+        console.log("o next episode prep promise awaiting");
+        const result = await this.ipc.episodeSwitchPrepPromise();
 
-        window[this.jutsu.skipEndingFnName]();
+        if (result === false) {
+            console.log("+ next episode prep promise fulfulled, value", result);
+            window[this.jutsu.skipEndingFnName]();
+        }
 
         return null;
     }
@@ -247,9 +256,11 @@ class JutSuper {
      * @returns {null}
     */
     initializeIpcValues() {
+        this.ipc.isEssentialsReady = true;
         this.ipc.isFullscreen = this.playerDiv.classList.contains(
             this.jutsu.playerFullscreenClassName
         );
+        this.ipc.isEpisodeSwitchPrep = false;
         return null;
     }
 

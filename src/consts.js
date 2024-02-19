@@ -56,8 +56,14 @@ class JutSuperPaths {
 
 class JutSuperIpcKeys {
     constructor() {
+        /** @type {"pageEnv"} */
+        this.pageCtxId = "pageEnv";
+        /** @type {"contentEnv"} */
+        this.contentCtxId = "contentEnv";
         /** @type {"jutsuper-ipc"} */
         this.defaultIpcId = "jutsuper-ipc";
+        /** @type {"data-is-essentials-ready"} */
+        this.isEssentialsReady = "data-is-essentials-ready";
         /** @type {"data-is-fullscreen"} */
         this.isFullscreen = "data-is-fullscreen";
         /** @type {"data-is-episode-switch-prep"} */
