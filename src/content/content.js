@@ -49,7 +49,7 @@ class JutSuperContent {
         let ipcKeys = new JutSuperIpcKeys();
 
         /** @type {JutSuperIpc} */
-        this.ipc = new JutSuperIpc(ipcKeys.contentCtxId, null, true);
+        this.ipc = new JutSuperIpc(ipcKeys.contentSenderId, null, true);
         this.ipc.onEssentialsReady(
             this, this.handleOnEssentialsReady
         )

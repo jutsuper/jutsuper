@@ -28,7 +28,7 @@ class JutSuper {
         this.jutsu = new JutSuPage();
 
         /** @type {JutSuperIpc} */
-        this.ipc = new JutSuperIpc(ipcKeys.pageCtxId, null, false);
+        this.ipc = new JutSuperIpc(ipcKeys.pageSenderId, null, false);
         /** @type {unknown} */
         this.player = player;
         /** @type {HTMLDivElement} */
