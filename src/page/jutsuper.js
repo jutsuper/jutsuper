@@ -1,6 +1,12 @@
-import { JutSuperIpc } from "/src/ipc.js";
-import { JutSuPage, JutSuperIds, JutSuperIpcKeys } from "/src/consts.js";
-
+import { JutSuperIpcBuilder, JutSuperIpc } from "/src/ipc.js";
+import {
+    JutsuFunctions as jutsuFns,
+    JutsuDomAttributes as jutsuAttrs,
+    JutSuperIpcIds as ipcIds,
+    JutSuperIpcKeys as ipcKeys,
+    JutSuperIpcLoadingStates as ipcLoadings,
+    JutSuperIpcAwaitStates as ipcAwaits
+} from "/src/consts.js";
 
 /** @type {JutSuper} */
 var jutsuper;
@@ -19,16 +25,8 @@ class JutSuper {
             );
         }
 
-        /** @type {JutSuperIpcKeys} */
-        let ipcKeys = new JutSuperIpcKeys();
-
-        /** @type {JutSuperIds} */
-        this.ids = new JutSuperIds();
-        /** @type {JutSuPage} */
-        this.jutsu = new JutSuPage();
-
         /** @type {JutSuperIpc} */
-        this.ipc = new JutSuperIpc(ipcKeys.pageSenderId, null, false);
+        this.ipc = new JutSuperIpcBuilder().identifyAs(ipcIds.page).build()
         /** @type {unknown} */
         this.player = player;
         /** @type {HTMLDivElement} */
@@ -39,20 +37,17 @@ class JutSuper {
         this.endingTriggered = false;
         /** @type {number[]} something like `[ 83, 98 ]` */
         this.openingSkipperRng = this.getOverlayRngByFunctionName(
-            this.jutsu.skipOpeningFnName
+            jutsuFns.skipOpeningFnName
         );
         /** @type {number[]} someting like `[ 1405, 1425 ]` */
         this.endingSkipperRng = this.getOverlayRngByFunctionName(
-            this.jutsu.skipEndingFnName
+            jutsuFns.skipEndingFnName
         );
         
-        this.ipc.listen();
         this.initializeIpcValues();
         this.injectFullscreenChangeListener();
         this.injectTimeupdateListener();
         this.injectSettingsTab();
-
-        this.ipc.listen();
         
         console.debug("JutSuper: constructed");
     }
@@ -106,6 +101,7 @@ class JutSuper {
 
     /**
      * # Start opening skip countdown
+     * @returns {undefined}
      */
     startSkippingOpening() {
         if (!cur_time_cookie) {
@@ -115,28 +111,25 @@ class JutSuper {
                 `(cur_time_cookie is ${cur_time_cookie})`
             );
 
-            return null;
+            return undefined;
         }
 
         console.debug("JutSuper: able to skip opening");
 
-        window[this.jutsu.skipOpeningFnName]();
-
-        return null;
+        window[jutsuFns.skipOpeningFnName]();
     }
 
     /**
      * # Stop opening skip countdown
-     * @returns {null}
+     * @returns {undefined}
      */
     stopSkippingOpening() {
         console.debug("JutSuper: not skipping opening anymore");
-        return null;
     }
     
     /**
      * # Start ending skip countdown
-     * @returns {null}
+     * @returns {undefined}
      */
     async startSkippingEnding() {
         if (!cur_time_cookie) {
@@ -145,8 +138,7 @@ class JutSuper {
                 "video wasn't played yet " +
                 `(cur_time_cookie is ${cur_time_cookie})`
             );
-
-            return null;
+            return;
         }
 
         console.debug("JutSuper: able to skip ending");
@@ -158,24 +150,21 @@ class JutSuper {
 
         if (result === false) {
             console.log("+ next episode prep promise fulfulled, value", result);
-            window[this.jutsu.skipEndingFnName]();
+            window[jutsuFns.skipEndingFnName]();
         }
-
-        return null;
     }
     
     /**
      * # Stop ending skip countdown
-     * @returns {null}
+     * @returns {undefined}
      */
     stopSkippingEnding() {
         console.debug("JutSuper: not skipping ending anymore");
-        return null;
     }
 
     /**
      * # Check if we are either in opening or ending time ranges
-     * @returns {null}
+     * @returns {undefined}
      */
     checkForKeyTimestamps() {
         const time = this.player.currentTime();
@@ -206,7 +195,7 @@ class JutSuper {
             if (this.endingTriggered) {
                 // then we have already recorded button's appearance,
                 // no need for more triggers
-                return null;
+                return;
             }
 
             this.endingTriggered = true;
@@ -223,8 +212,6 @@ class JutSuper {
                 this.stopSkippingEnding();
             }
         }
-
-        return null;
     }
 
     /**
@@ -253,19 +240,25 @@ class JutSuper {
     }
 
     /**
-     * @returns {null}
+     * @returns {undefined}
     */
     initializeIpcValues() {
-        this.ipc.isEssentialsReady = true;
-        this.ipc.isFullscreen = this.playerDiv.classList.contains(
-            this.jutsu.playerFullscreenClassName
-        );
-        this.ipc.isEpisodeSwitchPrep = false;
-        return null;
+        this.ipc.send({
+            key: ipcKeys.essentialsLoadingState,
+            value: ipcLoadings.loaded
+        });
+        this.ipc.send({
+            key: ipcKeys.isFullscreen,
+            value: this.playerDiv.classList.contains(jutsuAttrs.playerFullscreenClassName)
+        });
+        this.ipc.send({
+            key: ipcKeys.episodeSwitchPrepState,
+            value: ipcAwaits.idle
+        });
     }
 
     /**
-     * @returns {null}
+     * @returns {undefined}
      */
     handlePlayerClassChange() {
         /**
@@ -277,18 +270,16 @@ class JutSuper {
          * would still be `true`
          */
         const isFullscreen = this.playerDiv.classList.contains(
-            this.jutsu.playerFullscreenClassName
+            jutsuAttrs.playerFullscreenClassName
         );
 
-        if (this.ipc.isFullscreen !== isFullscreen) {
-            this.ipc.isFullscreen = isFullscreen;
+        if (this.ipc.get(ipcKeys.isFullscreen).value !== isFullscreen) {
+            this.ipc.send({ key: ipcKeys.isFullscreen, value: isFullscreen })
         }
-
-        return null;
     }
 
     /**
-     * @returns {null}
+     * @returns {undefined}
      */
     injectTimeupdateListener() {
         // on each time update, call `this.checkForKeyTimestamps`
@@ -298,7 +289,7 @@ class JutSuper {
     }
 
     /**
-     * @returns {null}
+     * @returns {undefined}
      */
     injectFullscreenChangeListener() {
         const options = { attributes: true };
@@ -318,12 +309,10 @@ class JutSuper {
         this._fullscreenMutationObserver.observe(
             this.playerDiv, options
         );
-        
-        return null;
     }
 
     /**
-     * @returns {null}
+     * @returns {undefined}
      */
     injectSettingsTab() {
         const topPlayerLane = document.getElementsByClassName("achiv_switcher");
@@ -335,14 +324,12 @@ class JutSuper {
         for (const lane of topPlayerLane) {
             lane.insertBefore(this.generateSettingsTab(), lane.firstChild);
         }
-
-        return null;
     }
 }
 
 /**
  * # Init `JutSuper` class into a `jutsuper` global variable
- * @returns {null}
+ * @returns {undefined}
  */
 function jutsuperLoad() {
     if (!jutsuper) {
@@ -352,8 +339,6 @@ function jutsuperLoad() {
     else {
         throw new Error("JutSuper: already loaded");
     }
-
-    return null;
 }
 
 /**

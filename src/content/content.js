@@ -1,26 +1,39 @@
 /**
- * @type {import("/src/consts.js").JutSuperIds}
- * @typedef {import("/src/consts.js").JutSuperIds} JutSuperIds
+ * @typedef {import("/src/consts.js").JutSuperIpcIds} JutSuperIpcIds
+ * @type {JutSuperIpcIds}
  */
-var JutSuperIds;
+var ipcIds;
 
 /**
- * @type {typeof import("/src/consts.js").JutSuperIpcKeys}
  * @typedef {import("/src/consts.js").JutSuperIpcKeys} JutSuperIpcKeys
+ * @type {JutSuperIpcKeys}
  */
-var JutSuperIpcKeys;
+var ipcKeys;
 
 /**
- * @type {import("/src/consts.js").JutSuperPaths}
- * @typedef {import("/src/consts.js").JutSuperPaths} JutSuperPaths
+ * @typedef {import("/src/consts.js").JutSuperAssetPaths} JutSuperAssetPaths
+ * @type {JutSuperAssetPaths}
  */
-var JutSuperPaths;
+var assetPaths;
 
 /**
- * @type {typeof import("/src/ipc.js").JutSuperIpc}
+ * @typedef {import("/src/ipc.js").JutSuperIpcBuilder} JutSuperIpcBuilder
+ * @type {typeof import("/src/ipc.js").JutSuperIpcBuilder}
+ */
+var JutSuperIpcBuilder;
+
+/**
  * @typedef {import("/src/ipc.js").JutSuperIpc} JutSuperIpc
+ * @type {typeof import("/src/ipc.js").JutSuperIpc}
  */
 var JutSuperIpc;
+
+/**
+ * @typedef {import("/src/ipc.js").JutSuperIpcRecvParamsBuilder} JutSuperIpcRecvParamsBuilder
+ * @type {typeof import("/src/ipc.js").JutSuperIpcRecvParamsBuilder}
+ */
+var JutSuperIpcRecvParamsBuilder
+
 
 
 /** @type {JutSuperContent} */
@@ -34,10 +47,12 @@ var jutsuperContent;
     /** @type {typeof import("/src/ipc.js")} */
     const ipcModule = await import(browser.runtime.getURL("/src/ipc.js"));
 
-    JutSuperIds = constsModule.JutSuperIds;
-    JutSuperIpcKeys = constsModule.JutSuperIpcKeys;
-    JutSuperPaths = constsModule.JutSuperPaths;
+    ipcIds = constsModule.JutSuperIpcIds;
+    ipcKeys = constsModule.JutSuperIpcKeys;
+    assetPaths = constsModule.JutSuperAssetPaths;
+    JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
     JutSuperIpc = ipcModule.JutSuperIpc;
+    JutSuperIpcRecvParamsBuilder = ipcModule.JutSuperIpcRecvParamsBuilder;
 })().then(() => {
     jutsuperContent = new JutSuperContent();
 })
@@ -45,38 +60,27 @@ var jutsuperContent;
 
 class JutSuperContent {
     constructor() {
-        /** @type {JutSuperIpcKeys} */
-        let ipcKeys = new JutSuperIpcKeys();
-
         /** @type {JutSuperIpc} */
-        this.ipc = new JutSuperIpc(ipcKeys.contentSenderId, null, true);
-        this.ipc.onEssentialsReady(
-            this, this.handleOnEssentialsReady
-        )
-        this.ipc.onFullscreenChange(
-            this, this.handleOnFullscreenChange
-        );
-        this.ipc.onEpisodeSwitchPrep(
-            this, this.handleOnCurrentlySwitchingEpisode
-        );
-        this.ipc.listen();
+        this.ipc = new JutSuperIpcBuilder()
+            .createCommunicationNode()
+            .identifyAs(ipcIds.content)
+            .build();
 
-        /** @type {JutSuperIds} */
-        let ids = new JutSuperIds();
-        /** @type {JutSuperPaths} */
-        let paths = new JutSuperPaths();
-
+        /** @type {string} */
         this.urlGearSvg = browser.runtime.getURL(paths.gearSvg);
-        this.urlJutsuperIpcJs = browser.runtime.getURL(paths.ipcJs);
-        this.urlJutsuperCss = browser.runtime.getURL(paths.jutsuperCss);
-        this.urlJutsuperJs = browser.runtime.getURL(paths.jutsuperJs);
+        /** @type {string} */
+        this.urlJutSuperIpcJs = browser.runtime.getURL(paths.ipcJs);
+        /** @type {string} */
+        this.urlJutSuperCss = browser.runtime.getURL(paths.jutsuperCss);
+        /** @type {string} */
+        this.urlJutSuperJs = browser.runtime.getURL(paths.jutsuperJs);
 
         const body = document.getElementsByTagName("body")[0];
 
         this.injectImage(body, this.urlGearSvg, ids.gearSvg);
-        this.injectCss(body, this.urlJutsuperCss, ids.jutsuperCss);
-        this.injectModule(body, this.urlJutsuperIpcJs, ids.jutsuperIpcJs);
-        this.injectModule(body, this.urlJutsuperJs, ids.jutsuperJs);
+        this.injectCss(body, this.urlJutSuperCss, ids.jutsuperCss);
+        this.injectModule(body, this.urlJutSuperIpcJs, ids.jutsuperIpcJs);
+        this.injectModule(body, this.urlJutSuperJs, ids.jutsuperJs);
     }
 
     /**
@@ -141,6 +145,36 @@ class JutSuperContent {
         node.appendChild(elm);
 
         return null;
+    }
+
+    async listenEssentialsLoadState() {
+        const cfg = new JutSuperIpcRecvParamsBuilder()
+            .recvOnlyTheseKeys(ipcKeys.essentialsLoadingState)
+            .build()
+
+        for (const evt of await this.ipc.recv(cfg)) {
+            console.log(evt)
+        }
+    }
+
+    async listenFullscreenChange() {
+        const cfg = new JutSuperIpcRecvParamsBuilder()
+            .recvOnlyTheseKeys(ipcKeys.isFullscreen)
+            .build()
+
+        for (const evt of await this.ipc.recv(cfg)) {
+            console.log(evt)
+        }
+    }
+
+    async listenEpisodeSwitchPrepStates() {
+        const cfg = new JutSuperIpcRecvParamsBuilder()
+            .recvOnlyTheseKeys(ipcKeys.episodeSwitchPrepState)
+            .build()
+
+        for (const evt of await this.ipc.recv(cfg)) {
+            console.log(evt)
+        }
     }
 
     /**
