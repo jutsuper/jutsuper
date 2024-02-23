@@ -1,4 +1,16 @@
 /**
+ * @typedef {import("/src/error.js").JutSuperErrors} JutSuperErrors
+ * @type {JutSuperErrors}
+ */
+var jsuperErrors;
+
+/**
+ * @typedef {import("/src/log.js").JutSuperLog} JutSuperLog
+ * @type {JutSuperLog}
+ */
+var jsuperLog;
+
+/**
  * @typedef {import("/src/consts.js").JutSuperIpcIds} JutSuperIpcIds
  * @type {JutSuperIpcIds}
  */
@@ -11,10 +23,34 @@ var ipcIds;
 var ipcKeys;
 
 /**
+ * @typedef {import("/src/consts.js").JutSuperIpcAwaitStates} JutSuperIpcAwaitStates
+ * @type {JutSuperIpcAwaitStates}
+ */
+var ipcAwaits;
+
+/**
+ * @typedef {import("/src/consts.js").JutSuperIpcLoadingStates} JutSuperIpcLoadingStates
+ * @type {JutSuperIpcLoadingStates}
+ */
+var ipcLoadingStates;
+
+/**
+ * @typedef {import("/src/consts.js").JutSuperStorageKeys} JutSuperStorageKeys
+ * @type {JutSuperStorageKeys}
+ */
+var storageKeys;
+
+/**
  * @typedef {import("/src/consts.js").JutSuperAssetPaths} JutSuperAssetPaths
  * @type {JutSuperAssetPaths}
  */
 var assetPaths;
+
+/**
+ * @typedef {import("/src/consts.js").JutSuperAssetIds} JutSuperAssetIds
+ * @type {JutSuperAssetIds}
+ */
+var assetIds;
 
 /**
  * @typedef {import("/src/ipc.js").JutSuperIpcBuilder} JutSuperIpcBuilder
@@ -42,14 +78,24 @@ var jutsuperContent;
 
 /** Import modules */
 (async function() {
+    /** @type {typeof import("/src/error.js")} */
+    const errorModule = await import(browser.runtime.getURL("/src/error.js"))
+    /** @type {typeof import("/src/log.js")} */
+    const logModule = await import(browser.runtime.getURL("/src/log.js"))
     /** @type {typeof import("/src/consts.js")} */
     const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
     /** @type {typeof import("/src/ipc.js")} */
     const ipcModule = await import(browser.runtime.getURL("/src/ipc.js"));
 
+    jsuperErrors = errorModule.jsuperErrors;
+    jsuperLog = logModule.jsuperLog;
     ipcIds = constsModule.JutSuperIpcIds;
     ipcKeys = constsModule.JutSuperIpcKeys;
+    ipcAwaits = constsModule.JutSuperIpcAwaitStates;
+    ipcLoadingStates = constsModule.JutSuperIpcLoadingStates;
+    storageKeys = constsModule.JutSuperStorageKeys;
     assetPaths = constsModule.JutSuperAssetPaths;
+    assetIds = constsModule.JutSuperAssetIds;
     JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
     JutSuperIpc = ipcModule.JutSuperIpc;
     JutSuperIpcRecvParamsBuilder = ipcModule.JutSuperIpcRecvParamsBuilder;
@@ -60,6 +106,8 @@ var jutsuperContent;
 
 class JutSuperContent {
     constructor() {
+        this.LOCATION = "JutSuperContent";
+
         /** @type {JutSuperIpc} */
         this.ipc = new JutSuperIpcBuilder()
             .createCommunicationNode()
@@ -67,20 +115,24 @@ class JutSuperContent {
             .build();
 
         /** @type {string} */
-        this.urlGearSvg = browser.runtime.getURL(paths.gearSvg);
+        this.urlGearSvg = browser.runtime.getURL(assetPaths.gearSvg);
         /** @type {string} */
-        this.urlJutSuperIpcJs = browser.runtime.getURL(paths.ipcJs);
+        this.urlJutSuperIpcJs = browser.runtime.getURL(assetPaths.ipcJs);
         /** @type {string} */
-        this.urlJutSuperCss = browser.runtime.getURL(paths.jutsuperCss);
+        this.urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
         /** @type {string} */
-        this.urlJutSuperJs = browser.runtime.getURL(paths.jutsuperJs);
+        this.urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
 
         const body = document.getElementsByTagName("body")[0];
 
-        this.injectImage(body, this.urlGearSvg, ids.gearSvg);
-        this.injectCss(body, this.urlJutSuperCss, ids.jutsuperCss);
-        this.injectModule(body, this.urlJutSuperIpcJs, ids.jutsuperIpcJs);
-        this.injectModule(body, this.urlJutSuperJs, ids.jutsuperJs);
+        this.injectImage(body, this.urlGearSvg, assetIds.gearSvg);
+        this.injectCss(body, this.urlJutSuperCss, assetIds.jutsuperCss);
+        this.injectModule(body, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
+        this.injectModule(body, this.urlJutSuperJs, assetIds.jutsuperJs);
+
+        this.listenEssentialsLoadState();
+        this.listenFullscreenChange();
+        this.listenEpisodeSwitchPrepStates();
     }
 
     /**
@@ -152,9 +204,25 @@ class JutSuperContent {
             .recvOnlyTheseKeys(ipcKeys.essentialsLoadingState)
             .build()
 
-        for (const evt of await this.ipc.recv(cfg)) {
-            console.log(evt)
+        for await (const evt of this.ipc.recv(cfg)) {
+            jsuperLog.debug(new Error, evt)
+
+            switch (evt.value) {
+                case ipcLoadingStates.loaded:
+                    await this.handleEssentialsLoaded()
+                    break;
+                default:
+                    jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
+                        location: this.LOCATION,
+                        target: `${evt.key}=${evt.value}`
+                    }).message)
+            }
         }
+
+        throw jsuperErrors.endsError({
+            location: this.LOCATION,
+            target: `${this.listenEssentialsLoadState.name}()`
+        })
     }
 
     async listenFullscreenChange() {
@@ -162,9 +230,15 @@ class JutSuperContent {
             .recvOnlyTheseKeys(ipcKeys.isFullscreen)
             .build()
 
-        for (const evt of await this.ipc.recv(cfg)) {
-            console.log(evt)
+        for await (const evt of this.ipc.recv(cfg)) {
+            jsuperLog.debug(new Error, evt)
+            await this.handleFullscreenChange(evt.value);
         }
+
+        throw jsuperErrors.endsError({
+            location: this.LOCATION,
+            target: `${this.listenFullscreenChange.name}()`
+        })
     }
 
     async listenEpisodeSwitchPrepStates() {
@@ -172,16 +246,53 @@ class JutSuperContent {
             .recvOnlyTheseKeys(ipcKeys.episodeSwitchPrepState)
             .build()
 
-        for (const evt of await this.ipc.recv(cfg)) {
-            console.log(evt)
+        for await (const evt of this.ipc.recv(cfg)) {
+            jsuperLog.debug(new Error, evt)
+            switch (evt.value) {
+                case ipcAwaits.idle:
+                    await this.handleEpisodeSwitchIdle();
+                    break;
+                case ipcAwaits.request:
+                    await this.handleEpisodeSwitchRequest();
+                    break;
+                default:
+                    jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
+                        location: this.LOCATION,
+                        target: `${evt.key}=${evt.value}`
+                    }).message)
+            }
         }
+
+        throw jsuperErrors.endsError({
+            location: this.LOCATION,
+            target: `${this.listenEpisodeSwitchPrepStates.name}()`
+        })
+    }
+
+    async handleEssentialsLoaded() {
+
+    }
+
+    async handleEpisodeSwitchIdle() {
+
+    }
+
+    async handleEpisodeSwitchRequest() {
+
+    }
+
+    async handleFullscreenChange(state) {
+        const values = {};
+        values;
+
+        await browser.storage.local.set(values);
     }
 
     /**
      * @param {boolean} state 
      */
     async handleOnEssentialsReady(state) {
-        console.debug("content script caught essentialsready! isEssentialsReady:", state);
+        jsuperLog.debug(new Error, "content script caught essentialsready! isEssentialsReady:", state);
 
         /** @type {{isFullscreen: boolean, isCurrentlySwitchingEpisode: boolean}} */
         const keys = await browser.storage.local.get(
@@ -189,10 +300,10 @@ class JutSuperContent {
         );
 
         if (keys.isCurrentlySwitchingEpisode) {
-            console.log("CURRENTLY SWITCHING EPISODE!!!");
+            jsuperLog.log(new Error, "CURRENTLY SWITCHING EPISODE!!!");
         }
         if (keys.isFullscreen) {
-            console.log("DON'T FORGET FULLSCREEN!!!");
+            jsuperLog.log(new Error, "DON'T FORGET FULLSCREEN!!!");
         }
     }
 
@@ -200,23 +311,26 @@ class JutSuperContent {
      * @param {boolean} state 
      */
     handleOnFullscreenChange(state) {
-        console.debug("content script caught fullscreenchange! isFullscreen:", state);
+        jsuperLog.debug(new Error, "content script caught fullscreenchange! isFullscreen:", state);
 
         browser.storage.local.set({ isFullscreen: state }).then(
             () => {
-                console.debug("set isFullscreen state")
+                jsuperLog.debug(new Error, "set isFullscreen state")
             }
         );
     }
 
     async handleOnCurrentlySwitchingEpisode(state) {
-        console.debug(
+        jsuperLog.debug(new Error,
             "content script caught currentlyswitchingepisode! isCurrentlySwitchingEpisode:", state
         );
+        
+        
+        await browser.storage.local.set(
+            { isCurrentlySwitchingEpisode: state }
+        );
 
-        await browser.storage.local.set({ isCurrentlySwitchingEpisode: state });
-
-        console.debug("set isCurrentlySwitchingEpisode state");
+        jsuperLog.debug(new Error, "set isCurrentlySwitchingEpisode state");
         this.ipc.isEpisodeSwitchPrep = false;
     }
 

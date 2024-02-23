@@ -33,6 +33,7 @@
     }
   ],
   "web_accessible_resources": [
+    "/src/log.js",
     "/src/consts.js",
     "/src/ipc.js",
     "/src/page/jutsuper.js",

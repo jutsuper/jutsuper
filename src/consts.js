@@ -12,13 +12,15 @@
 export {
     JutsuFunctions,
     JutsuDomAttributes,
+    JutSuperLogLevels,
+    JutSuperLogDefaults,
     JutSuperAssetIds,
     JutSuperAssetPaths,
     JutSuperIpcDefaultNodeProps,
-    JutSuperIpcSubFilters,
     JutSuperIpcJsDataTypes,
     JutSuperIpcIds,
     JutSuperIpcKeys,
+    JutSuperStorageKeys,
     JutSuperIpcLoadingStates,
     JutSuperIpcAwaitStates,
     JutSuperIpcValueDelims
@@ -27,13 +29,26 @@ export {
 
 /**
  * # Describes exposed function names on `jut.su`
+ * 
+ * These functions are located
+ * in the `window` object and called
+ * by the names specified here.
+ * 
  * @readonly
  * @enum {JutsuFunctionsType}
  */
 const JutsuFunctions = {
-    /** @type {"skip_video_intro"} */
+    /**
+     * # Name of a function that skips the opening
+     * Location is `window.skip_video_intro()`
+     * @type {"skip_video_intro"}
+     */
     skipOpeningFnName: "skip_video_intro",
-    /** @type {"video_go_next_episode"} */
+    /**
+     * # Name of a function that skips the ending
+     * Location is `window.video_go_next_episode()`
+     * @type {"video_go_next_episode"}
+     */
     skipEndingFnName: "video_go_next_episode",
 }
 /** 
@@ -54,9 +69,21 @@ const JutsuFunctions = {
  * @enum {JutsuDomAttributesType}
  */
 const JutsuDomAttributes = {
-    /** @type {"my-player"} */
+    /**
+     * # An ID of a `div` containing the player
+     * @type {"my-player"}
+     */
     playerDivId: "my-player",
-    /** @type {"vjs-fullscreen"} */
+    /**
+     * # Class name that the player has when in fullscreen
+     * 
+     * Used to determine if player is currently
+     * in fullscreen, so when changing episodes
+     * the fullscreen mode could be set
+     * to the same state.
+     * 
+     * @type {"vjs-fullscreen"}
+     */
     playerFullscreenClassName: "vjs-fullscreen",
 }
 /** 
@@ -72,7 +99,92 @@ const JutsuDomAttributes = {
 
 
 /**
+ * # Describes available logging levels
+ * @readonly
+ * @enum {JutSuperLogLevelsType}
+ */
+const JutSuperLogLevels = {
+    /** @type {"ERROR"} */
+    error: "ERROR",
+    /** @type {"WARN"} */
+    warn: "WARN",
+    /** @type {"LOG"} */
+    log: "LOG",
+    /** @type {"INFO"} */
+    info: "INFO",
+    /** @type {"DEBUG"} */
+    debug: "DEBUG"
+}
+/** 
+ * @typedef JutSuperLogLevelsType
+ * @property {"ERROR"} error
+ * @property {"WARN"} warn
+ * @property {"LOG"} log
+ * @property {"INFO"} info
+ * @property {"DEBUG"} debug
+ * 
+ * @typedef {(
+ *   "ERROR" |
+ *   "WARN" |
+ *   "LOG" |
+ *   "INFO" |
+ *   "DEBUG"
+ * )} JutSuperLogLevelsKeys
+ */
+
+
+/**
+ * # Describes default logging settings
+ * 
+ * Logging is handled by `/src/log.js`.
+ * 
+ * Change these settings to
+ * enable/disable logging or
+ * to include/exclude logging levels.
+ * 
+ * Production builds should not have
+ * the debug level enabled.
+ * 
+ * @readonly
+ * @enum {JutSuperLogDefaultsType}
+ */
+const JutSuperLogDefaults = {
+    /** # If logs should be enabled */
+    enabled: true,
+    /** # Only these levels are logged */
+    levels: [
+        JutSuperLogLevels.error,
+        JutSuperLogLevels.warn,
+        JutSuperLogLevels.log,
+        JutSuperLogLevels.info,
+        JutSuperLogLevels.debug
+    ],
+    /** # Path to log location is shown only on these levels */
+    locationLevels: [
+        JutSuperLogLevels.error,
+        JutSuperLogLevels.warn,
+        JutSuperLogLevels.log,
+        JutSuperLogLevels.info,
+        JutSuperLogLevels.debug
+    ]
+}
+/** 
+ * @typedef JutSuperLogDefaultsType
+ * @property {boolean} enabled
+ * @property {JutSuperLogLevelsKeys[]} levels
+ * @property {JutSuperLogLevelsKeys[]} pathLevels
+ */
+
+
+/**
  * # Describes IDs of public assets used by this extension
+ * 
+ * Content script injects this extension's
+ * assets into the page and gives these
+ * IDs to them.
+ * 
+ * Used for easier DOM queries in the code.
+ * 
  * @readonly
  * @enum {JutSuperAssetIdsType}
  */
@@ -104,6 +216,14 @@ const JutSuperAssetIds = {
 
 /**
  * # Describes paths to public assets used by this extension
+ * 
+ * These paths are only used in content script
+ * when injecting stuff into the page.
+ * 
+ * For importing, content script uses hardcoded paths,
+ * since the `import {...} from "..."` syntax
+ * is not supported there.
+ * 
  * @readonly
  * @enum {JutSuperAssetPathsType}
  */
@@ -139,6 +259,14 @@ const JutSuperAssetPaths = {
 
 /**
  * # Describes default DOM node for IPC
+ * 
+ * IPC node is an element in the DOM,
+ * is a children of `<body>` and stores
+ * information in form of attributes.
+ * 
+ * This node will be named as `tag`
+ * and will have an ID of `id`
+ * 
  * @readonly
  * @enum {JutSuperIpcDefaultNodePropsType}
  */
@@ -203,6 +331,11 @@ const JutSuperIpcJsDataTypes = {
 
 /**
  * # Describes IPC instances' ID's
+ * 
+ * IPC instances can have their own ID
+ * so that they won't receive their own events
+ * when listening.
+ * 
  * @readonly
  * @enum {JutSuperIpcIdsType}
  */
@@ -230,28 +363,69 @@ const JutSuperIpcIds = {
  * @enum {JutSuperIpcKeysType}
  */
 const JutSuperIpcKeys = {
-    /** @type {data-essentials-loading-state} */
+    /**
+     * # State of loading the player and other essentials
+     * 
+     * @see {JutSuperIpcLoadingStates} for possible values
+     * @type {data-essentials-loading-state}
+     */
     essentialsLoadingState: "data-essentials-loading-state",
-    /** @type {data-is-fullscreen} */
+    /**
+     * # Is the player is in fullscreen
+     * 
+     * @see {boolean} for possible values
+     * @type {data-is-fullscreen}
+     */
     isFullscreen: "data-is-fullscreen",
-    /** @type {data-episode-switch-prep-state} */
+    /**
+     * # Current state of episode switching preparations
+     * 
+     * @see {JutSuperIpcAwaitStates} for possible values
+     * @type {data-episode-switch-prep-state}
+     */
     episodeSwitchPrepState: "data-episode-switch-prep-state",
-    /** @type {max-continuous-episode-switches} */
-    maxContinuousEpisodeSwitches: "max-continuous-episode-switches"
+    /**
+     * # How many times the extension should skip endings
+     * 
+     * @see {number} for possible values
+     * @type {data-max-continuous-episode-switches}
+     */
+    maxContinuousEpisodeSwitches: "data-max-continuous-episode-switches"
 }
 /** 
  * @typedef JutSuperIpcKeysType
  * @property {"data-essentials-loading-state"} essentialsLoadingState
  * @property {"data-is-fullscreen"} isFullscreen
  * @property {"data-episode-switch-prep-state"} episodeSwitchPrepState
- * @property {"max-continuous-episode-switches"} maxContinuousEpisodeSwitches
+ * @property {"data-max-continuous-episode-switches"} maxContinuousEpisodeSwitches
  * 
  * @typedef {(
  *   "data-essentials-loading-state" |
  *   "data-is-fullscreen" |
  *   "data-episode-switch-prep-state" |
- *   "max-continuous-episode-switches"
+ *   "data-max-continuous-episode-switches"
  * )} JutSuperIpcKeysKeys
+ */
+
+
+/**
+ * # Describes keys used in IPC
+ * @readonly
+ * @enum {JutSuperStorageKeysType}
+ */
+const JutSuperStorageKeys = {
+    isFullscreen: "isFullscreen",
+    isSwitchingEpisode: "isSwitchingEpisode"
+}
+/**
+ * @typedef JutSuperStorageKeysType
+ * @property {"isFullscreen"} isFullscreen
+ * @property {"isSwitchingEpisode"} isSwitchingEpisode
+ * 
+ * @typedef {(
+ *   "isFullscreen" |
+ *   "isSwitchingEpisode"
+ * )} JutSuperStorageKeysKeys
  */
 
 
@@ -315,9 +489,15 @@ const JutSuperIpcAwaitStates = {
  * @enum {JutSuperIpcValueDelimsType}
  */
 const JutSuperIpcValueDelims = {
-    /** @type {";type="} */
+    /**
+     * # Denotes the data type
+     * @type {";type="}
+     */
     type: ";type=",
-    /** @type {";sender="} */
+    /**
+     * # Denotes the sender ID
+     * @type {";sender="}
+     */
     sender: ";sender=",
 }
 /** 

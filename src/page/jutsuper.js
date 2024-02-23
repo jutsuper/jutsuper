@@ -1,7 +1,9 @@
+import { jsuperLog } from "/src/log.js";
 import { JutSuperIpcBuilder, JutSuperIpc } from "/src/ipc.js";
 import {
     JutsuFunctions as jutsuFns,
     JutsuDomAttributes as jutsuAttrs,
+    JutSuperAssetIds as assetIds,
     JutSuperIpcIds as ipcIds,
     JutSuperIpcKeys as ipcKeys,
     JutSuperIpcLoadingStates as ipcLoadings,
@@ -30,7 +32,7 @@ class JutSuper {
         /** @type {unknown} */
         this.player = player;
         /** @type {HTMLDivElement} */
-        this.playerDiv = document.getElementById(this.jutsu.playerDivId);
+        this.playerDiv = document.getElementById(jutsuAttrs.playerDivId);
         /** @type {boolean} */
         this.openingTriggered = false;
         /** @type {boolean} */
@@ -49,7 +51,7 @@ class JutSuper {
         this.injectTimeupdateListener();
         this.injectSettingsTab();
         
-        console.debug("JutSuper: constructed");
+        jsuperLog.debug(new Error, "JutSuper: constructed");
     }
 
     /**
@@ -105,7 +107,7 @@ class JutSuper {
      */
     startSkippingOpening() {
         if (!cur_time_cookie) {
-            console.error(
+            jsuperLog.error(new Error,
                 "JutSuper: cannot start skipping opening, " +
                 "video wasn't played yet " +
                 `(cur_time_cookie is ${cur_time_cookie})`
@@ -114,7 +116,7 @@ class JutSuper {
             return undefined;
         }
 
-        console.debug("JutSuper: able to skip opening");
+        jsuperLog.debug(new Error, "JutSuper: able to skip opening");
 
         window[jutsuFns.skipOpeningFnName]();
     }
@@ -124,7 +126,7 @@ class JutSuper {
      * @returns {undefined}
      */
     stopSkippingOpening() {
-        console.debug("JutSuper: not skipping opening anymore");
+        jsuperLog.debug(new Error, "JutSuper: not skipping opening anymore");
     }
     
     /**
@@ -133,7 +135,7 @@ class JutSuper {
      */
     async startSkippingEnding() {
         if (!cur_time_cookie) {
-            console.debug(
+            jsuperLog.debug(new Error,
                 "JutSuper: cannot start skipping ending, " +
                 "video wasn't played yet " +
                 `(cur_time_cookie is ${cur_time_cookie})`
@@ -141,15 +143,15 @@ class JutSuper {
             return;
         }
 
-        console.debug("JutSuper: able to skip ending");
+        jsuperLog.debug(new Error, "JutSuper: able to skip ending");
 
         this.ipc.isEpisodeSwitchPrep = true;
         
-        console.log("o next episode prep promise awaiting");
+        jsuperLog.log(new Error, "o next episode prep promise awaiting");
         const result = await this.ipc.episodeSwitchPrepPromise();
 
         if (result === false) {
-            console.log("+ next episode prep promise fulfulled, value", result);
+            jsuperLog.log(new Error, "+ next episode prep promise fulfulled, value", result);
             window[jutsuFns.skipEndingFnName]();
         }
     }
@@ -159,7 +161,7 @@ class JutSuper {
      * @returns {undefined}
      */
     stopSkippingEnding() {
-        console.debug("JutSuper: not skipping ending anymore");
+        jsuperLog.debug(new Error, "JutSuper: not skipping ending anymore");
     }
 
     /**
@@ -219,7 +221,7 @@ class JutSuper {
      */
     generateSettingsTab() {
         const gearIconUri = document
-            .getElementById(this.ids.gearSvg)
+            .getElementById(assetIds.gearSvg)
             .getAttribute("href");
 
         const gearImage = document.createElement("img");
@@ -318,7 +320,7 @@ class JutSuper {
         const topPlayerLane = document.getElementsByClassName("achiv_switcher");
 
         if (topPlayerLane.length > 1) {
-            console.warn("JutSuper: there are several achiv_switcher elements");
+            jsuperLog.warn(new Error, "JutSuper: there are several achiv_switcher elements");
         }
 
         for (const lane of topPlayerLane) {
@@ -333,7 +335,7 @@ class JutSuper {
  */
 function jutsuperLoad() {
     if (!jutsuper) {
-        console.debug("JutSuper: now loading");
+        jsuperLog.debug(new Error, "JutSuper: now loading");
         jutsuper = new JutSuper(player, undefined);
     }
     else {
@@ -356,7 +358,7 @@ function jutsuperLoad() {
     const playerPollIntervalId = setInterval(() => {
         if (typeof jutsu_new_player === "undefined") {
             clearInterval(playerPollIntervalId);
-            console.log(
+            jsuperLog.log(new Error,
                 "JutSuper: either old player is enabled or " +
                 "this page contains no player, loading aborted"
             );

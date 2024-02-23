@@ -1,5 +1,5 @@
+import { jsuperLog } from "/src/log.js";
 import {
-    JutSuperIpcKeys,
     JutSuperIpcDefaultNodeProps as ipcDefaultNodeProps,
     JutSuperIpcJsDataTypes as ipcJsTypes,
     JutSuperIpcValueDelims as ipcDelims
@@ -11,33 +11,43 @@ export {
 };
 
 
-/** @typedef {import("/src/consts.js").IpcSupportedTypes} IpcSupportedTypes */
-/** @typedef {import("/src/consts.js").IpcJsDataType} IpcJsDataType */
+/** @typedef {import("/src/consts.js").JutSuperIpcSupportedDataTypes} JutSuperIpcSupportedDataTypes */
+/** @typedef {import("/src/consts.js").JutSuperIpcJsDataTypes} JutSuperIpcJsDataTypes */
 /** @typedef {import("/src/consts.js").IpcKeys} IpcKeys */
 
-/** @typedef {{thisArg: any, fn: function(any)}} Subscriber */
-/** @typedef {{value: string, type: IpcJsDataType, sender: string}} UnparsedValueDescriptor */
-/** @typedef {{value: IpcSupportedTypes, sender: string}} ValueDescriptor */
-
-/** @typedef {{
- *   nodeTag: string,
- *   nodeId: string,
- *   doCreateNode: boolean,
- *   senderId: string
- * }} JutSuperIpcCreationParams */
-/** @typedef {{
- *   key: string,
- *   value: any
- * }} JutSuperIpcSendParams */
-/** @typedef {{
- *   senderId: string,
- *   senderIds: string[],
- *   key: string,
- *   keys: string[],
- *   value: string,
- *   values: string[],
- *   acceptFromMyself: boolean
- * }} JutSuperIpcRecvParams */
+/**
+ * @typedef JutSuperIpcUnparsedValueDescriptor
+ * @property {string} value
+ * @property {JutSuperIpcJsDataTypes} type
+ * @property {string} sender
+ */
+/**
+ * @typedef JutSuperIpcValueDescriptor
+ * @property {string} key
+ * @property {JutSuperIpcSupportedDataTypes} value
+ * @property {string} sender
+ */
+/**
+ * @typedef JutSuperIpcCreationParams
+ * @property {string} nodeTag
+ * @property {string} nodeId
+ * @property {boolean} doCreateNode
+ * @property {senderId} string
+ */
+/**
+ * @typedef JutSuperIpcSendParams
+ * @property {string} key
+ * @property {JutSuperIpcSupportedDataTypes} value
+ */
+/**
+ * @typedef JutSuperIpcRecvParams
+ * @property {string} senderId
+ * @property {string[]} senderIds
+ * @property {string} key
+ * @property {string[]} keys
+ * @property {string} value
+ * @property {string[]} values
+ */
 
 
 class JutSuperIpc {
@@ -71,6 +81,8 @@ class JutSuperIpc {
         else {
             this.#node = this.#getNode();
         }
+
+        jsuperLog.log(new Error, "ipc");
     }
 
     /**
@@ -86,88 +98,98 @@ class JutSuperIpc {
 
     /**
      * @param {JutSuperIpcRecvParams} params 
-     * @returns {Promise<ValueDescriptor>}
+     * @returns {Promise<JutSuperIpcValueDescriptor>}
      */
-    async recv(params) {
+    async recvOnce(params) {
         /** @type {string[]} */
-        const senderIds = [];
+        let senderIds = [];
         /** @type {string[]} */
-        const keys = [];
+        let keys = [];
         /** @type {string[]} */
-        const values = [];
+        let values = [];
 
-        if (![null, undefined].contains(params.senderId)) {
-            senderIds.push(params.senderId)
+        if (![null, undefined].includes(params.senderId)) {
+            senderIds.push(params.senderId);
         };
-        if (![null, undefined].contains(params.senderIds)) {
-            senderIds.push(...params.senderIds)
+        if (![null, undefined].includes(params.senderIds)) {
+            senderIds.push(...params.senderIds);
         };
         if (params.acceptFromMyself) {
             senderIds.push(this.senderId);
         }
-        if (![null, undefined].contains(params.key)) {
-            keys.push(params.key)
+        if (![null, undefined].includes(params.key)) {
+            keys.push(params.key);
         };
-        if (![null, undefined].contains(params.keys)) {
-            keys.push(...params.keys)
+        if (![null, undefined].includes(params.keys)) {
+            keys.push(...params.keys);
         };
-        if (![null, undefined].contains(params.value)) {
-            values.push(params.value)
+        if (![null, undefined].includes(params.value)) {
+            values.push(params.value);
         };
-        if (![null, undefined].contains(params.values)) {
-            values.push(...params.values)
+        if (![null, undefined].includes(params.values)) {
+            values.push(...params.values);
         };
 
-        const isAnySenders = senderIds.length < 1;
-        const isAnyKeys = keys.length < 1;
-        const isAnyValues = values.length < 1;
+        const isAnySenders = senderIds.length > 0;
+        const isAnyKeys = keys.length > 0;
+        const isAnyValues = values.length > 0;
+
+        const getNodeKeyUnparsed = this.#getNodeKeyUnparsed;
+        const thisArg = this;
 
         return new Promise((resolve) => {
-            new MutationObserver((mutations, observer) => {
+            new MutationObserver(function (mutations, observer) {
                 for (const mutation of mutations) {
-                    if (
-                        !isAnyKeys ||
-                        !keys.includes(mutation.attributeName)
-                    ) {
+                    if (isAnyKeys && !keys.includes(mutation.attributeName)) {
                         continue;
                     }
 
-                    const descriptor = this.#getNodeKey(mutation.attributeName);
+                    /** @type {JutSuperIpcUnparsedValueDescriptor} */
+                    const descriptor = getNodeKeyUnparsed.call(
+                        thisArg,
+                        mutation.attributeName
+                    );
 
-                    if (
-                        !isAnyValues ||
-                        !values.includes(descriptor.value)
-                    ) {
-                        continue;
-                    }
-
-                    if (
-                        !isAnySenders ||
-                        !senderIds.includes(descriptor.sender)
-                    ) {
+                    if (isAnySenders && !senderIds.includes(descriptor.sender)) {
                         continue;
                     }
 
                     const parsedValue = JutSuperIpc.decodeValueWithType(
                         descriptor.value,
                         descriptor.type
-                    )
+                    );
 
-                    yield resolve({
+                    if (isAnyValues && !values.includes(descriptor.value)) {
+                        continue;
+                    }
+
+                    resolve({
+                        key: mutation.attributeName,
                         value: parsedValue,
                         sender: descriptor.sender
                     });
                 }
-            }).observe(this.#node, this.#defaultObserverOptions);
+            }).observe(thisArg.#node, thisArg.#defaultObserverOptions);
         });
     }
 
     /**
+     * @async
+     * @param {JutSuperIpcRecvParams} params 
+     * @returns {[JutSuperIpcValueDescriptor]}
+     */
+    async *recv(params) {
+        while (true) {
+            yield await this.recvOnce(params);
+        }
+    }
+
+    /**
      * @param {IpcKeys} key
-     * @returns {ValueDescriptor}
+     * @returns {JutSuperIpcValueDescriptor}
      */
     get(key) {
-        const raw = this.#getNodeKey(key);
+        const raw = this.#getNodeKeyUnparsed(key);
         const parsedValue = JutSuperIpc.decodeValueWithType(raw.value, raw.type);
         return { value: parsedValue, sender: raw.sender }
     }
@@ -237,11 +259,11 @@ class JutSuperIpc {
 
     /**
      * @param {string} value
-     * @returns {UnparsedValueDescriptor}
+     * @returns {JutSuperIpcUnparsedValueDescriptor}
      */
     static splitDescriptorValue(value) {
         const valueAndRest = value.split(ipcDelims.type);
-        const typeAndSender = valueAndRest.split(ipcDelims.sender);
+        const typeAndSender = valueAndRest[1].split(ipcDelims.sender);
 
         return {
             value: valueAndRest[0],
@@ -256,6 +278,7 @@ class JutSuperIpc {
     #createNode() {
         const node = document.createElement(this.nodeTag);
         node.id = this.nodeId;
+        document.getElementsByTagName("body")[0].appendChild(node);
         return node;
     }
 
@@ -268,9 +291,9 @@ class JutSuperIpc {
 
     /**
      * @param {string} key 
-     * @return {UnparsedValueDescriptor}
+     * @return {JutSuperIpcUnparsedValueDescriptor}
      */
-    #getNodeKey(key) {
+    #getNodeKeyUnparsed(key) {
         return JutSuperIpc.splitDescriptorValue(this.#node.getAttribute(key))
     }
 
@@ -375,7 +398,11 @@ class JutSuperIpcRecvParamsBuilder {
      * @returns {JutSuperIpcRecvParamsBuilder}
      */
     recvOnlyFrom(ids) {
-        this.#append(this.params.senderId, this.params.senderIds, ids)
+        this.#append(
+            (id) => {this.params.senderId = id},
+            (ids) => {this.params.senderIds.push(...ids)},
+            ids
+        )
         return this;
     }
 
@@ -384,7 +411,11 @@ class JutSuperIpcRecvParamsBuilder {
      * @returns {JutSuperIpcRecvParamsBuilder}
      */
     recvOnlyTheseKeys(keys) {
-        this.#append(this.params.key, this.params.keys, keys)
+        this.#append(
+            (key) => {this.params.key = key},
+            (keys) => {this.params.keys.push(...keys)},
+            keys
+        )
         return this;
     }
 
@@ -393,7 +424,11 @@ class JutSuperIpcRecvParamsBuilder {
      * @returns {JutSuperIpcRecvParamsBuilder}
      */
     recvOnlyTheseValues(values) {
-        this.#append(this.params.value, this.params.values, values)
+        this.#append(
+            (val) => {this.params.value = val},
+            (vals) => {this.params.values.push(...vals)},
+            values
+        )
         return this;
     }
 
@@ -412,12 +447,12 @@ class JutSuperIpcRecvParamsBuilder {
         return this.params;
     }
 
-    #append(valueSingle, valueArray, value) {
+    #append(valueSingleSetter, valueArraySetter, value) {
         if (Array.isArray(value)) {
-            valueArray.push(...value);
+            valueArraySetter(value);
         }
         else {
-            valueSingle = ids;
+            valueSingleSetter(value)
         }
     }
 }
