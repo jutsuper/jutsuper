@@ -1,4 +1,5 @@
 import { jsuperLog } from "/src/log.js";
+import { jsuperErrors } from "/src/error.js";
 import { JutSuperIpcBuilder, JutSuperIpc } from "/src/ipc.js";
 import {
     JutsuFunctions as jutsuFns,
@@ -20,6 +21,8 @@ class JutSuper {
      * @returns {JutSuper}
      */
     constructor(player) {
+        console.log("JutSuper");
+
         if (!player || !player.overlays_ || !player.on) {
             throw new Error(
                 "JutSuper: player not yet initialized, " +
@@ -45,13 +48,17 @@ class JutSuper {
         this.endingSkipperRng = this.getOverlayRngByFunctionName(
             jutsuFns.skipEndingFnName
         );
-        
-        this.initializeIpcValues();
+
+        this.#initPage().then(() => {
+            jsuperLog.debug(new Error, "JutSuper: constructed");
+        });
+    }
+
+    async #initPage() {
+        await this.initializeIpcValues();
         this.injectFullscreenChangeListener();
         this.injectTimeupdateListener();
         this.injectSettingsTab();
-        
-        jsuperLog.debug(new Error, "JutSuper: constructed");
     }
 
     /**
@@ -145,15 +152,20 @@ class JutSuper {
 
         jsuperLog.debug(new Error, "JutSuper: able to skip ending");
 
-        this.ipc.isEpisodeSwitchPrep = true;
+        this.ipc.send({
+            key: ipcKeys.episodeSwitchPrep,
+            value: ipcAwaits.request
+        });
         
         jsuperLog.log(new Error, "o next episode prep promise awaiting");
-        const result = await this.ipc.episodeSwitchPrepPromise();
 
-        if (result === false) {
-            jsuperLog.log(new Error, "+ next episode prep promise fulfulled, value", result);
-            window[jutsuFns.skipEndingFnName]();
-        }
+        await this.ipc.recvOnce({
+            key: ipcKeys.episodeSwitchPrep,
+            value: ipcAwaits.completed
+        })
+
+        jsuperLog.log(new Error, "+ next episode prep promise fulfulled");
+        window[jutsuFns.skipEndingFnName]();
     }
     
     /**
@@ -242,19 +254,43 @@ class JutSuper {
     }
 
     /**
-     * @returns {undefined}
+     * @returns {Promise<void>}
     */
-    initializeIpcValues() {
+    async initializeIpcValues() {
         this.ipc.send({
             key: ipcKeys.essentialsLoadingState,
             value: ipcLoadings.loaded
         });
+
         this.ipc.send({
-            key: ipcKeys.isFullscreen,
-            value: this.playerDiv.classList.contains(jutsuAttrs.playerFullscreenClassName)
+            key: ipcKeys.episodeSwitchPrep,
+            value: ipcAwaits.continuation
         });
+
+        await this.ipc.recvOnce({
+            key: ipcKeys.episodeSwitchPrep,
+            value: ipcAwaits.completed
+        })
+
+        const isEpSwitchedAutoDescriptor = this.ipc.get(
+            ipcKeys.isEpisodeSwitchedAutomatically
+        );
+
+        // "sorry" to any of you motherfuckers
+        // who don't like the `=== false` part,
+        // it's for the sake of readability
+        // you cunts
+        if (isEpSwitchedAutoDescriptor.value === false) {
+            this.ipc.send({
+                key: ipcKeys.isFullscreen,
+                value: this.playerDiv.classList.contains(
+                    jutsuAttrs.playerFullscreenClassName
+                )
+            });
+        }
+
         this.ipc.send({
-            key: ipcKeys.episodeSwitchPrepState,
+            key: ipcKeys.episodeSwitchPrep,
             value: ipcAwaits.idle
         });
     }
@@ -276,7 +312,10 @@ class JutSuper {
         );
 
         if (this.ipc.get(ipcKeys.isFullscreen).value !== isFullscreen) {
-            this.ipc.send({ key: ipcKeys.isFullscreen, value: isFullscreen })
+            this.ipc.send({
+                key: ipcKeys.isFullscreen,
+                value: isFullscreen
+            })
         }
     }
 

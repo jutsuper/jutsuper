@@ -26,7 +26,7 @@ class JutSuperErrors {
      * @param {JutSuperErrorsLocationWithTarget} params
      * @returns {Error}
      */
-    endsError(params) {
+    unexpectedEndError(params) {
         return new Error(
             `${params.location}: unexpected end of ` +
             `${params.target}`

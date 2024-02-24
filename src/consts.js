@@ -21,6 +21,9 @@ export {
     JutSuperIpcIds,
     JutSuperIpcKeys,
     JutSuperStorageKeys,
+    JutSuperStorageTransitionKeys,
+    JutSuperStorageDataKeys,
+    JutSuperStorageAllKeys,
     JutSuperIpcLoadingStates,
     JutSuperIpcAwaitStates,
     JutSuperIpcValueDelims
@@ -366,29 +369,44 @@ const JutSuperIpcKeys = {
     /**
      * # State of loading the player and other essentials
      * 
-     * @see {JutSuperIpcLoadingStates} for possible values
-     * @type {data-essentials-loading-state}
+     * ## Possible values
+     * @see {JutSuperIpcLoadingStates}
+     * 
+     * @type {"data-essentials-loading-state"}
      */
     essentialsLoadingState: "data-essentials-loading-state",
     /**
      * # Is the player is in fullscreen
      * 
-     * @see {boolean} for possible values
-     * @type {data-is-fullscreen}
+     * ## Possible values
+     * @see {boolean}
+     * 
+     * @type {"data-is-fullscreen"}
      */
     isFullscreen: "data-is-fullscreen",
     /**
      * # Current state of episode switching preparations
      * 
-     * @see {JutSuperIpcAwaitStates} for possible values
-     * @type {data-episode-switch-prep-state}
+     * ## Possible values
+     * @see {JutSuperIpcAwaitStates}
+     * 
+     * @type {"data-episode-switch-prep"}
      */
-    episodeSwitchPrepState: "data-episode-switch-prep-state",
+    episodeSwitchPrep: "data-episode-switch-prep",
+    /**
+     * # Was the episode switched automatically
+     * 
+     * ## Possible values
+     * @see {boolean}
+     * 
+     * @type {"data-is-episode-switched-automatically"}
+     */
+    isEpisodeSwitchedAutomatically: "data-is-episode-switched-automatically",
     /**
      * # How many times the extension should skip endings
      * 
      * @see {number} for possible values
-     * @type {data-max-continuous-episode-switches}
+     * @type {"data-max-continuous-episode-switches"}
      */
     maxContinuousEpisodeSwitches: "data-max-continuous-episode-switches"
 }
@@ -396,13 +414,15 @@ const JutSuperIpcKeys = {
  * @typedef JutSuperIpcKeysType
  * @property {"data-essentials-loading-state"} essentialsLoadingState
  * @property {"data-is-fullscreen"} isFullscreen
- * @property {"data-episode-switch-prep-state"} episodeSwitchPrepState
+ * @property {"data-episode-switch-prep"} episodeSwitchPrep
+ * @property {"data-is-episode-switched-automatically"} isEpisodeSwitchedAutomatically
  * @property {"data-max-continuous-episode-switches"} maxContinuousEpisodeSwitches
  * 
  * @typedef {(
  *   "data-essentials-loading-state" |
  *   "data-is-fullscreen" |
- *   "data-episode-switch-prep-state" |
+ *   "data-episode-switch-prep" |
+ *   "data-is-episode-switched-automatically" |
  *   "data-max-continuous-episode-switches"
  * )} JutSuperIpcKeysKeys
  */
@@ -411,22 +431,62 @@ const JutSuperIpcKeys = {
 /**
  * # Describes keys used in IPC
  * @readonly
- * @enum {JutSuperStorageKeysType}
+ * @enum {JutSuperStorageAllKeysType}
  */
 const JutSuperStorageKeys = {
     isFullscreen: "isFullscreen",
     isSwitchingEpisode: "isSwitchingEpisode"
 }
 /**
- * @typedef JutSuperStorageKeysType
+ * @typedef JutSuperStorageAllKeysType
  * @property {"isFullscreen"} isFullscreen
  * @property {"isSwitchingEpisode"} isSwitchingEpisode
  * 
  * @typedef {(
+ *   JutSuperStorageTransitionKeysKeys |
+ *   JutSuperStorageDataKeysKeys
+ * )} JutSuperStorageAllKeysKeys
+ *
+ * @typedef JutSuperStorageAllKeysTypes
+ * @property {boolean} isFullscreen
+ * @property {boolean} isSwitchingEpisode
+ */
+
+
+/**
+ * @readonly
+ * @type {JutSuperStorageTransitionKeysKeys[]}
+ */
+const JutSuperStorageTransitionKeys = [];
+JutSuperStorageTransitionKeys.push(JutSuperStorageKeys.isFullscreen);
+JutSuperStorageTransitionKeys.push(JutSuperStorageKeys.isSwitchingEpisode);
+/**
+ * @typedef {(
  *   "isFullscreen" |
  *   "isSwitchingEpisode"
- * )} JutSuperStorageKeysKeys
+ * )} JutSuperStorageTransitionKeysKeys
  */
+
+
+/**
+ * @readonly
+ * @type {JutSuperStorageDataKeysKeys[]}
+ */
+const JutSuperStorageDataKeys = [];
+/**
+ * @typedef {(
+ *   
+ * )} JutSuperStorageDataKeysKeys
+ */
+
+
+/**
+ * @readonly
+ * @type {JutSuperStorageAllKeysKeys[]}
+ */
+const JutSuperStorageAllKeys = [];
+JutSuperStorageAllKeys.push(...JutSuperStorageTransitionKeys);
+JutSuperStorageAllKeys.push(...JutSuperStorageDataKeys);
 
 
 /**
@@ -464,6 +524,12 @@ const JutSuperIpcAwaitStates = {
     request: "request",
     /** @type {"awaiting"} */
     awaiting: "awaiting",
+    /** @type {"aborted"} */
+    aborted: "aborted",
+    /** @type {"paused"} */
+    paused: "paused",
+    /** @type {"continuation"} */
+    continuation: "continuation",
     /** @type {"completed"} */
     completed: "completed",
 }
@@ -472,12 +538,18 @@ const JutSuperIpcAwaitStates = {
  * @property {"idle"} idle
  * @property {"request"} request
  * @property {"awaiting"} awaiting
+ * @property {"aborted"} aborted
+ * @property {"paused"} paused
+ * @property {"continuation"} continuation
  * @property {"completed"} completed
  * 
  * @typedef {(
  *   "idle" |
  *   "request" |
  *   "awaiting" |
+ *   "aborted" |
+ *   "paused" |
+ *   "continuation" |
  *   "completed"
  * )} JutSuperIpcAwaitStatesKeys
  */

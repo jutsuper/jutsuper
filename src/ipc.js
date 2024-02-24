@@ -17,9 +17,9 @@ export {
 
 /**
  * @typedef JutSuperIpcUnparsedValueDescriptor
- * @property {string} value
- * @property {JutSuperIpcJsDataTypes} type
- * @property {string} sender
+ * @property {string | undefined} value
+ * @property {JutSuperIpcJsDataTypes | undefined} type
+ * @property {string | undefined} sender
  */
 /**
  * @typedef JutSuperIpcValueDescriptor
@@ -81,8 +81,6 @@ class JutSuperIpc {
         else {
             this.#node = this.#getNode();
         }
-
-        jsuperLog.log(new Error, "ipc");
     }
 
     /**
@@ -190,8 +188,22 @@ class JutSuperIpc {
      */
     get(key) {
         const raw = this.#getNodeKeyUnparsed(key);
-        const parsedValue = JutSuperIpc.decodeValueWithType(raw.value, raw.type);
-        return { value: parsedValue, sender: raw.sender }
+        if (raw) {
+            const parsedValue = JutSuperIpc.decodeValueWithType(
+                raw.value,
+                raw.type
+            );
+            return {
+                value: parsedValue,
+                sender: raw.sender
+            }
+        }
+
+        return {
+            key: undefined,
+            value: undefined,
+            sender: undefined
+        }
     }
 
     /**
@@ -234,7 +246,7 @@ class JutSuperIpc {
     /**
      * 
      * @param {string} value 
-     * @param {IpcJsDataType} type
+     * @param {JutSuperIpcJsDataTypes} type
      * @returns {IpcSupportedTypes}
      */
     static decodeValueWithType(value, type) {
@@ -294,7 +306,16 @@ class JutSuperIpc {
      * @return {JutSuperIpcUnparsedValueDescriptor}
      */
     #getNodeKeyUnparsed(key) {
-        return JutSuperIpc.splitDescriptorValue(this.#node.getAttribute(key))
+        const rawValue = this.#node.getAttribute(key);
+        if (rawValue) {
+            return JutSuperIpc.splitDescriptorValue(rawValue)
+        }
+        
+        return {
+            value: undefined,
+            type: undefined,
+            sender: undefined
+        }
     }
 
     /**
