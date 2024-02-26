@@ -1,0 +1,16 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Build Manifest v2",
+            "runtimeArgs": ["--preserve-symlinks"],
+            "program": "${workspaceFolder}/build.mjs",
+            "args": ["--manifest", "2"]
+        }
+    ]
+}

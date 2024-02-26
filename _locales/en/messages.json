@@ -1,10 +1,10 @@
 {
-    "extName": {
-        "message": "JutSuper - autoskip on jut.su",
-        "description": "Extension name"
-    },
-    "extDescription": {
-        "message": "Better autoskip of openings/endings on jut.su",
-        "description": "Extension description"
-    }
+  "extName": {
+    "message": "JutSuper - autoskip on jut.su",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Better autoskip of openings/endings on jut.su",
+    "description": "Extension description"
+  }
 }

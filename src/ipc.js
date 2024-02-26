@@ -207,7 +207,7 @@ class JutSuperIpc {
     }
 
     /**
-     * @param {IpcJsDataType | string} type 
+     * @param {JutSuperIpcJsDataTypes | string} type 
      * @returns {boolean}
      */
     static isTypeCompatible(type) {
@@ -219,7 +219,7 @@ class JutSuperIpc {
     }
 
     /**
-     * @param {IpcSupportedTypes} value 
+     * @param {JutSuperIpcJsDataTypes} value 
      * @returns {string}
      */
     static encodeValueWithType(value) {

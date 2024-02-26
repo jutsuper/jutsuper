@@ -1,10 +1,10 @@
 {
-    "extName": {
-        "message": "JutSuper - автопропуск на jut.su",
-        "description": "Extension name"
-    },
-    "extDescription": {
-        "message": "Улучшенный автопропуск опенингов/эндингов на jut.su",
-        "description": "Extension description"
-    }
+  "extName": {
+    "message": "JutSuper - автопропуск на jut.su",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Улучшенный автопропуск опенингов/эндингов на jut.su",
+    "description": "Extension description"
+  }
 }
