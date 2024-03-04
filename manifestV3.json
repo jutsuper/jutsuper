@@ -40,6 +40,8 @@
       "resources": [
         "/src/log.js",
         "/src/consts.js",
+        "/src/error.js",
+        "/src/storage.js",
         "/src/ipc.js",
         "/src/page/jutsuper.js",
         "/src/page/jutsuper.css",

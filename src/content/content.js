@@ -1,3 +1,7 @@
+if (browser === undefined) {
+    var browser = chrome
+}
+
 /**
  * @typedef {import("/src/error.js").JutSuperErrors} JutSuperErrors
  * @type {JutSuperErrors}
