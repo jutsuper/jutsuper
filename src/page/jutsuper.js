@@ -8,7 +8,8 @@ import {
   JutSuperIpcIds as ipcIds,
   JutSuperIpcKeys as ipcKeys,
   JutSuperIpcLoadingStates as ipcLoadings,
-  JutSuperIpcAwaitStates as ipcAwaits
+  JutSuperIpcAwaitStates as ipcAwaits,
+  JutSuperIpcBoolRequestStates as ipcBoolStates
 } from "/src/consts.js";
 
 /** @type {JutSuper} */
@@ -276,10 +277,6 @@ class JutSuper {
       ipcKeys.isEpisodeSwitchedAutomatically
     );
 
-    // "sorry" to any of you motherfuckers
-    // who don't like the `=== false` part,
-    // it's for the sake of readability
-    // you cunts
     if (isEpSwitchedAutoDescriptor.value === false) {
       this.ipc.send({
         key: ipcKeys.isFullscreen,
@@ -288,6 +285,14 @@ class JutSuper {
         )
       });
     }
+    else {
+
+    }
+
+    this.ipc.send({
+      key: ipcKeys.fullscreenMode,
+      value: ipcBoolStates.idle
+    });
 
     this.ipc.send({
       key: ipcKeys.episodeSwitchPrep,

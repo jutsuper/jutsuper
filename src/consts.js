@@ -27,6 +27,7 @@ export {
   JutSuperStorageAllKeys,
   JutSuperIpcLoadingStates,
   JutSuperIpcAwaitStates,
+  JutSuperIpcBoolRequestStates,
   JutSuperIpcValueDelims
 }
 
@@ -420,6 +421,15 @@ const JutSuperIpcKeys = {
    */
   isFullscreen: "data-is-fullscreen",
   /**
+   * # Control fullscreen (enter or exit fullscreen)
+   * 
+   * ## Possible values
+   * @see {JutSuperIpcBoolRequestStates}
+   * 
+   * @type {"data-fullscreen-mode"}
+   */
+  fullscreenMode: "data-fullscreen-mode",
+  /**
    * # Current state of episode switching preparations
    * 
    * ## Possible values
@@ -449,6 +459,7 @@ const JutSuperIpcKeys = {
  * @typedef JutSuperIpcKeysType
  * @property {"data-essentials-loading-state"} essentialsLoadingState
  * @property {"data-is-fullscreen"} isFullscreen
+ * @property {"data-fullscreen-mode"} fullscreenMode
  * @property {"data-episode-switch-prep"} episodeSwitchPrep
  * @property {"data-is-episode-switched-automatically"} isEpisodeSwitchedAutomatically
  * @property {"data-max-continuous-episode-switches"} maxContinuousEpisodeSwitches
@@ -456,6 +467,7 @@ const JutSuperIpcKeys = {
  * @typedef {(
  *   "data-essentials-loading-state" |
  *   "data-is-fullscreen" |
+ *   "data-fullscreen-mode" |
  *   "data-episode-switch-prep" |
  *   "data-is-episode-switched-automatically" |
  *   "data-max-continuous-episode-switches"
@@ -587,6 +599,42 @@ const JutSuperIpcAwaitStates = {
  *   "continuation" |
  *   "completed"
  * )} JutSuperIpcAwaitStatesKeys
+ */
+
+
+/**
+ * # Describes states of awaiting in IPC
+ * @readonly
+ * @enum {JutSuperIpcBoolRequestStatesType}
+ */
+const JutSuperIpcBoolRequestStates = {
+  /** @type {"requestTrue"} */
+  requestTrue: "requestTrue",
+  /** @type {"requestFalse"} */
+  requestFalse: "requestFalse",
+  /** @type {"completed"} */
+  completed: "completed",
+  /** @type {"rejected"} */
+  rejected: "rejected",
+  /** @type {"idle"} */
+  idle: "idle",
+}
+/** 
+ * @typedef JutSuperIpcBoolRequestStatesType
+ * @property {"requestTrue"} requestTrue
+ * @property {"requestFalse"} requestFalse
+ * @property {"completed"} completed
+ * @property {"rejected"} rejected
+ * @property {"idle"} idle
+ * 
+ * @typedef {(
+ *   "requestTrue" |
+ *   "request" |
+ *   "requestFalse" |
+ *   "completed" |
+ *   "rejected" |
+ *   "idle"
+ * )} JutSuperIpcBoolRequestStatesKeys
  */
 
 

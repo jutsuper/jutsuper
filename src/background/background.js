@@ -72,15 +72,26 @@ class JutSuperBackground {
 
     const req = request["request"];
 
-    if (req && req === "fullscreenOn") {
-      this.handleFullscreenRequest()
+    if (req && ["fullscreenOn", "fullscreenOff"].contains(req)) {
+      if (req === "fullscreenOn") {
+        this.handleFullscreenRequest(true)
+      }
+      else if (req === "fullscreenOff") {
+        this.handleFullscreenRequest(false)
+      }
     }
   }
 
-  async handleFullscreenRequest() {
+  async handleFullscreenRequest(state) {
     const windows = await browser.windows.getAll();
     console.log("windows=", windows);
-    browser.windows.update(windows[0].id, {state: "fullscreen"});
+    if (state === true) {
+      browser.windows.update(windows[0].id, {state: "fullscreen"});
+    }
+    else if (state === false) {
+      browser.windows.update(windows[0].id, {state: undefined});
+    }
+    
   }
 }
 
