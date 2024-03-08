@@ -164,6 +164,8 @@ class JutSuperContent {
     this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
 
     this.listenEssentialsLoadState();
+    this.listenFullscreenChange();
+    this.listenEpisodeSwitchPrepStates();
   }
 
   /**
@@ -321,8 +323,6 @@ class JutSuperContent {
 
   async handleEssentialsLoaded() {
     await this.loadTransitionStorageAndClear();
-    this.listenFullscreenChange();
-    this.listenEpisodeSwitchPrepStates(true);
   }
 
   async handleEpisodeSwitchIdle() {
@@ -366,9 +366,11 @@ class JutSuperContent {
       );
       player.play();
 
-      await browser.runtime.sendMessage({
-        request: "fullscreenOn"
-      });
+      if (transitionKeys.isFullscreen) {
+        await browser.runtime.sendMessage({
+          request: "fullscreenOn"
+        });
+      }
     }
     else {
       jsuperLog.log(new Error, "episode was not switched automatically")

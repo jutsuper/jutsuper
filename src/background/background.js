@@ -57,8 +57,12 @@ var jutsuperBackground;
 
 class JutSuperBackground {
   constructor() {
+    const thisArg = this;
     this.LOCATION = JutSuperBackground.name;
-    browser.runtime.onMessage.addListener(this.messageCallback);
+
+    browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+      thisArg.messageCallback(request, sender, sendResponse)
+    });
   }
 
   messageCallback(request, sender, sendResponse) {
