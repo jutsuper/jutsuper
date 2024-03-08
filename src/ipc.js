@@ -32,7 +32,7 @@ export {
  * @property {string} nodeTag
  * @property {string} nodeId
  * @property {boolean} doCreateNode
- * @property {senderId} string
+ * @property {string} senderId
  */
 /**
  * @typedef JutSuperIpcSendParams

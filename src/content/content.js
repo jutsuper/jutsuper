@@ -1,3 +1,12 @@
+// #if "@BROWSER" == "chrome"
+var BROWSER = "chrome";
+var browser = chrome;
+// #elif "@BROWSER" == "firefox"
+var BROWSER = "firefox";
+// #else
+// #error
+// #endif
+
 var startedPlaying = false;
 var pressedFullscreen = false;
 
@@ -83,17 +92,11 @@ var JutSuperIpc;
  * @typedef {import("/src/ipc.js").JutSuperIpcRecvParamsBuilder} JutSuperIpcRecvParamsBuilder
  * @type {typeof import("/src/ipc.js").JutSuperIpcRecvParamsBuilder}
  */
-var JutSuperIpcRecvParamsBuilder
+var JutSuperIpcRecvParamsBuilder;
 
-
-/** @type {JutSuperContent} */
-var jutsuperContent;
-
-
-if (browser === undefined) {
-  var browser = chrome
-}
-
+/**
+ * @typedef {import("/src/ipc.js").JutSuperIpcValueDescriptor} JutSuperIpcValueDescriptor
+ */
 
 /** Import modules */
 (async function() {
@@ -127,9 +130,13 @@ if (browser === undefined) {
 })
 
 
+/** @type {JutSuperContent} */
+var jutsuperContent;
+
+
 class JutSuperContent {
   constructor() {
-    this.LOCATION = "JutSuperContent";
+    this.LOCATION = JutSuperContent.name;
 
     this.isFullscreen = undefined;
     this.isSwitchingEpisode = undefined;
@@ -150,7 +157,6 @@ class JutSuperContent {
     this.urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
 
     const head = document.getElementsByTagName("head")[0];
-    const body = document.getElementsByTagName("body")[0];
 
     this.injectImage(head, this.urlGearSvg, assetIds.gearSvg);
     this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
@@ -158,8 +164,6 @@ class JutSuperContent {
     this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
 
     this.listenEssentialsLoadState();
-    this.listenFullscreenChange();
-    this.listenEpisodeSwitchPrepStates();
   }
 
   /**
@@ -268,29 +272,45 @@ class JutSuperContent {
     })
   }
 
-  async listenEpisodeSwitchPrepStates() {
+  /**
+   * @param {boolean} routeExisting 
+   */
+  async listenEpisodeSwitchPrepStates(routeExisting = false) {
     const cfg = new JutSuperIpcRecvParamsBuilder()
       .recvOnlyTheseKeys(ipcKeys.episodeSwitchPrep)
       .build()
 
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt)
+    /**
+     * 
+     * @param {JutSuperContent} thisArg 
+     * @param {JutSuperIpcValueDescriptor} evt 
+     */
+    async function route(thisArg, evt) {
       switch (evt.value) {
         case ipcAwaits.idle:
-          await this.handleEpisodeSwitchIdle();
+          await thisArg.handleEpisodeSwitchIdle();
           break;
         case ipcAwaits.request:
-          await this.handleEpisodeSwitchRequest();
+          await thisArg.handleEpisodeSwitchRequest();
           break;
         case ipcAwaits.continuation:
-          await this.handleEpisodeSwitchContinuation();
+          await thisArg.handleEpisodeSwitchContinuation();
           break;
         default:
           jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
-            location: this.LOCATION,
+            location: thisArg.LOCATION,
             target: `${evt.key}=${evt.value}`
           }).message)
       }
+    }
+
+    if (routeExisting) {
+      await route(this, this.ipc.get(ipcKeys.episodeSwitchPrep))
+    }
+
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt)
+      await route(this, evt)
     }
 
     throw jsuperErrors.unexpectedEndError({
@@ -301,7 +321,8 @@ class JutSuperContent {
 
   async handleEssentialsLoaded() {
     await this.loadTransitionStorageAndClear();
-
+    this.listenFullscreenChange();
+    this.listenEpisodeSwitchPrepStates(true);
   }
 
   async handleEpisodeSwitchIdle() {
@@ -339,41 +360,15 @@ class JutSuperContent {
 
     if (transitionKeys.isSwitchingEpisode) {
       jsuperLog.log(new Error, "episode was switched automatically")
-      var intervalId = undefined;
 
-      intervalId = setInterval(function () {
-        const player = document.getElementById(
-          "my-player_html5_api"//jutsuAttrs.playerDivId
-        );
-  
-        if (!startedPlaying) {
-          if (!player || !player.play) {
-            return
-          }
+      const player = document.getElementById(
+        "my-player_html5_api"//jutsuAttrs.playerDivId
+      );
+      player.play();
 
-          player.play();
-          startedPlaying = true;
-
-          return
-        }
-
-        const fullscreenButton = document.getElementsByClassName(
-          jutsuAttrs.playerFullscreenButtonClassName
-        )[0];
-
-        if (!pressedFullscreen) {
-          if (!fullscreenButton.click) {
-            return
-          }
-
-          fullscreenButton.click();
-          pressedFullscreen = true;
-
-          return
-        }
-
-        clearInterval(intervalId);
-      }, 100)
+      await browser.runtime.sendMessage({
+        request: "fullscreenOn"
+      });
     }
     else {
       jsuperLog.log(new Error, "episode was not switched automatically")

@@ -1,3 +1,12 @@
+// #if "@BROWSER" == "chrome"
+var BROWSER = "chrome";
+var browser = chrome;
+// #elif "@BROWSER" == "firefox"
+var BROWSER = "firefox";
+// #else
+// #error
+// #endif
+
 // #if "@MANIFEST" == "3"
 import {
   JutSuperBrowsers as browsers,
@@ -35,76 +44,42 @@ var storageKeys;
   jsuperLog = logModule.jsuperLog;
   storageKeys = constsModule.JutSuperStorageKeys;
 })().then(() => {
-    main();
+  jutsuperBackground = new JutSuperBackground();
 })
 // #else
 // #error
 // #endif
 
-// #if "@BROWSER" == "chrome"
-var BROWSER = browsers.chrome;
-browser = chrome;
-// #elif "@BROWSER" == "firefox"
-var BROWSER = browsers.firefox;
-// #else
-// #error
-// #endif
+
+/** @type {JutSuperBackground} */
+var jutsuperBackground;
 
 
-const S = "setTimeout(() => {\n" +
-"  document.getElementById(\"my-player_html5_api\").play();\n" +
-"  document.getElementById(\"my-player\").requestFullscreen();\n" +
-"}, 10000)"
+class JutSuperBackground {
+  constructor() {
+    this.LOCATION = JutSuperBackground.name;
+    browser.runtime.onMessage.addListener(this.messageCallback);
+  }
 
-function onError(error) {
-  console.log(`Error: ${error}`);
-}
+  messageCallback(request, sender, sendResponse) {
+    console.log("request", request);
+    console.log("sender", sender);
+    console.log("sendResponse", sendResponse);
 
-function updateWindow(window) {
-  browser.windows.update(window.id, {state: "fullscreen"});
-}
+    const req = request["request"];
 
-async function main() {
-  jsuperLog.log(new Error, "JutSuperBackgroud: storageKeys", storageKeys);
-
-  const tabs = await browser.tabs.query({ url: "https://*.jut.su/*" });
-  console.log(tabs);
-
-  browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
-    console.log("TAB onRemoved, id:", tabId);
-    console.log("TAB onRemoved, removeInfo:", removeInfo);
-    //await chrome.scripting.executeScript({
-    //  target: { tabId: tab.id, allFrames: true },
-    //  files: ["content.js"],
-    //});
-    // Do other stuff...
-  });
-
-  browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    console.log("TAB onUpdated, id:", tabId);
-    console.log("TAB onUpdated, changeInfo:", changeInfo);
-    console.log("TAB onUpdated, tab:", tab);
-    //await chrome.scripting.executeScript({
-    //  target: { tabId: tab.id, allFrames: true },
-    //  files: ["content.js"],
-    //});
-    // Do other stuff...
-  });
-  
-
-  browser.windows.getAll().then((windowInfoArray) => {
-    for (const currentWindow of windowInfoArray) {
-      //updateWindow(currentWindow)
+    if (req && req === "fullscreenOn") {
+      this.handleFullscreenRequest()
     }
-  }, onError);
+  }
 
-  return;
-
-  browser.tabs.create({ url: "https://example.com" }).then(() => {
-    browser.tabs.executeScript({
-      code: S,
-    });
-  });
+  async handleFullscreenRequest() {
+    const windows = await browser.windows.getAll();
+    console.log("windows=", windows);
+    browser.windows.update(windows[0].id, {state: "fullscreen"});
+  }
 }
 
-main();
+// #if "@MANIFEST" == "3"
+jutsuperBackground = new JutSuperBackground();
+// #endif

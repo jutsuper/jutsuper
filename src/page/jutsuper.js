@@ -385,7 +385,7 @@ function jutsuperLoad() {
 /**
  * # Wait for necessary variables to be initialized
  * - `player`: the **jut.su**'s player on any
- * anime page
+ * page with it
  * - `player.overlays_`: overlays of that player
  * (opening and ending skippers, achievements, etc.),
  * required to parse opening and ending time regions
