@@ -7,10 +7,18 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Build Manifest v2",
+            "name": "Launch Build for Chrome",
             "runtimeArgs": ["--preserve-symlinks"],
             "program": "${workspaceFolder}/build.mjs",
-            "args": ["--manifest", "2"]
+            "args": ["--browser", "chrome"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Build for Firefox",
+            "runtimeArgs": ["--preserve-symlinks"],
+            "program": "${workspaceFolder}/build.mjs",
+            "args": ["--browser", "firefox"]
         }
     ]
 }

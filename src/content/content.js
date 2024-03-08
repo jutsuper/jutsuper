@@ -91,398 +91,398 @@ var jutsuperContent;
 
 
 if (browser === undefined) {
-    var browser = chrome
+  var browser = chrome
 }
 
 
 /** Import modules */
 (async function() {
-    /** @type {typeof import("/src/error.js")} */
-    const errorModule = await import(browser.runtime.getURL("/src/error.js"))
-    /** @type {typeof import("/src/log.js")} */
-    const logModule = await import(browser.runtime.getURL("/src/log.js"))
-    /** @type {typeof import("/src/consts.js")} */
-    const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
-    /** @type {typeof import("/src/ipc.js")} */
-    const ipcModule = await import(browser.runtime.getURL("/src/ipc.js"));
-    /** @type {typeof import("/src/storage.js")} */
-    const storageModule = await import(browser.runtime.getURL("/src/storage.js"));
+  /** @type {typeof import("/src/error.js")} */
+  const errorModule = await import(browser.runtime.getURL("/src/error.js"))
+  /** @type {typeof import("/src/log.js")} */
+  const logModule = await import(browser.runtime.getURL("/src/log.js"))
+  /** @type {typeof import("/src/consts.js")} */
+  const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
+  /** @type {typeof import("/src/ipc.js")} */
+  const ipcModule = await import(browser.runtime.getURL("/src/ipc.js"));
+  /** @type {typeof import("/src/storage.js")} */
+  const storageModule = await import(browser.runtime.getURL("/src/storage.js"));
 
-    jsuperErrors = errorModule.jsuperErrors;
-    jsuperLog = logModule.jsuperLog;
-    ipcIds = constsModule.JutSuperIpcIds;
-    ipcKeys = constsModule.JutSuperIpcKeys;
-    jutsuAttrs = constsModule.JutSuDomAttributes;
-    ipcAwaits = constsModule.JutSuperIpcAwaitStates;
-    ipcLoadingStates = constsModule.JutSuperIpcLoadingStates;
-    storageKeys = constsModule.JutSuperStorageKeys;
-    assetPaths = constsModule.JutSuperAssetPaths;
-    assetIds = constsModule.JutSuperAssetIds;
-    JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
-    JutSuperIpc = ipcModule.JutSuperIpc;
-    JutSuperIpcRecvParamsBuilder = ipcModule.JutSuperIpcRecvParamsBuilder;
-    jsuperStorage = storageModule.jsuperStorage;
+  jsuperErrors = errorModule.jsuperErrors;
+  jsuperLog = logModule.jsuperLog;
+  ipcIds = constsModule.JutSuperIpcIds;
+  ipcKeys = constsModule.JutSuperIpcKeys;
+  jutsuAttrs = constsModule.JutSuDomAttributes;
+  ipcAwaits = constsModule.JutSuperIpcAwaitStates;
+  ipcLoadingStates = constsModule.JutSuperIpcLoadingStates;
+  storageKeys = constsModule.JutSuperStorageKeys;
+  assetPaths = constsModule.JutSuperAssetPaths;
+  assetIds = constsModule.JutSuperAssetIds;
+  JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
+  JutSuperIpc = ipcModule.JutSuperIpc;
+  JutSuperIpcRecvParamsBuilder = ipcModule.JutSuperIpcRecvParamsBuilder;
+  jsuperStorage = storageModule.jsuperStorage;
 })().then(() => {
-    jutsuperContent = new JutSuperContent();
+  jutsuperContent = new JutSuperContent();
 })
 
 
 class JutSuperContent {
-    constructor() {
-        this.LOCATION = "JutSuperContent";
+  constructor() {
+    this.LOCATION = "JutSuperContent";
 
-        this.isFullscreen = undefined;
-        this.isSwitchingEpisode = undefined;
+    this.isFullscreen = undefined;
+    this.isSwitchingEpisode = undefined;
 
-        /** @type {JutSuperIpc} */
-        this.ipc = new JutSuperIpcBuilder()
-            .createCommunicationNode()
-            .identifyAs(ipcIds.content)
-            .build();
+    /** @type {JutSuperIpc} */
+    this.ipc = new JutSuperIpcBuilder()
+      .createCommunicationNode()
+      .identifyAs(ipcIds.content)
+      .build();
 
-        /** @type {string} */
-        this.urlGearSvg = browser.runtime.getURL(assetPaths.gearSvg);
-        /** @type {string} */
-        this.urlJutSuperIpcJs = browser.runtime.getURL(assetPaths.ipcJs);
-        /** @type {string} */
-        this.urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
-        /** @type {string} */
-        this.urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
+    /** @type {string} */
+    this.urlGearSvg = browser.runtime.getURL(assetPaths.gearSvg);
+    /** @type {string} */
+    this.urlJutSuperIpcJs = browser.runtime.getURL(assetPaths.ipcJs);
+    /** @type {string} */
+    this.urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
+    /** @type {string} */
+    this.urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
 
-        const head = document.getElementsByTagName("head")[0];
-        const body = document.getElementsByTagName("body")[0];
+    const head = document.getElementsByTagName("head")[0];
+    const body = document.getElementsByTagName("body")[0];
 
-        this.injectImage(head, this.urlGearSvg, assetIds.gearSvg);
-        this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
-        this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
-        this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
+    this.injectImage(head, this.urlGearSvg, assetIds.gearSvg);
+    this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
+    this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
+    this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
 
-        this.listenEssentialsLoadState();
-        this.listenFullscreenChange();
-        this.listenEpisodeSwitchPrepStates();
-    }
+    this.listenEssentialsLoadState();
+    this.listenFullscreenChange();
+    this.listenEpisodeSwitchPrepStates();
+  }
 
-    /**
-     * @param {HTMLElement} node
-     * @param {string} url
-     * @param {string} id
-     * @returns {null}
-     */
-    injectModule(node, url, id) {
-        const attrs = {
-            id: id,
-            src: url,
-            type: "module",
-        };
+  /**
+   * @param {HTMLElement} node
+   * @param {string} url
+   * @param {string} id
+   * @returns {null}
+   */
+  injectModule(node, url, id) {
+    const attrs = {
+      id: id,
+      src: url,
+      type: "module",
+    };
 
-        const elm = document.createElement("script");
-        JutSuperContent.applyAttrs(elm, attrs);
+    const elm = document.createElement("script");
+    JutSuperContent.applyAttrs(elm, attrs);
 
-        node.appendChild(elm);
+    node.appendChild(elm);
 
-        return null;
-    }
+    return null;
+  }
 
-    /**
-     * @param {HTMLElement} node
-     * @param {string} url
-     * @param {string} id
-     * @returns {null}
-     */
-    injectCss(node, url, id) {
-        const attrs = {
-            id: id,
-            href: url,
-            rel: "stylesheet",
-        };
+  /**
+   * @param {HTMLElement} node
+   * @param {string} url
+   * @param {string} id
+   * @returns {null}
+   */
+  injectCss(node, url, id) {
+    const attrs = {
+      id: id,
+      href: url,
+      rel: "stylesheet",
+    };
 
-        const elm = document.createElement("link");
-        JutSuperContent.applyAttrs(elm, attrs);
+    const elm = document.createElement("link");
+    JutSuperContent.applyAttrs(elm, attrs);
 
-        node.appendChild(elm);
+    node.appendChild(elm);
 
-        return null;
-    }
+    return null;
+  }
 
-    /**
-     * @param {HTMLElement} node
-     * @param {string} url
-     * @param {string} id
-     * @returns {null}
-     */
-    injectImage(node, url, id) {
-        const attrs = {
-            id: id,
-            href: url,
-            rel: "preload",
-            as: "image",
-        };
+  /**
+   * @param {HTMLElement} node
+   * @param {string} url
+   * @param {string} id
+   * @returns {null}
+   */
+  injectImage(node, url, id) {
+    const attrs = {
+      id: id,
+      href: url,
+      rel: "preload",
+      as: "image",
+    };
 
-        const elm = document.createElement("link");
-        JutSuperContent.applyAttrs(elm, attrs);
+    const elm = document.createElement("link");
+    JutSuperContent.applyAttrs(elm, attrs);
 
-        node.appendChild(elm);
+    node.appendChild(elm);
 
-        return null;
-    }
+    return null;
+  }
 
-    async listenEssentialsLoadState() {
-        const cfg = new JutSuperIpcRecvParamsBuilder()
-            .recvOnlyTheseKeys(ipcKeys.essentialsLoadingState)
-            .build()
+  async listenEssentialsLoadState() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvOnlyTheseKeys(ipcKeys.essentialsLoadingState)
+      .build()
 
-        for await (const evt of this.ipc.recv(cfg)) {
-            jsuperLog.debug(new Error, evt)
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt)
 
-            switch (evt.value) {
-                case ipcLoadingStates.loaded:
-                    await this.handleEssentialsLoaded()
-                    break;
-                default:
-                    jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
-                        location: this.LOCATION,
-                        target: `${evt.key}=${evt.value}`
-                    }).message)
-            }
-        }
-
-        throw jsuperErrors.unexpectedEndError({
+      switch (evt.value) {
+        case ipcLoadingStates.loaded:
+          await this.handleEssentialsLoaded()
+          break;
+        default:
+          jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
             location: this.LOCATION,
-            target: `${this.listenEssentialsLoadState.name}()`
-        })
+            target: `${evt.key}=${evt.value}`
+          }).message)
+      }
     }
 
-    async listenFullscreenChange() {
-        const cfg = new JutSuperIpcRecvParamsBuilder()
-            .recvOnlyTheseKeys(ipcKeys.isFullscreen)
-            .build()
+    throw jsuperErrors.unexpectedEndError({
+      location: this.LOCATION,
+      target: `${this.listenEssentialsLoadState.name}()`
+    })
+  }
 
-        for await (const evt of this.ipc.recv(cfg)) {
-            jsuperLog.debug(new Error, evt)
-            await this.handleFullscreenChange(evt.value);
-        }
+  async listenFullscreenChange() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvOnlyTheseKeys(ipcKeys.isFullscreen)
+      .build()
 
-        throw jsuperErrors.unexpectedEndError({
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt)
+      await this.handleFullscreenChange(evt.value);
+    }
+
+    throw jsuperErrors.unexpectedEndError({
+      location: this.LOCATION,
+      target: `${this.listenFullscreenChange.name}()`
+    })
+  }
+
+  async listenEpisodeSwitchPrepStates() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvOnlyTheseKeys(ipcKeys.episodeSwitchPrep)
+      .build()
+
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt)
+      switch (evt.value) {
+        case ipcAwaits.idle:
+          await this.handleEpisodeSwitchIdle();
+          break;
+        case ipcAwaits.request:
+          await this.handleEpisodeSwitchRequest();
+          break;
+        case ipcAwaits.continuation:
+          await this.handleEpisodeSwitchContinuation();
+          break;
+        default:
+          jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
             location: this.LOCATION,
-            target: `${this.listenFullscreenChange.name}()`
-        })
+            target: `${evt.key}=${evt.value}`
+          }).message)
+      }
     }
 
-    async listenEpisodeSwitchPrepStates() {
-        const cfg = new JutSuperIpcRecvParamsBuilder()
-            .recvOnlyTheseKeys(ipcKeys.episodeSwitchPrep)
-            .build()
+    throw jsuperErrors.unexpectedEndError({
+      location: this.LOCATION,
+      target: `${this.listenEpisodeSwitchPrepStates.name}()`
+    })
+  }
 
-        for await (const evt of this.ipc.recv(cfg)) {
-            jsuperLog.debug(new Error, evt)
-            switch (evt.value) {
-                case ipcAwaits.idle:
-                    await this.handleEpisodeSwitchIdle();
-                    break;
-                case ipcAwaits.request:
-                    await this.handleEpisodeSwitchRequest();
-                    break;
-                case ipcAwaits.continuation:
-                    await this.handleEpisodeSwitchContinuation();
-                    break;
-                default:
-                    jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
-                        location: this.LOCATION,
-                        target: `${evt.key}=${evt.value}`
-                    }).message)
-            }
-        }
+  async handleEssentialsLoaded() {
+    await this.loadTransitionStorageAndClear();
 
-        throw jsuperErrors.unexpectedEndError({
-            location: this.LOCATION,
-            target: `${this.listenEpisodeSwitchPrepStates.name}()`
-        })
-    }
+  }
 
-    async handleEssentialsLoaded() {
-        await this.loadTransitionStorageAndClear();
+  async handleEpisodeSwitchIdle() {
 
-    }
+  }
 
-    async handleEpisodeSwitchIdle() {
+  async handleEpisodeSwitchRequest() {
+    this.isSwitchingEpisode = true;
+    await this.commitTransitionStorage();
 
-    }
+    // send callback that
+    // episode switch preparations
+    // are completed
+    this.ipc.send({
+      key: ipcKeys.episodeSwitchPrep,
+      value: ipcAwaits.completed
+    });
+  }
 
-    async handleEpisodeSwitchRequest() {
-        this.isSwitchingEpisode = true;
-        await this.commitTransitionStorage();
+  async handleEpisodeSwitchContinuation() {
+    const transitionKeys = await jsuperStorage.getTransitionKeys();
+    const isSwitchedAutomatically = (
+      transitionKeys.isSwitchingEpisode !== undefined ?
+      transitionKeys.isSwitchingEpisode : false
+    );
+  
+    this.ipc.send({
+      key: ipcKeys.isEpisodeSwitchedAutomatically,
+      value: isSwitchedAutomatically,
+    })
+    this.ipc.send({
+      key: ipcKeys.episodeSwitchPrep,
+      value: ipcAwaits.completed,
+    })
 
-        // send callback that
-        // episode switch preparations
-        // are completed
-        this.ipc.send({
-            key: ipcKeys.episodeSwitchPrep,
-            value: ipcAwaits.completed
-        });
-    }
+    if (transitionKeys.isSwitchingEpisode) {
+      jsuperLog.log(new Error, "episode was switched automatically")
+      var intervalId = undefined;
 
-    async handleEpisodeSwitchContinuation() {
-        const transitionKeys = await jsuperStorage.getTransitionKeys();
-        const isSwitchedAutomatically = (
-            transitionKeys.isSwitchingEpisode !== undefined ?
-            transitionKeys.isSwitchingEpisode : false
+      intervalId = setInterval(function () {
+        const player = document.getElementById(
+          "my-player_html5_api"//jutsuAttrs.playerDivId
         );
+  
+        if (!startedPlaying) {
+          if (!player || !player.play) {
+            return
+          }
+
+          player.play();
+          startedPlaying = true;
+
+          return
+        }
+
+        const fullscreenButton = document.getElementsByClassName(
+          jutsuAttrs.playerFullscreenButtonClassName
+        )[0];
+
+        if (!pressedFullscreen) {
+          if (!fullscreenButton.click) {
+            return
+          }
+
+          fullscreenButton.click();
+          pressedFullscreen = true;
+
+          return
+        }
+
+        clearInterval(intervalId);
+      }, 100)
+    }
+    else {
+      jsuperLog.log(new Error, "episode was not switched automatically")
+    }
+
+    await jsuperStorage.removeTransitionKeys();
+  }
+
+  async handleFullscreenChange(state) {
+    this.isFullscreen = state;
+  }
+
+  /**
+   * # Save fullscreen and episode switch states
+   * @returns {Promise<void>}
+   */
+  async commitTransitionStorage() {
+    const values = {};
+    values[storageKeys.isFullscreen] = this.isFullscreen;
+    values[storageKeys.isSwitchingEpisode] = this.isSwitchingEpisode;
+
+    await jsuperStorage.setKeys(values);
+  }
+
+  /**
+   * # Load fullscreen and episode switch states
+   * @returns {Promise<void>}
+   */
+  async loadTransitionStorage() {
+    const values = await jsuperStorage.getTransitionKeys();
+
+    this.isFullscreen = values[storageKeys.isFullscreen];
+    this.isSwitchingEpisode = values[storageKeys.isSwitchingEpisode];
+  }
+
+  /**
+   * # Load fullscreen and episode switch states, then clear
+   * @returns {Promise<void>}
+   */
+  async loadTransitionStorageAndClear() {
+    await this.loadTransitionStorage();
+    await jsuperStorage.removeTransitionKeys();
+  }
+
+  /**
+   * @param {boolean} state 
+   */
+  async handleOnEssentialsReady(state) {
+    jsuperLog.debug(new Error, "content script caught essentialsready! isEssentialsReady:", state);
+
+    /** @type {{isFullscreen: boolean, isCurrentlySwitchingEpisode: boolean}} */
+    const keys = await browser.storage.local.get(
+      ["isFullscreen", "isCurrentlySwitchingEpisode"]
+    );
+
+    if (keys.isCurrentlySwitchingEpisode) {
+      jsuperLog.log(new Error, "CURRENTLY SWITCHING EPISODE!!!");
+    }
+    if (keys.isFullscreen) {
+      jsuperLog.log(new Error, "DON'T FORGET FULLSCREEN!!!");
+    }
+  }
+
+  /**
+   * @param {boolean} state 
+   */
+  handleOnFullscreenChange(state) {
+    jsuperLog.debug(new Error, "content script caught fullscreenchange! isFullscreen:", state);
+
+    browser.storage.local.set({ isFullscreen: state }).then(
+      () => {
+        jsuperLog.debug(new Error, "set isFullscreen state")
+      }
+    );
+  }
+
+  async handleOnCurrentlySwitchingEpisode(state) {
+    jsuperLog.debug(new Error,
+      "content script caught currentlyswitchingepisode! isCurrentlySwitchingEpisode:", state
+    );
     
-        this.ipc.send({
-            key: ipcKeys.isEpisodeSwitchedAutomatically,
-            value: isSwitchedAutomatically,
-        })
-        this.ipc.send({
-            key: ipcKeys.episodeSwitchPrep,
-            value: ipcAwaits.completed,
-        })
-
-        if (transitionKeys.isSwitchingEpisode) {
-            jsuperLog.log(new Error, "episode was switched automatically")
-            var intervalId = undefined;
-
-            intervalId = setInterval(function () {
-                const player = document.getElementById(
-                    "my-player_html5_api"//jutsuAttrs.playerDivId
-                );
     
-                if (!startedPlaying) {
-                    if (!player || !player.play) {
-                        return
-                    }
+    await browser.storage.local.set(
+      { isCurrentlySwitchingEpisode: state }
+    );
 
-                    player.play();
-                    startedPlaying = true;
+    jsuperLog.debug(new Error, "set isCurrentlySwitchingEpisode state");
+    this.ipc.isEpisodeSwitchPrep = false;
+  }
 
-                    return
-                }
+  requestPlay() {
 
-                const fullscreenButton = document.getElementsByClassName(
-                    jutsuAttrs.playerFullscreenButtonClassName
-                )[0];
+  }
 
-                if (!pressedFullscreen) {
-                    if (!fullscreenButton.click) {
-                        return
-                    }
+  requestFullscreen() {
 
-                    fullscreenButton.click();
-                    pressedFullscreen = true;
+  }
 
-                    return
-                }
-
-                clearInterval(intervalId);
-            }, 100)
-        }
-        else {
-            jsuperLog.log(new Error, "episode was not switched automatically")
-        }
-
-        await jsuperStorage.removeTransitionKeys();
+  /**
+   * @param {HTMLElement} node
+   * @param {Object.<string, string>} attrs 
+   * @returns {null}
+   */
+  static applyAttrs(node, attrs) {
+    for (const key in attrs) {
+      const value = attrs[key];
+      node.setAttribute(key, value);
     }
 
-    async handleFullscreenChange(state) {
-        this.isFullscreen = state;
-    }
-
-    /**
-     * # Save fullscreen and episode switch states
-     * @returns {Promise<void>}
-     */
-    async commitTransitionStorage() {
-        const values = {};
-        values[storageKeys.isFullscreen] = this.isFullscreen;
-        values[storageKeys.isSwitchingEpisode] = this.isSwitchingEpisode;
-
-        await jsuperStorage.setKeys(values);
-    }
-
-    /**
-     * # Load fullscreen and episode switch states
-     * @returns {Promise<void>}
-     */
-    async loadTransitionStorage() {
-        const values = await jsuperStorage.getTransitionKeys();
-
-        this.isFullscreen = values[storageKeys.isFullscreen];
-        this.isSwitchingEpisode = values[storageKeys.isSwitchingEpisode];
-    }
-
-    /**
-     * # Load fullscreen and episode switch states, then clear
-     * @returns {Promise<void>}
-     */
-    async loadTransitionStorageAndClear() {
-        await this.loadTransitionStorage();
-        await jsuperStorage.removeTransitionKeys();
-    }
-
-    /**
-     * @param {boolean} state 
-     */
-    async handleOnEssentialsReady(state) {
-        jsuperLog.debug(new Error, "content script caught essentialsready! isEssentialsReady:", state);
-
-        /** @type {{isFullscreen: boolean, isCurrentlySwitchingEpisode: boolean}} */
-        const keys = await browser.storage.local.get(
-            ["isFullscreen", "isCurrentlySwitchingEpisode"]
-        );
-
-        if (keys.isCurrentlySwitchingEpisode) {
-            jsuperLog.log(new Error, "CURRENTLY SWITCHING EPISODE!!!");
-        }
-        if (keys.isFullscreen) {
-            jsuperLog.log(new Error, "DON'T FORGET FULLSCREEN!!!");
-        }
-    }
-
-    /**
-     * @param {boolean} state 
-     */
-    handleOnFullscreenChange(state) {
-        jsuperLog.debug(new Error, "content script caught fullscreenchange! isFullscreen:", state);
-
-        browser.storage.local.set({ isFullscreen: state }).then(
-            () => {
-                jsuperLog.debug(new Error, "set isFullscreen state")
-            }
-        );
-    }
-
-    async handleOnCurrentlySwitchingEpisode(state) {
-        jsuperLog.debug(new Error,
-            "content script caught currentlyswitchingepisode! isCurrentlySwitchingEpisode:", state
-        );
-        
-        
-        await browser.storage.local.set(
-            { isCurrentlySwitchingEpisode: state }
-        );
-
-        jsuperLog.debug(new Error, "set isCurrentlySwitchingEpisode state");
-        this.ipc.isEpisodeSwitchPrep = false;
-    }
-
-    requestPlay() {
-
-    }
-
-    requestFullscreen() {
-
-    }
-
-    /**
-     * @param {HTMLElement} node
-     * @param {Object.<string, string>} attrs 
-     * @returns {null}
-     */
-    static applyAttrs(node, attrs) {
-        for (const key in attrs) {
-            const value = attrs[key];
-            node.setAttribute(key, value);
-        }
-
-        return null;
-    }
+    return null;
+  }
 }

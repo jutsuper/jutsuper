@@ -9,29 +9,29 @@ export { JutSuperErrors, jsuperErrors }
 
 
 class JutSuperErrors {
-    constructor() {}
+  constructor() {}
 
-    /**
-     * @param {JutSuperErrorsLocationWithTarget} params
-     * @returns {Error}
-     */
-    unhandledCaseError(params) {
-        return new Error(
-            `${params.location}: unhandled case ` +
-            `${params.target}`
-        )
-    }
+  /**
+   * @param {JutSuperErrorsLocationWithTarget} params
+   * @returns {Error}
+   */
+  unhandledCaseError(params) {
+    return new Error(
+      `${params.location}: unhandled case ` +
+      `${params.target}`
+    )
+  }
 
-    /**
-     * @param {JutSuperErrorsLocationWithTarget} params
-     * @returns {Error}
-     */
-    unexpectedEndError(params) {
-        return new Error(
-            `${params.location}: unexpected end of ` +
-            `${params.target}`
-        )
-    }
+  /**
+   * @param {JutSuperErrorsLocationWithTarget} params
+   * @returns {Error}
+   */
+  unexpectedEndError(params) {
+    return new Error(
+      `${params.location}: unexpected end of ` +
+      `${params.target}`
+    )
+  }
 }
 
 const jsuperErrors = new JutSuperErrors();

@@ -10,23 +10,24 @@
 
 
 export {
-    JutSuFunctions,
-    JutSuDomAttributes,
-    JutSuperLogLevels,
-    JutSuperLogDefaults,
-    JutSuperAssetIds,
-    JutSuperAssetPaths,
-    JutSuperIpcDefaultNodeProps,
-    JutSuperIpcJsDataTypes,
-    JutSuperIpcIds,
-    JutSuperIpcKeys,
-    JutSuperStorageKeys,
-    JutSuperStorageTransitionKeys,
-    JutSuperStorageDataKeys,
-    JutSuperStorageAllKeys,
-    JutSuperIpcLoadingStates,
-    JutSuperIpcAwaitStates,
-    JutSuperIpcValueDelims
+  JutSuFunctions,
+  JutSuDomAttributes,
+  JutSuperBrowsers,
+  JutSuperLogLevels,
+  JutSuperLogDefaults,
+  JutSuperAssetIds,
+  JutSuperAssetPaths,
+  JutSuperIpcDefaultNodeProps,
+  JutSuperIpcJsDataTypes,
+  JutSuperIpcIds,
+  JutSuperIpcKeys,
+  JutSuperStorageKeys,
+  JutSuperStorageTransitionKeys,
+  JutSuperStorageDataKeys,
+  JutSuperStorageAllKeys,
+  JutSuperIpcLoadingStates,
+  JutSuperIpcAwaitStates,
+  JutSuperIpcValueDelims
 }
 
 
@@ -41,18 +42,18 @@ export {
  * @enum {JutsuFunctionsType}
  */
 const JutSuFunctions = {
-    /**
-     * # Name of a function that skips the opening
-     * Location is `window.skip_video_intro()`
-     * @type {"skip_video_intro"}
-     */
-    skipOpeningFnName: "skip_video_intro",
-    /**
-     * # Name of a function that skips the ending
-     * Location is `window.video_go_next_episode()`
-     * @type {"video_go_next_episode"}
-     */
-    skipEndingFnName: "video_go_next_episode",
+  /**
+   * # Name of a function that skips the opening
+   * Location is `window.skip_video_intro()`
+   * @type {"skip_video_intro"}
+   */
+  skipOpeningFnName: "skip_video_intro",
+  /**
+   * # Name of a function that skips the ending
+   * Location is `window.video_go_next_episode()`
+   * @type {"video_go_next_episode"}
+   */
+  skipEndingFnName: "video_go_next_episode",
 }
 /** 
  * @typedef JutsuFunctionsType
@@ -72,27 +73,27 @@ const JutSuFunctions = {
  * @enum {JutsuDomAttributesType}
  */
 const JutSuDomAttributes = {
-    /**
-     * # An ID of a `div` containing the player
-     * @type {"my-player"}
-     */
-    playerDivId: "my-player",
-    /**
-     * # Class name that the player has when in fullscreen
-     * 
-     * Used to determine if player is currently
-     * in fullscreen, so when changing episodes
-     * the fullscreen mode could be set
-     * to the same state.
-     * 
-     * @type {"vjs-fullscreen"}
-     */
-    playerFullscreenClassName: "vjs-fullscreen",
-    /**
-     * # Class name of a fullscreen button in a player
-     * @type {"vjs-fullscreen"}
-     */
-    playerFullscreenButtonClassName: "vjs-fullscreen-control",
+  /**
+   * # An ID of a `div` containing the player
+   * @type {"my-player"}
+   */
+  playerDivId: "my-player",
+  /**
+   * # Class name that the player has when in fullscreen
+   * 
+   * Used to determine if player is currently
+   * in fullscreen, so when changing episodes
+   * the fullscreen mode could be set
+   * to the same state.
+   * 
+   * @type {"vjs-fullscreen"}
+   */
+  playerFullscreenClassName: "vjs-fullscreen",
+  /**
+   * # Class name of a fullscreen button in a player
+   * @type {"vjs-fullscreen"}
+   */
+  playerFullscreenButtonClassName: "vjs-fullscreen-control",
 }
 /** 
  * @typedef JutsuDomAttributesType
@@ -109,21 +110,48 @@ const JutSuDomAttributes = {
 
 
 /**
+ * # Browser names
+ * @readonly
+ * @enum {JutSuperBrowsersType}
+ */
+const JutSuperBrowsers = {
+  /**
+   * @type {"chrome"}
+   */
+  chrome: "chrome",
+  /**
+   * @type {"firefox"}
+   */
+  firefox: "firefox",
+}
+/** 
+ * @typedef JutSuperBrowsersType
+ * @property {"chrome"} chrome
+ * @property {"firefox"} firefox
+ * 
+ * @typedef {(
+ *   "chrome" |
+ *   "firefox"
+ * )} JutSuperBrowsersKeys
+ */
+
+
+/**
  * # Describes available logging levels
  * @readonly
  * @enum {JutSuperLogLevelsType}
  */
 const JutSuperLogLevels = {
-    /** @type {"ERROR"} */
-    error: "ERROR",
-    /** @type {"WARN"} */
-    warn: "WARN",
-    /** @type {"LOG"} */
-    log: "LOG",
-    /** @type {"INFO"} */
-    info: "INFO",
-    /** @type {"DEBUG"} */
-    debug: "DEBUG"
+  /** @type {"ERROR"} */
+  error: "ERROR",
+  /** @type {"WARN"} */
+  warn: "WARN",
+  /** @type {"LOG"} */
+  log: "LOG",
+  /** @type {"INFO"} */
+  info: "INFO",
+  /** @type {"DEBUG"} */
+  debug: "DEBUG"
 }
 /** 
  * @typedef JutSuperLogLevelsType
@@ -159,24 +187,24 @@ const JutSuperLogLevels = {
  * @enum {JutSuperLogDefaultsType}
  */
 const JutSuperLogDefaults = {
-    /** # If logs should be enabled */
-    enabled: true,
-    /** # Only these levels are logged */
-    levels: [
-        JutSuperLogLevels.error,
-        JutSuperLogLevels.warn,
-        JutSuperLogLevels.log,
-        JutSuperLogLevels.info,
-        JutSuperLogLevels.debug
-    ],
-    /** # Path to log location is shown only on these levels */
-    locationLevels: [
-        JutSuperLogLevels.error,
-        JutSuperLogLevels.warn,
-        JutSuperLogLevels.log,
-        JutSuperLogLevels.info,
-        JutSuperLogLevels.debug
-    ]
+  /** # If logs should be enabled */
+  enabled: true,
+  /** # Only these levels are logged */
+  levels: [
+    JutSuperLogLevels.error,
+    JutSuperLogLevels.warn,
+    JutSuperLogLevels.log,
+    JutSuperLogLevels.info,
+    JutSuperLogLevels.debug
+  ],
+  /** # Path to log location is shown only on these levels */
+  locationLevels: [
+    JutSuperLogLevels.error,
+    JutSuperLogLevels.warn,
+    JutSuperLogLevels.log,
+    JutSuperLogLevels.info,
+    JutSuperLogLevels.debug
+  ]
 }
 /** 
  * @typedef JutSuperLogDefaultsType
@@ -199,14 +227,14 @@ const JutSuperLogDefaults = {
  * @enum {JutSuperAssetIdsType}
  */
 const JutSuperAssetIds = {
-    /** @type {"jutsuper-gear-svg"} */
-    gearSvg: "jutsuper-gear-svg",
-    /** @type {"jutsuper-css"} */
-    jutsuperCss: "jutsuper-css",
-    /** @type {"jutsuper-ipc-js"} */
-    jutsuperIpcJs: "jutsuper-ipc-js",
-    /** @type {"jutsuper-js"} */
-    jutsuperJs: "jutsuper-js",
+  /** @type {"jutsuper-gear-svg"} */
+  gearSvg: "jutsuper-gear-svg",
+  /** @type {"jutsuper-css"} */
+  jutsuperCss: "jutsuper-css",
+  /** @type {"jutsuper-ipc-js"} */
+  jutsuperIpcJs: "jutsuper-ipc-js",
+  /** @type {"jutsuper-js"} */
+  jutsuperJs: "jutsuper-js",
 }
 /** 
  * @typedef JutSuperAssetIdsType
@@ -238,16 +266,16 @@ const JutSuperAssetIds = {
  * @enum {JutSuperAssetPathsType}
  */
 const JutSuperAssetPaths = {
-    /** @type {"/src/assets/gear.svg"} */
-    gearSvg: "/src/assets/gear.svg",
-    /** @type {"/src/consts.js"} */
-    constsJs: "/src/consts.js",
-    /** @type {"/src/ipc.js"} */
-    ipcJs: "/src/ipc.js",
-    /** @type {"/src/page/jutsuper.css"} */
-    jutsuperCss: "/src/page/jutsuper.css",
-    /** @type {"/src/page/jutsuper.js"} */
-    jutsuperJs: "/src/page/jutsuper.js",
+  /** @type {"/src/assets/gear.svg"} */
+  gearSvg: "/src/assets/gear.svg",
+  /** @type {"/src/consts.js"} */
+  constsJs: "/src/consts.js",
+  /** @type {"/src/ipc.js"} */
+  ipcJs: "/src/ipc.js",
+  /** @type {"/src/page/jutsuper.css"} */
+  jutsuperCss: "/src/page/jutsuper.css",
+  /** @type {"/src/page/jutsuper.js"} */
+  jutsuperJs: "/src/page/jutsuper.js",
 }
 /** 
  * @typedef JutSuperAssetPathsType
@@ -281,10 +309,10 @@ const JutSuperAssetPaths = {
  * @enum {JutSuperIpcDefaultNodePropsType}
  */
 const JutSuperIpcDefaultNodeProps = {
-    /** @type {"jutsuper-ipc"} */
-    tag: "jutsuper-ipc",
-    /** @type {"jutsuper-ipc"} */
-    id: "jutsuper-ipc",
+  /** @type {"jutsuper-ipc"} */
+  tag: "jutsuper-ipc",
+  /** @type {"jutsuper-ipc"} */
+  id: "jutsuper-ipc",
 }
 /** 
  * @typedef JutSuperIpcDefaultNodePropsType
@@ -303,16 +331,16 @@ const JutSuperIpcDefaultNodeProps = {
  * @enum {JutSuperIpcJsDataTypesType}
  */
 const JutSuperIpcJsDataTypes = {
-    /** @type {"boolean"} */
-    boolean: "boolean",
-    /** @type {"number"} */
-    number: "number",
-    /** @type {"string"} */
-    string: "string",
-    /** @type {"null"} */
-    null: "null",
-    /** @type {"undefined"} */
-    undefined: "undefined",
+  /** @type {"boolean"} */
+  boolean: "boolean",
+  /** @type {"number"} */
+  number: "number",
+  /** @type {"string"} */
+  string: "string",
+  /** @type {"null"} */
+  null: "null",
+  /** @type {"undefined"} */
+  undefined: "undefined",
 }
 /** 
  * @typedef JutSuperIpcJsDataTypesType
@@ -350,10 +378,10 @@ const JutSuperIpcJsDataTypes = {
  * @enum {JutSuperIpcIdsType}
  */
 const JutSuperIpcIds = {
-    /** @type {"pageMain"} */
-    page: "pageMain",
-    /** @type {"contentMain"} */
-    content: "contentMain"
+  /** @type {"pageMain"} */
+  page: "pageMain",
+  /** @type {"contentMain"} */
+  content: "contentMain"
 }
 /** 
  * @typedef JutSuperIpcIdsType
@@ -373,49 +401,49 @@ const JutSuperIpcIds = {
  * @enum {JutSuperIpcKeysType}
  */
 const JutSuperIpcKeys = {
-    /**
-     * # State of loading the player and other essentials
-     * 
-     * ## Possible values
-     * @see {JutSuperIpcLoadingStates}
-     * 
-     * @type {"data-essentials-loading-state"}
-     */
-    essentialsLoadingState: "data-essentials-loading-state",
-    /**
-     * # Is the player is in fullscreen
-     * 
-     * ## Possible values
-     * @see {boolean}
-     * 
-     * @type {"data-is-fullscreen"}
-     */
-    isFullscreen: "data-is-fullscreen",
-    /**
-     * # Current state of episode switching preparations
-     * 
-     * ## Possible values
-     * @see {JutSuperIpcAwaitStates}
-     * 
-     * @type {"data-episode-switch-prep"}
-     */
-    episodeSwitchPrep: "data-episode-switch-prep",
-    /**
-     * # Was the episode switched automatically
-     * 
-     * ## Possible values
-     * @see {boolean}
-     * 
-     * @type {"data-is-episode-switched-automatically"}
-     */
-    isEpisodeSwitchedAutomatically: "data-is-episode-switched-automatically",
-    /**
-     * # How many times the extension should skip endings
-     * 
-     * @see {number} for possible values
-     * @type {"data-max-continuous-episode-switches"}
-     */
-    maxContinuousEpisodeSwitches: "data-max-continuous-episode-switches"
+  /**
+   * # State of loading the player and other essentials
+   * 
+   * ## Possible values
+   * @see {JutSuperIpcLoadingStates}
+   * 
+   * @type {"data-essentials-loading-state"}
+   */
+  essentialsLoadingState: "data-essentials-loading-state",
+  /**
+   * # Is the player is in fullscreen
+   * 
+   * ## Possible values
+   * @see {boolean}
+   * 
+   * @type {"data-is-fullscreen"}
+   */
+  isFullscreen: "data-is-fullscreen",
+  /**
+   * # Current state of episode switching preparations
+   * 
+   * ## Possible values
+   * @see {JutSuperIpcAwaitStates}
+   * 
+   * @type {"data-episode-switch-prep"}
+   */
+  episodeSwitchPrep: "data-episode-switch-prep",
+  /**
+   * # Was the episode switched automatically
+   * 
+   * ## Possible values
+   * @see {boolean}
+   * 
+   * @type {"data-is-episode-switched-automatically"}
+   */
+  isEpisodeSwitchedAutomatically: "data-is-episode-switched-automatically",
+  /**
+   * # How many times the extension should skip endings
+   * 
+   * @see {number} for possible values
+   * @type {"data-max-continuous-episode-switches"}
+   */
+  maxContinuousEpisodeSwitches: "data-max-continuous-episode-switches"
 }
 /** 
  * @typedef JutSuperIpcKeysType
@@ -441,8 +469,8 @@ const JutSuperIpcKeys = {
  * @enum {JutSuperStorageAllKeysType}
  */
 const JutSuperStorageKeys = {
-    isFullscreen: "isFullscreen",
-    isSwitchingEpisode: "isSwitchingEpisode"
+  isFullscreen: "isFullscreen",
+  isSwitchingEpisode: "isSwitchingEpisode"
 }
 /**
  * @typedef JutSuperStorageAllKeysType
@@ -502,10 +530,10 @@ JutSuperStorageAllKeys.push(...JutSuperStorageDataKeys);
  * @enum {JutSuperIpcLoadingStatesType}
  */
 const JutSuperIpcLoadingStates = {
-    /** @type {"loading"} */
-    loading: "loading",
-    /** @type {"loaded"} */
-    loaded: "loaded",
+  /** @type {"loading"} */
+  loading: "loading",
+  /** @type {"loaded"} */
+  loaded: "loaded",
 }
 /** 
  * @typedef JutSuperIpcLoadingStatesType
@@ -525,20 +553,20 @@ const JutSuperIpcLoadingStates = {
  * @enum {JutSuperIpcAwaitStatesType}
  */
 const JutSuperIpcAwaitStates = {
-    /** @type {"idle"} */
-    idle: "idle",
-    /** @type {"request"} */
-    request: "request",
-    /** @type {"awaiting"} */
-    awaiting: "awaiting",
-    /** @type {"aborted"} */
-    aborted: "aborted",
-    /** @type {"paused"} */
-    paused: "paused",
-    /** @type {"continuation"} */
-    continuation: "continuation",
-    /** @type {"completed"} */
-    completed: "completed",
+  /** @type {"idle"} */
+  idle: "idle",
+  /** @type {"request"} */
+  request: "request",
+  /** @type {"awaiting"} */
+  awaiting: "awaiting",
+  /** @type {"aborted"} */
+  aborted: "aborted",
+  /** @type {"paused"} */
+  paused: "paused",
+  /** @type {"continuation"} */
+  continuation: "continuation",
+  /** @type {"completed"} */
+  completed: "completed",
 }
 /** 
  * @typedef JutSuperIpcAwaitStatesType
@@ -568,16 +596,16 @@ const JutSuperIpcAwaitStates = {
  * @enum {JutSuperIpcValueDelimsType}
  */
 const JutSuperIpcValueDelims = {
-    /**
-     * # Denotes the data type
-     * @type {";type="}
-     */
-    type: ";type=",
-    /**
-     * # Denotes the sender ID
-     * @type {";sender="}
-     */
-    sender: ";sender=",
+  /**
+   * # Denotes the data type
+   * @type {";type="}
+   */
+  type: ";type=",
+  /**
+   * # Denotes the sender ID
+   * @type {";sender="}
+   */
+  sender: ";sender=",
 }
 /** 
  * @typedef JutSuperIpcValueDelimsType

@@ -1,7 +1,16 @@
-// #if "MANIFEST_VER" == "3"
-import { JutSuperStorageKeys as storageKeys } from "/src/consts.js";
-import { jsuperLog } from "/src/log.js";
-// #elif "MANIFEST_VER" == "2"
+// #if "@MANIFEST" == "3"
+import {
+  JutSuperBrowsers as browsers,
+  JutSuperStorageKeys as storageKeys
+} from "/src/consts.js";
+import {jsuperLog } from "/src/log.js";
+// #elif "@MANIFEST" == "2"
+/**
+ * @typedef {import("/src/consts.js").JutSuperBrowsers} JutSuperBrowsers
+ * @type {JutSuperBrowsers}
+ */
+var browsers;
+
 /**
  * @typedef {import("/src/log.js").JutSuperLog} JutSuperLog
  * @type {JutSuperLog}
@@ -17,13 +26,14 @@ var storageKeys;
 
 /** Import modules */
 (async function() {
-    /** @type {typeof import("/src/log.js")} */
-    const logModule = await import(browser.runtime.getURL("/src/log.js"))
-    /** @type {typeof import("/src/consts.js")} */
-    const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
+  /** @type {typeof import("/src/log.js")} */
+  const logModule = await import(browser.runtime.getURL("/src/log.js"))
+  /** @type {typeof import("/src/consts.js")} */
+  const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
 
-    jsuperLog = logModule.jsuperLog;
-    storageKeys = constsModule.JutSuperStorageKeys;
+  browsers = constsModule.JutSuperBrowsers;
+  jsuperLog = logModule.jsuperLog;
+  storageKeys = constsModule.JutSuperStorageKeys;
 })().then(() => {
     main();
 })
@@ -31,15 +41,19 @@ var storageKeys;
 // #error
 // #endif
 
-
-if (browser === undefined) {
-  var browser = chrome
-}
+// #if "@BROWSER" == "chrome"
+var BROWSER = browsers.chrome;
+browser = chrome;
+// #elif "@BROWSER" == "firefox"
+var BROWSER = browsers.firefox;
+// #else
+// #error
+// #endif
 
 
 const S = "setTimeout(() => {\n" +
-"    document.getElementById(\"my-player_html5_api\").play();\n" +
-"    document.getElementById(\"my-player\").requestFullscreen();\n" +
+"  document.getElementById(\"my-player_html5_api\").play();\n" +
+"  document.getElementById(\"my-player\").requestFullscreen();\n" +
 "}, 10000)"
 
 function onError(error) {
@@ -51,46 +65,46 @@ function updateWindow(window) {
 }
 
 async function main() {
-    jsuperLog.log(new Error, "JutSuperBackgroud: storageKeys", storageKeys);
+  jsuperLog.log(new Error, "JutSuperBackgroud: storageKeys", storageKeys);
 
-    const tabs = await browser.tabs.query({ url: "https://*.jut.su/*" });
-    console.log(tabs);
+  const tabs = await browser.tabs.query({ url: "https://*.jut.su/*" });
+  console.log(tabs);
 
-    browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
-      console.log("TAB onRemoved, id:", tabId);
-      console.log("TAB onRemoved, removeInfo:", removeInfo);
-      //await chrome.scripting.executeScript({
-      //  target: { tabId: tab.id, allFrames: true },
-      //  files: ["content.js"],
-      //});
-      // Do other stuff...
-    });
+  browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
+    console.log("TAB onRemoved, id:", tabId);
+    console.log("TAB onRemoved, removeInfo:", removeInfo);
+    //await chrome.scripting.executeScript({
+    //  target: { tabId: tab.id, allFrames: true },
+    //  files: ["content.js"],
+    //});
+    // Do other stuff...
+  });
 
-    browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-      console.log("TAB onUpdated, id:", tabId);
-      console.log("TAB onUpdated, changeInfo:", changeInfo);
-      console.log("TAB onUpdated, tab:", tab);
-      //await chrome.scripting.executeScript({
-      //  target: { tabId: tab.id, allFrames: true },
-      //  files: ["content.js"],
-      //});
-      // Do other stuff...
-    });
-    
-
-    browser.windows.getAll().then((windowInfoArray) => {
-      for (const currentWindow of windowInfoArray) {
-          //updateWindow(currentWindow)
-      }
-    }, onError);
-
-    return;
+  browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    console.log("TAB onUpdated, id:", tabId);
+    console.log("TAB onUpdated, changeInfo:", changeInfo);
+    console.log("TAB onUpdated, tab:", tab);
+    //await chrome.scripting.executeScript({
+    //  target: { tabId: tab.id, allFrames: true },
+    //  files: ["content.js"],
+    //});
+    // Do other stuff...
+  });
   
-    browser.tabs.create({ url: "https://example.com" }).then(() => {
-        browser.tabs.executeScript({
-          code: S,
-        });
-      });
+
+  browser.windows.getAll().then((windowInfoArray) => {
+    for (const currentWindow of windowInfoArray) {
+      //updateWindow(currentWindow)
+    }
+  }, onError);
+
+  return;
+
+  browser.tabs.create({ url: "https://example.com" }).then(() => {
+    browser.tabs.executeScript({
+      code: S,
+    });
+  });
 }
 
 main();
