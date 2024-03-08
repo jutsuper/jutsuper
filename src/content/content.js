@@ -1,6 +1,5 @@
-if (browser === undefined) {
-    var browser = chrome
-}
+var startedPlaying = false;
+var pressedFullscreen = false;
 
 /**
  * @typedef {import("/src/error.js").JutSuperErrors} JutSuperErrors
@@ -31,6 +30,12 @@ var ipcIds;
  * @type {JutSuperIpcKeys}
  */
 var ipcKeys;
+
+/**
+ * @typedef {import("/src/consts.js").JutSuDomAttributes} JutSuDomAttributes
+ * @type {JutSuDomAttributes}
+ */
+var jutsuAttrs;
 
 /**
  * @typedef {import("/src/consts.js").JutSuperIpcAwaitStates} JutSuperIpcAwaitStates
@@ -85,6 +90,11 @@ var JutSuperIpcRecvParamsBuilder
 var jutsuperContent;
 
 
+if (browser === undefined) {
+    var browser = chrome
+}
+
+
 /** Import modules */
 (async function() {
     /** @type {typeof import("/src/error.js")} */
@@ -102,6 +112,7 @@ var jutsuperContent;
     jsuperLog = logModule.jsuperLog;
     ipcIds = constsModule.JutSuperIpcIds;
     ipcKeys = constsModule.JutSuperIpcKeys;
+    jutsuAttrs = constsModule.JutSuDomAttributes;
     ipcAwaits = constsModule.JutSuperIpcAwaitStates;
     ipcLoadingStates = constsModule.JutSuperIpcLoadingStates;
     storageKeys = constsModule.JutSuperStorageKeys;
@@ -138,12 +149,13 @@ class JutSuperContent {
         /** @type {string} */
         this.urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
 
+        const head = document.getElementsByTagName("head")[0];
         const body = document.getElementsByTagName("body")[0];
 
-        this.injectImage(body, this.urlGearSvg, assetIds.gearSvg);
-        this.injectCss(body, this.urlJutSuperCss, assetIds.jutsuperCss);
-        this.injectModule(body, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
-        this.injectModule(body, this.urlJutSuperJs, assetIds.jutsuperJs);
+        this.injectImage(head, this.urlGearSvg, assetIds.gearSvg);
+        this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
+        this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
+        this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
 
         this.listenEssentialsLoadState();
         this.listenFullscreenChange();
@@ -327,6 +339,41 @@ class JutSuperContent {
 
         if (transitionKeys.isSwitchingEpisode) {
             jsuperLog.log(new Error, "episode was switched automatically")
+            var intervalId = undefined;
+
+            intervalId = setInterval(function () {
+                const player = document.getElementById(
+                    "my-player_html5_api"//jutsuAttrs.playerDivId
+                );
+    
+                if (!startedPlaying) {
+                    if (!player || !player.play) {
+                        return
+                    }
+
+                    player.play();
+                    startedPlaying = true;
+
+                    return
+                }
+
+                const fullscreenButton = document.getElementsByClassName(
+                    jutsuAttrs.playerFullscreenButtonClassName
+                )[0];
+
+                if (!pressedFullscreen) {
+                    if (!fullscreenButton.click) {
+                        return
+                    }
+
+                    fullscreenButton.click();
+                    pressedFullscreen = true;
+
+                    return
+                }
+
+                clearInterval(intervalId);
+            }, 100)
         }
         else {
             jsuperLog.log(new Error, "episode was not switched automatically")

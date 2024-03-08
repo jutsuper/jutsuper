@@ -10,8 +10,8 @@
 
 
 export {
-    JutsuFunctions,
-    JutsuDomAttributes,
+    JutSuFunctions,
+    JutSuDomAttributes,
     JutSuperLogLevels,
     JutSuperLogDefaults,
     JutSuperAssetIds,
@@ -40,7 +40,7 @@ export {
  * @readonly
  * @enum {JutsuFunctionsType}
  */
-const JutsuFunctions = {
+const JutSuFunctions = {
     /**
      * # Name of a function that skips the opening
      * Location is `window.skip_video_intro()`
@@ -71,7 +71,7 @@ const JutsuFunctions = {
  * @readonly
  * @enum {JutsuDomAttributesType}
  */
-const JutsuDomAttributes = {
+const JutSuDomAttributes = {
     /**
      * # An ID of a `div` containing the player
      * @type {"my-player"}
@@ -88,15 +88,22 @@ const JutsuDomAttributes = {
      * @type {"vjs-fullscreen"}
      */
     playerFullscreenClassName: "vjs-fullscreen",
+    /**
+     * # Class name of a fullscreen button in a player
+     * @type {"vjs-fullscreen"}
+     */
+    playerFullscreenButtonClassName: "vjs-fullscreen-control",
 }
 /** 
  * @typedef JutsuDomAttributesType
  * @property {"my-player"} playerDivId
  * @property {"vjs-fullscreen"} playerFullscreenClassName
+ * @property {"vjs-fullscreen-control"} playerFullscreenButtonClassName
  * 
  * @typedef {(
  *   "my-player" |
- *   "vjs-fullscreen"
+ *   "vjs-fullscreen" |
+ *   "vjs-fullscreen-control"
  * )} JutsuDomAttributesKeys
  */
 

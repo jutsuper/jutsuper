@@ -2,8 +2,8 @@ import { jsuperLog } from "/src/log.js";
 import { jsuperErrors } from "/src/error.js";
 import { JutSuperIpcBuilder, JutSuperIpc } from "/src/ipc.js";
 import {
-    JutsuFunctions as jutsuFns,
-    JutsuDomAttributes as jutsuAttrs,
+    JutSuFunctions as jutsuFns,
+    JutSuDomAttributes as jutsuAttrs,
     JutSuperAssetIds as assetIds,
     JutSuperIpcIds as ipcIds,
     JutSuperIpcKeys as ipcKeys,
