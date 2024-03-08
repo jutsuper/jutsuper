@@ -288,21 +288,25 @@ class JutSuperContent {
      * @param {JutSuperIpcValueDescriptor} evt 
      */
     async function route(thisArg, evt) {
-      switch (evt.value) {
-        case ipcAwaits.idle:
-          await thisArg.handleEpisodeSwitchIdle();
-          break;
-        case ipcAwaits.request:
-          await thisArg.handleEpisodeSwitchRequest();
-          break;
-        case ipcAwaits.continuation:
-          await thisArg.handleEpisodeSwitchContinuation();
-          break;
-        default:
-          jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
-            location: thisArg.LOCATION,
-            target: `${evt.key}=${evt.value}`
-          }).message)
+      try {
+        switch (evt.value) {
+          case ipcAwaits.idle:
+            await thisArg.handleEpisodeSwitchIdle();
+            break;
+          case ipcAwaits.request:
+            await thisArg.handleEpisodeSwitchRequest();
+            break;
+          case ipcAwaits.continuation:
+            await thisArg.handleEpisodeSwitchContinuation();
+            break;
+          default:
+            throw jsuperErrors.unhandledCaseError({
+              location: thisArg.LOCATION,
+              target: `${evt.key}=${evt.value}`
+            });
+        }
+      } catch (e) {
+        jsuperLog.error(new Error, e)
       }
     }
 
@@ -352,28 +356,51 @@ class JutSuperContent {
     this.ipc.send({
       key: ipcKeys.isEpisodeSwitchedAutomatically,
       value: isSwitchedAutomatically,
-    })
+    });
     this.ipc.send({
       key: ipcKeys.episodeSwitchPrep,
       value: ipcAwaits.completed,
-    })
+    });
 
     if (transitionKeys.isSwitchingEpisode) {
-      jsuperLog.log(new Error, "episode was switched automatically")
+      jsuperLog.log(new Error, "episode was switched automatically");
 
-      const player = document.getElementById(
-        "my-player_html5_api"//jutsuAttrs.playerDivId
+      const body = document.getElementsByTagName(
+        "body"
+      )[0];
+      const playerDiv = document.getElementById(
+        jutsuAttrs.playerDivId
       );
-      player.play();
+      const playerVideo = document.getElementById(
+        "my-player_html5_api"
+      );
+      const header = document.getElementsByClassName(
+        "z_fix_header"
+      )[0];
+      const infoPanel = document.getElementsByClassName(
+        "info_panel"
+      )[0];
+      const footer = document.getElementsByClassName(
+        "footer"
+      )[0];
+
+      playerVideo.play();
 
       if (transitionKeys.isFullscreen) {
         await browser.runtime.sendMessage({
           request: "fullscreenOn"
         });
+        body.style.overflow = "hidden";
+        header.style.display = "none";
+        infoPanel.style.display = "none";
+        footer.style.display = "none";
+        playerDiv.classList.add("vjs-fullscreen");
+        playerDiv.classList.add("jutsuper-fullscreen");
+        playerDiv.classList.add("jutsuper-top");
       }
     }
     else {
-      jsuperLog.log(new Error, "episode was not switched automatically")
+      jsuperLog.log(new Error, "episode was not switched automatically");
     }
 
     await jsuperStorage.removeTransitionKeys();
