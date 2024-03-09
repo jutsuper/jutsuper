@@ -56,7 +56,7 @@ var ipcAwaits;
  * @typedef {import("/src/consts.js").JutSuperIpcBoolRequestStates} JutSuperIpcBoolRequestStates
  * @type {JutSuperIpcBoolRequestStates}
  */
-var ipcBoolStates;
+var ipcBoolRequests;
 
 /**
  * @typedef {import("/src/consts.js").JutSuperIpcLoadingStates} JutSuperIpcLoadingStates
@@ -123,7 +123,7 @@ var JutSuperIpcRecvParamsBuilder;
   ipcKeys = constsModule.JutSuperIpcKeys;
   jutsuAttrs = constsModule.JutSuDomAttributes;
   ipcAwaits = constsModule.JutSuperIpcAwaitStates;
-  ipcBoolStates = constsModule.JutSuperIpcBoolRequestStates;
+  ipcBoolRequests = constsModule.JutSuperIpcBoolRequestStates;
   ipcLoadingStates = constsModule.JutSuperIpcLoadingStates;
   storageKeys = constsModule.JutSuperStorageKeys;
   assetPaths = constsModule.JutSuperAssetPaths;
@@ -173,14 +173,17 @@ class JutSuperContent {
     this.listenEssentialsLoadState();
     this.listenFullscreenChange();
     this.listenEpisodeSwitchPrepStates();
-    this.listenFullscreenModeRequests();
   }
+
+  /////////////////////////////
+  // Injecting into the page //
+  /////////////////////////////
 
   /**
    * @param {HTMLElement} node
    * @param {string} url
    * @param {string} id
-   * @returns {null}
+   * @returns {undefined}
    */
   injectModule(node, url, id) {
     const attrs = {
@@ -193,15 +196,13 @@ class JutSuperContent {
     JutSuperContent.applyAttrs(elm, attrs);
 
     node.appendChild(elm);
-
-    return null;
   }
 
   /**
    * @param {HTMLElement} node
    * @param {string} url
    * @param {string} id
-   * @returns {null}
+   * @returns {undefined}
    */
   injectCss(node, url, id) {
     const attrs = {
@@ -214,15 +215,13 @@ class JutSuperContent {
     JutSuperContent.applyAttrs(elm, attrs);
 
     node.appendChild(elm);
-
-    return null;
   }
 
   /**
    * @param {HTMLElement} node
    * @param {string} url
    * @param {string} id
-   * @returns {null}
+   * @returns {undefined}
    */
   injectImage(node, url, id) {
     const attrs = {
@@ -236,9 +235,11 @@ class JutSuperContent {
     JutSuperContent.applyAttrs(elm, attrs);
 
     node.appendChild(elm);
-
-    return null;
   }
+
+  /////////////////////////////
+  // Essentials loading wait //
+  /////////////////////////////
 
   async listenEssentialsLoadState() {
     const cfg = new JutSuperIpcRecvParamsBuilder()
@@ -270,6 +271,10 @@ class JutSuperContent {
     await this.loadTransitionStorageAndClear();
   }
 
+  ////////////////////////////////
+  // Fullscreen change handling //
+  ////////////////////////////////
+
   async listenFullscreenChange() {
     const cfg = new JutSuperIpcRecvParamsBuilder()
       .recvOnlyTheseKeys(ipcKeys.isFullscreen)
@@ -289,6 +294,10 @@ class JutSuperContent {
   async handleFullscreenChange(state) {
     this.isFullscreen = state;
   }
+
+  ////////////////////////////////////
+  // Episode switch states handling //
+  ////////////////////////////////////
 
   /**
    * @param {boolean} routeExisting 
@@ -377,7 +386,6 @@ class JutSuperContent {
     if (transitionKeys.isSwitchingEpisode) {
       jsuperLog.log(new Error, "episode was switched automatically");
 
-      /**
       const body = document.getElementsByTagName(
         "body"
       )[0];
@@ -397,7 +405,7 @@ class JutSuperContent {
         "footer"
       )[0];
 
-      playerVideo.play();
+      this.requestPlay();
 
       if (transitionKeys.isFullscreen) {
         await browser.runtime.sendMessage({
@@ -409,9 +417,8 @@ class JutSuperContent {
         footer.style.display = "none";
         playerDiv.classList.add("vjs-fullscreen");
         playerDiv.classList.add("jutsuper-fullscreen");
-        playerDiv.classList.add("jutsuper-top");
+        playerDiv.classList.add("jutsuper-top-index");
       }
-      */
     }
     else {
       jsuperLog.log(new Error, "episode was not switched automatically");
@@ -420,47 +427,9 @@ class JutSuperContent {
     await jsuperStorage.removeTransitionKeys();
   }
 
-  async listenFullscreenModeRequests() {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
-      .recvOnlyTheseKeys(ipcKeys.fullscreenMode)
-      .build();
-    
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt)
-
-      try {
-        switch (evt.value) {
-          case ipcBoolStates.requestTrue:
-            await this.handleFullscreenEnterRequest();
-            break;
-          case ipcBoolStates.requestFalse:
-            await this.handleFullscreenExitRequest();
-            break;
-          case ipcBoolStates.idle:
-            break;
-          default:
-            throw jsuperErrors.unhandledCaseError({
-              location: thisArg.LOCATION,
-              target: `${evt.key}=${evt.value}`
-            });
-        }
-      } catch (e) {
-        jsuperLog.error(new Error, e);
-      }
-    }
-  }
-
-  async handleFullscreenEnterRequest() {
-    await browser.runtime.sendMessage({
-      request: "fullscreenOn"
-    });
-  }
-
-  async handleFullscreenExitRequest() {
-    await browser.runtime.sendMessage({
-      request: "fullscreenOff"
-    });
-  }
+  ////////////////////////////
+  // Browser storage handle //
+  ////////////////////////////
 
   /**
    * # Save fullscreen and episode switch states
@@ -494,71 +463,22 @@ class JutSuperContent {
     await jsuperStorage.removeTransitionKeys();
   }
 
-  /**
-   * @param {boolean} state 
-   */
-  async handleOnEssentialsReady(state) {
-    jsuperLog.debug(new Error, "content script caught essentialsready! isEssentialsReady:", state);
-
-    /** @type {{isFullscreen: boolean, isCurrentlySwitchingEpisode: boolean}} */
-    const keys = await browser.storage.local.get(
-      ["isFullscreen", "isCurrentlySwitchingEpisode"]
-    );
-
-    if (keys.isCurrentlySwitchingEpisode) {
-      jsuperLog.log(new Error, "CURRENTLY SWITCHING EPISODE!!!");
-    }
-    if (keys.isFullscreen) {
-      jsuperLog.log(new Error, "DON'T FORGET FULLSCREEN!!!");
-    }
-  }
-
-  /**
-   * @param {boolean} state 
-   */
-  handleOnFullscreenChange(state) {
-    jsuperLog.debug(new Error, "content script caught fullscreenchange! isFullscreen:", state);
-
-    browser.storage.local.set({ isFullscreen: state }).then(
-      () => {
-        jsuperLog.debug(new Error, "set isFullscreen state")
-      }
-    );
-  }
-
-  async handleOnCurrentlySwitchingEpisode(state) {
-    jsuperLog.debug(new Error,
-      "content script caught currentlyswitchingepisode! isCurrentlySwitchingEpisode:", state
-    );
-    
-    
-    await browser.storage.local.set(
-      { isCurrentlySwitchingEpisode: state }
-    );
-
-    jsuperLog.debug(new Error, "set isCurrentlySwitchingEpisode state");
-    this.ipc.isEpisodeSwitchPrep = false;
-  }
-
   requestPlay() {
-
-  }
-
-  requestFullscreen() {
-
+    this.ipc.send({
+      key: ipcKeys.playingControl,
+      value: ipcBoolRequests.requestTrue
+    });
   }
 
   /**
    * @param {HTMLElement} node
    * @param {Object.<string, string>} attrs 
-   * @returns {null}
+   * @returns {undefined}
    */
   static applyAttrs(node, attrs) {
     for (const key in attrs) {
       const value = attrs[key];
       node.setAttribute(key, value);
     }
-
-    return null;
   }
 }

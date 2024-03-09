@@ -1,6 +1,10 @@
 import { jsuperLog } from "/src/log.js";
 import { jsuperErrors } from "/src/error.js";
-import { JutSuperIpcBuilder, JutSuperIpc } from "/src/ipc.js";
+import {
+  JutSuperIpcBuilder,
+  JutSuperIpcRecvParamsBuilder,
+  JutSuperIpc
+} from "/src/ipc.js";
 import {
   JutSuFunctions as jutsuFns,
   JutSuDomAttributes as jutsuAttrs,
@@ -9,7 +13,7 @@ import {
   JutSuperIpcKeys as ipcKeys,
   JutSuperIpcLoadingStates as ipcLoadings,
   JutSuperIpcAwaitStates as ipcAwaits,
-  JutSuperIpcBoolRequestStates as ipcBoolStates
+  JutSuperIpcBoolRequestStates as ipcBoolRequests
 } from "/src/consts.js";
 
 /** @type {JutSuper} */
@@ -19,10 +23,9 @@ var jutsuper;
 class JutSuper {
   /**
    * @param {unknown} player Jut.su's player on a page
-   * @returns {JutSuper}
    */
   constructor(player) {
-    console.log("JutSuper");
+    this.LOCATION = JutSuper.name;
 
     if (!player || !player.overlays_ || !player.on) {
       throw new Error(
@@ -35,7 +38,7 @@ class JutSuper {
     this.ipc = new JutSuperIpcBuilder().identifyAs(ipcIds.page).build()
     /** @type {unknown} */
     this.player = player;
-    /** @type {HTMLDivElement} */
+    /** @type {HTMLElement} */
     this.playerDiv = document.getElementById(jutsuAttrs.playerDivId);
     /** @type {boolean} */
     this.openingTriggered = false;
@@ -49,6 +52,8 @@ class JutSuper {
     this.endingSkipperRng = this.getOverlayRngByFunctionName(
       jutsuFns.skipEndingFnName
     );
+
+    this.listenPlayRequests();
 
     this.#initPage().then(() => {
       jsuperLog.debug(new Error, "JutSuper: constructed");
@@ -95,7 +100,6 @@ class JutSuper {
    * # Example
    * - `getOverlayRngByFunctionName("skip_video_intro") ->  [ 83, 98 ]`
    * - `getOverlayRngByFunctionName("video_go_next_episode") -> [ 1405, 1425 ]`
-   * @param {unknown} player 
    * @param {string} fn_name
    * @returns {number[] | null}
    */
@@ -139,7 +143,7 @@ class JutSuper {
   
   /**
    * # Start ending skip countdown
-   * @returns {undefined}
+   * @returns {Promise<undefined>}
    */
   async startSkippingEnding() {
     if (!cur_time_cookie) {
@@ -185,8 +189,11 @@ class JutSuper {
     const time = this.player.currentTime();
 
     if (
+      // does the opening range exists
       this.openingSkipperRng &&
+      // is current time in the opening skipper region
       JutSuper.isInRangeExclusive(time, this.openingSkipperRng) &&
+      // is currently playing
       !this.player.paused()
     ) {
       // then we currently see the opening skip button
@@ -194,15 +201,18 @@ class JutSuper {
       if (this.openingTriggered) {
         // then we have already recorded button's appearance,
         // no need for more triggers
-        return null;
+        return;
       }
 
       this.openingTriggered = true;
       this.startSkippingOpening();
     }
     else if (
+      // does the ending range exists
       this.endingSkipperRng &&
+      // is current time in the ending skipper region
       JutSuper.isInRangeExclusive(time, this.endingSkipperRng) &&
+      // is currently playing
       !this.player.paused()
     ) {
       // then we currently see the ending skip button
@@ -271,7 +281,7 @@ class JutSuper {
     await this.ipc.recvOnce({
       key: ipcKeys.episodeSwitchPrep,
       value: ipcAwaits.completed
-    })
+    });
 
     const isEpSwitchedAutoDescriptor = this.ipc.get(
       ipcKeys.isEpisodeSwitchedAutomatically
@@ -285,13 +295,10 @@ class JutSuper {
         )
       });
     }
-    else {
-
-    }
 
     this.ipc.send({
-      key: ipcKeys.fullscreenMode,
-      value: ipcBoolStates.idle
+      key: ipcKeys.playingControl,
+      value: ipcAwaits.idle
     });
 
     this.ipc.send({
@@ -310,7 +317,7 @@ class JutSuper {
      * because when pressing F11 (going out of fullscreen),
      * the `fullscreenchange` event will be fired,
      * but the value returned by `isFullscreen()`
-     * would still be `true`
+     * will still be `true`
      */
     const isFullscreen = this.playerDiv.classList.contains(
       jutsuAttrs.playerFullscreenClassName
@@ -320,7 +327,7 @@ class JutSuper {
       this.ipc.send({
         key: ipcKeys.isFullscreen,
         value: isFullscreen
-      })
+      });
     }
   }
 
@@ -371,6 +378,51 @@ class JutSuper {
       lane.insertBefore(this.generateSettingsTab(), lane.firstChild);
     }
   }
+
+  /**
+   * @returns {void}
+   */
+  async listenPlayRequests() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvOnlyTheseKeys(ipcKeys.playingControl)
+      .build();
+    
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt);
+
+      try {
+        switch (evt.value) {
+          case ipcBoolRequests.requestTrue:
+            this.handlePlayRequest();
+            break;
+          case ipcBoolRequests.requestFalse:
+            this.handlePauseRequest();
+            break;
+          default:
+            throw jsuperErrors.unhandledCaseError({
+              location: this.LOCATION,
+              target: `${evt.key}=${evt.value}`
+            });
+        }
+      } catch (e) {
+        jsuperLog.error(new Error, e);
+      }
+    }
+  }
+
+  /**
+   * @returns {undefined}
+   */
+  handlePlayRequest() {
+    this.player.play();
+  }
+
+  /**
+   * @returns {undefined}
+   */
+  handlePauseRequest() {
+    this.player().pause();
+  }
 }
 
 /**
@@ -389,8 +441,7 @@ function jutsuperLoad() {
 
 /**
  * # Wait for necessary variables to be initialized
- * - `player`: the **jut.su**'s player on any
- * page with it
+ * - `player`: the **jut.su**'s player video player
  * - `player.overlays_`: overlays of that player
  * (opening and ending skippers, achievements, etc.),
  * required to parse opening and ending time regions

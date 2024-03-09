@@ -83,7 +83,7 @@ class JutSuperLog {
 
   /**
    * @param {Error} loc
-   * @param {function(...any)} logger
+   * @param {function(...any): void} logger
    * @returns {void}
    */
   #logLocation(loc, logger) {

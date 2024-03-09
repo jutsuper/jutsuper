@@ -12,7 +12,7 @@ import {
   JutSuperBrowsers as browsers,
   JutSuperStorageKeys as storageKeys
 } from "/src/consts.js";
-import {jsuperLog } from "/src/log.js";
+import { jsuperLog } from "/src/log.js";
 // #elif "@MANIFEST" == "2"
 /**
  * @typedef {import("/src/consts.js").JutSuperBrowsers} JutSuperBrowsers
@@ -51,6 +51,13 @@ var storageKeys;
 // #endif
 
 
+/**
+ * @typedef {import("/src/messaging.js").JutSuperActionsMessage} JutSuperActionsMessage
+ * @typedef {import("/src/messaging.js").JutSuperMessage} JutSuperMessage
+ * @typedef {import("/src/browser.js").BrowserMessageSenderDescriptor} BrowserMessageSenderDescriptor
+ */
+
+
 /** @type {JutSuperBackground} */
 var jutsuperBackground;
 
@@ -65,6 +72,12 @@ class JutSuperBackground {
     });
   }
 
+  /**
+   * 
+   * @param {JutSuperMessage} request 
+   * @param {BrowserMessageSenderDescriptor} sender 
+   * @param {function(unknown)} sendResponse 
+   */
   messageCallback(request, sender, sendResponse) {
     console.log("request", request);
     console.log("sender", sender);
@@ -72,7 +85,7 @@ class JutSuperBackground {
 
     const req = request["request"];
 
-    if (req && ["fullscreenOn", "fullscreenOff"].contains(req)) {
+    if (req && ["fullscreenOn", "fullscreenOff"].includes(req)) {
       if (req === "fullscreenOn") {
         this.handleFullscreenRequest(true)
       }

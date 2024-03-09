@@ -43,17 +43,8 @@
   object-fit: contain;
 }
 
-.jutsuper-top {
-  z-index: 200;
-}
-
-.jutsuper-iframe-fullscreen {
-  border: none !important;
-  padding: 0 !important;
-}
-  
-.jutsuper-fullscreen-backdrop {
-  background: black;
+.jutsuper-top-index {
+  z-index: 200 !important;
 }
 
 .jutsuper-hidden {

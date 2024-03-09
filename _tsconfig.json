@@ -1,0 +1,13 @@
+{
+  "include": ["."],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "target": "ES2016",
+    "moduleResolution": "NodeNext",
+    "baseUrl": ".",
+    "paths": {
+      "/*": ["*"]
+    }
+  }
+}

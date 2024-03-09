@@ -2,6 +2,7 @@ import { jsuperLog } from "/src/log.js";
 import {
   JutSuperIpcDefaultNodeProps as ipcDefaultNodeProps,
   JutSuperIpcJsDataTypes as ipcJsTypes,
+  JutSuperIpcJsDataTypesArray as ipcJsTypesArr,
   JutSuperIpcValueDelims as ipcDelims
 } from "/src/consts.js";
 export {
@@ -11,19 +12,22 @@ export {
 };
 
 
-/** @typedef {import("/src/consts.js").JutSuperIpcSupportedDataTypes} JutSuperIpcSupportedDataTypes */
-/** @typedef {import("/src/consts.js").JutSuperIpcJsDataTypes} JutSuperIpcJsDataTypes */
-/** @typedef {import("/src/consts.js").JutSuperIpcKeys} JutSuperIpcKeys */
-
+/**
+ * @typedef {import("/src/consts.js").JutSuperIpcSupportedDataTypes} JutSuperIpcSupportedDataTypes
+ * @typedef {import("/src/consts.js").JutSuperIpcJsDataTypes} JutSuperIpcJsDataTypes
+ * @typedef {import("/src/consts.js").JutSuperIpcJsDataTypesKeys} JutSuperIpcJsDataTypesKeys
+ * @typedef {import("/src/consts.js").JutSuperIpcKeys} JutSuperIpcKeys
+ * @typedef {import("/src/consts.js").JutSuperIpcKeysKeys} JutSuperIpcKeysKeys
+ */
 /**
  * @typedef JutSuperIpcUnparsedValueDescriptor
  * @property {string | undefined} value
- * @property {JutSuperIpcJsDataTypes | undefined} type
+ * @property {JutSuperIpcJsDataTypesKeys | undefined} type
  * @property {string | undefined} sender
  */
 /**
  * @typedef JutSuperIpcValueDescriptor
- * @property {string} key
+ * @property {string?} key
  * @property {JutSuperIpcSupportedDataTypes} value
  * @property {string} sender
  */
@@ -41,12 +45,13 @@ export {
  */
 /**
  * @typedef JutSuperIpcRecvParams
- * @property {string} senderId
- * @property {string[]} senderIds
- * @property {string} key
- * @property {string[]} keys
- * @property {string} value
- * @property {string[]} values
+ * @property {string?} senderId
+ * @property {string[]?} senderIds
+ * @property {string?} key
+ * @property {string[]?} keys
+ * @property {string?} value
+ * @property {string[]?} values
+ * @property {boolean?} acceptFromMyself
  */
 
 
@@ -58,6 +63,8 @@ class JutSuperIpc {
 
   /** @param {JutSuperIpcCreationParams} params */
   constructor(params) {
+    console.log("JutSuper IPC constructing");
+
     this.nodeTag = params.nodeTag ?
       params.nodeTag : ipcDefaultNodeProps.tag;
     this.nodeId = params.nodeId ?
@@ -128,9 +135,9 @@ class JutSuperIpc {
       values.push(...params.values);
     };
 
-    const isAnySenders = senderIds.length > 0;
-    const isAnyKeys = keys.length > 0;
-    const isAnyValues = values.length > 0;
+    const shouldRecvFromAnySenders = senderIds.length < 1;
+    const shouldRecvAnyKeys = keys.length < 1;
+    const shouldRecvAnyValues = values.length < 1;
 
     const getNodeKeyUnparsed = this.#getNodeKeyUnparsed;
     const thisArg = this;
@@ -138,7 +145,7 @@ class JutSuperIpc {
     return new Promise((resolve) => {
       new MutationObserver(function (mutations, _observer) {
         for (const mutation of mutations) {
-          if (isAnyKeys && !keys.includes(mutation.attributeName)) {
+          if (!shouldRecvAnyKeys && !keys.includes(mutation.attributeName)) {
             continue;
           }
 
@@ -148,7 +155,11 @@ class JutSuperIpc {
             mutation.attributeName
           );
 
-          if (isAnySenders && !senderIds.includes(descriptor.sender)) {
+          if (descriptor.sender == thisArg.senderId && !params.acceptFromMyself) {
+            continue;
+          }
+
+          if (!shouldRecvFromAnySenders && !senderIds.includes(descriptor.sender)) {
             continue;
           }
 
@@ -157,7 +168,7 @@ class JutSuperIpc {
             descriptor.type
           );
 
-          if (isAnyValues && !values.includes(descriptor.value)) {
+          if (!shouldRecvAnyValues && !values.includes(descriptor.value)) {
             continue;
           }
 
@@ -183,7 +194,7 @@ class JutSuperIpc {
   }
 
   /**
-   * @param {JutSuperIpcKeys} key
+   * @param {JutSuperIpcKeysKeys} key
    * @returns {JutSuperIpcValueDescriptor}
    */
   get(key) {
@@ -193,7 +204,9 @@ class JutSuperIpc {
         raw.value,
         raw.type
       );
+
       return {
+        key: undefined,
         value: parsedValue,
         sender: raw.sender
       }
@@ -207,7 +220,7 @@ class JutSuperIpc {
   }
 
   /**
-   * @param {JutSuperIpcJsDataTypes | string} type 
+   * @param {JutSuperIpcJsDataTypesKeys | string} type 
    * @returns {boolean}
    */
   static isTypeCompatible(type) {
@@ -219,10 +232,11 @@ class JutSuperIpc {
   }
 
   /**
-   * @param {JutSuperIpcJsDataTypes} value 
+   * @param {JutSuperIpcSupportedDataTypes} value 
    * @returns {string}
    */
   static encodeValueWithType(value) {
+    /** @type {JutSuperIpcJsDataTypesKeys | string} */
     let typeOfValue = typeof value;
 
     if (value === null) {
@@ -246,8 +260,8 @@ class JutSuperIpc {
   /**
    * 
    * @param {string} value 
-   * @param {JutSuperIpcJsDataTypes} type
-   * @returns {IpcSupportedTypes}
+   * @param {JutSuperIpcJsDataTypesKeys} type
+   * @returns {JutSuperIpcSupportedDataTypes | undefined}
    */
   static decodeValueWithType(value, type) {
     switch (type) {
@@ -257,8 +271,6 @@ class JutSuperIpc {
       case ipcJsTypes.null: return null;
       case ipcJsTypes.undefined: return undefined;
     }
-
-    return undefined;
   }
 
   /**
@@ -274,8 +286,14 @@ class JutSuperIpc {
    * @returns {JutSuperIpcUnparsedValueDescriptor}
    */
   static splitDescriptorValue(value) {
+    /** @type {string[]} */
     const valueAndRest = value.split(ipcDelims.type);
+    /** @type {string[]} */
     const typeAndSender = valueAndRest[1].split(ipcDelims.sender);
+
+    if (!ipcJsTypesArr.includes(typeAndSender[0])) {
+      return;
+    }
 
     return {
       value: valueAndRest[0],
@@ -327,8 +345,6 @@ class JutSuperIpc {
       case "true": return true;
       case "false": return false;
     }
-
-    return undefined
   }
 
   /**
@@ -336,13 +352,11 @@ class JutSuperIpc {
    * @returns {number | undefined}
    */
   static #decodeNumber(value) {
-    const num = new Number(value);
+    const num = (new Number(value)).valueOf();
 
-    if (num !== NaN) {
+    if (!Number.isNaN(num)) {
       return num;
     }
-
-    return undefined
   }
 }
 
@@ -415,7 +429,7 @@ class JutSuperIpcRecvParamsBuilder {
   }
 
   /**
-   * @param {string | string[]} id 
+   * @param {string | string[]} ids
    * @returns {JutSuperIpcRecvParamsBuilder}
    */
   recvOnlyFrom(ids) {
@@ -428,7 +442,7 @@ class JutSuperIpcRecvParamsBuilder {
   }
 
   /**
-   * @param {string | string[]} id 
+   * @param {string | string[]} keys
    * @returns {JutSuperIpcRecvParamsBuilder}
    */
   recvOnlyTheseKeys(keys) {
@@ -441,7 +455,7 @@ class JutSuperIpcRecvParamsBuilder {
   }
 
   /**
-   * @param {string | string[]} id 
+   * @param {string | string[]} values
    * @returns {JutSuperIpcRecvParamsBuilder}
    */
   recvOnlyTheseValues(values) {

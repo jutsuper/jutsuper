@@ -7,10 +7,12 @@ import {
 } from "/src/consts.js";
 
 
-/** @typedef {import("/src/consts.js").JutSuperStorageTransitionKeysKeys} JutSuperStorageTransitionKeysKeys */
-/** @typedef {import("/src/consts.js").JutSuperStorageDataKeysKeys} JutSuperStorageDataKeysKeys */
-/** @typedef {import("/src/consts.js").JutSuperStorageAllKeysKeys} JutSuperStorageAllKeysKeys */
-/** @typedef {import("/src/consts.js").JutSuperStorageAllKeysTypes} JutSuperStorageAllKeysTypes */
+/**
+ * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeysKeys} JutSuperStorageTransitionKeysKeys
+ * @typedef {import("/src/consts.js").JutSuperStorageDataKeysKeys} JutSuperStorageDataKeysKeys
+ * @typedef {import("/src/consts.js").JutSuperStorageAllKeysKeys} JutSuperStorageAllKeysKeys
+ * @typedef {import("/src/consts.js").JutSuperStorageAllKeysTypes} JutSuperStorageAllKeysTypes
+ */
 
 
 class JutSuperStorage {

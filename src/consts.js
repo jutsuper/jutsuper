@@ -17,8 +17,10 @@ export {
   JutSuperLogDefaults,
   JutSuperAssetIds,
   JutSuperAssetPaths,
+  JutSuperCss,
   JutSuperIpcDefaultNodeProps,
   JutSuperIpcJsDataTypes,
+  JutSuperIpcJsDataTypesArray,
   JutSuperIpcIds,
   JutSuperIpcKeys,
   JutSuperStorageKeys,
@@ -28,7 +30,9 @@ export {
   JutSuperIpcLoadingStates,
   JutSuperIpcAwaitStates,
   JutSuperIpcBoolRequestStates,
-  JutSuperIpcValueDelims
+  JutSuperIpcValueDelims,
+  JutSuperMessagingMessageKeys,
+  JutSuperMessagingMessageActionsKeys
 }
 
 
@@ -92,26 +96,67 @@ const JutSuDomAttributes = {
   playerFullscreenClassName: "vjs-fullscreen",
   /**
    * # Class name of a fullscreen button in a player
-   * @type {"vjs-fullscreen"}
+   * @type {"vjs-fullscreen-control"}
    */
   playerFullscreenButtonClassName: "vjs-fullscreen-control",
+  /**
+   * # Class name of a page header
+   *
+   * Used to get the page header and apply "display: none"
+   * style to it (basically, hiding it)
+   * so it won't overlap with a fullscreen player
+   * 
+   * @type {"z_fix_header"}
+   */
+  headerClassName: "z_fix_header",
+  /**
+   * # Class name of info panel with a search bar
+   * 
+   * Used to get the page info panel and apply "display: none"
+   * style to it (basically, hiding it)
+   * so it won't overlap with a fullscreen player
+   * 
+   * @type {"info_panel"}
+   */
+  infoPanelClassName: "info_panel",
+  /**
+   * # Class name of a footer
+   * 
+   * Used to get the page footer and apply "display: none"
+   * style to it (basically, hiding it)
+   * so it won't overlap with a fullscreen player
+   * 
+   * @type {"footer"}
+   */
+  footerClassName: "footer"
 }
 /** 
  * @typedef JutsuDomAttributesType
  * @property {"my-player"} playerDivId
  * @property {"vjs-fullscreen"} playerFullscreenClassName
  * @property {"vjs-fullscreen-control"} playerFullscreenButtonClassName
+ * @property {"z_fix_header"} headerClassName
+ * @property {"info_panel"} infoPanelClassName
+ * @property {"footer"} footerClassName
+ * 
  * 
  * @typedef {(
  *   "my-player" |
  *   "vjs-fullscreen" |
- *   "vjs-fullscreen-control"
+ *   "vjs-fullscreen-control" |
+ *   "z_fix_header" |
+ *   "info_panel" |
+ *   "footer"
  * )} JutsuDomAttributesKeys
  */
 
 
 /**
  * # Browser names
+ * 
+ * Used for flow control
+ * based on the current browser
+ * 
  * @readonly
  * @enum {JutSuperBrowsersType}
  */
@@ -188,9 +233,15 @@ const JutSuperLogLevels = {
  * @enum {JutSuperLogDefaultsType}
  */
 const JutSuperLogDefaults = {
-  /** # If logs should be enabled */
+  /** 
+   * # If logs should be enabled
+   * @type {boolean}
+   */
   enabled: true,
-  /** # Only these levels are logged */
+  /**
+   * # Only these levels are logged
+   * @type {JutSuperLogLevelsKeys[]}
+   */
   levels: [
     JutSuperLogLevels.error,
     JutSuperLogLevels.warn,
@@ -198,7 +249,10 @@ const JutSuperLogDefaults = {
     JutSuperLogLevels.info,
     JutSuperLogLevels.debug
   ],
-  /** # Path to log location is shown only on these levels */
+  /**
+   * # Path to log location is shown only on these levels
+   * @type {JutSuperLogLevelsKeys[]}
+   */
   locationLevels: [
     JutSuperLogLevels.error,
     JutSuperLogLevels.warn,
@@ -297,6 +351,46 @@ const JutSuperAssetPaths = {
 
 
 /**
+ * # CSS styles of this extension
+ * 
+ * @readonly
+ * @enum {JutSuperCssType}
+ */
+const JutSuperCss = {
+  /** @type {"jutsuper-bottom-top-appear"} */
+  keyframesBottomTopAppear: "jutsuper-bottom-top-appear",
+  /** @type {"jutsuper-bottom-top-anim-025"} */
+  bottomTopAnim025: "jutsuper-bottom-top-anim-025",
+  /** @type {"jutsuper-bottom-margin-right-5"} */
+  bottomMarginRight5: "jutsuper-bottom-margin-right-5",
+  /** @type {"jutsuper-fullscreen"} */
+  fullscreen: "jutsuper-fullscreen",
+  /** @type {"jutsuper-top-index"} */
+  topIndex: "jutsuper-top-index",
+  /** @type {"jutsuper-hidden"} */
+  hidden: "jutsuper-hidden",
+}
+/** 
+ * @typedef JutSuperCssType
+ * @property {"jutsuper-bottom-top-appear"} keyframesBottomTopAppear
+ * @property {"jutsuper-bottom-top-anim-025"} bottomTopAnim025
+ * @property {"jutsuper-bottom-margin-right-5"} bottomMarginRight5
+ * @property {"jutsuper-fullscreen"} fullscreen
+ * @property {"jutsuper-top-index"} topIndex
+ * @property {"jutsuper-hidden"} hidden
+ * 
+ * @typedef {(
+ *   "jutsuper-bottom-top-appear" |
+ *   "jutsuper-bottom-top-anim-025" |
+ *   "jutsuper-bottom-margin-right-5" |
+ *   "jutsuper-fullscreen" |
+ *   "jutsuper-top-index" |
+ *   "jutsuper-hidden"
+ * )} JutSuperCssKeys
+ */
+
+
+/**
  * # Describes default DOM node for IPC
  * 
  * IPC node is an element in the DOM,
@@ -368,6 +462,16 @@ const JutSuperIpcJsDataTypes = {
  */
 
 
+/** @type {JutSuperIpcJsDataTypesKeys[]} */
+const JutSuperIpcJsDataTypesArray = [
+  JutSuperIpcJsDataTypes.boolean,
+  JutSuperIpcJsDataTypes.number,
+  JutSuperIpcJsDataTypes.string,
+  JutSuperIpcJsDataTypes.null,
+  JutSuperIpcJsDataTypes.undefined
+]
+
+
 /**
  * # Describes IPC instances' ID's
  * 
@@ -421,14 +525,15 @@ const JutSuperIpcKeys = {
    */
   isFullscreen: "data-is-fullscreen",
   /**
-   * # Control fullscreen (enter or exit fullscreen)
+   * # Control video playing (request `play` or `pause`)
    * 
    * ## Possible values
    * @see {JutSuperIpcBoolRequestStates}
+   * @see {JutSuperIpcAwaitStates}
    * 
-   * @type {"data-fullscreen-mode"}
+   * @type {"data-playing-control"}
    */
-  fullscreenMode: "data-fullscreen-mode",
+  playingControl: "data-playing-control",
   /**
    * # Current state of episode switching preparations
    * 
@@ -459,7 +564,7 @@ const JutSuperIpcKeys = {
  * @typedef JutSuperIpcKeysType
  * @property {"data-essentials-loading-state"} essentialsLoadingState
  * @property {"data-is-fullscreen"} isFullscreen
- * @property {"data-fullscreen-mode"} fullscreenMode
+ * @property {"data-playing-control"} playingControl
  * @property {"data-episode-switch-prep"} episodeSwitchPrep
  * @property {"data-is-episode-switched-automatically"} isEpisodeSwitchedAutomatically
  * @property {"data-max-continuous-episode-switches"} maxContinuousEpisodeSwitches
@@ -467,7 +572,7 @@ const JutSuperIpcKeys = {
  * @typedef {(
  *   "data-essentials-loading-state" |
  *   "data-is-fullscreen" |
- *   "data-fullscreen-mode" |
+ *   "data-playing-control" |
  *   "data-episode-switch-prep" |
  *   "data-is-episode-switched-automatically" |
  *   "data-max-continuous-episode-switches"
@@ -481,7 +586,9 @@ const JutSuperIpcKeys = {
  * @enum {JutSuperStorageAllKeysType}
  */
 const JutSuperStorageKeys = {
+  /** @type {"isFullscreen"} */
   isFullscreen: "isFullscreen",
+  /** @type {"isSwitchingEpisode"} */
   isSwitchingEpisode: "isSwitchingEpisode"
 }
 /**
@@ -611,29 +718,16 @@ const JutSuperIpcBoolRequestStates = {
   /** @type {"requestTrue"} */
   requestTrue: "requestTrue",
   /** @type {"requestFalse"} */
-  requestFalse: "requestFalse",
-  /** @type {"completed"} */
-  completed: "completed",
-  /** @type {"rejected"} */
-  rejected: "rejected",
-  /** @type {"idle"} */
-  idle: "idle",
+  requestFalse: "requestFalse"
 }
 /** 
  * @typedef JutSuperIpcBoolRequestStatesType
  * @property {"requestTrue"} requestTrue
  * @property {"requestFalse"} requestFalse
- * @property {"completed"} completed
- * @property {"rejected"} rejected
- * @property {"idle"} idle
  * 
  * @typedef {(
  *   "requestTrue" |
- *   "request" |
- *   "requestFalse" |
- *   "completed" |
- *   "rejected" |
- *   "idle"
+ *   "requestFalse"
  * )} JutSuperIpcBoolRequestStatesKeys
  */
 
@@ -664,4 +758,48 @@ const JutSuperIpcValueDelims = {
  *   ";type=" |
  *   ";sender="
  * )} JutSuperIpcValueDelimsKeys
+ */
+
+
+/**
+ * # Describes message keys in internal messaging
+ * @readonly
+ * @enum {JutSuperMessagingMessageKeysType}
+ */
+const JutSuperMessagingMessageKeys = {
+  /**
+   * # Denotes what actions to perform
+   * @type {"actions"}
+   */
+  actions: "actions",
+}
+/** 
+ * @typedef JutSuperMessagingMessageKeysType
+ * @property {"actions"} actions
+ * 
+ * @typedef {(
+ *   "actions"
+ * )} JutSuperMessagingMessageKeysKeys
+ */
+
+
+/**
+ * # Describes `actions` keys in internal messaging
+ * @readonly
+ * @enum {JutSuperMessagingMessageActionsKeysType}
+ */
+const JutSuperMessagingMessageActionsKeys = {
+  /**
+   * # Denotes the fullscreen state
+   * @type {"fullscreenState"}
+   */
+  fullscreenState: "fullscreenState",
+}
+/** 
+ * @typedef JutSuperMessagingMessageActionsKeysType
+ * @property {"fullscreenState"} fullscreenState
+ * 
+ * @typedef {(
+ *   "fullscreenState"
+ * )} JutSuperMessagingMessageActionsKeysKeys
  */
