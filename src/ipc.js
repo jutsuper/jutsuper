@@ -92,7 +92,7 @@ class JutSuperIpc {
 
   /**
    * @param {JutSuperIpcSendParams} params
-   * @returns {undefined}
+   * @returns {void}
    */
   send(params) {
     let encodedValue = JutSuperIpc.encodeValueWithType(params.value);

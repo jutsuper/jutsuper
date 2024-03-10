@@ -552,6 +552,34 @@ const JutSuperIpcKeys = {
    */
   isEpisodeSwitchedAutomatically: "data-is-episode-switched-automatically",
   /**
+   * # Request to inject a function to exit custom fullscreen
+   * 
+   * When the episode is switched and fullscreen is required,
+   * the browser does not simply allow `fullscreenButton.click()`
+   * because the `requestFullscreen()` function behind it will only
+   * go into fullscreen if the call was made in a short period
+   * of user activity (e.g. clicking).
+   * 
+   * So a workaround for this would be to enter the fullscreen mode
+   * with a special request in a background script
+   * (that would work like F11) and then applying CSS to the player
+   * so it looks like fullscreen.
+   * 
+   * But when user decides to exit this "fake" fullscreen mode,
+   * he encounters a huge disappointment when that doesn't work.
+   * 
+   * So a second workaround for this would be to inject
+   * a function that prevents default behavior once and
+   * does its thing of removing the CSS we applied earlier
+   * and exiting the F11-like fullscreen.
+   * 
+   * ## Possible values
+   * @see {JutSuperIpcBoolRequestStatesKeys}
+   *
+   * @type {"data-inject-custom-fullscreen-exit"}
+   */
+  injectCustomFullscreenExit: "data-inject-custom-fullscreen-exit",
+  /**
    * # How many times the extension should skip endings
    * 
    * @see {number} for possible values
@@ -566,6 +594,7 @@ const JutSuperIpcKeys = {
  * @property {"data-playing-control"} playingControl
  * @property {"data-episode-switch-prep"} episodeSwitchPrep
  * @property {"data-is-episode-switched-automatically"} isEpisodeSwitchedAutomatically
+ * @property {"data-inject-custom-fullscreen-exit"} injectCustomFullscreenExit
  * @property {"data-max-continuous-episode-switches"} maxContinuousEpisodeSwitches
  * 
  * @typedef {(
@@ -574,6 +603,7 @@ const JutSuperIpcKeys = {
  *   "data-playing-control" |
  *   "data-episode-switch-prep" |
  *   "data-is-episode-switched-automatically" |
+ *   "data-inject-custom-fullscreen-exit" |
  *   "data-max-continuous-episode-switches"
  * )} JutSuperIpcKeysKeys
  */

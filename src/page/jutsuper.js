@@ -9,6 +9,7 @@ import {
   JutSuFunctions as jutsuFns,
   JutSuDomAttributes as jutsuAttrs,
   JutSuperAssetIds as assetIds,
+  JutSuperCss as jsuperCss,
   JutSuperIpcIds as ipcIds,
   JutSuperIpcKeys as ipcKeys,
   JutSuperIpcLoadingStates as ipcLoadings,
@@ -16,9 +17,64 @@ import {
   JutSuperIpcBoolRequestStates as ipcBoolRequests
 } from "/src/consts.js";
 
+
 /** @type {JutSuper} */
 var jutsuper;
 
+
+/**
+ * @param {MouseEvent} event 
+ */
+function customFullscreenExit(event) {
+  event.stopImmediatePropagation();
+
+  const body = document.getElementsByTagName(
+    "body"
+  )[0];
+  const playerDiv = document.getElementById(
+    jutsuAttrs.playerDivId
+  );
+  const header = document.getElementsByClassName(
+    jutsuAttrs.headerClassName
+  )[0];
+  const infoPanel = document.getElementsByClassName(
+    jutsuAttrs.infoPanelClassName
+  )[0];
+  const footer = document.getElementsByClassName(
+    jutsuAttrs.footerClassName
+  )[0];
+
+  // enable scrolling
+  body.style.overflow = null;
+  // show header
+  header.style.display = null;
+  // show info panel
+  infoPanel.style.display = null;
+  // show footer
+  footer.style.display = null;
+
+  // remove fullscreen styling from the player
+  playerDiv.classList.remove(jutsuAttrs.playerFullscreenClassName);
+  // make the player regular size
+  playerDiv.classList.remove(jsuperCss.fullscreen);
+  // put the player in a normal position
+  playerDiv.classList.remove(jsuperCss.topIndex);
+
+  removeCustomFullscreenExit();
+}
+
+function removeCustomFullscreenExit() {
+  /** @type {HTMLButtonElement} */
+  const fullscreenButton = document.getElementsByClassName(
+    jutsuAttrs.playerFullscreenButtonClassName
+  )[0];
+
+  fullscreenButton.removeEventListener(
+    "click",
+    customFullscreenExit,
+    false
+  );
+}
 
 class JutSuper {
   /**
@@ -54,6 +110,7 @@ class JutSuper {
     );
 
     this.listenPlayRequests();
+    this.listenCustomFullscreenExitInjectRequest();
 
     this.#initPage().then(() => {
       jsuperLog.debug(new Error, "JutSuper: constructed");
@@ -115,7 +172,7 @@ class JutSuper {
 
   /**
    * # Start opening skip countdown
-   * @returns {undefined}
+   * @returns {void}
    */
   startSkippingOpening() {
     if (!cur_time_cookie) {
@@ -135,7 +192,7 @@ class JutSuper {
 
   /**
    * # Stop opening skip countdown
-   * @returns {undefined}
+   * @returns {void}
    */
   stopSkippingOpening() {
     jsuperLog.debug(new Error, "JutSuper: not skipping opening anymore");
@@ -175,7 +232,7 @@ class JutSuper {
   
   /**
    * # Stop ending skip countdown
-   * @returns {undefined}
+   * @returns {void}
    */
   stopSkippingEnding() {
     jsuperLog.debug(new Error, "JutSuper: not skipping ending anymore");
@@ -183,7 +240,7 @@ class JutSuper {
 
   /**
    * # Check if we are either in opening or ending time ranges
-   * @returns {undefined}
+   * @returns {void}
    */
   checkForKeyTimestamps() {
     const time = this.player.currentTime();
@@ -308,7 +365,7 @@ class JutSuper {
   }
 
   /**
-   * @returns {undefined}
+   * @returns {void}
    */
   handlePlayerClassChange() {
     /**
@@ -332,7 +389,7 @@ class JutSuper {
   }
 
   /**
-   * @returns {undefined}
+   * @returns {void}
    */
   injectTimeupdateListener() {
     // on each time update, call `this.checkForKeyTimestamps`
@@ -342,13 +399,13 @@ class JutSuper {
   }
 
   /**
-   * @returns {undefined}
+   * @returns {void}
    */
   injectFullscreenChangeListener() {
     const options = { attributes: true };
 
-    this._fullscreenMutationObserver = new MutationObserver(
-      (mutations, observer) => {
+    new MutationObserver(
+      (mutations, _observer) => {
         for (const record of mutations) {
           if (record.attributeName !== "class") {
             return null;
@@ -357,15 +414,13 @@ class JutSuper {
           this.handlePlayerClassChange();
         }
       }
-    );
-
-    this._fullscreenMutationObserver.observe(
+    ).observe(
       this.playerDiv, options
     );
   }
 
   /**
-   * @returns {undefined}
+   * @returns {void}
    */
   injectSettingsTab() {
     const topPlayerLane = document.getElementsByClassName("achiv_switcher");
@@ -380,7 +435,7 @@ class JutSuper {
   }
 
   /**
-   * @returns {void}
+   * @returns {Promise<never>}
    */
   async listenPlayRequests() {
     const cfg = new JutSuperIpcRecvParamsBuilder()
@@ -411,23 +466,73 @@ class JutSuper {
   }
 
   /**
-   * @returns {undefined}
+   * @returns {void}
    */
   handlePlayRequest() {
     this.player.play();
   }
 
   /**
-   * @returns {undefined}
+   * @returns {void}
    */
   handlePauseRequest() {
     this.player().pause();
+  }
+
+  /**
+   * @returns {Promise<never>}
+   */
+  async listenCustomFullscreenExitInjectRequest() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvOnlyTheseKeys(ipcKeys.injectCustomFullscreenExit)
+      .build();
+    
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt);
+
+      try {
+        switch (evt.value) {
+          case ipcBoolRequests.requestTrue:
+            this.handleCustomFullscreenExitInject();
+            break;
+          case ipcBoolRequests.requestFalse:
+            this.handleCustomFullscreenExitUninject();
+            break;
+          default:
+            throw jsuperErrors.unhandledCaseError({
+              location: this.LOCATION,
+              target: `${evt.key}=${evt.value}`
+            });
+        }
+      } catch (e) {
+        jsuperLog.error(new Error, e);
+      }
+    }
+  }
+
+  /**
+   * @returns {void}
+   */
+  handleCustomFullscreenExitInject() {
+    /** @type {HTMLButtonElement} */
+    const fullscreenButton = document.getElementsByClassName(
+      jutsuAttrs.playerFullscreenButtonClassName
+    )[0];
+
+    fullscreenButton.onclick = customFullscreenExit;
+  }
+
+  /**
+   * @returns {void}
+   */
+  handleCustomFullscreenExitUninject() {
+    removeCustomFullscreenExit()
   }
 }
 
 /**
  * # Init `JutSuper` class into a `jutsuper` global variable
- * @returns {undefined}
+ * @returns {void}
  */
 function jutsuperLoad() {
   if (!jutsuper) {

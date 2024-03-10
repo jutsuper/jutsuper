@@ -211,7 +211,7 @@ class JutSuperContent {
    * @param {HTMLElement} node
    * @param {string} url
    * @param {string} id
-   * @returns {undefined}
+   * @returns {void}
    */
   injectModule(node, url, id) {
     const attrs = {
@@ -230,7 +230,7 @@ class JutSuperContent {
    * @param {HTMLElement} node
    * @param {string} url
    * @param {string} id
-   * @returns {undefined}
+   * @returns {void}
    */
   injectCss(node, url, id) {
     const attrs = {
@@ -249,7 +249,7 @@ class JutSuperContent {
    * @param {HTMLElement} node
    * @param {string} url
    * @param {string} id
-   * @returns {undefined}
+   * @returns {void}
    */
   injectImage(node, url, id) {
     const attrs = {
@@ -269,6 +269,9 @@ class JutSuperContent {
   // Essentials loading wait //
   /////////////////////////////
 
+  /**
+   * @returns {Promise<never>}
+   */
   async listenEssentialsLoadState() {
     const cfg = new JutSuperIpcRecvParamsBuilder()
       .recvOnlyTheseKeys(ipcKeys.essentialsLoadingState)
@@ -303,6 +306,9 @@ class JutSuperContent {
   // Fullscreen change handling //
   ////////////////////////////////
 
+  /**
+   * @returns {Promise<never>}
+   */
   async listenFullscreenChange() {
     const cfg = new JutSuperIpcRecvParamsBuilder()
       .recvOnlyTheseKeys(ipcKeys.isFullscreen)
@@ -332,6 +338,7 @@ class JutSuperContent {
 
   /**
    * @param {boolean} routeExisting 
+   * @returns {Promise<never>}
    */
   async listenEpisodeSwitchPrepStates(routeExisting = false) {
     const cfg = new JutSuperIpcRecvParamsBuilder()
@@ -466,6 +473,24 @@ class JutSuperContent {
         playerDiv.classList.add(jsuperCss.fullscreen);
         // put the player above everything
         playerDiv.classList.add(jsuperCss.topIndex);
+
+        const thisArg = this;
+
+        setTimeout(function() {
+          thisArg.ipc.send({
+            key: ipcKeys.injectCustomFullscreenExit,
+            value: ipcBoolRequests.requestTrue
+          });
+        }, 5000)
+
+        /** 
+        // inject function to be able to exit
+        // this custom fullscreen mode
+        this.ipc.send({
+          key: ipcKeys.injectCustomFullscreenExit,
+          value: ipcBoolRequests.requestTrue
+        });
+        */
       }
     }
     else {
@@ -526,7 +551,7 @@ class JutSuperContent {
   /**
    * @param {HTMLElement} node
    * @param {Object.<string, string>} attrs 
-   * @returns {undefined}
+   * @returns {void}
    */
   static applyAttrs(node, attrs) {
     for (const key in attrs) {
