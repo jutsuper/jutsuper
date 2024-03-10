@@ -115,7 +115,7 @@ class JutSuperBackground {
         browser.windows.update(windows[0].id, {state: "fullscreen"});
         break;
       case false:
-        browser.windows.update(windows[0].id, {state: undefined});
+        browser.windows.update(windows[0].id, {state: "normal"});
         break;
     }
   }

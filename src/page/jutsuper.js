@@ -514,6 +514,7 @@ class JutSuper {
    * @returns {void}
    */
   handleCustomFullscreenExitInject() {
+    this.player.isFullscreen(true);
     /** @type {HTMLButtonElement} */
     const fullscreenButton = document.getElementsByClassName(
       jutsuAttrs.playerFullscreenButtonClassName
