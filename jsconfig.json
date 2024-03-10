@@ -1,5 +1,6 @@
 {
   "include": ["."],
+  "exclude": ["dist"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

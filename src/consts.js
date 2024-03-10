@@ -25,8 +25,7 @@ export {
   JutSuperIpcKeys,
   JutSuperStorageKeys,
   JutSuperStorageTransitionKeys,
-  JutSuperStorageDataKeys,
-  JutSuperStorageAllKeys,
+  JutSuperStorageSettingsKeys,
   JutSuperIpcLoadingStates,
   JutSuperIpcAwaitStates,
   JutSuperIpcBoolRequestStates,
@@ -581,40 +580,52 @@ const JutSuperIpcKeys = {
 
 
 /**
- * # Describes keys used in IPC
+ * # Object of a persistent extension storage
  * @readonly
- * @enum {JutSuperStorageAllKeysType}
+ * @enum {JutSuperStorageKeysType}
  */
 const JutSuperStorageKeys = {
+  /** @type {"transition"} */
+  transition: "transition",
+  /** @type {"settings"} */
+  settings: "settings"
+}
+/**
+ * @typedef JutSuperStorageKeysType
+ * @property {"transition"} transition
+ * @property {"settings"} settings
+ *
+ * @typedef JutSuperStorageKeysTypes
+ * @property {JutSuperStorageTransitionKeysType} [transition]
+ * @property {JutSuperStorageSettingsKeysType} [settings]
+ * 
+ * @typedef {(
+*   "transition" |
+*   "settings"
+* )} JutSuperStorageKeysKeys
+ */
+
+
+/**
+ * # Episode switch temporary values
+ * @readonly
+ * @enum {JutSuperStorageTransitionKeysType}
+ */
+const JutSuperStorageTransitionKeys = {
   /** @type {"isFullscreen"} */
   isFullscreen: "isFullscreen",
   /** @type {"isSwitchingEpisode"} */
   isSwitchingEpisode: "isSwitchingEpisode"
 }
 /**
- * @typedef JutSuperStorageAllKeysType
+ * @typedef JutSuperStorageTransitionKeysType
  * @property {"isFullscreen"} isFullscreen
  * @property {"isSwitchingEpisode"} isSwitchingEpisode
- * 
- * @typedef {(
- *   JutSuperStorageTransitionKeysKeys |
- *   JutSuperStorageDataKeysKeys
- * )} JutSuperStorageAllKeysKeys
  *
- * @typedef JutSuperStorageAllKeysTypes
- * @property {boolean} isFullscreen
- * @property {boolean} isSwitchingEpisode
- */
-
-
-/**
- * @readonly
- * @type {JutSuperStorageTransitionKeysKeys[]}
- */
-const JutSuperStorageTransitionKeys = [];
-JutSuperStorageTransitionKeys.push(JutSuperStorageKeys.isFullscreen);
-JutSuperStorageTransitionKeys.push(JutSuperStorageKeys.isSwitchingEpisode);
-/**
+ * @typedef JutSuperStorageTransitionKeysTypes
+ * @property {boolean} [isFullscreen]
+ * @property {boolean} [isSwitchingEpisode]
+ * 
  * @typedef {(
  *   "isFullscreen" |
  *   "isSwitchingEpisode"
@@ -623,24 +634,25 @@ JutSuperStorageTransitionKeys.push(JutSuperStorageKeys.isSwitchingEpisode);
 
 
 /**
+ * # Extension settings
  * @readonly
- * @type {JutSuperStorageDataKeysKeys[]}
+ * @enum {JutSuperStorageSettingsKeysType}
  */
-const JutSuperStorageDataKeys = [];
+const JutSuperStorageSettingsKeys = {
+  /** @type {"maxContinuousEpisodeSwitches"} */
+  maxContinuousEpisodeSwitches: "maxContinuousEpisodeSwitches",
+}
 /**
+ * @typedef JutSuperStorageSettingsKeysType
+ * @property {"maxContinuousEpisodeSwitches"} maxContinuousEpisodeSwitches
+ *
+ * @typedef JutSuperStorageSettingsKeysTypes
+ * @property {number} [maxContinuousEpisodeSwitches]
+ * 
  * @typedef {(
- *   
- * )} JutSuperStorageDataKeysKeys
+ *   "maxContinuousEpisodeSwitches" 
+ * )} JutSuperStorageSettingsKeysKeys
  */
-
-
-/**
- * @readonly
- * @type {JutSuperStorageAllKeysKeys[]}
- */
-const JutSuperStorageAllKeys = [];
-JutSuperStorageAllKeys.push(...JutSuperStorageTransitionKeys);
-JutSuperStorageAllKeys.push(...JutSuperStorageDataKeys);
 
 
 /**

@@ -27,7 +27,7 @@ export {
  */
 /**
  * @typedef JutSuperIpcValueDescriptor
- * @property {string?} key
+ * @property {string} [key]
  * @property {JutSuperIpcSupportedDataTypes} value
  * @property {string} sender
  */
@@ -45,13 +45,13 @@ export {
  */
 /**
  * @typedef JutSuperIpcRecvParams
- * @property {string?} senderId
- * @property {string[]?} senderIds
- * @property {string?} key
- * @property {string[]?} keys
- * @property {string?} value
- * @property {string[]?} values
- * @property {boolean?} acceptFromMyself
+ * @property {string} [senderId]
+ * @property {string[]} [senderIds]
+ * @property {string} [key]
+ * @property {string[]} [keys]
+ * @property {string} [value]
+ * @property {string[]} [values]
+ * @property {boolean} [acceptFromMyself]
  */
 
 

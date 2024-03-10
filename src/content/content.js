@@ -7,9 +7,6 @@ var BROWSER = "firefox";
 // #error
 // #endif
 
-var startedPlaying = false;
-var pressedFullscreen = false;
-
 /**
  * @typedef {import("/src/error.js").JutSuperErrors} JutSuperErrors
  * @type {JutSuperErrors}
@@ -29,6 +26,18 @@ var jsuperLog;
 var jsuperStorage;
 
 /**
+ * @typedef {import("/src/consts.js").JutSuperCss} JutSuperCss
+ * @type {JutSuperCss}
+ */
+var jsuperCss;
+
+/**
+ * @typedef {import("/src/consts.js").JutSuDomAttributes} JutSuDomAttributes
+ * @type {JutSuDomAttributes}
+ */
+var jutsuAttrs;
+
+/**
  * @typedef {import("/src/consts.js").JutSuperIpcIds} JutSuperIpcIds
  * @type {JutSuperIpcIds}
  */
@@ -39,12 +48,6 @@ var ipcIds;
  * @type {JutSuperIpcKeys}
  */
 var ipcKeys;
-
-/**
- * @typedef {import("/src/consts.js").JutSuDomAttributes} JutSuDomAttributes
- * @type {JutSuDomAttributes}
- */
-var jutsuAttrs;
 
 /**
  * @typedef {import("/src/consts.js").JutSuperIpcAwaitStates} JutSuperIpcAwaitStates
@@ -69,6 +72,12 @@ var ipcLoadingStates;
  * @type {JutSuperStorageKeys}
  */
 var storageKeys;
+
+/**
+ * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeys} JutSuperStorageTransitionKeys
+ * @type {JutSuperStorageTransitionKeys}
+ */
+var transitionKeys;
 
 /**
  * @typedef {import("/src/consts.js").JutSuperAssetPaths} JutSuperAssetPaths
@@ -101,7 +110,20 @@ var JutSuperIpc;
 var JutSuperIpcRecvParamsBuilder;
 
 /**
+ * @typedef {import("/src/messaging.js").JutSuperRequestMessageBuilder} JutSuperRequestMessageBuilder
+ * @type {typeof import("/src/messaging.js").JutSuperRequestMessageBuilder}
+ */
+var JutSuperRequestMessageBuilder;
+
+/**
+ * @typedef {import("/src/messaging.js").JutSuperMessageBuilder} JutSuperMessageBuilder
+ * @type {typeof import("/src/messaging.js").JutSuperMessageBuilder}
+ */
+var JutSuperMessageBuilder;
+
+/**
  * @typedef {import("/src/ipc.js").JutSuperIpcValueDescriptor} JutSuperIpcValueDescriptor
+ * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeysTypes} JutSuperStorageTransitionKeysTypes
  */
 
 /** Import modules */
@@ -116,22 +138,28 @@ var JutSuperIpcRecvParamsBuilder;
   const ipcModule = await import(browser.runtime.getURL("/src/ipc.js"));
   /** @type {typeof import("/src/storage.js")} */
   const storageModule = await import(browser.runtime.getURL("/src/storage.js"));
+  /** @type {typeof import("/src/messaging.js")} */
+  const messagingModule = await import(browser.runtime.getURL("/src/messaging.js"));
 
   jsuperErrors = errorModule.jsuperErrors;
   jsuperLog = logModule.jsuperLog;
+  jsuperStorage = storageModule.jsuperStorage;
+  jsuperCss = constsModule.JutSuperCss;
+  jutsuAttrs = constsModule.JutSuDomAttributes;
   ipcIds = constsModule.JutSuperIpcIds;
   ipcKeys = constsModule.JutSuperIpcKeys;
-  jutsuAttrs = constsModule.JutSuDomAttributes;
   ipcAwaits = constsModule.JutSuperIpcAwaitStates;
   ipcBoolRequests = constsModule.JutSuperIpcBoolRequestStates;
   ipcLoadingStates = constsModule.JutSuperIpcLoadingStates;
   storageKeys = constsModule.JutSuperStorageKeys;
+  transitionKeys = constsModule.JutSuperStorageTransitionKeys;
   assetPaths = constsModule.JutSuperAssetPaths;
   assetIds = constsModule.JutSuperAssetIds;
   JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
   JutSuperIpc = ipcModule.JutSuperIpc;
   JutSuperIpcRecvParamsBuilder = ipcModule.JutSuperIpcRecvParamsBuilder;
-  jsuperStorage = storageModule.jsuperStorage;
+  JutSuperRequestMessageBuilder = messagingModule.JutSuperRequestMessageBuilder;
+  JutSuperMessageBuilder = messagingModule.JutSuperMessageBuilder;
 })().then(() => {
   jutsuperContent = new JutSuperContent();
 })
@@ -291,6 +319,9 @@ class JutSuperContent {
     });
   }
 
+  /**
+   * @param {boolean} state 
+   */
   async handleFullscreenChange(state) {
     this.isFullscreen = state;
   }
@@ -368,10 +399,15 @@ class JutSuperContent {
   }
 
   async handleEpisodeSwitchContinuation() {
-    const transitionKeys = await jsuperStorage.getTransitionKeys();
+    let transition = await jsuperStorage.getTransition();
+
+    if (transition === undefined) {
+      transition = {}
+    }
+
     const isSwitchedAutomatically = (
-      transitionKeys.isSwitchingEpisode !== undefined ?
-      transitionKeys.isSwitchingEpisode : false
+      transition.isSwitchingEpisode !== undefined ?
+      transition.isSwitchingEpisode : false
     );
   
     this.ipc.send({
@@ -383,7 +419,7 @@ class JutSuperContent {
       value: ipcAwaits.completed,
     });
 
-    if (transitionKeys.isSwitchingEpisode) {
+    if (isSwitchedAutomatically) {
       jsuperLog.log(new Error, "episode was switched automatically");
 
       const body = document.getElementsByTagName(
@@ -392,39 +428,51 @@ class JutSuperContent {
       const playerDiv = document.getElementById(
         jutsuAttrs.playerDivId
       );
-      const playerVideo = document.getElementById(
-        "my-player_html5_api"
-      );
       const header = document.getElementsByClassName(
-        "z_fix_header"
+        jutsuAttrs.headerClassName
       )[0];
       const infoPanel = document.getElementsByClassName(
-        "info_panel"
+        jutsuAttrs.infoPanelClassName
       )[0];
       const footer = document.getElementsByClassName(
-        "footer"
+        jutsuAttrs.footerClassName
       )[0];
 
       this.requestPlay();
 
       if (transitionKeys.isFullscreen) {
-        await browser.runtime.sendMessage({
-          request: "fullscreenOn"
-        });
+        await browser.runtime.sendMessage(
+          (new JutSuperMessageBuilder())
+            .request(
+              (new JutSuperRequestMessageBuilder)
+                .isFullscreenState(true)
+                .build()
+            )
+            .build()
+        );
+
+        // disable scrolling
         body.style.overflow = "hidden";
+        // hide header
         header.style.display = "none";
+        // hide info panel
         infoPanel.style.display = "none";
+        // hide footer
         footer.style.display = "none";
-        playerDiv.classList.add("vjs-fullscreen");
-        playerDiv.classList.add("jutsuper-fullscreen");
-        playerDiv.classList.add("jutsuper-top-index");
+
+        // add fullscreen styling to the player
+        playerDiv.classList.add(jutsuAttrs.playerFullscreenClassName);
+        // make the player full window size
+        playerDiv.classList.add(jsuperCss.fullscreen);
+        // put the player above everything
+        playerDiv.classList.add(jsuperCss.topIndex);
       }
     }
     else {
       jsuperLog.log(new Error, "episode was not switched automatically");
     }
 
-    await jsuperStorage.removeTransitionKeys();
+    await jsuperStorage.removeTransition();
   }
 
   ////////////////////////////
@@ -436,11 +484,12 @@ class JutSuperContent {
    * @returns {Promise<void>}
    */
   async commitTransitionStorage() {
-    const values = {};
-    values[storageKeys.isFullscreen] = this.isFullscreen;
-    values[storageKeys.isSwitchingEpisode] = this.isSwitchingEpisode;
+    /** @type {JutSuperStorageTransitionKeysTypes} */
+    const transition = {};
+    transition[transitionKeys.isFullscreen] = this.isFullscreen;
+    transition[transitionKeys.isSwitchingEpisode] = this.isSwitchingEpisode;
 
-    await jsuperStorage.setKeys(values);
+    await jsuperStorage.setTransition(transition);
   }
 
   /**
@@ -448,10 +497,14 @@ class JutSuperContent {
    * @returns {Promise<void>}
    */
   async loadTransitionStorage() {
-    const values = await jsuperStorage.getTransitionKeys();
+    let transition = await jsuperStorage.getTransition();
 
-    this.isFullscreen = values[storageKeys.isFullscreen];
-    this.isSwitchingEpisode = values[storageKeys.isSwitchingEpisode];
+    if (transition === undefined) {
+      transition = {}
+    }
+
+    this.isFullscreen = transition[transitionKeys.isFullscreen];
+    this.isSwitchingEpisode = transition[transitionKeys.isSwitchingEpisode];
   }
 
   /**
@@ -460,7 +513,7 @@ class JutSuperContent {
    */
   async loadTransitionStorageAndClear() {
     await this.loadTransitionStorage();
-    await jsuperStorage.removeTransitionKeys();
+    await jsuperStorage.removeTransition();
   }
 
   requestPlay() {

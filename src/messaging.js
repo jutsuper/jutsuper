@@ -10,18 +10,21 @@ export {
 
 /**
  * @typedef JutSuperActionsMessage
- * @property {boolean?} fullscreenState
+ * @property {boolean} [fullscreenState]
  */
 /**
  * @typedef JutSuperMessage
- * @property {JutSuperActionsMessage?} actions
+ * @property {JutSuperActionsMessage} [actions]
  */
 
 
 class JutSuperRequestMessageBuilder {
+  /** @type {JutSuperActionsMessage} */
+  #message
+  
   constructor() {
     /** @type {JutSuperActionsMessage} */
-    this.message = {};
+    this.#message = {};
   }
 
   /**
@@ -29,7 +32,7 @@ class JutSuperRequestMessageBuilder {
    * @returns {JutSuperRequestMessageBuilder}
    */
   isFullscreenState(value) {
-    this.message[msgActKeys.fullscreenState] = value;
+    this.#message[msgActKeys.fullscreenState] = value;
     return this;
   }
 
@@ -37,14 +40,17 @@ class JutSuperRequestMessageBuilder {
    * @returns {JutSuperActionsMessage}
    */
   build() {
-    return this.message
+    return this.#message
   }
 }
 
 class JutSuperMessageBuilder {
+  /** @type {JutSuperMessage} */
+  #message;
+
   constructor() {
     /** @type {JutSuperMessage} */
-    this.message = {};
+    this.#message = {};
   }
 
   /**
@@ -52,7 +58,7 @@ class JutSuperMessageBuilder {
    * @returns {JutSuperMessageBuilder}
    */
   request(value) {
-    this.message[msgKeys.actions] = value;
+    this.#message[msgKeys.actions] = value;
     return this;
   }
 
@@ -60,6 +66,6 @@ class JutSuperMessageBuilder {
    * @returns {JutSuperMessage}
    */
   build() {
-    return this.message
+    return this.#message
   }
 }

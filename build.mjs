@@ -1,3 +1,7 @@
+/**
+ * @file Project builder
+ */
+
 import fs from "fs";
 import { emptyDirSync } from "fs-extra";
 import { globSync } from "glob";
@@ -177,33 +181,33 @@ function build() {
        * 
        * @example
        * if (rawSrcFilePath === "src/storage.js") {
-       *   console.assert(dirPathToFile === "src")
+       *   console.assert(pathToParentDirOfFile === "src")
        * }
        * 
        * if (rawSrcFilePath === "src/background/background.js") {
-       *   console.assert(dirPathToFile === "src/background")
+       *   console.assert(pathToParentDirOfFile === "src/background")
        * }
        */
-      const dirPathToFile = path.dirname(rawSrcFilePath);
+      const pathToParentDirOfFile = path.dirname(rawSrcFilePath);
       /**
        * # Get target dist path for the current folder path
        * 
        * @example
        * if (
        *   targetDirPath === "dist/firefox" &&
-       *   dirPathToFile === "src"
+       *   pathToParentDirOfFile === "src"
        * ) {
        *   console.assert(distParentPath === "dist/firefox/src")
        * }
        * 
        * if (
        *   targetDirPath === "dist/chrome" &&
-       *   dirPathToFile === "src/background"
+       *   pathToParentDirOfFile === "src/background"
        * ) {
        *   console.assert(distParentPath === "dist/chrome/src/background")
        * }
        */
-      const distParentPath = path.join(targetDirPath, dirPathToFile);
+      const distParentPath = path.join(targetDirPath, pathToParentDirOfFile);
       /**
        * # Get the final dist file path
        * 

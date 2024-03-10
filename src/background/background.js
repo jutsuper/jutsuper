@@ -67,44 +67,57 @@ class JutSuperBackground {
     const thisArg = this;
     this.LOCATION = JutSuperBackground.name;
 
-    browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-      thisArg.messageCallback(request, sender, sendResponse)
-    });
+    browser.runtime.onMessage.addListener(
+      /**
+       * @param {JutSuperMessage} request 
+       * @param {BrowserMessageSenderDescriptor} sender 
+       * @param {function(unknown): any} sendResponse 
+       */
+      function(request, sender, sendResponse) {
+        thisArg.messageCallback(request, sender, sendResponse)
+      }
+    );
   }
 
   /**
    * 
    * @param {JutSuperMessage} request 
    * @param {BrowserMessageSenderDescriptor} sender 
-   * @param {function(unknown)} sendResponse 
+   * @param {function(unknown): any} sendResponse 
    */
   messageCallback(request, sender, sendResponse) {
     console.log("request", request);
     console.log("sender", sender);
     console.log("sendResponse", sendResponse);
 
-    const req = request["request"];
-
-    if (req && ["fullscreenOn", "fullscreenOff"].includes(req)) {
-      if (req === "fullscreenOn") {
-        this.handleFullscreenRequest(true)
-      }
-      else if (req === "fullscreenOff") {
-        this.handleFullscreenRequest(false)
-      }
+    if (request.actions) {
+      this.handleActions(request.actions);
     }
   }
 
+  /**
+   * @param {JutSuperActionsMessage} actions 
+   */
+  async handleActions(actions) {
+    if (actions.fullscreenState !== undefined) {
+      await this.handleFullscreenRequest(actions.fullscreenState)
+    }
+  }
+
+  /**
+   * @param {boolean} state 
+   */
   async handleFullscreenRequest(state) {
     const windows = await browser.windows.getAll();
-    console.log("windows=", windows);
-    if (state === true) {
-      browser.windows.update(windows[0].id, {state: "fullscreen"});
+
+    switch (state) {
+      case true:
+        browser.windows.update(windows[0].id, {state: "fullscreen"});
+        break;
+      case false:
+        browser.windows.update(windows[0].id, {state: undefined});
+        break;
     }
-    else if (state === false) {
-      browser.windows.update(windows[0].id, {state: undefined});
-    }
-    
   }
 }
 

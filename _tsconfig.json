@@ -1,9 +1,10 @@
 {
   "include": ["."],
+  "exclude": ["dist"],
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "target": "ES2016",
+    "target": "ESNext",
     "moduleResolution": "NodeNext",
     "baseUrl": ".",
     "paths": {
