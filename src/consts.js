@@ -524,6 +524,15 @@ const JutSuperIpcKeys = {
    */
   isFullscreen: "data-is-fullscreen",
   /**
+   * # Request to enter/exit fullscreen
+   * 
+   * ## Possible values
+   * @see {JutSuperIpcBoolRequestStatesKeys}
+   *
+   * @type {"data-fullscreen-control"}
+   */
+  fullscreenControl: "data-fullscreen-control",
+  /**
    * # Control video playing (request `play` or `pause`)
    * 
    * ## Possible values
@@ -591,6 +600,7 @@ const JutSuperIpcKeys = {
  * @typedef JutSuperIpcKeysType
  * @property {"data-essentials-loading-state"} essentialsLoadingState
  * @property {"data-is-fullscreen"} isFullscreen
+ * @property {"data-fullscreen-control"} fullscreenControl
  * @property {"data-playing-control"} playingControl
  * @property {"data-episode-switch-prep"} episodeSwitchPrep
  * @property {"data-is-episode-switched-automatically"} isEpisodeSwitchedAutomatically
@@ -600,6 +610,7 @@ const JutSuperIpcKeys = {
  * @typedef {(
  *   "data-essentials-loading-state" |
  *   "data-is-fullscreen" |
+ *   "data-fullscreen-control" |
  *   "data-playing-control" |
  *   "data-episode-switch-prep" |
  *   "data-is-episode-switched-automatically" |

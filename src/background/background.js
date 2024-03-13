@@ -67,6 +67,8 @@ class JutSuperBackground {
     const thisArg = this;
     this.LOCATION = JutSuperBackground.name;
 
+    this.prevWindowState = undefined;
+
     browser.runtime.onMessage.addListener(
       /**
        * @param {JutSuperMessage} request 
@@ -86,36 +88,46 @@ class JutSuperBackground {
    * @param {function(unknown): any} sendResponse 
    */
   messageCallback(request, sender, sendResponse) {
-    console.log("request", request);
-    console.log("sender", sender);
-    console.log("sendResponse", sendResponse);
-
     if (request.actions) {
-      this.handleActions(request.actions);
+      this.handleActions(request.actions, sender, sendResponse);
     }
   }
 
   /**
-   * @param {JutSuperActionsMessage} actions 
+   * @param {JutSuperActionsMessage} actions
+   * @param {BrowserMessageSenderDescriptor} sender 
+   * @param {function(unknown): any} sendResponse 
    */
-  async handleActions(actions) {
+  async handleActions(actions, sender, sendResponse) {
     if (actions.fullscreenState !== undefined) {
-      await this.handleFullscreenRequest(actions.fullscreenState)
+      await this.handleFullscreenRequest(
+        actions.fullscreenState,
+        sender,
+        sendResponse
+      )
     }
   }
 
   /**
-   * @param {boolean} state 
+   * @param {boolean} state
+   * @param {BrowserMessageSenderDescriptor} sender 
+   * @param {function(unknown): any} sendResponse 
    */
-  async handleFullscreenRequest(state) {
-    const windows = await browser.windows.getAll();
+  async handleFullscreenRequest(state, sender, sendResponse) {
+    const window = await browser.windows.get(sender.tab.windowId);
 
     switch (state) {
       case true:
-        browser.windows.update(windows[0].id, {state: "fullscreen"});
+        this.prevWindowState = window.state;
+        browser.windows.update(window.id, { state: "fullscreen" });
         break;
       case false:
-        browser.windows.update(windows[0].id, {state: "normal"});
+        if (this.prevWindowState) {
+          browser.windows.update(window.id, { state: this.prevWindowState });
+          this.prevWindowState = undefined;
+        } else {
+          browser.windows.update(window.id, { state: "maximized" });
+        }
         break;
     }
   }

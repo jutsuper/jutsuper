@@ -22,60 +22,6 @@ import {
 var jutsuper;
 
 
-/**
- * @param {MouseEvent} event 
- */
-function customFullscreenExit(event) {
-  event.stopImmediatePropagation();
-
-  const body = document.getElementsByTagName(
-    "body"
-  )[0];
-  const playerDiv = document.getElementById(
-    jutsuAttrs.playerDivId
-  );
-  const header = document.getElementsByClassName(
-    jutsuAttrs.headerClassName
-  )[0];
-  const infoPanel = document.getElementsByClassName(
-    jutsuAttrs.infoPanelClassName
-  )[0];
-  const footer = document.getElementsByClassName(
-    jutsuAttrs.footerClassName
-  )[0];
-
-  // enable scrolling
-  body.style.overflow = null;
-  // show header
-  header.style.display = null;
-  // show info panel
-  infoPanel.style.display = null;
-  // show footer
-  footer.style.display = null;
-
-  // remove fullscreen styling from the player
-  playerDiv.classList.remove(jutsuAttrs.playerFullscreenClassName);
-  // make the player regular size
-  playerDiv.classList.remove(jsuperCss.fullscreen);
-  // put the player in a normal position
-  playerDiv.classList.remove(jsuperCss.topIndex);
-
-  removeCustomFullscreenExit();
-}
-
-function removeCustomFullscreenExit() {
-  /** @type {HTMLButtonElement} */
-  const fullscreenButton = document.getElementsByClassName(
-    jutsuAttrs.playerFullscreenButtonClassName
-  )[0];
-
-  fullscreenButton.removeEventListener(
-    "click",
-    customFullscreenExit,
-    false
-  );
-}
-
 class JutSuper {
   /**
    * @param {unknown} player Jut.su's player on a page
@@ -495,9 +441,6 @@ class JutSuper {
           case ipcBoolRequests.requestTrue:
             this.handleCustomFullscreenExitInject();
             break;
-          case ipcBoolRequests.requestFalse:
-            this.handleCustomFullscreenExitUninject();
-            break;
           default:
             throw jsuperErrors.unhandledCaseError({
               location: this.LOCATION,
@@ -511,23 +454,71 @@ class JutSuper {
   }
 
   /**
-   * @returns {void}
+   * @param {MouseEvent} event 
    */
-  handleCustomFullscreenExitInject() {
-    this.player.isFullscreen(true);
-    /** @type {HTMLButtonElement} */
-    const fullscreenButton = document.getElementsByClassName(
-      jutsuAttrs.playerFullscreenButtonClassName
+  customFullscreenExit(event) {
+    event.stopImmediatePropagation();
+
+    const body = document.getElementsByTagName(
+      "body"
+    )[0];
+    const playerDiv = document.getElementById(
+      jutsuAttrs.playerDivId
+    );
+    const header = document.getElementsByClassName(
+      jutsuAttrs.headerClassName
+    )[0];
+    const infoPanel = document.getElementsByClassName(
+      jutsuAttrs.infoPanelClassName
+    )[0];
+    const footer = document.getElementsByClassName(
+      jutsuAttrs.footerClassName
     )[0];
 
-    fullscreenButton.onclick = customFullscreenExit;
+    // enable scrolling
+    body.style.overflow = null;
+    // show header
+    header.style.display = null;
+    // show info panel
+    infoPanel.style.display = null;
+    // show footer
+    footer.style.display = null;
+
+    // remove fullscreen styling from the player
+    playerDiv.classList.remove(jutsuAttrs.playerFullscreenClassName);
+    // make the player regular size
+    playerDiv.classList.remove(jsuperCss.fullscreen);
+    // put the player in a normal position
+    playerDiv.classList.remove(jsuperCss.topIndex);
+
+    this.player.isFullscreen(false);
+
+    this.ipc.send({
+      key: ipcKeys.fullscreenControl,
+      value: ipcBoolRequests.requestFalse
+    });
   }
 
   /**
    * @returns {void}
    */
-  handleCustomFullscreenExitUninject() {
-    removeCustomFullscreenExit()
+  handleCustomFullscreenExitInject() {
+    this.player.isFullscreen(true);
+
+    /** @type {HTMLButtonElement} */
+    const fullscreenButton = document.getElementsByClassName(
+      jutsuAttrs.playerFullscreenButtonClassName
+    )[0];
+
+    const thisArg = this;
+
+    fullscreenButton.addEventListener(
+      "click",
+      function (event) {
+        return thisArg.customFullscreenExit(event);
+      },
+      { capture: true, once: true }
+    );
   }
 }
 

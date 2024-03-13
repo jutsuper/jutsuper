@@ -43,6 +43,7 @@
         "/src/error.js",
         "/src/storage.js",
         "/src/ipc.js",
+        "/src/messaging.js",
         "/src/page/jutsuper.js",
         "/src/page/jutsuper.css",
         "/src/assets/gear.svg"

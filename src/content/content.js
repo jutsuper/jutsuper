@@ -200,6 +200,7 @@ class JutSuperContent {
 
     this.listenEssentialsLoadState();
     this.listenFullscreenChange();
+    this.listenFullscreenControl();
     this.listenEpisodeSwitchPrepStates();
   }
 
@@ -330,6 +331,52 @@ class JutSuperContent {
    */
   async handleFullscreenChange(state) {
     this.isFullscreen = state;
+  }
+
+  ////////////////////////
+  // Fullscreen control //
+  ////////////////////////
+
+  async listenFullscreenControl() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvOnlyTheseKeys(ipcKeys.fullscreenControl)
+      .build();
+
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt);
+
+      try {
+        switch (evt.value) {
+          case ipcBoolRequests.requestFalse:
+            await this.handleFullscreenExitRequest();
+            break;
+          default:
+            throw jsuperErrors.unhandledCaseError({
+              location: thisArg.LOCATION,
+              target: `${evt.key}=${evt.value}`
+            });
+        }
+      } catch (e) {
+        jsuperLog.error(new Error, e);
+      }
+    }
+
+    throw jsuperErrors.unexpectedEndError({
+      location: this.LOCATION,
+      target: `${this.listenFullscreenControl.name}()`
+    });
+  }
+
+  async handleFullscreenExitRequest() {
+    await browser.runtime.sendMessage(
+      (new JutSuperMessageBuilder())
+        .request(
+          (new JutSuperRequestMessageBuilder)
+            .isFullscreenState(false)
+            .build()
+        )
+        .build()
+    );
   }
 
   ////////////////////////////////////
@@ -474,23 +521,12 @@ class JutSuperContent {
         // put the player above everything
         playerDiv.classList.add(jsuperCss.topIndex);
 
-        const thisArg = this;
-
-        setTimeout(function() {
-          thisArg.ipc.send({
-            key: ipcKeys.injectCustomFullscreenExit,
-            value: ipcBoolRequests.requestTrue
-          });
-        }, 5000)
-
-        /** 
         // inject function to be able to exit
         // this custom fullscreen mode
         this.ipc.send({
           key: ipcKeys.injectCustomFullscreenExit,
           value: ipcBoolRequests.requestTrue
         });
-        */
       }
     }
     else {
