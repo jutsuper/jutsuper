@@ -476,25 +476,25 @@ class JutSuperContent {
     if (isSwitchedAutomatically) {
       jsuperLog.log(new Error, "episode was switched automatically");
 
-      const body = document.getElementsByTagName(
-        "body"
-      )[0];
-      const playerDiv = document.getElementById(
-        jutsuAttrs.playerDivId
-      );
-      const header = document.getElementsByClassName(
-        jutsuAttrs.headerClassName
-      )[0];
-      const infoPanel = document.getElementsByClassName(
-        jutsuAttrs.infoPanelClassName
-      )[0];
-      const footer = document.getElementsByClassName(
-        jutsuAttrs.footerClassName
-      )[0];
-
       this.requestPlay();
 
-      if (transitionKeys.isFullscreen) {
+      if (transition.isFullscreen) {
+        const body = document.getElementsByTagName(
+          "body"
+        )[0];
+        const playerDiv = document.getElementById(
+          jutsuAttrs.playerDivId
+        );
+        const header = document.getElementsByClassName(
+          jutsuAttrs.headerClassName
+        )[0];
+        const infoPanel = document.getElementsByClassName(
+          jutsuAttrs.infoPanelClassName
+        )[0];
+        const footer = document.getElementsByClassName(
+          jutsuAttrs.footerClassName
+        )[0];
+
         await browser.runtime.sendMessage(
           (new JutSuperMessageBuilder())
             .request(

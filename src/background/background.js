@@ -118,7 +118,9 @@ class JutSuperBackground {
 
     switch (state) {
       case true:
-        this.prevWindowState = window.state;
+        if (this.prevWindowState === undefined) {
+          this.prevWindowState = window.state;
+        }
         browser.windows.update(window.id, { state: "fullscreen" });
         break;
       case false:
