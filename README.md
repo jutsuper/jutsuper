@@ -2,3 +2,12 @@
 
 
 # Autoskip browser plugin for [jut.su](https://jut.su/)
+
+
+### Skip openings and endings
+
+### Play automatically
+
+### Persist fullscreen
+
+### Change preferences
