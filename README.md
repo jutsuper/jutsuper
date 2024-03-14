@@ -3,7 +3,7 @@
 
 # Autoskip browser plugin for [jut.su](https://jut.su/)
 
-<img src="assets/circle.svg" width="100" />
+<a href="#"><img src="assets/circle.svg" width="100"/></a>
 
 ### Skip openings and endings
 
