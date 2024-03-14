@@ -202,6 +202,10 @@ class JutSuperContent {
     this.listenFullscreenChange();
     this.listenFullscreenControl();
     this.listenEpisodeSwitchPrepStates();
+
+    window.addEventListener('resize', function(event) {
+      console.log(window.innerWidth, "x", window.innerHeight);
+    }, true);
   }
 
   /////////////////////////////

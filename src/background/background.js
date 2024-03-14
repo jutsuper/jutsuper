@@ -61,6 +61,7 @@ var storageKeys;
 /** @type {JutSuperBackground} */
 var jutsuperBackground;
 
+console.log(this);
 
 class JutSuperBackground {
   constructor() {
