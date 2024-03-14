@@ -1,13 +1,13 @@
 <svg width="232" height="232" viewBox="0 0 232 232" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <style><![CDATA[
+  <style>
     @keyframes anim {
       0% {
         transform: scale(0.9);
-        fill: #28E0CA;
+        fill: #10AD9B;
       }
       100% {
         transform: scale(1);
-        fill: #10ad9b;
+        fill: #28E0CA;
       }
     }
     #ellipse {
@@ -16,7 +16,8 @@
       animation-name: anim;
       animation-iteration-count: infinite;
       animation-direction: alternate;
+      transform-origin: center;
     }
-  ]]></style>
+  </style>
   <circle id="ellipse" cx="116" cy="116" r="116"/>
 </svg>
