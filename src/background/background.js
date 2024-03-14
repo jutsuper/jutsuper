@@ -1,8 +1,8 @@
-// #if "@BROWSER" == "chrome"
-var BROWSER = "chrome";
+// #if "@BROWSER" == "blink"
+var BROWSER = "blink";
 var browser = chrome;
-// #elif "@BROWSER" == "firefox"
-var BROWSER = "firefox";
+// #elif "@BROWSER" == "gecko"
+var BROWSER = "gecko";
 // #else
 // #error
 // #endif

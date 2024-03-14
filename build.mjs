@@ -10,23 +10,26 @@ import { program } from "commander";
 import { compile } from "c-preprocessor";
 
 
-const CHROME = "chrome";
-const FIREFOX = "firefox";
+const BLINK = "blink";
+const GECKO = "gecko";
 const ALL = "all";
 const SUPPORTED_BROWSERS = [
-  CHROME,
-  FIREFOX
+  BLINK,
+  GECKO
 ];
 const SUPPORTED_BROWSERS_COMMA_SEP = (
   SUPPORTED_BROWSERS.join(",")
 );
+const SUPPORTED_BROWSERS_WITH_ALL_COMMA_SEP = (
+  SUPPORTED_BROWSERS_COMMA_SEP + ",all"
+)
 
 const MANIFEST_FILE_NAME = "manifest.json";
 const MANIFEST2_FILE_NAME = "manifestV2.json";
 const MANIFEST3_FILE_NAME = "manifestV3.json";
 const MANIFEST_VER_MAP = {}
-MANIFEST_VER_MAP[CHROME] = 3
-MANIFEST_VER_MAP[FIREFOX] = 2
+MANIFEST_VER_MAP[BLINK] = 3
+MANIFEST_VER_MAP[GECKO] = 2
 const MANIFEST_FILE_MAP = {}
 MANIFEST_FILE_MAP[3] = MANIFEST3_FILE_NAME
 MANIFEST_FILE_MAP[2] = MANIFEST2_FILE_NAME
@@ -56,7 +59,7 @@ const COMPILER_MANIFEST_KEY = "@MANIFEST";
 program
   .option(
     "-b, --browser <string>",
-    `Specify target browsers comma separated, no space (${SUPPORTED_BROWSERS_COMMA_SEP})`
+    `Specify target browsers comma separated, no space (${SUPPORTED_BROWSERS_WITH_ALL_COMMA_SEP})`
   )
   .parse();
 
@@ -194,17 +197,17 @@ function build() {
        * 
        * @example
        * if (
-       *   targetDirPath === "dist/firefox" &&
+       *   targetDirPath === "dist/gecko" &&
        *   pathToParentDirOfFile === "src"
        * ) {
-       *   console.assert(distParentPath === "dist/firefox/src")
+       *   console.assert(distParentPath === "dist/gecko/src")
        * }
        * 
        * if (
-       *   targetDirPath === "dist/chrome" &&
+       *   targetDirPath === "dist/blink" &&
        *   pathToParentDirOfFile === "src/background"
        * ) {
-       *   console.assert(distParentPath === "dist/chrome/src/background")
+       *   console.assert(distParentPath === "dist/blink/src/background")
        * }
        */
       const distParentPath = path.join(targetDirPath, pathToParentDirOfFile);
@@ -213,19 +216,19 @@ function build() {
        * 
        * @example
        * if (
-       *   distParentPath === "dist/firefox/src" &&
+       *   distParentPath === "dist/gecko/src" &&
        *   parsedSrcPath.name === "storage" &&
        *   parsedSrcPath.ext === ".js"
        * ) {
-       *   console.assert(distPath === "dist/firefox/src/storage.js")
+       *   console.assert(distPath === "dist/gecko/src/storage.js")
        * }
        * 
        * if (
-       *   distParentPath === "dist/chrome/src/background" &&
+       *   distParentPath === "dist/blink/src/background" &&
        *   parsedSrcPath.name === "background" &&
        *   parsedSrcPath.ext === ".js"
        * ) {
-       *   console.assert(distPath === "dist/chrome/src/background/background.js")
+       *   console.assert(distPath === "dist/blink/src/background/background.js")
        * }
        */
       const distPath = path.join(distParentPath, parsedSrcPath.name + parsedSrcPath.ext);

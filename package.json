@@ -8,8 +8,8 @@
     "glob": "^10.3.10"
   },
   "scripts": {
-    "build-chrome": "node build.mjs --browser chrome",
-    "build-firefox": "node build.mjs --browser firefox",
+    "build-blink": "node build.mjs --browser blink",
+    "build-gecko": "node build.mjs --browser gecko",
     "build": "node build.mjs --browser all"
   },
   "devDependencies": {
