@@ -15,18 +15,18 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Build for Chrome",
+      "name": "Launch Build for Blink",
       "runtimeArgs": ["--preserve-symlinks"],
       "program": "${workspaceFolder}/build.mjs",
-      "args": ["--browser", "chrome"]
+      "args": ["--browser", "blink"]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Build for Firefox",
+      "name": "Launch Build for Gecko",
       "runtimeArgs": ["--preserve-symlinks"],
       "program": "${workspaceFolder}/build.mjs",
-      "args": ["--browser", "firefox"]
+      "args": ["--browser", "gecko"]
     }
   ]
 }
