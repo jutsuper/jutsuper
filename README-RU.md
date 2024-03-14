@@ -2,7 +2,15 @@
 
 [<svg fill="none" width="100" height="24">
   <foreignObject width="100%" height="100%">
-    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f1ec-1f1e7.svg" alt="GB Flag" width="24" style="float: left; margin-right: 5px"/> English
+    <div>
+      <style>
+        .float-left-margin-right-5px {
+          float: left;
+          margin-right: 5px;
+        }
+      </style>
+      <img class="float-left-margin-right-5px" src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f1ec-1f1e7.svg" alt="GB Flag" width="24"/> English
+    </div>
   </foreignObject>
 </svg>](https://github.com/kerdl/jutsuper/blob/main/README.md)
 
