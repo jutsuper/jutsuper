@@ -4,7 +4,7 @@
 # Autoskip browser plugin for [jut.su](https://jut.su/)
 
 <svg width="232" height="232" viewBox="0 0 232 232" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <style>
+  <style><![CDATA[
     @keyframes anim {
       0% {
         transform: scale(0.9);
@@ -22,7 +22,7 @@
       animation-iteration-count: infinite;
       animation-direction: alternate;
     }
-  </style>
+  ]]></style>
   <circle id="ellipse" cx="116" cy="116" r="116"/>
 </svg>
 
