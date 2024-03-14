@@ -1,0 +1,133 @@
+<svg width="1024" height="576" viewBox="0 0 1024 576" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes anim-left-to-right-pulse {
+      0% {
+        transform: translateX(-30px);
+        opacity: 0;
+      }
+      50% {
+        transform: translateX(-30px);
+        opacity: 0;
+      }
+      60% {
+        transform: translateX(0px);
+        opacity: 1;
+      }
+      70% {
+        transform: translateX(0px);
+      }
+      80% {
+        transform: translateX(10px);
+      }
+      90% {
+        transform: translateX(0px);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(30px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes anim-stretch-left-to-right {
+      0% {
+        width: 3%;
+      }
+      34% {
+        width: 10%;
+      }
+      80% {
+        width: 73%;
+      }
+      86% {
+        width: 73%;
+      }
+      100% {
+        width: 3%;
+      }
+    }
+
+    @keyframes anim-short-appear-and-spin {
+      0% {
+        opacity: 0;
+        transform: rotate(0deg);
+      }
+
+      36% {
+        opacity: 0;
+      }
+      38% {
+        opacity: 1;
+      }
+      44% {
+        opacity: 1;
+      }
+      46% {
+        opacity: 0;
+      }
+
+      86% {
+        opacity: 0;
+      }
+      88% {
+        opacity: 1;
+      }
+      94% {
+        opacity: 1;
+      }
+      96% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 0;
+        transform: rotate(2160deg);
+      }
+    }
+
+    #player-skipper {
+      animation-name: anim-left-to-right-pulse;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #player-timeline-watched {
+      animation-name: anim-stretch-left-to-right;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #player-loader {
+      animation-name: anim-short-appear-and-spin;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+      animation-timing-function: linear;
+      transform-origin: center;
+    }
+  </style>
+  <g id="autoskip-element" clip-path="url(#clip0_0_1)">
+    <rect id="bg" width="1024" height="576" rx="30" fill="url(#green-gradient)"/>
+    <g id="player-timeline">
+      <rect id="player-timeline-remaining" x="36" y="475" width="951" height="36" rx="18" fill="white"/>
+      <rect id="player-timeline-watched" x="36" y="475" width="36" height="36" rx="18" fill="#9BC76C"/>
+    </g>
+    <g id="player-skipper" opacity="0">
+      <rect id="player-skipper-bg" x="727" y="346" width="260" height="90" rx="45" fill="white"/>
+      <path id="player-skipper-triangle" d="M953 387.036C955.667 388.575 955.667 392.425 953 393.964L922.25 411.718C919.583 413.257 916.25 411.333 916.25 408.254L916.25 372.746C916.25 369.667 919.583 367.743 922.25 369.282L953 387.036Z" fill="#9BC76C"/>
+    </g>
+    <path id="player-loader" opacity="0" d="M577.932 288.5C582.94 288.5 587.056 284.425 586.456 279.453C585.109 268.291 581.28 257.531 575.205 247.98C567.502 235.869 556.506 226.205 543.507 220.12C530.507 214.035 516.042 211.782 501.808 213.625C487.574 215.467 474.159 221.329 463.137 230.523C452.115 239.717 443.943 251.863 439.577 265.536C435.211 279.209 434.834 293.843 438.488 307.724C442.143 321.604 449.678 334.155 460.211 343.905C468.518 351.594 478.417 357.291 489.156 360.618C493.94 362.1 498.687 358.782 499.585 353.854V353.854C500.483 348.927 497.18 344.272 492.456 342.61C485.093 340.018 478.306 335.941 472.532 330.596C464.529 323.187 458.804 313.651 456.027 303.106C453.251 292.56 453.538 281.441 456.855 271.052C460.171 260.664 466.381 251.436 474.755 244.451C483.129 237.465 493.321 233.011 504.136 231.611C514.951 230.211 525.941 231.923 535.818 236.546C545.695 241.169 554.049 248.512 559.902 257.714C564.125 264.353 566.919 271.762 568.148 279.469C568.936 284.415 572.923 288.5 577.932 288.5V288.5Z" fill="white"/>
+  </g>
+
+  <defs>
+    <clipPath id="clip0_0_1">
+      <rect width="1024" height="576" fill="white"/>
+    </clipPath>
+    <linearGradient id="green-gradient" x1="0" y2="0" gradientTransform="rotate(-120)">
+      <stop offset="0%" stop-color="#C3E062"></stop>
+      <stop offset="100%" stop-color="#9BC76C"></stop>
+    </linearGradient>
+  </defs>
+</svg>

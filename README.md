@@ -3,16 +3,30 @@
 
 # Autoskip browser plugin for [jut.su](https://jut.su/)
 
+### Skip openings and endings
 <picture>
-  <p align="center">
-    <img src="assets/circle.svg" width="64"/>
+  <p align="left">
+    <img src="assets/autoskip-element.svg" width="600px"/>
   </p>
 </picture>
 
-### Skip openings and endings
-
 ### Play automatically
+<picture>
+  <p align="left">
+    <img src="assets/autoskip-element.svg" width="600px"/>
+  </p>
+</picture>
 
 ### Persist fullscreen
+<picture>
+  <p align="left">
+    <img src="assets/autoskip-element.svg" width="600px"/>
+  </p>
+</picture>
 
 ### Change preferences
+<picture>
+  <p align="left">
+    <img src="assets/autoskip-element.svg" width="600px"/>
+  </p>
+</picture>

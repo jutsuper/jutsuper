@@ -5,9 +5,29 @@
 
 
 ### Пропускай опенинги и эндинги
+<picture>
+  <p align="left">
+    <img src="assets/autoskip-element.svg" width="600px"/>
+  </p>
+</picture>
 
 ### Воспроизводи автоматически
+<picture>
+  <p align="left">
+    <img src="assets/autoskip-element.svg" width="600px"/>
+  </p>
+</picture>
 
 ### Сохраняй полноэкранный режим
+<picture>
+  <p align="left">
+    <img src="assets/autoskip-element.svg" width="600px"/>
+  </p>
+</picture>
 
 ### Настраивай
+<picture>
+  <p align="left">
+    <img src="assets/autoskip-element.svg" width="600px"/>
+  </p>
+</picture>
