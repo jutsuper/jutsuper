@@ -1,0 +1,236 @@
+<svg width="1024" height="576" viewBox="0 0 1024 576" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes anim-shift-slider-delay1 {
+      0% {
+        transform: translateX(0px);
+      }
+      10% {
+        transform: translateX(0px);
+      }
+      20% {
+        transform: translateX(94px);
+      }
+      55% {
+        transform: translateX(94px);
+      }
+      65% {
+        transform: translateX(0px);
+      }
+      100% {
+        transform: translateX(0px);
+      }
+    }
+
+    @keyframes anim-stretch-slider-delay1 {
+      0% {
+        width: 4%;
+      }
+      10% {
+        width: 4%;
+      }
+      20% {
+        width: 13%;
+      }
+      55% {
+        width: 13%;
+      }
+      65% {
+        width: 4%;
+      }
+      100% {
+        width: 4%;
+      }
+    }
+
+    @keyframes anim-shift-slider-delay2 {
+      0% {
+        transform: translateX(0px);
+      }
+      25% {
+        transform: translateX(0px);
+      }
+      35% {
+        transform: translateX(-94px);
+      }
+      70% {
+        transform: translateX(-94px);
+      }
+      80% {
+        transform: translateX(0px);
+      }
+      100% {
+        transform: translateX(0px);
+      }
+    }
+
+    @keyframes anim-stretch-slider-delay2 {
+      0% {
+        width: 13%;
+      }
+      25% {
+        width: 13%;
+      }
+      35% {
+        width: 4%;
+      }
+      70% {
+        width: 4%;
+      }
+      80% {
+        width: 13%;
+      }
+      100% {
+        width: 13%;
+      }
+    }
+
+    @keyframes anim-shift-slider-delay3 {
+      0% {
+        transform: translateX(0px);
+      }
+      40% {
+        transform: translateX(0px);
+      }
+      50% {
+        transform: translateX(-94px);
+      }
+      100% {
+        transform: translateX(-94px);
+      }
+    }
+
+    @keyframes anim-stretch-slider-delay3 {
+      0% {
+        width: 13%;
+      }
+      40% {
+        width: 13%;
+      }
+      50% {
+        width: 4%;
+      }
+      100% {
+        width: 4%;
+      }
+    }
+
+    @keyframes anim-top-bottom-show-hide {
+      0% {
+        transform: translateY(-240px);
+      }
+      15% {
+        transform: translateY(0px);
+      }
+      85% {
+        transform: translateY(0px);
+      }
+      100% {
+        transform: translateY(-240px);
+      }
+    }
+
+    @keyframes anim-stretch-left-to-right {
+      0% {
+        width: 30%;
+      }
+      85% {
+        width: 60%;
+      }
+      100% {
+        width: 30%;
+      }
+    }
+
+    #settings-slider1-tip {
+      animation-name: anim-shift-slider-delay1;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-slider1-enabled-bg {
+      animation-name: anim-stretch-slider-delay1;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-slider2-tip {
+      animation-name: anim-shift-slider-delay2;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-slider2-enabled-bg {
+      animation-name: anim-stretch-slider-delay2;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-slider3-tip {
+      animation-name: anim-shift-slider-delay3;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-slider3-enabled-bg {
+      animation-name: anim-stretch-slider-delay3;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings {
+      animation-name: anim-top-bottom-show-hide;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #player-timeline-watched {
+      animation-name: anim-stretch-left-to-right;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+      animation-timing-function: cubic-bezier(.09,.21,.31,1);
+    }
+  </style>
+  <g id="change-preferences-element" clip-path="url(#clip0_0_1)">
+    <rect id="bg" width="1024" height="576" rx="30" fill="url(#green-gradient)"/>
+    <g id="player-timeline">
+      <rect id="player-timeline-remaining" x="36" y="475" width="951" height="36" rx="18" fill="white"/>
+      <rect id="player-timeline-watched" x="36" y="475" width="388" height="36" rx="18" fill="#9BC76C"/>
+    </g>
+    <g id="settings">
+      <rect id="settings-bg" x="13" y="15" width="997" height="221" rx="30" fill="white"/>
+      <g id="slider1">
+        <rect id="settings-slider1-disabled-bg" x="61" y="142" width="139" height="46" rx="23" fill="#E7E7E7"/>
+        <rect id="settings-slider1-enabled-bg" x="61" y="142" width="46" height="46" rx="23" fill="#9BC76C"/>
+        <rect id="settings-slider1-tip" x="61" y="142" width="46" height="46" rx="23" fill="#C3E062"/>
+      </g>
+      <g id="slider2">
+        <rect id="settings-slider2-disabled-bg" x="230" y="142" width="139" height="46" rx="23" fill="#E7E7E7"/>
+        <rect id="settings-slider2-enabled-bg" x="230" y="142" width="46" height="46" rx="23" fill="#9BC76C"/>
+        <rect id="settings-slider2-tip" x="323" y="142" width="46" height="46" rx="23" fill="#C3E062"/>
+      </g>
+      <g id="slider3">
+        <rect id="settings-slider3-disabled-bg" x="399" y="142" width="139" height="46" rx="23" fill="#E7E7E7"/>
+        <rect id="settings-slider3-enabled-bg" x="399" y="142" width="46" height="46" rx="23" fill="#9BC76C"/>
+        <rect id="settings-slider3-tip" x="492" y="142" width="46" height="46" rx="23" fill="#C3E062"/>
+      </g>
+      <rect id="settings-topbar" x="61" y="63" width="901" height="46" rx="23" fill="#E7E7E7"/>
+    </g>
+  </g>
+  <defs>
+    <clipPath id="clip0_0_1">
+      <rect width="1024" height="576" rx="30" fill="white"/>
+    </clipPath>
+    <linearGradient id="green-gradient" gradientTransform="rotate(120)">
+      <stop offset="0%" stop-color="#BDF283"></stop>
+      <stop offset="100%" stop-color="#C3E062"></stop>
+    </linearGradient>
+  </defs>
+</svg>

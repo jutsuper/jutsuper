@@ -21,6 +21,6 @@
 ### Настраивай
 <picture>
   <p align="left">
-    <img src="assets/showcase/autoskip-element.svg" width="500px" alt="Анимация настройки"/>
+    <img src="assets/showcase/change-preferences-element.svg" width="500px" alt="Анимация настройки"/>
   </p>
 </picture>

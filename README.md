@@ -20,6 +20,6 @@
 ### Change preferences
 <picture>
   <p align="left">
-    <img src="assets/showcase/autoskip-element.svg" width="500px" alt="Changing preferences animation"/>
+    <img src="assets/showcase/change-preferences-element.svg" width="500px" alt="Changing preferences animation"/>
   </p>
 </picture>
