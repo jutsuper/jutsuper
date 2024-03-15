@@ -21,7 +21,7 @@
 ### Сохраняй полноэкранный режим
 <picture>
   <p align="left">
-    <img src="assets/showcase/autoskip-element.svg" width="500px"/>
+    <img src="assets/showcase/persistent-fullscreen-element.svg" width="500px"/>
   </p>
 </picture>
 
