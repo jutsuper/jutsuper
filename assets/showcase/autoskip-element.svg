@@ -125,9 +125,9 @@
     <clipPath id="clip0_0_1">
       <rect width="1024" height="576" fill="white"/>
     </clipPath>
-    <linearGradient id="green-gradient" x1="0" y2="0" gradientTransform="rotate(-120)">
-      <stop offset="0%" stop-color="#C3E062"></stop>
-      <stop offset="100%" stop-color="#9BC76C"></stop>
+    <linearGradient id="green-gradient" gradientTransform="rotate(120)">
+      <stop offset="0%" stop-color="#BDF283"></stop>
+      <stop offset="100%" stop-color="#C3E062"></stop>
     </linearGradient>
   </defs>
 </svg>
