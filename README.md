@@ -6,27 +6,27 @@
 ### Skip openings and endings automatically
 <picture>
   <p align="left">
-    <img src="assets/showcase/autoskip-element.svg" width="600px"/>
+    <img src="assets/showcase/autoskip-element.svg" width="500px"/>
   </p>
 </picture>
 
 ### Play automatically
 <picture>
   <p align="left">
-    <img src="assets/showcase/autoplay-element.svg" width="600px"/>
+    <img src="assets/showcase/autoplay-element.svg" width="500px"/>
   </p>
 </picture>
 
 ### Persist fullscreen
 <picture>
   <p align="left">
-    <img src="assets/showcase/autoskip-element.svg" width="600px"/>
+    <img src="assets/showcase/autoskip-element.svg" width="500px"/>
   </p>
 </picture>
 
 ### Change preferences
 <picture>
   <p align="left">
-    <img src="assets/showcase/autoskip-element.svg" width="600px"/>
+    <img src="assets/showcase/autoskip-element.svg" width="500px"/>
   </p>
 </picture>
