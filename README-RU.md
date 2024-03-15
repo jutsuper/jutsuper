@@ -7,27 +7,27 @@
 ### Пропускай опенинги и эндинги автоматически
 <picture>
   <p align="left">
-    <img src="assets/autoskip-element.svg" width="600px"/>
+    <img src="assets/showcase/autoskip-element.svg" width="600px"/>
   </p>
 </picture>
 
 ### Воспроизводи автоматически
 <picture>
   <p align="left">
-    <img src="assets/autoskip-element.svg" width="600px"/>
+    <img src="assets/showcase/autoplay-element.svg" width="600px"/>
   </p>
 </picture>
 
 ### Сохраняй полноэкранный режим
 <picture>
   <p align="left">
-    <img src="assets/autoskip-element.svg" width="600px"/>
+    <img src="assets/showcase/autoskip-element.svg" width="600px"/>
   </p>
 </picture>
 
 ### Настраивай
 <picture>
   <p align="left">
-    <img src="assets/autoskip-element.svg" width="600px"/>
+    <img src="assets/showcase/autoskip-element.svg" width="600px"/>
   </p>
 </picture>
