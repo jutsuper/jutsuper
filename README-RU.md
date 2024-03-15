@@ -4,30 +4,23 @@
 # Браузерный плагин автопропуска на [jut.su](https://jut.su/)
 
 
-### Пропускай опенинги и эндинги автоматически
+### Пропускай опенинги и эндинги, воспроизводи автоматически
 <picture>
   <p align="left">
-    <img src="assets/showcase/autoskip-element.svg" width="500px"/>
-  </p>
-</picture>
-
-### Воспроизводи автоматически
-<picture>
-  <p align="left">
-    <img src="assets/showcase/autoplay-element.svg" width="500px"/>
+    <img src="assets/showcase/autoskip-element.svg" width="500px" alt="Анимация пропуска опенингов и эндингов с автоматическим воспроизведением"/>
   </p>
 </picture>
 
 ### Сохраняй полноэкранный режим
 <picture>
   <p align="left">
-    <img src="assets/showcase/persistent-fullscreen-element.svg" width="500px"/>
+    <img src="assets/showcase/persistent-fullscreen-element.svg" width="500px" alt="Анимация сохранения полноэкранного режима"/>
   </p>
 </picture>
 
 ### Настраивай
 <picture>
   <p align="left">
-    <img src="assets/showcase/autoskip-element.svg" width="500px"/>
+    <img src="assets/showcase/autoskip-element.svg" width="500px" alt="Анимация настройки"/>
   </p>
 </picture>
