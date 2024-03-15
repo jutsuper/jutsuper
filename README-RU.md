@@ -4,7 +4,7 @@
 # Плагин автопропуска на [jut.su](https://jut.su/)
 
 
-### Пропускай опенинги и эндинги
+### Пропускай опенинги и эндинги автоматически
 <picture>
   <p align="left">
     <img src="assets/autoskip-element.svg" width="600px"/>

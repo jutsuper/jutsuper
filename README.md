@@ -3,7 +3,7 @@
 
 # Autoskip browser plugin for [jut.su](https://jut.su/)
 
-### Skip openings and endings
+### Skip openings and endings automatically
 <picture>
   <p align="left">
     <img src="assets/autoskip-element.svg" width="600px"/>
