@@ -6,6 +6,9 @@ import {
   JutSuperIpc
 } from "/src/ipc.js";
 import {
+  BrowserWindowStates as windowStates
+} from "/src/browser.js"
+import {
   JutSuFunctions as jutsuFns,
   JutSuDomAttributes as jutsuAttrs,
   JutSuperAssetIds as assetIds,
@@ -28,6 +31,7 @@ class JutSuper {
    */
   constructor(player) {
     this.LOCATION = JutSuper.name;
+    console.log(`${this.LOCATION}: constructing`);
 
     if (!player || !player.overlays_ || !player.on) {
       throw new Error(
@@ -35,6 +39,11 @@ class JutSuper {
         "unable to construct JutSuper"
       );
     }
+
+    /** @type {boolean} */
+    this.isCustomFullscreen = false;
+    /** @type {number | undefined} */
+    this.peakScreenHeight = undefined;
 
     /** @type {JutSuperIpc} */
     this.ipc = new JutSuperIpcBuilder().identifyAs(ipcIds.page).build()
@@ -454,10 +463,15 @@ class JutSuper {
   }
 
   /**
-   * @param {MouseEvent} event 
+   * @param {MouseEvent} [event] 
+   * @returns {void}
    */
-  customFullscreenExit(event) {
-    event.stopImmediatePropagation();
+  customFullscreenExit(event = undefined) {
+    if (event && this.isCustomFullscreen) {
+      event.stopImmediatePropagation();
+    } else if (!this.isCustomFullscreen) {
+      return;
+    }
 
     const body = document.getElementsByTagName(
       "body"
@@ -492,6 +506,7 @@ class JutSuper {
     playerDiv.classList.remove(jsuperCss.topIndex);
 
     this.player.isFullscreen(false);
+    this.isCustomFullscreen = false;
 
     this.ipc.send({
       key: ipcKeys.fullscreenControl,
@@ -502,7 +517,44 @@ class JutSuper {
   /**
    * @returns {void}
    */
+  listenResolutionChange() {
+    const thisArg = this;
+    window.addEventListener("resize", function(event) {
+      console.log(window.innerWidth, "x", window.innerHeight);
+      thisArg.handleResolutionChange(event);
+    }, true);
+  }
+
+  /**
+   * @param {UIEvent} event 
+   * @returns {void}
+   */
+  async handleResolutionChange(event) {
+    const wasPeakScreenHeightDefined = typeof this.peakScreenHeight === "number";
+
+    if (!wasPeakScreenHeightDefined || this.peakScreenHeight < window.innerHeight) {
+      this.peakScreenHeight = window.innerHeight;
+      return;
+    } else if (this.peakScreenHeight > window.innerHeight) {
+      this.ipc.send({
+        key: ipcKeys.windowState,
+        value: ipcAwaits.request
+      });
+      const windowState = (await this.ipc.recvOnce({
+        key: ipcKeys.windowState
+      })).value;
+  
+      if (windowState !== windowStates.fullscreen) {
+        this.customFullscreenExit();
+      }
+    }
+  }
+
+  /**
+   * @returns {void}
+   */
   handleCustomFullscreenExitInject() {
+    this.isCustomFullscreen = true;
     this.player.isFullscreen(true);
 
     /** @type {HTMLButtonElement} */
@@ -519,6 +571,14 @@ class JutSuper {
       },
       { capture: true, once: true }
     );
+
+    // send callback that the injection was completed
+    this.ipc.send({
+      key: ipcKeys.injectCustomFullscreenExit,
+      value: ipcAwaits.completed
+    });
+
+    this.listenResolutionChange();
   }
 }
 

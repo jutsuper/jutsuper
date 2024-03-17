@@ -32,6 +32,12 @@ var jsuperLog;
  */
 var storageKeys;
 
+/**
+ * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessageBuilder} JutSuperRequestsResponseMessageBuilder
+ * @type {typeof import("/src/messaging.js").JutSuperRequestsResponseMessageBuilder}
+ */
+var JutSuperRequestsResponseMessageBuilder;
+
 
 /** Import modules */
 (async function() {
@@ -39,10 +45,13 @@ var storageKeys;
   const logModule = await import(browser.runtime.getURL("/src/log.js"))
   /** @type {typeof import("/src/consts.js")} */
   const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
+  /** @type {typeof import("/src/messaging.js")} */
+  const messagingModule = await import(browser.runtime.getURL("/src/messaging.js"))
 
   browsers = constsModule.JutSuperBrowsers;
   jsuperLog = logModule.jsuperLog;
   storageKeys = constsModule.JutSuperStorageKeys;
+  JutSuperRequestsResponseMessageBuilder = messagingModule.JutSuperRequestsResponseMessageBuilder;
 })().then(() => {
   jutsuperBackground = new JutSuperBackground();
 })
@@ -53,8 +62,11 @@ var storageKeys;
 
 /**
  * @typedef {import("/src/messaging.js").JutSuperActionsMessage} JutSuperActionsMessage
+ * @typedef {import("/src/messaging.js").JutSuperRequestsRequestMessage} JutSuperRequestsRequestMessage
+ * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessage} JutSuperRequestsResponseMessage
  * @typedef {import("/src/messaging.js").JutSuperMessage} JutSuperMessage
  * @typedef {import("/src/browser.js").BrowserMessageSenderDescriptor} BrowserMessageSenderDescriptor
+ * @typedef {import("/src/browser.js").BrowserWindowDescriptor} BrowserWindowDescriptor
  */
 
 
@@ -72,50 +84,56 @@ class JutSuperBackground {
 
     browser.runtime.onMessage.addListener(
       /**
-       * @param {JutSuperMessage} request 
+       * @param {JutSuperMessage} message 
        * @param {BrowserMessageSenderDescriptor} sender 
-       * @param {function(unknown): any} sendResponse 
+       * @param {function(any): any} sendResponse 
        */
-      function(request, sender, sendResponse) {
-        thisArg.messageCallback(request, sender, sendResponse)
+      function(message, sender, sendResponse) {
+        const resp = thisArg.messageCallback(message, sender);
+        sendResponse(resp);
       }
     );
   }
 
   /**
    * 
-   * @param {JutSuperMessage} request 
+   * @param {JutSuperMessage} message 
    * @param {BrowserMessageSenderDescriptor} sender 
-   * @param {function(unknown): any} sendResponse 
+   * @returns {Promise<JutSuperRequestsResponseMessage> | Promise<void>}
    */
-  messageCallback(request, sender, sendResponse) {
-    if (request.actions) {
-      this.handleActions(request.actions, sender, sendResponse);
+  async messageCallback(message, sender) {
+    if (message.actions) {
+      this.handleActions(message.actions, sender);
+    }
+    if (message.requests) {
+      return await this.handleRequests(message.requests, sender);
     }
   }
 
   /**
    * @param {JutSuperActionsMessage} actions
    * @param {BrowserMessageSenderDescriptor} sender 
-   * @param {function(unknown): any} sendResponse 
+   * @returns {Promise<void>}
    */
-  async handleActions(actions, sender, sendResponse) {
+  async handleActions(actions, sender) {
     if (actions.fullscreenState !== undefined) {
       await this.handleFullscreenRequest(
         actions.fullscreenState,
-        sender,
-        sendResponse
+        sender
       )
     }
   }
 
   /**
    * @param {boolean} state
-   * @param {BrowserMessageSenderDescriptor} sender 
-   * @param {function(unknown): any} sendResponse 
+   * @param {BrowserMessageSenderDescriptor} sender
+   * @returns {Promise<void>}
    */
-  async handleFullscreenRequest(state, sender, sendResponse) {
+  async handleFullscreenRequest(state, sender) {
+    /** @type {BrowserWindowDescriptor} */
     const window = await browser.windows.get(sender.tab.windowId);
+
+    console.log(window);
 
     switch (state) {
       case true:
@@ -132,6 +150,21 @@ class JutSuperBackground {
           browser.windows.update(window.id, { state: "maximized" });
         }
         break;
+    }
+  }
+
+  /**
+   * @param {JutSuperRequestsRequestMessage} requests
+   * @param {BrowserMessageSenderDescriptor} sender 
+   * @returns {Promise<JutSuperRequestsResponseMessage> | Promise<void>}
+   */
+  async handleRequests(requests, sender) {
+    if (requests.getWindowState) {
+      /** @type {BrowserWindowDescriptor} */
+      const window = await browser.windows.get(sender.tab.windowId);
+      return (new JutSuperRequestsResponseMessageBuilder())
+        .windowState(window.state)
+        .build();
     }
   }
 }

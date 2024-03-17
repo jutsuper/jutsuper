@@ -110,10 +110,16 @@ var JutSuperIpc;
 var JutSuperIpcRecvParamsBuilder;
 
 /**
- * @typedef {import("/src/messaging.js").JutSuperRequestMessageBuilder} JutSuperRequestMessageBuilder
- * @type {typeof import("/src/messaging.js").JutSuperRequestMessageBuilder}
+ * @typedef {import("/src/messaging.js").JutSuperActionsMessageBuilder} JutSuperActionsMessageBuilder
+ * @type {typeof import("/src/messaging.js").JutSuperActionsMessageBuilder}
  */
-var JutSuperRequestMessageBuilder;
+var JutSuperActionsMessageBuilder;
+
+/**
+ * @typedef {import("/src/messaging.js").JutSuperRequestsRequestMessageBuilder} JutSuperRequestsRequestMessageBuilder
+ * @type {typeof import("/src/messaging.js").JutSuperRequestsRequestMessageBuilder}
+ */
+var JutSuperRequestsRequestMessageBuilder;
 
 /**
  * @typedef {import("/src/messaging.js").JutSuperMessageBuilder} JutSuperMessageBuilder
@@ -124,6 +130,7 @@ var JutSuperMessageBuilder;
 /**
  * @typedef {import("/src/ipc.js").JutSuperIpcValueDescriptor} JutSuperIpcValueDescriptor
  * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeysTypes} JutSuperStorageTransitionKeysTypes
+ * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessage} JutSuperRequestsResponseMessage
  */
 
 /** Import modules */
@@ -158,7 +165,8 @@ var JutSuperMessageBuilder;
   JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
   JutSuperIpc = ipcModule.JutSuperIpc;
   JutSuperIpcRecvParamsBuilder = ipcModule.JutSuperIpcRecvParamsBuilder;
-  JutSuperRequestMessageBuilder = messagingModule.JutSuperRequestMessageBuilder;
+  JutSuperActionsMessageBuilder = messagingModule.JutSuperActionsMessageBuilder;
+  JutSuperRequestsRequestMessageBuilder = messagingModule.JutSuperRequestsRequestMessageBuilder;
   JutSuperMessageBuilder = messagingModule.JutSuperMessageBuilder;
 })().then(() => {
   jutsuperContent = new JutSuperContent();
@@ -202,10 +210,7 @@ class JutSuperContent {
     this.listenFullscreenChange();
     this.listenFullscreenControl();
     this.listenEpisodeSwitchPrepStates();
-
-    window.addEventListener('resize', function(event) {
-      console.log(window.innerWidth, "x", window.innerHeight);
-    }, true);
+    this.listenWindowStatesRequests();
   }
 
   /////////////////////////////
@@ -337,6 +342,68 @@ class JutSuperContent {
     this.isFullscreen = state;
   }
 
+  ////////////////////////////////////
+  // Window state requests handling //
+  ////////////////////////////////////
+
+  /**
+   * @returns {Promise<never>}
+   */
+  async listenWindowStatesRequests() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvOnlyTheseKeys(ipcKeys.windowState)
+      .build();
+
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt);
+
+      try {
+        switch (evt.value) {
+          case ipcAwaits.request:
+            await this.handleWindowStateRequest();
+            break;
+          default:
+            throw jsuperErrors.unhandledCaseError({
+              location: this.LOCATION,
+              target: `${evt.key}=${evt.value}`
+            });
+        }
+      } catch (e) {
+        jsuperLog.error(new Error, e);
+      }
+    }
+
+    throw jsuperErrors.unexpectedEndError({
+      location: this.LOCATION,
+      target: `${this.listenWindowStatesRequests.name}()`
+    });
+  }
+
+  /**
+   * @returns {Promise<void>}
+   */
+  async handleWindowStateRequest() {
+    /** @type {Promise<JutSuperRequestsResponseMessage>} */
+    const sendResult = await browser.runtime.sendMessage(
+      (new JutSuperMessageBuilder())
+        .requests(
+          (new JutSuperRequestsRequestMessageBuilder())
+            .getWindowState()
+            .build()
+        )
+        .build()
+    );
+    const resp = await sendResult;
+    const windowState = resp.windowState;
+
+    console.log("windowState =", windowState);
+
+    this.ipc.send({
+      key: ipcKeys.windowState,
+      value: windowState
+    })
+  }
+
   ////////////////////////
   // Fullscreen control //
   ////////////////////////
@@ -374,8 +441,8 @@ class JutSuperContent {
   async handleFullscreenExitRequest() {
     await browser.runtime.sendMessage(
       (new JutSuperMessageBuilder())
-        .request(
-          (new JutSuperRequestMessageBuilder)
+        .actions(
+          (new JutSuperActionsMessageBuilder())
             .isFullscreenState(false)
             .build()
         )
@@ -499,16 +566,6 @@ class JutSuperContent {
           jutsuAttrs.footerClassName
         )[0];
 
-        await browser.runtime.sendMessage(
-          (new JutSuperMessageBuilder())
-            .request(
-              (new JutSuperRequestMessageBuilder)
-                .isFullscreenState(true)
-                .build()
-            )
-            .build()
-        );
-
         // disable scrolling
         body.style.overflow = "hidden";
         // hide header
@@ -531,6 +588,22 @@ class JutSuperContent {
           key: ipcKeys.injectCustomFullscreenExit,
           value: ipcBoolRequests.requestTrue
         });
+
+        // wait for injection to complete
+        await this.ipc.recvOnce({
+          key: ipcKeys.injectCustomFullscreenExit,
+          value: ipcAwaits.completed
+        });
+
+        await browser.runtime.sendMessage(
+          (new JutSuperMessageBuilder())
+            .actions(
+              (new JutSuperActionsMessageBuilder())
+                .isFullscreenState(true)
+                .build()
+            )
+            .build()
+        );
       }
     }
     else {

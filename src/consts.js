@@ -31,8 +31,15 @@ export {
   JutSuperIpcBoolRequestStates,
   JutSuperIpcValueDelims,
   JutSuperMessagingMessageKeys,
-  JutSuperMessagingMessageActionsKeys
+  JutSuperMessagingMessageActionsKeys,
+  JutSuperMessagingMessageRequestsRequestKeys,
+  JutSuperMessagingMessageRequestsResponseKeys
 }
+
+
+/**
+ * @typedef {import("/src/browser.js").BrowserWindowStatesKeys} BrowserWindowStatesKeys
+ */
 
 
 /**
@@ -524,6 +531,16 @@ const JutSuperIpcKeys = {
    */
   isFullscreen: "data-is-fullscreen",
   /**
+   * # Request window state from a background script
+   * 
+   * ## Possible values
+   * @see {JutSuperIpcAwaitStatesKeys}
+   * @see {BrowserWindowStatesKeys}
+   *
+   * @type {"data-fullscreen-control"}
+   */
+  windowState: "data-window-state",
+  /**
    * # Request to enter/exit fullscreen
    * 
    * ## Possible values
@@ -584,6 +601,7 @@ const JutSuperIpcKeys = {
    * 
    * ## Possible values
    * @see {JutSuperIpcBoolRequestStatesKeys}
+   * @see {JutSuperIpcAwaitStatesKeys}
    *
    * @type {"data-inject-custom-fullscreen-exit"}
    */
@@ -600,6 +618,7 @@ const JutSuperIpcKeys = {
  * @typedef JutSuperIpcKeysType
  * @property {"data-essentials-loading-state"} essentialsLoadingState
  * @property {"data-is-fullscreen"} isFullscreen
+ * @property {"data-window-state"} windowState
  * @property {"data-fullscreen-control"} fullscreenControl
  * @property {"data-playing-control"} playingControl
  * @property {"data-episode-switch-prep"} episodeSwitchPrep
@@ -825,13 +844,20 @@ const JutSuperMessagingMessageKeys = {
    * @type {"actions"}
    */
   actions: "actions",
+  /**
+   * # Denotes value requests
+   * @type {"requests"}
+   */
+  requests: "requests",
 }
 /** 
  * @typedef JutSuperMessagingMessageKeysType
  * @property {"actions"} actions
+ * @property {"requests"} requests
  * 
  * @typedef {(
- *   "actions"
+ *   "actions" |
+ *   "requests"
  * )} JutSuperMessagingMessageKeysKeys
  */
 
@@ -855,4 +881,48 @@ const JutSuperMessagingMessageActionsKeys = {
  * @typedef {(
  *   "fullscreenState"
  * )} JutSuperMessagingMessageActionsKeysKeys
+ */
+
+
+/**
+ * # Describes `requests` keys in a request message in internal messaging
+ * @readonly
+ * @enum {JutSuperMessagingMessageRequestsRequestKeysType}
+ */
+const JutSuperMessagingMessageRequestsRequestKeys = {
+  /**
+   * # Gets the current window state
+   * @type {"getWindowState"}
+   */
+  getWindowState: "getWindowState",
+}
+/** 
+ * @typedef JutSuperMessagingMessageRequestsRequestKeysType
+ * @property {"getWindowState"} getWindowState
+ * 
+ * @typedef {(
+ *   "getWindowState"
+ * )} JutSuperMessagingMessageRequestsRequestKeysKeys
+ */
+
+
+/**
+ * # Describes `requests` keys in a response message in internal messaging
+ * @readonly
+ * @enum {JutSuperMessagingMessageRequestsResponseKeysType}
+ */
+const JutSuperMessagingMessageRequestsResponseKeys = {
+  /**
+   * # Denotes the current window state
+   * @type {"windowState"}
+   */
+  windowState: "windowState",
+}
+/** 
+ * @typedef JutSuperMessagingMessageRequestsResponseKeysType
+ * @property {"windowState"} windowState
+ * 
+ * @typedef {(
+ *   "windowState"
+ * )} JutSuperMessagingMessageRequestsResponseKeysKeys
  */
