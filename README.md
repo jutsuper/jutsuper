@@ -1,7 +1,7 @@
 [<img src="assets/flag/ru.svg" alt="RU Flag" width="20"/> Русский](https://github.com/kerdl/jutsuper/blob/main/README-RU.md)
 
 
-# <img src="src/assets/logo/square-green.svg" width="25" /> Autoskip browser plugin for [jut.su](https://jut.su/)
+# <picture><img src="src/assets/logo/square-green.svg" width="25" /></picture> Autoskip browser plugin for [jut.su](https://jut.su/)
 
 ### Skip openings and endings, play automatically
 <picture>
