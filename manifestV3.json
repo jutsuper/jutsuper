@@ -41,6 +41,7 @@
         "/src/log.js",
         "/src/consts.js",
         "/src/error.js",
+        "/src/util.js",
         "/src/storage.js",
         "/src/ipc.js",
         "/src/messaging.js",
