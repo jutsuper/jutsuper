@@ -290,8 +290,12 @@ const JutSuperLogDefaults = {
  * @enum {JutSuperAssetIdsType}
  */
 const JutSuperAssetIds = {
-  /** @type {"jutsuper-gear-svg"} */
-  gearSvg: "jutsuper-gear-svg",
+  /** @type {"jutsuper-green-logo-svg"} */
+  greenLogoSvg: "jutsuper-green-logo-svg",
+  /** @type {"jutsuper-white-logo-svg"} */
+  whiteLogoSvg: "jutsuper-white-logo-svg",
+  /** @type {"jutsuper-black-logo-svg"} */
+  blackLogoSvg: "jutsuper-black-logo-svg",
   /** @type {"jutsuper-css"} */
   jutsuperCss: "jutsuper-css",
   /** @type {"jutsuper-ipc-js"} */
@@ -301,13 +305,15 @@ const JutSuperAssetIds = {
 }
 /** 
  * @typedef JutSuperAssetIdsType
- * @property {"jutsuper-gear-svg"} gearSvg
+ * @property {"jutsuper-green-logo-svg"} greenLogoSvg
+ * @property {"jutsuper-white-logo-svg"} whiteLogoSvg
+ * @property {"jutsuper-black-logo-svg"} blackLogoSvg
  * @property {"jutsuper-css"} jutsuperCss
  * @property {"jutsuper-ipc-js"} jutsuperIpcJs
  * @property {"jutsuper-js"} jutsuperJs
  * 
  * @typedef {(
- *   "jutsuper-gear-svg" |
+ *   "jutsuper-green-logo-svg" |
  *   "jutsuper-css" |
  *   "jutsuper-ipc-js" |
  *   "jutsuper-js"
@@ -329,8 +335,12 @@ const JutSuperAssetIds = {
  * @enum {JutSuperAssetPathsType}
  */
 const JutSuperAssetPaths = {
-  /** @type {"/src/assets/gear.svg"} */
-  gearSvg: "/src/assets/gear.svg",
+  /** @type {"/src/assets/logo/green.svg"} */
+  greenLogoSvg: "/src/assets/logo/green.svg",
+  /** @type {"/src/assets/logo/white.svg"} */
+  whiteLogoSvg: "/src/assets/logo/white.svg",
+  /** @type {"/src/assets/logo/black.svg"} */
+  blackLogoSvg: "/src/assets/logo/black.svg",
   /** @type {"/src/consts.js"} */
   constsJs: "/src/consts.js",
   /** @type {"/src/ipc.js"} */
@@ -342,14 +352,18 @@ const JutSuperAssetPaths = {
 }
 /** 
  * @typedef JutSuperAssetPathsType
- * @property {"/src/assets/gear.svg"} gearSvg
+ * @property {"/src/assets/logo/green.svg"} greenLogoSvg
+ * @property {"/src/assets/logo/white.svg"} whiteLogoSvg
+ * @property {"/src/assets/logo/black.svg"} blackLogoSvg
  * @property {"/src/consts.js"} constsJs
  * @property {"/src/ipc.js"} ipcJs
  * @property {"/src/page/jutsuper.css"} jutsuperCss
  * @property {"/src/page/jutsuper.js"} jutsuperJs
  * 
  * @typedef {(
- *   "/src/assets/gear.svg" |
+ *   "/src/assets/logo/green.svg" |
+ *   "/src/assets/logo/white.svg" |
+ *   "/src/assets/logo/black.svg" |
  *   "/src/consts.js" |
  *   "/src/ipc.js" |
  *   "/src/page/jutsuper.css" |

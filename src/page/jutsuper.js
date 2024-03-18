@@ -319,7 +319,7 @@ class JutSuper {
    */
   generateSettingsTab() {
     const gearIconUri = document
-      .getElementById(assetIds.gearSvg)
+      .getElementById(assetIds.greenLogoSvg)
       .getAttribute("href");
 
     const gearImage = document.createElement("img");

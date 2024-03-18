@@ -1,7 +1,7 @@
-[<img src="assets/gb.svg" alt="GB Flag" width="20"/> English](https://github.com/kerdl/jutsuper/blob/main/README.md)
+[<img src="assets/flag/gb.svg" alt="GB Flag" width="20"/> English](https://github.com/kerdl/jutsuper/blob/main/README.md)
 
 
-# Браузерный плагин автопропуска на [jut.su](https://jut.su/)
+# <img src="src/assets/logo/square-green.svg" width="25" /> Браузерный плагин автопропуска на [jut.su](https://jut.su/)
 
 
 ### Пропускай опенинги и эндинги, воспроизводи автоматически

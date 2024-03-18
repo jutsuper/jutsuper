@@ -19,7 +19,7 @@
   },
   "action": {
     "default_icon": {
-      "128": "/src/assets/icon128.png"
+      "128": "/src/assets/logo/square-green-128.png"
     },
     "default_title": "JutSuper",
     "default_popup": "/src/popup/popup.html"
@@ -48,7 +48,9 @@
         "/src/browser.js",
         "/src/page/jutsuper.js",
         "/src/page/jutsuper.css",
-        "/src/assets/gear.svg"
+        "/src/assets/logo/green.svg",
+        "/src/assets/logo/white.svg",
+        "/src/assets/logo/black.svg"
       ],
       "matches": [
         "https://*.jut.su/*"
@@ -56,6 +58,6 @@
     }
   ],
   "icons": {
-    "128": "/src/assets/icon128.png"
+    "128": "/src/assets/logo/square-green-128.png"
   }
 }
