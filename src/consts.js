@@ -158,7 +158,7 @@ const JutSuDomAttributes = {
 
 
 /**
- * # Browser names
+ * # Browser engine names
  * 
  * Used for flow control
  * based on the current browser
@@ -168,22 +168,24 @@ const JutSuDomAttributes = {
  */
 const JutSuperBrowsers = {
   /**
-   * @type {"chrome"}
+   * # Chrome, Opera, Yandex Browser, etc.
+   * @type {"blick"}
    */
-  chrome: "chrome",
+  blink: "blink",
   /**
-   * @type {"firefox"}
+   * # Firefox
+   * @type {"gecko"}
    */
-  firefox: "firefox",
+  gecko: "gecko",
 }
 /** 
  * @typedef JutSuperBrowsersType
- * @property {"chrome"} chrome
- * @property {"firefox"} firefox
+ * @property {"blink"} blink
+ * @property {"gecko"} gecko
  * 
  * @typedef {(
- *   "chrome" |
- *   "firefox"
+ *   "blink" |
+ *   "gecko"
  * )} JutSuperBrowsersKeys
  */
 

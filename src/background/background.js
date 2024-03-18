@@ -13,6 +13,7 @@ import {
   JutSuperStorageKeys as storageKeys
 } from "/src/consts.js";
 import { jsuperLog } from "/src/log.js";
+import { JutSuperRequestsResponseMessageBuilder } from "/src/messaging.js";
 // #elif "@MANIFEST" == "2"
 /**
  * @typedef {import("/src/consts.js").JutSuperBrowsers} JutSuperBrowsers
@@ -89,8 +90,14 @@ class JutSuperBackground {
        * @param {function(any): any} sendResponse 
        */
       function(message, sender, sendResponse) {
-        const resp = thisArg.messageCallback(message, sender);
-        sendResponse(resp);
+        (async () => {
+          const resp = await thisArg.messageCallback(message, sender);
+          sendResponse(resp);
+        })();
+
+        // return `true` to indicate we want to
+        // send a response asynchronously
+        return true;
       }
     );
   }

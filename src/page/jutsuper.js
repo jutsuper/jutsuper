@@ -27,7 +27,7 @@ var jutsuper;
 
 class JutSuper {
   /**
-   * @param {unknown} player Jut.su's player on a page
+   * @param {unknown} player Jut.su's player
    */
   constructor(player) {
     this.LOCATION = JutSuper.name;
@@ -35,8 +35,8 @@ class JutSuper {
 
     if (!player || !player.overlays_ || !player.on) {
       throw new Error(
-        "JutSuper: player not yet initialized, " +
-        "unable to construct JutSuper"
+        `${this.LOCATION}: player not yet initialized, ` +
+        `unable to construct ${this.LOCATION}`
       );
     }
 
@@ -55,20 +55,47 @@ class JutSuper {
     this.openingTriggered = false;
     /** @type {boolean} */
     this.endingTriggered = false;
-    /** @type {number[]} something like `[ 83, 98 ]` */
-    this.openingSkipperRng = this.getOverlayRngByFunctionName(
+    /**
+     * # Time ranges when it's possible to skip the opening
+     * (in seconds)
+     * 
+     * @example
+     * ```
+     * // if there is one skipper, it may be
+     * [ 83, 98 ]
+     * // if there are multiple skippers, it may be
+     * [[ 83, 98 ], [ 100, 115 ]]
+     * ```
+     * @type {number[][]} 
+     */
+    this.openingSkipperRngs = this.getOverlayRngsByFunctionName(
       jutsuFns.skipOpeningFnName
     );
-    /** @type {number[]} someting like `[ 1405, 1425 ]` */
-    this.endingSkipperRng = this.getOverlayRngByFunctionName(
+    /**
+     * # Time ranges when it's possible to skip the ending
+     * (in seconds)
+     * 
+     * @example
+     * ```
+     * // if there is one skipper, it may be
+     * [ 1205, 1225 ]
+     * // if there are multiple skippers, it may be
+     * [[ 1205, 1225 ], [ 1405, 1425 ]]
+     * ```
+     * @type {number[][]} 
+     */
+    this.endingSkipperRngs = this.getOverlayRngsByFunctionName(
       jutsuFns.skipEndingFnName
     );
+
+    jsuperLog.debug(new Error, "openingSkipperRngs is", this.openingSkipperRngs);
+    jsuperLog.debug(new Error, "endingSkipperRngs is", this.endingSkipperRngs);
 
     this.listenPlayRequests();
     this.listenCustomFullscreenExitInjectRequest();
 
     this.#initPage().then(() => {
-      jsuperLog.debug(new Error, "JutSuper: constructed");
+      jsuperLog.debug(new Error, `${this.LOCATION}: constructed`);
     });
   }
 
@@ -83,14 +110,38 @@ class JutSuper {
    * # Check if `value` is in the `range`, exclusive (not including the last)
    * 
    * @param {number} value number value to check in the range 
-   * @param {number[]} range where to check, should be like `[ 83, 98 ]`
+   * @param {number[] | number[][]} range where to check
+   * example values: `[ 83, 98 ]` || `[[ 83, 98 ], [ 100, 115 ]]`
    * @returns {boolean}
    */
   static isInRangeExclusive(value, range) {
-    const start = range[0]
-    const end = range[1]
+    if (range.length < 1) {
+      return false;
+    }
 
-    return value >= start && value < end
+    if (typeof range[0] === "number") {
+      /** @type {number[]} */
+      range;
+
+      const start = range[0]
+      const end = range[1]
+      return value >= start && value < end
+    }
+    else if (range[0].constructor === Array) {
+      /** @type {number[][]} */
+      range;
+
+      for (const rng of range) {
+        const start = rng[0]
+        const end = rng[1]
+
+        if (value >= start && value < end) {
+          return true
+        }
+      }
+    }
+
+    return false;
   }
 
   /** 
@@ -109,20 +160,32 @@ class JutSuper {
    * We'll read the boundaries of these overlays to determine
    * when to skip openings and endings.
    * 
-   * # Example
-   * - `getOverlayRngByFunctionName("skip_video_intro") ->  [ 83, 98 ]`
-   * - `getOverlayRngByFunctionName("video_go_next_episode") -> [ 1405, 1425 ]`
+   * @example
+   * ```
+   * const openingRng = getOverlayRngsByFunctionName("skip_video_intro");
+   * // example values:
+   * // openingRng === [ 83, 98 ] ||
+   * // openingRng === [[ 83, 98 ], [ 100, 115 ]]
+   * const endingRng = getOverlayRngsByFunctionName("video_go_next_episode");
+   * // example values:
+   * // endingRng === [ 1205, 1225 ] ||
+   * // endingRng === [[ 1205, 1225 ], [ 1405, 1425 ]]
+   * ```
+   * - `getOverlayRngsByFunctionName("skip_video_intro") ->  [ 83, 98 ]`
+   * - `getOverlayRngsByFunctionName("video_go_next_episode") -> [ 1405, 1425 ]`
    * @param {string} fn_name
-   * @returns {number[] | null}
+   * @returns {number[][]}
    */
-  getOverlayRngByFunctionName(fn_name) {
+  getOverlayRngsByFunctionName(fn_name) {
+    /** @type {number[][]} */
+    const ranges = [];
     for (const overlay of this.player.overlays_) {
       if (overlay.options_.the_function === fn_name) {
-        return [overlay.options_.start, overlay.options_.end]
+        ranges.push([overlay.options_.start, overlay.options_.end]);
       }
     }
 
-    return null;
+    return ranges;
   }
 
   /**
@@ -202,9 +265,9 @@ class JutSuper {
 
     if (
       // does the opening range exists
-      this.openingSkipperRng &&
+      this.openingSkipperRngs.length > 0 &&
       // is current time in the opening skipper region
-      JutSuper.isInRangeExclusive(time, this.openingSkipperRng) &&
+      JutSuper.isInRangeExclusive(time, this.openingSkipperRngs) &&
       // is currently playing
       !this.player.paused()
     ) {
@@ -221,9 +284,9 @@ class JutSuper {
     }
     else if (
       // does the ending range exists
-      this.endingSkipperRng &&
+      this.endingSkipperRngs.length > 0 &&
       // is current time in the ending skipper region
-      JutSuper.isInRangeExclusive(time, this.endingSkipperRng) &&
+      JutSuper.isInRangeExclusive(time, this.endingSkipperRngs) &&
       // is currently playing
       !this.player.paused()
     ) {

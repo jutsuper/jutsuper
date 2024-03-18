@@ -7,6 +7,13 @@ var BROWSER = "gecko";
 // #error
 // #endif
 
+
+/**
+ * @typedef {import("/src/consts.js").JutSuperBrowsers} JutSuperBrowsers
+ * @type {JutSuperBrowsers}
+ */
+var browsers;
+
 /**
  * @typedef {import("/src/error.js").JutSuperErrors} JutSuperErrors
  * @type {JutSuperErrors}
@@ -127,11 +134,6 @@ var JutSuperRequestsRequestMessageBuilder;
  */
 var JutSuperMessageBuilder;
 
-/**
- * @typedef {import("/src/ipc.js").JutSuperIpcValueDescriptor} JutSuperIpcValueDescriptor
- * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeysTypes} JutSuperStorageTransitionKeysTypes
- * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessage} JutSuperRequestsResponseMessage
- */
 
 /** Import modules */
 (async function() {
@@ -148,6 +150,7 @@ var JutSuperMessageBuilder;
   /** @type {typeof import("/src/messaging.js")} */
   const messagingModule = await import(browser.runtime.getURL("/src/messaging.js"));
 
+  browsers = constsModule.JutSuperBrowsers;
   jsuperErrors = errorModule.jsuperErrors;
   jsuperLog = logModule.jsuperLog;
   jsuperStorage = storageModule.jsuperStorage;
@@ -171,6 +174,14 @@ var JutSuperMessageBuilder;
 })().then(() => {
   jutsuperContent = new JutSuperContent();
 })
+
+
+/**
+ * @typedef {import("/src/ipc.js").JutSuperIpcValueDescriptor} JutSuperIpcValueDescriptor
+ * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeysTypes} JutSuperStorageTransitionKeysTypes
+ * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessage} JutSuperRequestsResponseMessage
+ * @typedef {import("/src/browser.js").BrowserWindowStatesKeys} BrowserWindowStatesKeys
+ */
 
 
 /** @type {JutSuperContent} */
@@ -383,18 +394,35 @@ class JutSuperContent {
    * @returns {Promise<void>}
    */
   async handleWindowStateRequest() {
-    /** @type {Promise<JutSuperRequestsResponseMessage>} */
-    const sendResult = await browser.runtime.sendMessage(
-      (new JutSuperMessageBuilder())
-        .requests(
-          (new JutSuperRequestsRequestMessageBuilder())
-            .getWindowState()
-            .build()
-        )
-        .build()
-    );
-    const resp = await sendResult;
-    const windowState = resp.windowState;
+    /** @type {BrowserWindowStatesKeys} */
+    let windowState;
+    let message = (new JutSuperMessageBuilder())
+      .requests(
+        (new JutSuperRequestsRequestMessageBuilder())
+          .getWindowState()
+          .build()
+      )
+      .build()
+
+    
+    if (BROWSER === browsers.blink) {
+      /** @type {JutSuperRequestsResponseMessage} */
+      const resp = await new Promise(resolve => {
+        browser.runtime.sendMessage(message,
+          /** @param {JutSuperRequestsResponseMessage} response */
+          (response) => {
+            resolve(response);
+          }
+        );
+      });
+      windowState = resp.windowState;
+    }
+    else if (BROWSER === browsers.gecko) {
+      /** @type {Promise<JutSuperRequestsResponseMessage>} */
+      const sendResult = await browser.runtime.sendMessage(message);
+      const resp = await sendResult;
+      windowState = resp.windowState;
+    }
 
     console.log("windowState =", windowState);
 
