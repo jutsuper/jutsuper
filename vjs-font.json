@@ -1,0 +1,10 @@
+{
+  "font-name": "JutSuperVjs",
+  "root-dir": ".",
+  "icons": [
+    {
+      "name": "jutsuper-logo-white",
+      "svg": "src/assets/logo/square-white-48.svg"
+    }
+  ]
+}

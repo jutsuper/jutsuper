@@ -190,9 +190,12 @@ var jutsuperContent;
 
 class JutSuperContent {
   constructor() {
+    /** @type {string} */
     this.LOCATION = JutSuperContent.name;
 
+    /** @type {boolean} */
     this.isFullscreen = undefined;
+    /** @type {boolean} */
     this.isSwitchingEpisode = undefined;
 
     /** @type {JutSuperIpc} */
@@ -202,7 +205,7 @@ class JutSuperContent {
       .build();
 
     /** @type {string} */
-    this.urlGreenLogoSvg = browser.runtime.getURL(assetPaths.greenLogoSvg);
+    this.urlSquareGreenLogo48Svg = browser.runtime.getURL(assetPaths.squareGreenLogo48Svg);
     /** @type {string} */
     this.urlJutSuperIpcJs = browser.runtime.getURL(assetPaths.ipcJs);
     /** @type {string} */
@@ -212,7 +215,7 @@ class JutSuperContent {
 
     const head = document.getElementsByTagName("head")[0];
 
-    this.injectImage(head, this.urlGreenLogoSvg, assetIds.greenLogoSvg);
+    this.injectImage(head, this.urlSquareGreenLogo48Svg, assetIds.squareGreenLogo48Svg);
     this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
     this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
     this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);

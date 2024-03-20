@@ -317,26 +317,14 @@ class JutSuper {
   /**
    * @returns {HTMLDivElement}
    */
-  generateSettingsTab() {
-    const gearIconUri = document
-      .getElementById(assetIds.greenLogoSvg)
-      .getAttribute("href");
-
-    const gearImage = document.createElement("img");
-    gearImage.setAttribute("src", gearIconUri)
-    gearImage.classList.add("jutsuper-bottom-margin-right-5");
-    gearImage.style.width = "15px";
-    gearImage.style.height = "15px";
-
-    const div = document.createElement("div");
-    div.classList.add("achiv_switcher_in");
-    div.classList.add("jutsuper-bottom-top-anim-025");
-    div.style.marginRight = "5px";
-
-    div.append(gearImage);
-    div.append("JutSuper");
-
-    return div;
+  generateSettingsButton() {
+    const Button = videojs.getComponent("Button");
+    const button = new Button(this.player, {
+      clickHandler: function(event) {
+        console.log("clicked");
+      }
+    });
+    return button;
   }
 
   /**
@@ -441,15 +429,7 @@ class JutSuper {
    * @returns {void}
    */
   injectSettingsTab() {
-    const topPlayerLane = document.getElementsByClassName("achiv_switcher");
-
-    if (topPlayerLane.length > 1) {
-      jsuperLog.warn(new Error, "JutSuper: there are several achiv_switcher elements");
-    }
-
-    for (const lane of topPlayerLane) {
-      lane.insertBefore(this.generateSettingsTab(), lane.firstChild);
-    }
+    
   }
 
   /**
