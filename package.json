@@ -7,12 +7,12 @@
     "fs-extra": "^11.2.0",
     "glob": "^10.3.10"
   },
+  "devDependencies": {
+    "c-preprocessor": "^0.2.13"
+  },
   "scripts": {
     "build-blink": "node build.mjs --browser blink",
     "build-gecko": "node build.mjs --browser gecko",
     "build": "node build.mjs --browser all"
-  },
-  "devDependencies": {
-    "c-preprocessor": "^0.2.13"
   }
 }

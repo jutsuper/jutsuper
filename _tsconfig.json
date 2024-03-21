@@ -1,6 +1,9 @@
 {
   "include": ["."],
-  "exclude": ["dist"],
+  "exclude": [
+    "dev",
+    "dist"
+  ],
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
