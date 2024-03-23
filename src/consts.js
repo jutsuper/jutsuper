@@ -324,6 +324,8 @@ const JutSuperAssetIds = {
   jutsuperIpcJs: "jutsuper-ipc-js",
   /** @type {"jutsuper-js"} */
   jutsuperJs: "jutsuper-js",
+  /** @type {"jutsuper-settings-html"} */
+  settingsHtml: "jutsuper-settings-html",
 }
 /** 
  * @typedef JutSuperAssetIdsType
@@ -333,6 +335,7 @@ const JutSuperAssetIds = {
  * @property {"jutsuper-css"} jutsuperCss
  * @property {"jutsuper-ipc-js"} jutsuperIpcJs
  * @property {"jutsuper-js"} jutsuperJs
+ * @property {"jutsuper-settings-html"} settingsHtml
  * 
  * @typedef {(
  *   "jutsuper-square-green-logo-48-svg" |
@@ -340,7 +343,8 @@ const JutSuperAssetIds = {
  *   "jutsuper-square-black-logo-48-svg" |
  *   "jutsuper-css" |
  *   "jutsuper-ipc-js" |
- *   "jutsuper-js"
+ *   "jutsuper-js" |
+ *   "jutsuper-settings-html"
  * )} JutSuperAssetIdsKeys
  */
 
@@ -373,6 +377,8 @@ const JutSuperAssetPaths = {
   jutsuperCss: "/src/page/jutsuper.css",
   /** @type {"/src/page/jutsuper.js"} */
   jutsuperJs: "/src/page/jutsuper.js",
+  /** @type {"/src/page/settings.html"} */
+  settingsHtml: "/src/page/settings.html",
 }
 /** 
  * @typedef JutSuperAssetPathsType
@@ -383,6 +389,7 @@ const JutSuperAssetPaths = {
  * @property {"/src/ipc.js"} ipcJs
  * @property {"/src/page/jutsuper.css"} jutsuperCss
  * @property {"/src/page/jutsuper.js"} jutsuperJs
+ * @property {"/src/page/settings.html"} settingsHtml
  * 
  * @typedef {(
  *   "/src/assets/logo/square-green-48.svg" |
@@ -391,7 +398,8 @@ const JutSuperAssetPaths = {
  *   "/src/consts.js" |
  *   "/src/ipc.js" |
  *   "/src/page/jutsuper.css" |
- *   "/src/page/jutsuper.js"
+ *   "/src/page/jutsuper.js" |
+ *   "/src/page/settings.html"
  * )} JutSuperAssetPathsKeys
  */
 

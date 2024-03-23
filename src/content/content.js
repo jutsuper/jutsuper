@@ -214,6 +214,8 @@ class JutSuperContent {
     this.urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
     /** @type {string} */
     this.urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
+    /** @type {string} */
+    this.urlSettingsHtml = browser.runtime.getURL(assetPaths.settingsHtml);
 
     const head = document.getElementsByTagName("head")[0];
 
@@ -222,6 +224,7 @@ class JutSuperContent {
     this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
     this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
     this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
+    this.injectDocument(head, this.urlSettingsHtml, assetIds.settingsHtml);
 
     this.listenEssentialsLoadState();
     this.listenFullscreenChange();
@@ -284,6 +287,24 @@ class JutSuperContent {
       href: url,
       rel: "preload",
       as: "image",
+    };
+
+    const elm = document.createElement("link");
+    JutSuperContent.applyAttrs(elm, attrs);
+
+    node.appendChild(elm);
+  }
+
+  /**
+   * @param {HTMLElement} node
+   * @param {string} url
+   * @param {string} id
+   * @returns {void}
+   */
+  injectDocument(node, url, id) {
+    const attrs = {
+      id: id,
+      href: url
     };
 
     const elm = document.createElement("link");

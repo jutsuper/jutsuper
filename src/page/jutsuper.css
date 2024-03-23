@@ -86,3 +86,49 @@
 .jutsuper-hidden {
   visibility: hidden;
 }
+
+/* Toggle slider */
+.jutsuper-slider-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.jutsuper-slider-switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.jutsuper-slider-bg-area {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .25s;
+  border-radius: 50px;
+}
+
+input:checked + .jutsuper-slider-bg-area {
+  background-color: #9BC76C;
+}
+
+.jutsuper-slider-bg-area:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .25s;
+  border-radius: 50px;
+}
+
+input:checked + .jutsuper-slider-bg-area:before {
+  transform: translateX(20px);
+}

@@ -130,7 +130,7 @@ class JutSuper {
     }
     this.injectFullscreenChangeListener();
     this.injectTimeupdateListener();
-    this.injectSettings();
+    await this.injectSettings();
   }
 
   /**
@@ -453,9 +453,9 @@ class JutSuper {
   }
 
   /**
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  injectSettings() {
+  async injectSettings() {
     const thisArg = this;
     const Button = this.player.constructor.getComponent("Button");
     const iconUrl = document.getElementById(assetIds.squareWhiteLogo48Svg).getAttribute("href");
@@ -514,6 +514,10 @@ class JutSuper {
       );
     }
 
+    const settingsAreaHtml = await (await fetch(
+      document.getElementById(assetIds.settingsHtml).href
+    )).text();
+
     this.settingsContainer.id = domIds.vjsSettingsContainer;
     this.settingsContainer.classList.add(jsuperCss.vjsSettingsContainer);
 
@@ -521,6 +525,7 @@ class JutSuper {
     this.settingsArea.classList.add(jsuperCss.vjsSettingsArea);
     this.settingsArea.classList.add(jsuperCss.bottomTopAnim);
     this.settingsArea.classList.add(jsuperCss.hidden);
+    this.settingsArea.innerHTML = settingsAreaHtml;
 
     this.player.el().insertBefore(
       this.settingsContainer,

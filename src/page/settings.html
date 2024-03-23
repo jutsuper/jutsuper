@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="jutsuper.css"
+    >
+    <link
+      href="/src/assets/font/Roboto-Regular.ttf"
+    >
+    <style>
+      body {
+        background-color: cadetblue;
+      }
+      .area {
+        display: flex;
+        background-color: white;
+        clip-path: border-box;
+        max-width: 220px;
+        max-height: 400px;
+        width: 220px;
+        height: 247px;
+        border-radius: 20px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        justify-content: center;
+        font-family: "Roboto";
+        font-weight: normal;
+      }
+    </style>
+    <script>
+      console.log("injecting fonts");
+      const fonts = [
+        ["Roboto", "/src/assets/font/Roboto-Regular.ttf", "truetype", "normal"],
+        ["Roboto", "/src/assets/font/Roboto-Bold.ttf", "truetype", "bold"]
+      ]
+      const newStyle = document.createElement("style");
+
+      for (const font of fonts) {
+        const family = font[0];
+        const url = font[1];
+        const format = font[2]
+        const weight = font[3];
+
+        let ff = "";
+        ff += "@font-face {\n";
+        ff += "  font-family: \"" + family + "\";";
+        ff += "  font-weight: " + weight + ";";
+        ff += "  src: url(\"" + url + "\") format(\"" + format + "\");";
+        ff += "}";
+
+        newStyle.appendChild(document.createTextNode(ff))
+      }
+
+      document.head.appendChild(newStyle);
+    </script>
+  </head>
+  <body>
+    <div class="area">
+      <label class="jutsuper-slider-switch">
+        <input type="checkbox">
+        <span class="jutsuper-slider-bg-area"></span>
+      </label>
+      <h>Опенинги</h>
+    </div>
+  </body>
+</html>
