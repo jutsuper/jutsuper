@@ -12,6 +12,7 @@ import {
   JutSuFunctions as jutsuFns,
   JutSuDomAttributes as jutsuAttrs,
   JutSuperAssetIds as assetIds,
+  JutSuperDomIds as domIds,
   JutSuperCss as jsuperCss,
   JutSuperIpcIds as ipcIds,
   JutSuperIpcKeys as ipcKeys,
@@ -44,6 +45,13 @@ class JutSuper {
     this.isCustomFullscreen = false;
     /** @type {number | undefined} */
     this.peakScreenHeight = undefined;
+
+    /** @type {HTMLDivElement} */
+    this.settingsContainer = document.createElement("div");
+    /** @type {HTMLDivElement} */
+    this.settingsArea = document.createElement("div");
+    /** @type {HTMLButtonElement} */
+    this.vjsButton = undefined;
 
     /** @type {JutSuperIpc} */
     this.ipc = new JutSuperIpcBuilder().identifyAs(ipcIds.page).build()
@@ -100,10 +108,29 @@ class JutSuper {
   }
 
   async #initPage() {
+    const thisArg = this;
+
     await this.initializeIpcValues();
+    document.onclick = function(event) {
+      const clickedSmthSettingsRelated = [
+        domIds.vjsButton,
+        domIds.vjsSettingsArea,
+      ].includes(event.target.id)
+      const isSettingsAreaHidden = thisArg
+        .settingsArea
+        .classList
+        .contains(jsuperCss.hidden)
+
+      if (
+        !clickedSmthSettingsRelated &&
+        !isSettingsAreaHidden
+      ) {
+        thisArg.settingsArea.classList.add(jsuperCss.hidden);
+      }
+    }
     this.injectFullscreenChangeListener();
     this.injectTimeupdateListener();
-    this.injectSettingsTab();
+    this.injectSettings();
   }
 
   /**
@@ -428,8 +455,79 @@ class JutSuper {
   /**
    * @returns {void}
    */
-  injectSettingsTab() {
-    
+  injectSettings() {
+    const thisArg = this;
+    const Button = this.player.constructor.getComponent("Button");
+    const iconUrl = document.getElementById(assetIds.squareWhiteLogo48Svg).getAttribute("href");
+    const buttonOptions = {
+      name: "JutSuperButton"
+    };
+
+    this.vjsButton = new Button(this.player, buttonOptions);
+    this.vjsButton.addClass(jsuperCss.vjsIcon);
+    this.vjsButton.el().id = domIds.vjsButton;
+    this.vjsButton.el().title = "JutSuper";
+    this.vjsButton.el().style.backgroundImage = `url(${iconUrl})`;
+    this.vjsButton.el().style.backgroundRepeat = "no-repeat";
+    this.vjsButton.el().style.backgroundSize = "20px";
+    this.vjsButton.el().style.backgroundPosition = "center";
+
+    this.vjsButton.on("click", function() {
+      thisArg.settingsArea.classList.toggle(jsuperCss.hidden);
+    });
+    this.player.on("userinactive", function(event) {
+      if (event.target.player.paused()) {
+        return;
+      }
+      if (!thisArg.settingsArea.classList.contains(jsuperCss.hidden)) {
+        thisArg.settingsArea.classList.add(jsuperCss.hidden);
+      }
+    })
+
+    this.player.controlBar.addChild(this.vjsButton);
+    /** to make quality selector list overlap jutsuper settings */
+    this.player.controlBar.qualitySelector.el().style.zIndex = "2" 
+    /** to make thumbnail holder overlap jutsuper settings */
+    player.el().getElementsByClassName("vjs-thumbnail-holder")[0].style.zIndex = 2;
+
+    const insertedButton = this.player.el()
+      .getElementsByClassName(jsuperCss.vjsIcon)[0];
+
+    let anchorElement;
+    const shareButtons = this.player.el()
+      .getElementsByClassName(jutsuAttrs.playerShareButtonClassName);
+
+    if (shareButtons.length > 0) {
+      anchorElement = shareButtons[0]
+    }
+
+    if (anchorElement && anchorElement.nextSibling) {
+      this.player.controlBar.el().insertBefore(
+        insertedButton,
+        anchorElement.nextSibling
+      );
+    }
+    else if (anchorElement && !anchorElement.nextSibling) {
+      this.player.controlBar.el().insertBefore(
+        insertedButton,
+        anchorElement.nextSibling
+      );
+    }
+
+    this.settingsContainer.id = domIds.vjsSettingsContainer;
+    this.settingsContainer.classList.add(jsuperCss.vjsSettingsContainer);
+
+    this.settingsArea.id = domIds.vjsSettingsArea;
+    this.settingsArea.classList.add(jsuperCss.vjsSettingsArea);
+    this.settingsArea.classList.add(jsuperCss.bottomTopAnim);
+    this.settingsArea.classList.add(jsuperCss.hidden);
+
+    this.player.el().insertBefore(
+      this.settingsContainer,
+      this.player.el().firstChild
+    )
+
+    document.getElementById(domIds.vjsSettingsContainer).append(this.settingsArea);
   }
 
   /**

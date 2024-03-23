@@ -17,6 +17,7 @@ export {
   JutSuperLogDefaults,
   JutSuperAssetIds,
   JutSuperAssetPaths,
+  JutSuperDomIds,
   JutSuperCss,
   JutSuperIpcDefaultNodeProps,
   JutSuperIpcJsDataTypes,
@@ -106,6 +107,21 @@ const JutSuDomAttributes = {
    */
   playerFullscreenButtonClassName: "vjs-fullscreen-control",
   /**
+   * # Class name of a subtitles button in a player
+   * @type {"vjs-subtitles-button"}
+   */
+  playerSubtitlesButtonClassName: "vjs-subtitles-button",
+  /**
+   * # Class name of a share button in a player
+   * @type {"vjs-share-control"}
+   */
+  playerShareButtonClassName: "vjs-share-control",
+  /**
+   * # Class name of a thumbnail holder in a player
+   * @type {"vjs-thumbnail-holder"}
+   */
+  playerThumbnailHolderClassName: "vjs-thumbnail-holder",
+  /**
    * # Class name of a page header
    *
    * Used to get the page header and apply "display: none"
@@ -141,6 +157,9 @@ const JutSuDomAttributes = {
  * @property {"my-player"} playerDivId
  * @property {"vjs-fullscreen"} playerFullscreenClassName
  * @property {"vjs-fullscreen-control"} playerFullscreenButtonClassName
+ * @property {"vjs-subtitles-button"} playerSubtitlesButtonClassName
+ * @property {"vjs-share-control"} playerShareButtonClassName
+ * @property {"vjs-thumbnail-holder"} playerThumbnailHolderClassName
  * @property {"z_fix_header"} headerClassName
  * @property {"info_panel"} infoPanelClassName
  * @property {"footer"} footerClassName
@@ -150,6 +169,9 @@ const JutSuDomAttributes = {
  *   "my-player" |
  *   "vjs-fullscreen" |
  *   "vjs-fullscreen-control" |
+ *   "vjs-subtitles-button" |
+ *   "vjs-share-control" |
+ *   "vjs-thumbnail-holder" |
  *   "z_fix_header" |
  *   "info_panel" |
  *   "footer"
@@ -375,16 +397,52 @@ const JutSuperAssetPaths = {
 
 
 /**
+ * # Describes IDs of DOM elements created and accessed by this extension
+ * 
+ * Used for easier DOM queries in the code.
+ * 
+ * @readonly
+ * @enum {JutSuperDomIdsType}
+ */
+const JutSuperDomIds = {
+  /** @type {"jutsuper-vjs-button"} */
+  vjsButton: "jutsuper-vjs-button",
+  /** @type {"jutsuper-vjs-settings-container"} */
+  vjsSettingsContainer: "jutsuper-vjs-settings-container",
+  /** @type {"jutsuper-vjs-settings-area"} */
+  vjsSettingsArea: "jutsuper-vjs-settings-area",
+}
+/** 
+ * @typedef JutSuperDomIdsType
+ * @property {"jutsuper-vjs-button"} vjsButton
+ * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
+ * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
+ * 
+ * @typedef {(
+ *   "jutsuper-vjs-button" |
+ *   "jutsuper-vjs-settings-container" |
+ *   "jutsuper-vjs-settings-area"
+ * )} JutSuperDomIdsKeys
+ */
+
+
+/**
  * # CSS styles of this extension
  * 
  * @readonly
  * @enum {JutSuperCssType}
  */
 const JutSuperCss = {
-  /** @type {"jutsuper-bottom-top-appear"} */
-  keyframesBottomTopAppear: "jutsuper-bottom-top-appear",
-  /** @type {"jutsuper-bottom-top-anim-025"} */
-  bottomTopAnim025: "jutsuper-bottom-top-anim-025",
+  /** @type {"jutsuper-vjs-icon"} */
+  vjsIcon: "jutsuper-vjs-icon",
+  /** @type {"jutsuper-vjs-settings-container"} */
+  vjsSettingsContainer: "jutsuper-vjs-settings-container",
+  /** @type {"jutsuper-vjs-settings-area"} */
+  vjsSettingsArea: "jutsuper-vjs-settings-area",
+  /** @type {"jutsuper-bottom-top-anim-appear"} */
+  keyframesBottomTopAppear: "jutsuper-bottom-top-anim-appear",
+  /** @type {"jutsuper-bottom-top-anim"} */
+  bottomTopAnim: "jutsuper-bottom-top-anim",
   /** @type {"jutsuper-bottom-margin-right-5"} */
   bottomMarginRight5: "jutsuper-bottom-margin-right-5",
   /** @type {"jutsuper-fullscreen"} */
@@ -396,16 +454,22 @@ const JutSuperCss = {
 }
 /** 
  * @typedef JutSuperCssType
- * @property {"jutsuper-bottom-top-appear"} keyframesBottomTopAppear
- * @property {"jutsuper-bottom-top-anim-025"} bottomTopAnim025
+ * @property {"jutsuper-vjs-icon"} vjsIcon
+ * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
+ * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
+ * @property {"jutsuper-bottom-top-anim-appear"} keyframesBottomTopAppear
+ * @property {"jutsuper-bottom-top-anim"} bottomTopAnim
  * @property {"jutsuper-bottom-margin-right-5"} bottomMarginRight5
  * @property {"jutsuper-fullscreen"} fullscreen
  * @property {"jutsuper-top-index"} topIndex
  * @property {"jutsuper-hidden"} hidden
  * 
  * @typedef {(
- *   "jutsuper-bottom-top-appear" |
- *   "jutsuper-bottom-top-anim-025" |
+ *   "jutsuper-vjs-icon" |
+ *   "jutsuper-vjs-settings-container" |
+ *   "jutsuper-vjs-settings-area" |
+ *   "jutsuper-bottom-top-anim-appear" |
+ *   "jutsuper-bottom-top-anim" |
  *   "jutsuper-bottom-margin-right-5" |
  *   "jutsuper-fullscreen" |
  *   "jutsuper-top-index" |

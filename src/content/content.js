@@ -207,6 +207,8 @@ class JutSuperContent {
     /** @type {string} */
     this.urlSquareGreenLogo48Svg = browser.runtime.getURL(assetPaths.squareGreenLogo48Svg);
     /** @type {string} */
+    this.urlSquareWhiteLogo48Svg = browser.runtime.getURL(assetPaths.squareWhiteLogo48Svg);
+    /** @type {string} */
     this.urlJutSuperIpcJs = browser.runtime.getURL(assetPaths.ipcJs);
     /** @type {string} */
     this.urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
@@ -216,6 +218,7 @@ class JutSuperContent {
     const head = document.getElementsByTagName("head")[0];
 
     this.injectImage(head, this.urlSquareGreenLogo48Svg, assetIds.squareGreenLogo48Svg);
+    this.injectImage(head, this.urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
     this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
     this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
     this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
