@@ -38,23 +38,26 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "/src/log.js",
+        "/src/assets/font/Roboto-Regular.ttf",
+        "/src/assets/font/Roboto-Bold.ttf",
+        "/src/assets/logo/green.svg",
+        "/src/assets/logo/white.svg",
+        "/src/assets/logo/black.svg",
+        "/src/assets/logo/square-green-48.svg",
+        "/src/assets/logo/square-white-48.svg",
+        "/src/assets/logo/square-black-48.svg",
+        "/src/assets/icon/dropdown.svg",
         "/src/consts.js",
-        "/src/error.js",
+        "/src/log.js",
         "/src/util.js",
+        "/src/error.js",
         "/src/storage.js",
         "/src/ipc.js",
         "/src/messaging.js",
         "/src/browser.js",
         "/src/page/jutsuper.js",
         "/src/page/jutsuper.css",
-        "/src/page/settings.html",
-        "/src/assets/logo/green.svg",
-        "/src/assets/logo/white.svg",
-        "/src/assets/logo/black.svg",
-        "/src/assets/logo/square-green-48.svg",
-        "/src/assets/logo/square-white-48.svg",
-        "/src/assets/logo/square-black-48.svg"
+        "/src/page/settings.html"
       ],
       "matches": [
         "https://*.jut.su/*"

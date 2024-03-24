@@ -19,6 +19,7 @@ export {
   JutSuperAssetPaths,
   JutSuperDomIds,
   JutSuperCss,
+  JutSuperDefaultFonts,
   JutSuperIpcDefaultNodeProps,
   JutSuperIpcJsDataTypes,
   JutSuperIpcJsDataTypesArray,
@@ -318,6 +319,8 @@ const JutSuperAssetIds = {
   squareWhiteLogo48Svg: "jutsuper-square-white-logo-48-svg",
   /** @type {"jutsuper-square-black-logo-48-svg"} */
   squareBlackLogo48Svg: "jutsuper-square-black-logo-48-svg",
+  /** @type {"jutsuper-dropdown-svg"} */
+  dropdownSvg: "jutsuper-dropdown-svg",
   /** @type {"jutsuper-css"} */
   jutsuperCss: "jutsuper-css",
   /** @type {"jutsuper-ipc-js"} */
@@ -332,6 +335,7 @@ const JutSuperAssetIds = {
  * @property {"jutsuper-square-green-logo-48-svg"} squareGreenLogo48Svg
  * @property {"jutsuper-square-white-logo-48-svg"} squareWhiteLogo48Svg
  * @property {"jutsuper-square-black-logo-48-svg"} squareBlackLogo48Svg
+ * @property {"jutsuper-dropdown-svg"} dropdownSvg
  * @property {"jutsuper-css"} jutsuperCss
  * @property {"jutsuper-ipc-js"} jutsuperIpcJs
  * @property {"jutsuper-js"} jutsuperJs
@@ -341,6 +345,7 @@ const JutSuperAssetIds = {
  *   "jutsuper-square-green-logo-48-svg" |
  *   "jutsuper-square-white-logo-48-svg" |
  *   "jutsuper-square-black-logo-48-svg" |
+ *   "jutsuper-dropdown-svg" |
  *   "jutsuper-css" |
  *   "jutsuper-ipc-js" |
  *   "jutsuper-js" |
@@ -369,6 +374,8 @@ const JutSuperAssetPaths = {
   squareWhiteLogo48Svg: "/src/assets/logo/square-white-48.svg",
   /** @type {"/src/assets/logo/square-black-48.svg"} */
   squareBlackLogo48Svg: "/src/assets/logo/square-black-48.svg",
+  /** @type {"/src/assets/icon/dropdown.svg"} */
+  dropdownSvg: "/src/assets/icon/dropdown.svg",
   /** @type {"/src/consts.js"} */
   constsJs: "/src/consts.js",
   /** @type {"/src/ipc.js"} */
@@ -385,6 +392,7 @@ const JutSuperAssetPaths = {
  * @property {"/src/assets/logo/square-green-48.svg"} squareGreenLogo48Svg
  * @property {"/src/assets/logo/square-white-48.svg"} squareWhiteLogo48Svg
  * @property {"/src/assets/logo/square-black-48.svg"} squareBlackLogo48Svg
+ * @property {"/src/assets/icon/dropdown.svg"} dropdownSvg
  * @property {"/src/consts.js"} constsJs
  * @property {"/src/ipc.js"} ipcJs
  * @property {"/src/page/jutsuper.css"} jutsuperCss
@@ -395,6 +403,7 @@ const JutSuperAssetPaths = {
  *   "/src/assets/logo/square-green-48.svg" |
  *   "/src/assets/logo/square-white-48.svg" |
  *   "/src/assets/logo/square-black-48.svg" |
+ *   "/src/assets/icon/dropdown.svg" |
  *   "/src/consts.js" |
  *   "/src/ipc.js" |
  *   "/src/page/jutsuper.css" |
@@ -419,17 +428,25 @@ const JutSuperDomIds = {
   vjsSettingsContainer: "jutsuper-vjs-settings-container",
   /** @type {"jutsuper-vjs-settings-area"} */
   vjsSettingsArea: "jutsuper-vjs-settings-area",
+  /** @type {"jutsuper-vjs-settings-clip-area"} */
+  vjsSettingsClipArea: "jutsuper-vjs-settings-clip-area",
+  /** @type {"jutsuper-settings-root"} */
+  settingsRoot: "jutsuper-settings-root"
 }
 /** 
  * @typedef JutSuperDomIdsType
  * @property {"jutsuper-vjs-button"} vjsButton
  * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
  * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
+ * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
+ * @property {"jutsuper-settings-root"} settingsRoot
  * 
  * @typedef {(
  *   "jutsuper-vjs-button" |
  *   "jutsuper-vjs-settings-container" |
- *   "jutsuper-vjs-settings-area"
+ *   "jutsuper-vjs-settings-area" |
+ *   "jutsuper-vjs-settings-clip-area" |
+ *   "jutsuper-settings-root"
  * )} JutSuperDomIdsKeys
  */
 
@@ -447,6 +464,8 @@ const JutSuperCss = {
   vjsSettingsContainer: "jutsuper-vjs-settings-container",
   /** @type {"jutsuper-vjs-settings-area"} */
   vjsSettingsArea: "jutsuper-vjs-settings-area",
+  /** @type {"jutsuper-vjs-settings-clip-area"} */
+  vjsSettingsClipArea: "jutsuper-vjs-settings-clip-area",
   /** @type {"jutsuper-bottom-top-anim-appear"} */
   keyframesBottomTopAppear: "jutsuper-bottom-top-anim-appear",
   /** @type {"jutsuper-bottom-top-anim"} */
@@ -465,6 +484,7 @@ const JutSuperCss = {
  * @property {"jutsuper-vjs-icon"} vjsIcon
  * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
  * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
+ * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
  * @property {"jutsuper-bottom-top-anim-appear"} keyframesBottomTopAppear
  * @property {"jutsuper-bottom-top-anim"} bottomTopAnim
  * @property {"jutsuper-bottom-margin-right-5"} bottomMarginRight5
@@ -476,6 +496,7 @@ const JutSuperCss = {
  *   "jutsuper-vjs-icon" |
  *   "jutsuper-vjs-settings-container" |
  *   "jutsuper-vjs-settings-area" |
+ *   "jutsuper-vjs-settings-clip-area" |
  *   "jutsuper-bottom-top-anim-appear" |
  *   "jutsuper-bottom-top-anim" |
  *   "jutsuper-bottom-margin-right-5" |
@@ -483,6 +504,47 @@ const JutSuperCss = {
  *   "jutsuper-top-index" |
  *   "jutsuper-hidden"
  * )} JutSuperCssKeys
+ */
+
+
+/**
+ * # Fonts to be injected into the page
+ * 
+ * @readonly
+ * @type {FontDescriptor[]}
+ */
+const JutSuperDefaultFonts = [
+  {
+    family: "Roboto",
+    path: "/src/assets/font/Roboto-Regular.ttf",
+    format: "truetype",
+    weight: "normal"
+  },
+  {
+    family: "Roboto",
+    path: "/src/assets/font/Roboto-Bold.ttf",
+    format: "truetype",
+    weight: "bold"
+  }
+]
+/**
+ * @typedef FontDescriptor
+ * @property {string} family
+ * @property {string} path
+ * @property {(
+ *   "collection" | "embedded-opentype" |
+ *   "opentype" | "svg" |
+ *   "truetype" | "woff" |
+ *   "woff2"
+ * )} format
+ * @property {(
+ *   "normal" | "bold" |
+ *   "100" | "200" |
+ *   "300" | "400" |
+ *   "500" | "600" |
+ *   "700" | "800" |
+ *   "900"
+ * )} weight
  */
 
 

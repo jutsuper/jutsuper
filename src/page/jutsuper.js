@@ -50,6 +50,8 @@ class JutSuper {
     this.settingsContainer = document.createElement("div");
     /** @type {HTMLDivElement} */
     this.settingsArea = document.createElement("div");
+    /** @type {HTMLDivElement} */
+    this.settingsClipArea = document.createElement("div");
     /** @type {HTMLButtonElement} */
     this.vjsButton = undefined;
 
@@ -111,23 +113,21 @@ class JutSuper {
     const thisArg = this;
 
     await this.initializeIpcValues();
-    document.onclick = function(event) {
-      const clickedSmthSettingsRelated = [
-        domIds.vjsButton,
-        domIds.vjsSettingsArea,
-      ].includes(event.target.id)
-      const isSettingsAreaHidden = thisArg
-        .settingsArea
-        .classList
-        .contains(jsuperCss.hidden)
+    document.addEventListener("mousedown", function(event) {
+      const clickedOnVjsButton = event.target.id === domIds.vjsButton;
+      if (clickedOnVjsButton) {
+        return;
+      }
 
-      if (
-        !clickedSmthSettingsRelated &&
-        !isSettingsAreaHidden
-      ) {
+      const boundaries = thisArg.settingsArea.getBoundingClientRect();
+      const isInXRange = event.clientX >= boundaries.left && event.clientX <= boundaries.right;
+      const isInYRange = event.clientY >= boundaries.top && event.clientY <= boundaries.bottom;
+      const isInAreaRange = isInXRange && isInYRange;
+
+      if (!isInAreaRange) {
         thisArg.settingsArea.classList.add(jsuperCss.hidden);
       }
-    }
+    });
     this.injectFullscreenChangeListener();
     this.injectTimeupdateListener();
     await this.injectSettings();
@@ -514,9 +514,15 @@ class JutSuper {
       );
     }
 
-    const settingsAreaHtml = await (await fetch(
+    const settingsAreaHtmlTemplate = document.createElement("template");
+    const settingsAreaHtmlString = await (await fetch(
       document.getElementById(assetIds.settingsHtml).href
     )).text();
+    settingsAreaHtmlTemplate.innerHTML = settingsAreaHtmlString;
+    const settingsContent = settingsAreaHtmlTemplate
+      .content
+      .getElementById(domIds.settingsRoot);
+    settingsContent.removeAttribute("class");
 
     this.settingsContainer.id = domIds.vjsSettingsContainer;
     this.settingsContainer.classList.add(jsuperCss.vjsSettingsContainer);
@@ -525,7 +531,11 @@ class JutSuper {
     this.settingsArea.classList.add(jsuperCss.vjsSettingsArea);
     this.settingsArea.classList.add(jsuperCss.bottomTopAnim);
     this.settingsArea.classList.add(jsuperCss.hidden);
-    this.settingsArea.innerHTML = settingsAreaHtml;
+
+    this.settingsClipArea.id = domIds.vjsSettingsClipArea;
+    this.settingsClipArea.classList.add(jsuperCss.vjsSettingsClipArea);
+    this.settingsClipArea.append(settingsContent);
+    this.settingsArea.append(this.settingsClipArea);
 
     this.player.el().insertBefore(
       this.settingsContainer,

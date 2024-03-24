@@ -14,7 +14,6 @@
         background-color: cadetblue;
       }
       .area {
-        display: flex;
         background-color: white;
         clip-path: border-box;
         max-width: 220px;
@@ -24,7 +23,7 @@
         border-radius: 20px;
         overflow-x: hidden;
         overflow-y: auto;
-        justify-content: center;
+        justify-content: left;
         font-family: "Roboto";
         font-weight: normal;
       }
@@ -57,12 +56,29 @@
     </script>
   </head>
   <body>
-    <div class="area">
-      <label class="jutsuper-slider-switch">
-        <input type="checkbox">
-        <span class="jutsuper-slider-bg-area"></span>
-      </label>
-      <h>Опенинги</h>
+    <!-- Start of the area that gets injected -->
+    <div id="jutsuper-settings-root" class="area">
+      <div
+        id="jutsuper-settings-openings-bar"
+        class="jutsuper-settings-section-header"
+      >
+        <label class="jutsuper-slider-switch jutsuper-right-margin-10">
+          <input type="checkbox">
+          <span class="jutsuper-slider-bg-area"></span>
+        </label>
+        <h
+          id="jutsuper-settings-openings-title"
+          class="jutsuper-right-margin-10 jutsuper-no-pointer-events"
+        >
+          Опенинги
+        </h>
+        <img
+          id="jutsuper-settings-opening-bar-dropdown"
+          src="/src/assets/icon/dropdown.svg"
+          class="jutsuper-flex-float-to-right jutsuper-no-pointer-events jutsuper-no-select"
+        />
+      </div>
     </div>
+    <!-- End of the area that gets injected -->
   </body>
 </html>

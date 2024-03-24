@@ -39,6 +39,12 @@ var jsuperStorage;
 var jsuperCss;
 
 /**
+ * @typedef {import("/src/consts.js").FontDescriptor} FontDescriptor
+ * @type {FontDescriptor[]}
+ */
+var defaultFonts;
+
+/**
  * @typedef {import("/src/consts.js").JutSuDomAttributes} JutSuDomAttributes
  * @type {JutSuDomAttributes}
  */
@@ -155,6 +161,7 @@ var JutSuperMessageBuilder;
   jsuperLog = logModule.jsuperLog;
   jsuperStorage = storageModule.jsuperStorage;
   jsuperCss = constsModule.JutSuperCss;
+  defaultFonts = constsModule.JutSuperDefaultFonts;
   jutsuAttrs = constsModule.JutSuDomAttributes;
   ipcIds = constsModule.JutSuperIpcIds;
   ipcKeys = constsModule.JutSuperIpcKeys;
@@ -209,6 +216,8 @@ class JutSuperContent {
     /** @type {string} */
     this.urlSquareWhiteLogo48Svg = browser.runtime.getURL(assetPaths.squareWhiteLogo48Svg);
     /** @type {string} */
+    this.urlDropdownSvg = browser.runtime.getURL(assetPaths.dropdownSvg);
+    /** @type {string} */
     this.urlJutSuperIpcJs = browser.runtime.getURL(assetPaths.ipcJs);
     /** @type {string} */
     this.urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
@@ -219,7 +228,9 @@ class JutSuperContent {
 
     const head = document.getElementsByTagName("head")[0];
 
-    this.injectImage(head, this.urlSquareGreenLogo48Svg, assetIds.squareGreenLogo48Svg);
+    this.injectFonts(head, defaultFonts);
+    this.injectImage(head, this.urlDropdownSvg, assetIds.dropdownSvg);
+    this.injectImage(head, this.urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
     this.injectImage(head, this.urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
     this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
     this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
@@ -236,6 +247,29 @@ class JutSuperContent {
   /////////////////////////////
   // Injecting into the page //
   /////////////////////////////
+
+  /**
+   * 
+   * @param {HTMLElement} node 
+   * @param {FontDescriptor[]} fonts 
+   */
+  injectFonts(node, fonts) {
+    const style = document.createElement("style");
+
+    for (const font of fonts) {
+      const extensionUrl = browser.runtime.getURL(font.path);
+      let ff = "";
+      ff += "@font-face {\n";
+      ff += "  font-family: \"" + font.family + "\";";
+      ff += "  font-weight: " + font.weight + ";";
+      ff += "  src: url(\"" + extensionUrl + "\") format(\"" + font.format + "\");";
+      ff += "}";
+
+      style.appendChild(document.createTextNode(ff))
+    }
+
+    node.appendChild(style);
+  }
 
   /**
    * @param {HTMLElement} node
