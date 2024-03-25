@@ -321,6 +321,8 @@ const JutSuperAssetIds = {
   squareBlackLogo48Svg: "jutsuper-square-black-logo-48-svg",
   /** @type {"jutsuper-dropdown-svg"} */
   dropdownSvg: "jutsuper-dropdown-svg",
+  /** @type {"jutsuper-skip-svg"} */
+  skipSvg: "jutsuper-skip-svg",
   /** @type {"jutsuper-css"} */
   jutsuperCss: "jutsuper-css",
   /** @type {"jutsuper-ipc-js"} */
@@ -336,6 +338,7 @@ const JutSuperAssetIds = {
  * @property {"jutsuper-square-white-logo-48-svg"} squareWhiteLogo48Svg
  * @property {"jutsuper-square-black-logo-48-svg"} squareBlackLogo48Svg
  * @property {"jutsuper-dropdown-svg"} dropdownSvg
+ * @property {"jutsuper-skip-svg"} skipSvg
  * @property {"jutsuper-css"} jutsuperCss
  * @property {"jutsuper-ipc-js"} jutsuperIpcJs
  * @property {"jutsuper-js"} jutsuperJs
@@ -346,6 +349,7 @@ const JutSuperAssetIds = {
  *   "jutsuper-square-white-logo-48-svg" |
  *   "jutsuper-square-black-logo-48-svg" |
  *   "jutsuper-dropdown-svg" |
+ *   "jutsuper-skip-svg" |
  *   "jutsuper-css" |
  *   "jutsuper-ipc-js" |
  *   "jutsuper-js" |
@@ -376,6 +380,8 @@ const JutSuperAssetPaths = {
   squareBlackLogo48Svg: "/src/assets/logo/square-black-48.svg",
   /** @type {"/src/assets/icon/dropdown.svg"} */
   dropdownSvg: "/src/assets/icon/dropdown.svg",
+  /** @type {"/src/assets/icon/skip.svg"} */
+  skipSvg: "/src/assets/icon/skip.svg",
   /** @type {"/src/consts.js"} */
   constsJs: "/src/consts.js",
   /** @type {"/src/ipc.js"} */
@@ -393,6 +399,7 @@ const JutSuperAssetPaths = {
  * @property {"/src/assets/logo/square-white-48.svg"} squareWhiteLogo48Svg
  * @property {"/src/assets/logo/square-black-48.svg"} squareBlackLogo48Svg
  * @property {"/src/assets/icon/dropdown.svg"} dropdownSvg
+ * @property {"/src/assets/icon/skip.svg"} skipSvg
  * @property {"/src/consts.js"} constsJs
  * @property {"/src/ipc.js"} ipcJs
  * @property {"/src/page/jutsuper.css"} jutsuperCss
@@ -404,6 +411,7 @@ const JutSuperAssetPaths = {
  *   "/src/assets/logo/square-white-48.svg" |
  *   "/src/assets/logo/square-black-48.svg" |
  *   "/src/assets/icon/dropdown.svg" |
+ *   "/src/assets/icon/skip.svg" |
  *   "/src/consts.js" |
  *   "/src/ipc.js" |
  *   "/src/page/jutsuper.css" |
@@ -476,8 +484,8 @@ const JutSuperCss = {
   fullscreen: "jutsuper-fullscreen",
   /** @type {"jutsuper-top-index"} */
   topIndex: "jutsuper-top-index",
-  /** @type {"jutsuper-hidden"} */
-  hidden: "jutsuper-hidden",
+  /** @type {"jutsuper-visibility-hidden"} */
+  hidden: "jutsuper-visibility-hidden",
 }
 /** 
  * @typedef JutSuperCssType
@@ -490,7 +498,7 @@ const JutSuperCss = {
  * @property {"jutsuper-bottom-margin-right-5"} bottomMarginRight5
  * @property {"jutsuper-fullscreen"} fullscreen
  * @property {"jutsuper-top-index"} topIndex
- * @property {"jutsuper-hidden"} hidden
+ * @property {"jutsuper-visibility-hidden"} hidden
  * 
  * @typedef {(
  *   "jutsuper-vjs-icon" |
@@ -502,7 +510,7 @@ const JutSuperCss = {
  *   "jutsuper-bottom-margin-right-5" |
  *   "jutsuper-fullscreen" |
  *   "jutsuper-top-index" |
- *   "jutsuper-hidden"
+ *   "jutsuper-visibility-hidden"
  * )} JutSuperCssKeys
  */
 

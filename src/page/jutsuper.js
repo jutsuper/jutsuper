@@ -523,6 +523,21 @@ class JutSuper {
       .content
       .getElementById(domIds.settingsRoot);
     settingsContent.removeAttribute("class");
+    settingsContent.classList.add("jutsuper-settings-frame");
+
+    const settingsScripts = settingsContent.getElementsByTagName("script");
+    console.log("settingsScripts", settingsScripts);
+    for (const script of settingsScripts) {
+      document.body.append(script)
+    }
+    window.jutsuperSettingsCloseOtherBars = (thisArg) => {
+      const bars = document.getElementsByName("bars");
+      for (const bar of bars) {
+        if (bar.id !== thisArg.id) {
+          bar.checked = false;
+        }
+      }
+    }
 
     this.settingsContainer.id = domIds.vjsSettingsContainer;
     this.settingsContainer.classList.add(jsuperCss.vjsSettingsContainer);
@@ -543,6 +558,16 @@ class JutSuper {
     )
 
     document.getElementById(domIds.vjsSettingsContainer).append(this.settingsArea);
+    for (const icon of document.getElementsByClassName("jutsuper-settings-dropdown-icon")) {
+      icon.setAttribute(
+        "src", document.getElementById(assetIds.dropdownSvg).href
+      )
+    }
+    for (const icon of document.getElementsByClassName("jutsuper-settings-skip-icon")) {
+      icon.setAttribute(
+        "src", document.getElementById(assetIds.skipSvg).href
+      )
+    }
   }
 
   /**

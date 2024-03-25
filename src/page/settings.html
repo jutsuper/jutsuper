@@ -21,11 +21,15 @@
         width: 220px;
         height: 247px;
         border-radius: 20px;
-        overflow-x: hidden;
-        overflow-y: auto;
+        overflow: hidden;
         justify-content: left;
         font-family: "Roboto";
-        font-weight: normal;
+        font-size: 1em;
+        color: black;
+      }
+      .inner-area {
+        overflow-y: scroll;
+        height: inherit;
       }
     </style>
     <script>
@@ -56,29 +60,166 @@
     </script>
   </head>
   <body>
-    <!-- Start of the area that gets injected -->
-    <div id="jutsuper-settings-root" class="area">
+    <div class="area">
+      <!-- Start of the area that gets injected -->
       <div
-        id="jutsuper-settings-openings-bar"
-        class="jutsuper-settings-section-header"
+        id="jutsuper-settings-root"
+        class="inner-area jutsuper-settings-frame"
       >
-        <label class="jutsuper-slider-switch jutsuper-right-margin-10">
-          <input type="checkbox">
-          <span class="jutsuper-slider-bg-area"></span>
-        </label>
-        <h
-          id="jutsuper-settings-openings-title"
-          class="jutsuper-right-margin-10 jutsuper-no-pointer-events"
+        <script>
+          window.jutsuperSettingsCloseOtherBars = (thisArg) => {
+            const bars = document.getElementsByName("bars");
+            for (const bar of bars) {
+              if (bar.id !== thisArg.id) {
+                bar.checked = false;
+              }
+            }
+          }
+        </script>
+        <!-- Skip header -->
+        <div class="jutsuper-heading">
+          <img
+            id="jutsuper-settings-skip-header-icon"
+            src="/src/assets/icon/skip.svg"
+            class="jutsuper-settings-skip-icon jutsuper-right-margin-10 jutsuper-no-pointer-events jutsuper-no-select"
+          />
+          <h>
+            Пропускать
+          </h>
+        </div>
+        <!-- Openings bar -->
+        <input
+          id="jutsuper-settings-openings-bar"
+          class="jutsuper-display-hidden"
+          type="checkbox"
+          name="bars"
+          onchange="window.jutsuperSettingsCloseOtherBars(this)"
         >
-          Опенинги
-        </h>
-        <img
-          id="jutsuper-settings-opening-bar-dropdown"
-          src="/src/assets/icon/dropdown.svg"
-          class="jutsuper-flex-float-to-right jutsuper-no-pointer-events jutsuper-no-select"
-        />
+        <label
+          for="jutsuper-settings-openings-bar"
+          class="jutsuper-settings-section-bar"
+        >
+          <label class="jutsuper-slider-switch jutsuper-right-margin-10">
+            <input type="checkbox">
+            <span
+              id="jutsuper-settings-openings-slider"
+              class="jutsuper-slider-bg-area"
+            ></span>
+          </label>
+          <h
+            id="jutsuper-settings-openings-title"
+            class="jutsuper-no-pointer-events jutsuper-no-select"
+          >
+            Опенинги
+          </h>
+          <img
+            id="jutsuper-settings-openings-bar-dropdown-icon"
+            src="/src/assets/icon/dropdown.svg"
+            class="jutsuper-settings-dropdown-icon jutsuper-flex-float-to-right jutsuper-no-pointer-events jutsuper-no-select"
+          />
+        </label>
+        <!-- Openings settings -->
+        <div
+          id="jutsuper-settings-openings-section-clip"
+          class="jutsuper-settings-section-clip-area"
+        >
+          <div 
+            id="jutsuper-settings-openings-section"
+            class="jutsuper-settings-section-area"
+          >
+            <table style="width: 100%; table-layout: fixed;">
+              <tbody>
+                <tr>
+                  <td style="width: 100% !important; vertical-align: middle;">
+                    Задержка
+                  </td>
+                  <td style="width: 100%; vertical-align: middle;">
+                    <input
+                      style="width: inherit"
+                      class="jutsuper-range"
+                      type="range"
+                      min="0"
+                      max="10"
+                      oninput="
+                        const out = document.getElementById('jutsuper-settings-openings-delay-num');
+                        out.value = this.value;
+                        out.classList.add('jutsuper-display-hidden');
+                        setTimeout(() => {
+                          out.classList.remove('jutsuper-display-hidden');
+                        }, 1);
+                        
+                      "
+                    >
+                  </td>
+                  <td style="width: 24px; height: 1.5em; overflow: hidden; vertical-align: middle;">
+                    <output
+                      id="jutsuper-settings-openings-delay-num"
+                      style="display: inline-table; justify-content: center;"
+                      class="jutsuper-top-bottom-appear"
+                    >
+                      0
+                    </output>
+                  </td>
+                  <td style="width: 12px; font-size: 0.8em; vertical-align: middle;">с.</td>
+                </tr>
+                <tr>
+                  <td>Отмена</td>
+                  <td>__________</td>
+                </tr>
+                <tr>
+                  <td>Порядок</td>
+                  <td>__________</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Endings bar -->
+        <input
+          id="jutsuper-settings-endings-bar"
+          class="jutsuper-display-hidden"
+          type="checkbox"
+          name="bars"
+          onchange="window.jutsuperSettingsCloseOtherBars(this)"
+        >
+        <label
+          for="jutsuper-settings-endings-bar"
+          class="jutsuper-settings-section-bar"
+        >
+          <label class="jutsuper-slider-switch jutsuper-right-margin-10">
+            <input type="checkbox">
+            <span
+              id="jutsuper-settings-endings-slider"
+              class="jutsuper-slider-bg-area"
+            ></span>
+          </label>
+          <h
+            id="jutsuper-settings-endings-title"
+            class="jutsuper-no-pointer-events jutsuper-no-select"
+          >
+            Эндинги
+          </h>
+          <img
+            id="jutsuper-settings-endings-bar-dropdown-icon"
+            src="/src/assets/icon/dropdown.svg"
+            class="jutsuper-settings-dropdown-icon jutsuper-flex-float-to-right jutsuper-no-pointer-events jutsuper-no-select"
+          />
+        </label>
+        <!-- Endings settings -->
+        <div
+          id="jutsuper-settings-endings-section-clip"
+          class="jutsuper-settings-section-clip-area"
+        >
+          <div
+            id="jutsuper-settings-endings-settings"
+            class="jutsuper-settings-section-area"
+          >
+
+          </div>
+        </div>
       </div>
+      <!-- End of the area that gets injected -->
     </div>
-    <!-- End of the area that gets injected -->
   </body>
 </html>

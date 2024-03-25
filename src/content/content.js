@@ -218,6 +218,8 @@ class JutSuperContent {
     /** @type {string} */
     this.urlDropdownSvg = browser.runtime.getURL(assetPaths.dropdownSvg);
     /** @type {string} */
+    this.urlSkipSvg = browser.runtime.getURL(assetPaths.skipSvg);
+    /** @type {string} */
     this.urlJutSuperIpcJs = browser.runtime.getURL(assetPaths.ipcJs);
     /** @type {string} */
     this.urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
@@ -230,6 +232,7 @@ class JutSuperContent {
 
     this.injectFonts(head, defaultFonts);
     this.injectImage(head, this.urlDropdownSvg, assetIds.dropdownSvg);
+    this.injectImage(head, this.urlSkipSvg, assetIds.skipSvg);
     this.injectImage(head, this.urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
     this.injectImage(head, this.urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
     this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
