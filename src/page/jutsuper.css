@@ -59,6 +59,12 @@
   clip-path: border-box;
   overflow-y: hidden;
   overflow-x: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.jutsuper-vjs-settings-clip-area::-webkit-scrollbar {
+  display: none;
 }
 
 .jutsuper-settings-frame {
