@@ -16,8 +16,6 @@
       .area {
         background-color: white;
         clip-path: border-box;
-        max-width: 220px;
-        max-height: 400px;
         width: 220px;
         height: 247px;
         border-radius: 20px;
@@ -127,51 +125,68 @@
             id="jutsuper-settings-openings-section"
             class="jutsuper-settings-section-area"
           >
-            <table style="width: 100%; table-layout: fixed;">
-              <tbody>
-                <tr>
-                  <td style="width: 100% !important; vertical-align: middle;">
-                    Задержка
-                  </td>
-                  <td style="width: 100%; vertical-align: middle;">
-                    <input
-                      style="width: inherit"
-                      class="jutsuper-range"
-                      type="range"
-                      min="0"
-                      max="10"
-                      oninput="
-                        const out = document.getElementById('jutsuper-settings-openings-delay-num');
-                        out.value = this.value;
-                        out.classList.add('jutsuper-display-hidden');
-                        setTimeout(() => {
-                          out.classList.remove('jutsuper-display-hidden');
-                        }, 1);
-                        
-                      "
-                    >
-                  </td>
-                  <td style="width: 24px; height: 1.5em; overflow: hidden; vertical-align: middle;">
-                    <output
-                      id="jutsuper-settings-openings-delay-num"
-                      style="display: inline-table; justify-content: center;"
-                      class="jutsuper-top-bottom-appear"
-                    >
-                      0
-                    </output>
-                  </td>
-                  <td style="width: 12px; font-size: 0.8em; vertical-align: middle;">с.</td>
-                </tr>
-                <tr>
-                  <td>Отмена</td>
-                  <td>__________</td>
-                </tr>
-                <tr>
-                  <td>Порядок</td>
-                  <td>__________</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="jutsuper-grid-container">
+              <div style="text-align: end;">
+                Задержка
+              </div>
+              <div
+                class="jutsuper-range-container"
+                style="display: flex;justify-content: center;width: 100%;"
+              >
+                <input
+                  style="width: inherit"
+                  class="jutsuper-range"
+                  type="range"
+                  min="0"
+                  max="10"
+                  oninput="
+                    const out = document.getElementById('jutsuper-settings-openings-delay-num');
+                    out.value = this.value;
+                    out.classList.add('jutsuper-display-hidden');
+                    setTimeout(() => {
+                      out.classList.remove('jutsuper-display-hidden');
+                    }, 1);
+                    
+                  "
+                >
+              </div>
+              <div style="width: 100%; text-align: end;">
+                <output
+                  id="jutsuper-settings-openings-delay-num"
+                  style="display: inline-table; justify-content: center;"
+                  class="jutsuper-top-bottom-appear"
+                >
+                  0
+                </output>
+              </div>
+              <div style="width: 100%;">
+                с.
+              </div>
+              <div style="text-align: end;">
+                Отмена
+              </div>
+              <div>
+                _
+              </div>
+              <div>
+                _
+              </div>
+              <div>
+                _
+              </div>
+              <div style="text-align: end;">
+                Порядок
+              </div>
+              <div>
+                _
+              </div>
+              <div>
+                _
+              </div>
+              <div>
+                _
+              </div>
+            </div>
           </div>
         </div>
 
