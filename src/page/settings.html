@@ -196,6 +196,7 @@
           type="checkbox"
           name="bars"
           onchange="window.jutsuperSettingsCloseOtherBars(this)"
+          checked
         >
         <label
           for="jutsuper-settings-openings-bar"
@@ -290,11 +291,14 @@
                   onclick="
                     this.isListening = !this.isListening;
                     this.classList.toggle('jutsuper-settings-key-label-flashing');
+                    const rec = document.getElementById('jutsuper-settings-openings-cancel-key-record');
+                    rec.classList.toggle('jutsuper-settings-key-label-record-icon-flashing');
                   "
                 />
               </div>
-              <div>
-                
+              <div
+                id="jutsuper-settings-openings-cancel-key-record"
+              >
               </div>
               <div>
                 
@@ -303,7 +307,23 @@
                 Порядок
               </div>
               <div>
-                
+                <div class="jutsuper-settings-radio-container">
+                  <input
+                    id="jutsuper-settings-openings-skip-order-first"
+                    class="jutsuper-settings-radio jutsuper-no-select"
+                    type="radio"
+                    name="op-skip-order"
+                    style="width: 100%;overflow: hidden;text-overflow:ellipsis"
+                    checked
+                  />
+                  <input
+                    id="jutsuper-settings-openings-skip-order-last"
+                    class="jutsuper-settings-radio jutsuper-no-select"
+                    type="radio"
+                    name="op-skip-order"
+                    style="width: 100%;overflow: hidden;text-overflow:ellipsis"
+                  />
+                </div>
               </div>
               <div>
                 
@@ -360,6 +380,7 @@
         </div>
         <script>
           const opCancelBtn = document.getElementById("jutsuper-settings-openings-cancel-key-button");
+          const opCancelRec = document.getElementById('jutsuper-settings-openings-cancel-key-record');
           opCancelBtn.isListening = false;
           opCancelBtn.addEventListener("keydown", event => {
             if (!opCancelBtn.isListening) {
@@ -370,7 +391,20 @@
             opCancelBtn.value = keyLabel;
             opCancelBtn.classList.remove('jutsuper-settings-key-label-flashing');
             opCancelBtn.isListening = false;
+            opCancelRec.classList.toggle('jutsuper-settings-key-label-record-icon-flashing');
           })
+          document.addEventListener("mousedown", function(event) {
+            const boundaries = opCancelBtn.getBoundingClientRect();
+            const isInXRange = event.clientX >= boundaries.left && event.clientX <= boundaries.right;
+            const isInYRange = event.clientY >= boundaries.top && event.clientY <= boundaries.bottom;
+            const isInAreaRange = isInXRange && isInYRange;
+
+            if (!isInAreaRange) {
+              opCancelBtn.isListening = false;
+              opCancelBtn.classList.remove("jutsuper-settings-key-label-flashing")
+              opCancelRec.classList.remove("jutsuper-settings-key-label-record-icon-flashing")
+            }
+          });
         </script>
       </div>
       <!-- End of the area that gets injected -->

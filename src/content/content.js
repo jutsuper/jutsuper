@@ -27,6 +27,12 @@ var jsuperErrors;
 var jsuperLog;
 
 /**
+ * @typedef {import("/src/consts.js").JutSuperRegex} JutSuperRegex
+ * @type {JutSuperRegex}
+ */
+var regexp;
+
+/**
  * @typedef {import("/src/storage.js").JutSuperStorage} JutSuperStorage
  * @type {JutSuperStorage}
  */
@@ -159,6 +165,7 @@ var JutSuperMessageBuilder;
   browsers = constsModule.JutSuperBrowsers;
   jsuperErrors = errorModule.jsuperErrors;
   jsuperLog = logModule.jsuperLog;
+  regexp = constsModule.JutSuperRegex;
   jsuperStorage = storageModule.jsuperStorage;
   jsuperCss = constsModule.JutSuperCss;
   defaultFonts = constsModule.JutSuperDefaultFonts;
@@ -299,7 +306,7 @@ class JutSuperContent {
    * @param {string} id
    * @returns {void}
    */
-  injectCss(node, url, id) {
+  async injectCss(node, url, id) {
     const attrs = {
       id: id,
       href: url,

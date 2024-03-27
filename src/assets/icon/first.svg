@@ -1,0 +1,6 @@
+<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="first">
+<path id="triangle" d="M6.48057 6.13176C7.15239 6.51565 7.15239 7.48435 6.48057 7.86824L2.49614 10.1451C1.82948 10.526 1 10.0446 1 9.27682L1 4.72318C1 3.95536 1.82948 3.47399 2.49614 3.85494L6.48057 6.13176Z" fill="black"/>
+<path id="underline" d="M9 11H12" stroke="black" stroke-width="2" stroke-linecap="round"/>
+</g>
+</svg>

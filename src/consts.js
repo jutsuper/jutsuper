@@ -15,6 +15,7 @@ export {
   JutSuperBrowsers,
   JutSuperLogLevels,
   JutSuperLogDefaults,
+  JutSuperRegex,
   JutSuperAssetIds,
   JutSuperAssetPaths,
   JutSuperDomIds,
@@ -298,6 +299,25 @@ const JutSuperLogDefaults = {
  * @property {JutSuperLogLevelsKeys[]} levels
  * @property {JutSuperLogLevelsKeys[]} pathLevels
  */
+
+
+/**
+ * # Regex patterns
+ * 
+ * @readonly
+ * @enum {JutSuperRegexType}
+ */
+const JutSuperRegex = {
+  cssUrl: /(?<=url\().*(?=\))/,
+}
+/** 
+ * @typedef JutSuperRegexType
+ * @property {RegExp} cssUrl
+ * 
+ * @typedef {(
+*   "(?<=url\().*(?=\))"
+* )} JutSuperRegexKeys
+*/
 
 
 /**

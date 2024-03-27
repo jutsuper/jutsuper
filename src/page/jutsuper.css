@@ -1,11 +1,10 @@
 :root {
   --jutsuper-color-grey: rgb(150, 150, 150);
   --jutsuper-color-light-green: #BDF283;
-  --jutsuper-color-light-green-half-transparent: #BCF28380;
   --jutsuper-color-dark-green: #9BC76C;
-  --jutsuper-color-dark-green-half-transparent: #9BC76C80;
+  --jutsuper-color-dark-green-half-transparent: #ACDD77;
   --jutsuper-color-darker-green: #8CB660;
-  --jutsuper-color-darker-green-half-transparent: #8CB66080;
+  --jutsuper-color-darker-green-half-transparent: #A4D471;
   --jutsuper-dur-ultra-fast: .05s;
   --jutsuper-dur-faster: .1s;
   --jutsuper-dur-fast: .15s;
@@ -172,6 +171,15 @@
   }
 }
 
+@keyframes jutsuper-opacity-1-to-0-anim {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .jutsuper-bottom-top-anim {
   visibility: visible;
   transform: translateY(0px);
@@ -295,6 +303,23 @@
   animation-direction: alternate-reverse;
 }
 
+.jutsuper-settings-key-label-record-icon-flashing:before {
+  display: flex;
+  content: "\2022";
+  width: 100%;
+  height: 100%;
+  justify-content: end;
+  align-items: center;
+  font-size: 2em;
+  line-height: 0;
+  color: #CF1B2B;
+  animation-name: jutsuper-opacity-1-to-0-anim;
+  animation-duration: var(--jutsuper-dur-slow);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+}
+
 /* Toggle slider */
 .jutsuper-slider-switch {
   position: relative;
@@ -385,6 +410,70 @@ input.jutsuper-range[type=range] {
   }
 }
 
-input:active.jutsuper-range[type=range] {
-  
+/* Radio */
+.jutsuper-settings-radio-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+input.jutsuper-settings-radio[type="radio"] {
+  appearance: none;
+  background-color: var(--jutsuper-color-darker-green-half-transparent);
+  margin-left: 1px;
+  margin-right: 1px;
+  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+}
+
+input.jutsuper-settings-radio:checked[type="radio"] {
+  background-color: var(--jutsuper-color-darker-green)
+}
+
+input.jutsuper-settings-radio:first-child[type="radio"] {
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  margin-left: 0;
+}
+
+input.jutsuper-settings-radio:last-child[type="radio"] {
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  margin-right: 0;
+}
+
+.jutsuper-settings-radio {
+  cursor: pointer;
+  margin: 0;
+}
+
+#jutsuper-settings-openings-skip-order-first:before {
+  content: url("/src/assets/icon/first.svg");
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  transform: translateY(1px);
+  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+}
+
+#jutsuper-settings-openings-skip-order-first:checked::before {
+  transform: translateY(-1px);
+}
+
+#jutsuper-settings-openings-skip-order-last:before {
+  content: url("/src/assets/icon/last.svg");
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  transform: translateY(1px);
+  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+}
+
+#jutsuper-settings-openings-skip-order-last:checked::before {
+  transform: translateY(-1px);
 }
