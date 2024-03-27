@@ -55,6 +55,110 @@
       }
 
       document.head.appendChild(newStyle);
+
+      const KEY_CODE_LABELS = {
+        8: "Bksp",
+        9: "Tab",
+        12: "Null",
+        13: "Enter",
+        16: "Shift",
+        17: "Ctrl",
+        18: "Alt",
+        19: "PsBk",
+        20: "Caps",
+        27: "Esc",
+        32: "Space",
+        33: "PgUp",
+        34: "PgDown",
+        35: "End",
+        36: "Home",
+        37: "Left",
+        38: "Up",
+        39: "Right",
+        40: "Down",
+        45: "Insert",
+        46: "Delete",
+        48: "0",
+        49: "1",
+        50: "2",
+        51: "3",
+        52: "4",
+        53: "5",
+        54: "6",
+        55: "7",
+        56: "8",
+        57: "9",
+        65: "A",
+        66: "B",
+        67: "C",
+        68: "D",
+        69: "E",
+        70: "F",
+        71: "G",
+        72: "H",
+        73: "I",
+        74: "J",
+        75: "K",
+        76: "L",
+        77: "M",
+        78: "N",
+        79: "O",
+        80: "P",
+        81: "Q",
+        82: "R",
+        83: "S",
+        84: "T",
+        85: "U",
+        86: "V",
+        87: "W",
+        88: "X",
+        89: "Y",
+        90: "Z",
+        91: "Win",
+        93: "RMB",
+        96: "Np0",
+        97: "Np1",
+        98: "Np2",
+        99: "Np3",
+        100: "Np4",
+        101: "Np5",
+        102: "Np6",
+        103: "Np7",
+        104: "Np8",
+        105: "Np9",
+        106: "Np*",
+        107: "Np+",
+        109: "Np-",
+        110: "Np.",
+        111: "Np/",
+        112: "F1",
+        113: "F2",
+        114: "F3",
+        115: "F4",
+        116: "F5",
+        117: "F6",
+        118: "F7",
+        119: "F8",
+        120: "F9",
+        121: "F10",
+        122: "F11",
+        123: "F12",
+        144: "NumLock",
+        145: "ScrlLock",
+        182: "MyPC",
+        183: "MyCalc",
+        186: ";",
+        187: "=",
+        188: ",",
+        189: "-",
+        190: ".",
+        191: "/",
+        192: "`",
+        219: "[",
+        220: "\\",
+        221: "]",
+        222: "'"
+      }
     </script>
   </head>
   <body>
@@ -82,7 +186,7 @@
             class="jutsuper-settings-skip-icon jutsuper-right-margin-10 jutsuper-no-pointer-events jutsuper-no-select"
           />
           <h>
-            Пропускать
+            Настройки пропуска
           </h>
         </div>
         <!-- Openings bar -->
@@ -126,12 +230,12 @@
             class="jutsuper-settings-section-area"
           >
             <div class="jutsuper-grid-container">
-              <div style="text-align: end;">
+              <div style="display: flex;align-items: center;">
                 Задержка
               </div>
               <div
                 class="jutsuper-range-container"
-                style="display: flex;justify-content: center;width: 100%;"
+                style="display: flex;justify-content: center;width: 100%;align-items: center;"
               >
                 <input
                   style="width: inherit"
@@ -139,6 +243,7 @@
                   type="range"
                   min="0"
                   max="10"
+                  value="5"
                   oninput="
                     const out = document.getElementById('jutsuper-settings-openings-delay-num');
                     out.value = this.value;
@@ -150,41 +255,61 @@
                   "
                 >
               </div>
-              <div style="width: 100%; text-align: end;">
+              <div style="display: flex;align-items: center;text-align: end;width: 100%;">
                 <output
                   id="jutsuper-settings-openings-delay-num"
-                  style="display: inline-table; justify-content: center;"
+                  style="display: inline-table; justify-content: center;width: 100%"
                   class="jutsuper-top-bottom-appear"
                 >
-                  0
+                  5
                 </output>
               </div>
-              <div style="width: 100%;">
+              <div style="display: flex;align-items: center;width: 100%;">
                 с.
               </div>
-              <div style="text-align: end;">
+              <div style="display: flex;align-items: center;">
                 Отмена
               </div>
-              <div>
-                _
+              <div
+                class="jutsuper-settings-key-label-container"
+                style="position: relative;"
+              >
+                <!--
+                  Using <input/> instead of a <button/>
+                  because the parent (which is VJS)
+                  enforces some CSS properties
+                  for ALL buttons (wtf?) that conflict
+                  with our stuff
+                -->
+                <input
+                  id="jutsuper-settings-openings-cancel-key-button"
+                  class="jutsuper-settings-key-label jutsuper-no-select"
+                  type="button"
+                  style="width: 100%;overflow: hidden;text-overflow:ellipsis"
+                  value="Shift"
+                  onclick="
+                    this.isListening = !this.isListening;
+                    this.classList.toggle('jutsuper-settings-key-label-flashing');
+                  "
+                />
               </div>
               <div>
-                _
+                
               </div>
               <div>
-                _
+                
               </div>
-              <div style="text-align: end;">
+              <div style="display: flex;align-items: center;">
                 Порядок
               </div>
               <div>
-                _
+                
               </div>
               <div>
-                _
+                
               </div>
               <div>
-                _
+                
               </div>
             </div>
           </div>
@@ -233,6 +358,20 @@
 
           </div>
         </div>
+        <script>
+          const opCancelBtn = document.getElementById("jutsuper-settings-openings-cancel-key-button");
+          opCancelBtn.isListening = false;
+          opCancelBtn.addEventListener("keydown", event => {
+            if (!opCancelBtn.isListening) {
+              return
+            }
+            const shortKeyLabel = KEY_CODE_LABELS[event.keyCode];
+            const keyLabel = shortKeyLabel ? shortKeyLabel : event.key
+            opCancelBtn.value = keyLabel;
+            opCancelBtn.classList.remove('jutsuper-settings-key-label-flashing');
+            opCancelBtn.isListening = false;
+          })
+        </script>
       </div>
       <!-- End of the area that gets injected -->
     </div>

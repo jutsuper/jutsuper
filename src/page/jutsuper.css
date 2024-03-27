@@ -4,6 +4,8 @@
   --jutsuper-color-light-green-half-transparent: #BCF28380;
   --jutsuper-color-dark-green: #9BC76C;
   --jutsuper-color-dark-green-half-transparent: #9BC76C80;
+  --jutsuper-color-darker-green: #8CB660;
+  --jutsuper-color-darker-green-half-transparent: #8CB66080;
   --jutsuper-dur-ultra-fast: .05s;
   --jutsuper-dur-faster: .1s;
   --jutsuper-dur-fast: .15s;
@@ -161,6 +163,15 @@
   }
 }
 
+@keyframes jutsuper-settings-key-label-flashing-anim {
+  0% {
+    background-color: var(--jutsuper-color-darker-green);
+  }
+  100% {
+    background-color: var(--jutsuper-color-dark-green-half-transparent);
+  }
+}
+
 .jutsuper-bottom-top-anim {
   visibility: visible;
   transform: translateY(0px);
@@ -252,9 +263,36 @@
 
 .jutsuper-grid-container {
   display: grid;
-  grid-template-columns: min-content auto 16px 12px;
-  grid-template-rows: repeat(3, 1.2em);
+  grid-template-columns: min-content minmax(0, 1fr) 16px 12px;
+  grid-template-rows: repeat(3, minmax(24px, auto));
   gap: 6px;
+}
+
+.jutsuper-settings-key-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: bold;
+  background-color: var(--jutsuper-color-darker-green-half-transparent);
+  border-radius: 50px;
+  cursor: pointer;
+  border: none;
+  height: 24px;
+}
+
+.jutsuper-settings-key-label:before {
+  width: 100px;
+}
+
+.jutsuper-settings-key-label-flashing {
+  animation-name: jutsuper-settings-key-label-flashing-anim;
+  animation-duration: var(--jutsuper-dur-slow);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
 }
 
 /* Toggle slider */
@@ -284,7 +322,7 @@
 }
 
 input:checked + .jutsuper-slider-bg-area {
-  background-color: var(--jutsuper-color-dark-green);
+  background-color: var(--jutsuper-color-darker-green);
 }
 
 .jutsuper-slider-bg-area:before {
@@ -304,29 +342,49 @@ input:checked + .jutsuper-slider-bg-area:before {
 }
 
 /* Range slider */
-.jutsuper-range-container {
-  width: inherit;
-}
 .jutsuper-range {
   width: inherit;
 }
 
+.jutsuper-range-container {
+  position: relative;
+}
+
+.jutsuper-range-container::before {
+  /*content: "";*/
+  position: absolute;
+  background-image: url("/src/assets/icon/dropdown.svg");
+  background-repeat: no-repeat;
+  rotate: -90deg;
+  pointer-events: none;
+  background-size: 8px;
+  width: 8px;
+  height: 8px;
+}
+
 input.jutsuper-range[type=range] {
+  height: 24px;
+  margin: 0;
   appearance: none;
-  background-color: var(--jutsuper-color-dark-green-half-transparent);
+  background-color: var(--jutsuper-color-darker-green-half-transparent);
   border-radius: 50px;
   overflow: hidden;
+  cursor: pointer;
 
   &::-webkit-slider-thumb {
     appearance: none;
     width: 0;
-    box-shadow: -20rem 0 0 20rem var(--jutsuper-color-dark-green);
+    box-shadow: -20rem 0 0 20rem var(--jutsuper-color-darker-green);
   }
 
   &::-moz-range-thumb {
     appearance: none;
     border: none;
     width: 0;
-    box-shadow: -20rem 0 0 20rem var(--jutsuper-color-dark-green);
+    box-shadow: -20rem 0 0 20rem var(--jutsuper-color-darker-green);
   }
+}
+
+input:active.jutsuper-range[type=range] {
+  
 }
