@@ -230,79 +230,7 @@
             id="jutsuper-settings-openings-section"
             class="jutsuper-settings-section-area"
           >
-            <div class="jutsuper-grid-container">
-              <div style="display: flex;align-items: center;">
-                Задержка
-              </div>
-              <div
-                class="jutsuper-range-container"
-                style="display: flex;justify-content: center;width: 100%;align-items: center;"
-              >
-                <input
-                  style="width: inherit"
-                  class="jutsuper-range"
-                  type="range"
-                  min="0"
-                  max="10"
-                  value="5"
-                  oninput="
-                    const out = document.getElementById('jutsuper-settings-openings-delay-num');
-                    out.value = this.value;
-                    out.classList.add('jutsuper-display-hidden');
-                    setTimeout(() => {
-                      out.classList.remove('jutsuper-display-hidden');
-                    }, 1);
-                    
-                  "
-                >
-              </div>
-              <div style="display: flex;align-items: center;text-align: end;width: 100%;">
-                <output
-                  id="jutsuper-settings-openings-delay-num"
-                  style="display: inline-table; justify-content: center;width: 100%"
-                  class="jutsuper-top-bottom-appear"
-                >
-                  5
-                </output>
-              </div>
-              <div style="display: flex;align-items: center;width: 100%;">
-                с.
-              </div>
-              <div style="display: flex;align-items: center;">
-                Отмена
-              </div>
-              <div
-                class="jutsuper-settings-key-label-container"
-                style="position: relative;"
-              >
-                <!--
-                  Using <input/> instead of a <button/>
-                  because the parent (which is VJS)
-                  enforces some CSS properties
-                  for ALL buttons (wtf?) that conflict
-                  with our stuff
-                -->
-                <input
-                  id="jutsuper-settings-openings-cancel-key-button"
-                  class="jutsuper-settings-key-label jutsuper-no-select"
-                  type="button"
-                  style="width: 100%;overflow: hidden;text-overflow:ellipsis"
-                  value="Shift"
-                  onclick="
-                    this.isListening = !this.isListening;
-                    this.classList.toggle('jutsuper-settings-key-label-flashing');
-                    const rec = document.getElementById('jutsuper-settings-openings-cancel-key-record');
-                    rec.classList.toggle('jutsuper-settings-key-label-record-icon-flashing');
-                  "
-                />
-              </div>
-              <div
-                id="jutsuper-settings-openings-cancel-key-record"
-              >
-              </div>
-              <div>
-                
-              </div>
+            <div class="jutsuper-grid-container jutsuper-grid-1-row jutsuper-grid-2-cols">
               <div style="display: flex;align-items: center;">
                 Порядок
               </div>
@@ -310,7 +238,7 @@
                 <div class="jutsuper-settings-radio-container">
                   <input
                     id="jutsuper-settings-openings-skip-order-first"
-                    class="jutsuper-settings-radio jutsuper-no-select"
+                    class="jutsuper-settings-radio jutsuper-inset-icon jutsuper-order-first-icon jutsuper-no-select"
                     type="radio"
                     name="op-skip-order"
                     style="width: 100%;overflow: hidden;text-overflow:ellipsis"
@@ -318,18 +246,12 @@
                   />
                   <input
                     id="jutsuper-settings-openings-skip-order-last"
-                    class="jutsuper-settings-radio jutsuper-no-select"
+                    class="jutsuper-settings-radio jutsuper-inset-icon jutsuper-order-last-icon jutsuper-no-select"
                     type="radio"
                     name="op-skip-order"
                     style="width: 100%;overflow: hidden;text-overflow:ellipsis"
                   />
                 </div>
-              </div>
-              <div>
-                
-              </div>
-              <div>
-                
               </div>
             </div>
           </div>
@@ -375,8 +297,102 @@
             id="jutsuper-settings-endings-settings"
             class="jutsuper-settings-section-area"
           >
-
+          <div class="jutsuper-grid-container jutsuper-grid-1-row jutsuper-grid-2-cols">
+            <div style="display: flex;align-items: center;">
+              Порядок
+            </div>
+            <div class="jutsuper-settings-radio-container">
+              <input
+                id="jutsuper-settings-endings-skip-order-first"
+                class="jutsuper-settings-radio jutsuper-inset-icon jutsuper-order-first-icon jutsuper-no-select"
+                type="radio"
+                name="ed-skip-order"
+                style="width: 100%;overflow: hidden;text-overflow:ellipsis"
+                checked
+              />
+              <input
+                id="jutsuper-settings-endings-skip-order-last"
+                class="jutsuper-settings-radio jutsuper-inset-icon jutsuper-order-last-icon jutsuper-no-select"
+                type="radio"
+                name="ed-skip-order"
+                style="width: 100%;overflow: hidden;text-overflow:ellipsis"
+              />
+            </div>
           </div>
+          </div>
+        </div>
+        <div class="jutsuper-settings-outer-section-area">
+          <div class="jutsuper-grid-container jutsuper-grid-2-rows">
+            <div style="display: flex;align-items: center;">
+              Задержка
+            </div>
+            <div>
+              <input
+                class="jutsuper-range"
+                type="range"
+                min="0"
+                max="10"
+                value="5"
+                oninput="
+                  const out = document.getElementById('jutsuper-settings-openings-delay-num');
+                  out.value = this.value;
+                  out.classList.add('jutsuper-display-hidden');
+                  setTimeout(() => {
+                    out.classList.remove('jutsuper-display-hidden');
+                  }, 1);
+                  
+                "
+              >
+            </div>
+            <div style="display: flex;align-items: center;text-align: end;width: 100%;">
+              <output
+                id="jutsuper-settings-openings-delay-num"
+                style="display: inline-table; justify-content: center;width: 100%"
+                class="jutsuper-top-bottom-appear"
+              >
+                5
+              </output>
+            </div>
+            <div style="display: flex;align-items: center;width: 100%;">
+              с.
+            </div>
+            <div style="display: flex;align-items: center;">
+              Отмена
+            </div>
+            <div
+              class="jutsuper-settings-key-label-container"
+              style="position: relative;"
+            >
+              <!--
+                Using <input/> instead of a <button/>
+                because the parent (which is VJS)
+                enforces some CSS properties
+                for ALL buttons (wtf?) that conflicts
+                with our stuff
+              -->
+              <input
+                id="jutsuper-settings-openings-cancel-key-button"
+                class="jutsuper-settings-key-label jutsuper-no-select"
+                type="button"
+                style="width: 100%;height: 100%;overflow: hidden;text-overflow:ellipsis"
+                value="Shift"
+                onclick="
+                  this.isListening = !this.isListening;
+                  this.classList.toggle('jutsuper-settings-key-label-flashing');
+                  const rec = document.getElementById('jutsuper-settings-openings-cancel-key-record');
+                  rec.classList.toggle('jutsuper-settings-key-label-record-icon-flashing');
+                "
+              />
+            </div>
+            <div
+              id="jutsuper-settings-openings-cancel-key-record"
+            >
+            </div>
+            <div>
+              
+            </div>
+          </div>
+        </div>
         </div>
         <script>
           const opCancelBtn = document.getElementById("jutsuper-settings-openings-cancel-key-button");

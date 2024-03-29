@@ -11,6 +11,7 @@
   --jutsuper-dur-mid: .25s;
   --jutsuper-dur-slow: .50s;
   --jutsuper-curve-fast-start-slow-end: cubic-bezier(0,.86,.24,.96);
+  --jutsuper-size-settings-row-height: 24px;
 }
 
 .jutsuper-vjs-icon {
@@ -108,6 +109,10 @@
   padding-top: 0;
 }
 
+.jutsuper-settings-outer-section-area {
+  padding: 15px;
+}
+
 #jutsuper-settings-openings-bar:checked + label {
   box-shadow: inset 0 -48px 0px -2px var(--jutsuper-color-light-green);
   .jutsuper-settings-dropdown-icon {
@@ -116,7 +121,7 @@
 }
 
 #jutsuper-settings-openings-bar:checked ~ #jutsuper-settings-openings-section-clip {
-  height: 100px;
+  height: 40px;
   transition: var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
 }
 
@@ -128,7 +133,7 @@
 }
 
 #jutsuper-settings-endings-bar:checked ~ #jutsuper-settings-endings-section-clip {
-  height: 100px;
+  height: 40px;
 }
 
 .jutsuper-settings-dropdown-icon {
@@ -272,52 +277,20 @@
 .jutsuper-grid-container {
   display: grid;
   grid-template-columns: min-content minmax(0, 1fr) 16px 12px;
-  grid-template-rows: repeat(3, minmax(24px, auto));
+  grid-template-rows: repeat(3, minmax(auto, var(--jutsuper-size-settings-row-height)));
   gap: 6px;
 }
 
-.jutsuper-settings-key-label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 0.8em;
-  font-weight: bold;
-  background-color: var(--jutsuper-color-darker-green-half-transparent);
-  border-radius: 50px;
-  cursor: pointer;
-  border: none;
-  height: 24px;
+.jutsuper-grid-1-row {
+  grid-template-rows: repeat(1, minmax(auto, var(--jutsuper-size-settings-row-height)));
 }
 
-.jutsuper-settings-key-label:before {
-  width: 100px;
+.jutsuper-grid-2-rows {
+  grid-template-rows: repeat(2, minmax(auto, var(--jutsuper-size-settings-row-height)));
 }
 
-.jutsuper-settings-key-label-flashing {
-  animation-name: jutsuper-settings-key-label-flashing-anim;
-  animation-duration: var(--jutsuper-dur-slow);
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: alternate-reverse;
-}
-
-.jutsuper-settings-key-label-record-icon-flashing:before {
-  display: flex;
-  content: "\2022";
-  width: 100%;
-  height: 100%;
-  justify-content: end;
-  align-items: center;
-  font-size: 2em;
-  line-height: 0;
-  color: #CF1B2B;
-  animation-name: jutsuper-opacity-1-to-0-anim;
-  animation-duration: var(--jutsuper-dur-slow);
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: alternate-reverse;
+.jutsuper-grid-2-cols {
+  grid-template-columns: min-content minmax(0, 1fr);
 }
 
 /* Toggle slider */
@@ -368,7 +341,8 @@ input:checked + .jutsuper-slider-bg-area:before {
 
 /* Range slider */
 .jutsuper-range {
-  width: inherit;
+  width: 100%;
+  height: 100%;
 }
 
 .jutsuper-range-container {
@@ -388,13 +362,13 @@ input:checked + .jutsuper-slider-bg-area:before {
 }
 
 input.jutsuper-range[type=range] {
-  height: 24px;
   margin: 0;
   appearance: none;
-  background-color: var(--jutsuper-color-darker-green-half-transparent);
   border-radius: 50px;
   overflow: hidden;
   cursor: pointer;
+  box-shadow: inset 0px 0px 0px 2px var(--jutsuper-color-darker-green);
+  background-color: #00000000;
 
   &::-webkit-slider-thumb {
     appearance: none;
@@ -419,7 +393,7 @@ input.jutsuper-range[type=range] {
 
 input.jutsuper-settings-radio[type="radio"] {
   appearance: none;
-  background-color: var(--jutsuper-color-darker-green-half-transparent);
+  box-shadow: inset 0px 0px 0px 2px var(--jutsuper-color-darker-green);
   margin-left: 1px;
   margin-right: 1px;
   transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
@@ -446,34 +420,66 @@ input.jutsuper-settings-radio:last-child[type="radio"] {
   margin: 0;
 }
 
-#jutsuper-settings-openings-skip-order-first:before {
+.jutsuper-inset-icon::before {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+}
+
+.jutsuper-order-first-icon::before {
   content: url("/src/assets/icon/first.svg");
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-  transform: translateY(1px);
-  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
 }
 
-#jutsuper-settings-openings-skip-order-first:checked::before {
-  transform: translateY(-1px);
-}
-
-#jutsuper-settings-openings-skip-order-last:before {
+.jutsuper-order-last-icon::before {
   content: url("/src/assets/icon/last.svg");
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-  transform: translateY(1px);
-  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
 }
 
-#jutsuper-settings-openings-skip-order-last:checked::before {
-  transform: translateY(-1px);
+
+/* Key label button */
+.jutsuper-settings-key-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: bold;
+  background-color: var(--jutsuper-color-darker-green-half-transparent);
+  border-radius: 50px;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.jutsuper-settings-key-label:before {
+  width: 100px;
+}
+
+.jutsuper-settings-key-label-flashing {
+  animation-name: jutsuper-settings-key-label-flashing-anim;
+  animation-duration: var(--jutsuper-dur-slow);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+}
+
+.jutsuper-settings-key-label-record-icon-flashing:before {
+  display: flex;
+  content: "\2022";
+  width: 100%;
+  height: 100%;
+  justify-content: end;
+  align-items: center;
+  font-size: 2em;
+  line-height: 0;
+  color: #CF1B2B;
+  animation-name: jutsuper-opacity-1-to-0-anim;
+  animation-duration: var(--jutsuper-dur-slow);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
 }
