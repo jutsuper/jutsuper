@@ -60,7 +60,8 @@
         "/src/browser.js",
         "/src/page/jutsuper.js",
         "/src/page/jutsuper.css",
-        "/src/page/settings.html"
+        "/src/page/settings.html",
+        "/src/page/settings.js"
       ],
       "matches": [
         "https://*.jut.su/*"

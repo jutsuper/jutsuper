@@ -6,7 +6,6 @@
       rel="stylesheet"
       href="jutsuper.css"
     >
-    </script>
     <style>
       body {
         background-color: black;
@@ -28,6 +27,9 @@
       }
     </style>
     <script>
+      (function setDebugFlag() {
+        window.JUTSUPER_DEBUG = true;
+      })();
       (function injectFonts() {
         const fonts = [
           ["Roboto", "/src/assets/font/Roboto-Regular.ttf", "truetype", "normal"],
@@ -64,7 +66,21 @@
     </script>
   </head>
   <body>
-    <div class="jutsuper-settings-dev-area hidden">
+    <div 
+      id="jutsuper-settings-dev-page-preload-message"
+      style="
+        color: white;
+        margin-bottom: 20px
+      "
+    >
+      <div>
+        Awaiting JavaScript...
+      </div>
+      <div style="color: red">
+        (page may not work)
+      </div>
+    </div>
+    <div class="jutsuper-settings-dev-area">
       <!-- Start of the area that gets injected -->
       <div
         id="jutsuper-settings-root"
@@ -405,36 +421,6 @@
           </div>
         </div>
         </div>
-        <script>
-          /*
-          const opCancelBtn = document.getElementById("jutsuper-settings-openings-cancel-key-button");
-          const opCancelRec = document.getElementById('jutsuper-settings-openings-cancel-key-record');
-          opCancelBtn.isListening = false;
-          opCancelBtn.addEventListener("keydown", event => {
-            if (!opCancelBtn.isListening) {
-              return
-            }
-            const shortKeyLabel = KEY_CODE_LABELS[event.keyCode];
-            const keyLabel = shortKeyLabel ? shortKeyLabel : event.key
-            opCancelBtn.value = keyLabel;
-            opCancelBtn.classList.remove('jutsuper-settings-key-label-flashing');
-            opCancelBtn.isListening = false;
-            opCancelRec.classList.toggle('jutsuper-settings-key-label-record-icon-flashing');
-          })
-          document.addEventListener("mousedown", function(event) {
-            const boundaries = opCancelBtn.getBoundingClientRect();
-            const isInXRange = event.clientX >= boundaries.left && event.clientX <= boundaries.right;
-            const isInYRange = event.clientY >= boundaries.top && event.clientY <= boundaries.bottom;
-            const isInAreaRange = isInXRange && isInYRange;
-
-            if (!isInAreaRange) {
-              opCancelBtn.isListening = false;
-              opCancelBtn.classList.remove("jutsuper-settings-key-label-flashing")
-              opCancelRec.classList.remove("jutsuper-settings-key-label-record-icon-flashing")
-            }
-          });
-          */
-        </script>
       </div>
       <!-- End of the area that gets injected -->
     </div>

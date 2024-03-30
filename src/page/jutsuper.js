@@ -20,6 +20,9 @@ import {
   JutSuperIpcAwaitStates as ipcAwaits,
   JutSuperIpcBoolRequestStates as ipcBoolRequests
 } from "/src/consts.js";
+import {
+  JutSuperSettings
+} from "/src/page/settings.js";
 
 
 /** @type {JutSuper} */
@@ -525,20 +528,6 @@ class JutSuper {
     settingsContent.removeAttribute("class");
     settingsContent.classList.add("jutsuper-settings-frame");
 
-    const settingsScripts = settingsContent.getElementsByTagName("script");
-    console.log("settingsScripts", settingsScripts);
-    for (const script of settingsScripts) {
-      document.body.append(script)
-    }
-    window.jutsuperSettingsCloseOtherBars = (thisArg) => {
-      const bars = document.getElementsByName("bars");
-      for (const bar of bars) {
-        if (bar.id !== thisArg.id) {
-          bar.checked = false;
-        }
-      }
-    }
-
     this.settingsContainer.id = domIds.vjsSettingsContainer;
     this.settingsContainer.classList.add(jsuperCss.vjsSettingsContainer);
 
@@ -570,6 +559,8 @@ class JutSuper {
         "src", document.getElementById(assetIds.skipSvg).href
       )
     }
+
+    this.settingsPopup = new JutSuperSettings(document);
   }
 
   /**

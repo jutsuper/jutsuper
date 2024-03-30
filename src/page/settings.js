@@ -1,5 +1,5 @@
 import { jsuperUtil as util } from "/src/util.js";
-export { jsuperSettings };
+export { JutSuperSettings };
 
 
 class JutSuperSettings {
@@ -11,7 +11,6 @@ class JutSuperSettings {
 
     this.document = doc ? doc : document;
 
-    const devArea = this.document.getElementsByClassName("jutsuper-settings-dev-area");
     this.bars = this.document.getElementsByName("jutsuper-settings-bar");
     this.opSkipSwitch = this.document.getElementById("jutsuper-settings-openings-switch");
     this.opSkipOrderSelector = this.document.getElementById("jutsuper-settings-openings-skip-order-selector");
@@ -64,7 +63,10 @@ class JutSuperSettings {
     });
 
     // if in dev environment, show the dev area
-    if (devArea.length > 0) {
+    if (window.JUTSUPER_DEBUG) {
+      const preloadMessage = this.document.getElementById("jutsuper-settings-dev-page-preload-message");
+      preloadMessage.classList.add("hidden");
+      const devArea = this.document.getElementsByClassName("jutsuper-settings-dev-area");
       devArea[0].classList.remove("hidden");
     }
   }
@@ -210,6 +212,6 @@ class JutSuperSettings {
   }
 }
 
-
-const jsuperSettings = new JutSuperSettings();
-window.jsuperSettings = jsuperSettings;
+if (window.JUTSUPER_DEBUG) {
+  window.jsuperSettings = new JutSuperSettings(document);
+}

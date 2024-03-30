@@ -233,6 +233,8 @@ class JutSuperContent {
     /** @type {string} */
     this.urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
     /** @type {string} */
+    this.urlSettingsJs = browser.runtime.getURL("/src/page/settings.js");
+    /** @type {string} */
     this.urlSettingsHtml = browser.runtime.getURL(assetPaths.settingsHtml);
 
     const head = document.getElementsByTagName("head")[0];
@@ -246,6 +248,7 @@ class JutSuperContent {
     this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
     this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
     this.injectDocument(head, this.urlSettingsHtml, assetIds.settingsHtml);
+
 
     this.listenEssentialsLoadState();
     this.listenFullscreenChange();

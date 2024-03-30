@@ -51,7 +51,8 @@
     "/src/ipc.js",
     "/src/page/jutsuper.js",
     "/src/page/jutsuper.css",
-    "/src/page/settings.html"
+    "/src/page/settings.html",
+    "/src/page/settings.js"
   ],
   "icons": {
     "128": "/src/assets/logo/square-green-128.png"
