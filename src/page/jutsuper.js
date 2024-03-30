@@ -525,8 +525,6 @@ class JutSuper {
     const settingsContent = settingsAreaHtmlTemplate
       .content
       .getElementById(domIds.settingsRoot);
-    settingsContent.removeAttribute("class");
-    settingsContent.classList.add("jutsuper-settings-frame");
 
     this.settingsContainer.id = domIds.vjsSettingsContainer;
     this.settingsContainer.classList.add(jsuperCss.vjsSettingsContainer);

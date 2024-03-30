@@ -33,9 +33,9 @@ class JutSuperSettings {
       const keyLabel = util.getKeyLabelFromRawLabel(event.key);
 
       thisArg.cancelKeyListener.value = keyLabel;
-      thisArg.cancelKeyListener.classList.remove("jutsuper-settings-key-label-flashing");
+      thisArg.cancelKeyListener.classList.remove("jutsuper-animate-darker-to-dark-green-ht-animation");
       thisArg.cancelKeyListener.isListening = false;
-      thisArg.cancelKeyListenerRecCircle.classList.toggle("jutsuper-settings-key-label-record-icon-flashing");
+      thisArg.cancelKeyListenerRecCircle.classList.toggle("jutsuper-animate-opacity-1-to-0");
     });
     this.cancelKeyListenerRecCircle = this.document.getElementById("jutsuper-settings-cancel-key-listener-rec-circle");
 
@@ -57,8 +57,8 @@ class JutSuperSettings {
 
       if (!isInAreaRange) {
         thisArg.cancelKeyListener.isListening = false;
-        thisArg.cancelKeyListener.classList.remove("jutsuper-settings-key-label-flashing")
-        thisArg.cancelKeyListenerRecCircle.classList.remove("jutsuper-settings-key-label-record-icon-flashing")
+        thisArg.cancelKeyListener.classList.remove("jutsuper-animate-darker-to-dark-green-ht-animation");
+        thisArg.cancelKeyListenerRecCircle.classList.remove("jutsuper-animate-opacity-1-to-0");
       }
     });
 
@@ -200,8 +200,8 @@ class JutSuperSettings {
    */
   onCancelRecorderClick(event) {
     this.cancelKeyListener.isListening = !this.cancelKeyListener.isListening;
-    this.cancelKeyListener.classList.toggle("jutsuper-settings-key-label-flashing");
-    this.cancelKeyListenerRecCircle.classList.toggle("jutsuper-settings-key-label-record-icon-flashing");
+    this.cancelKeyListener.classList.toggle("jutsuper-animate-darker-to-dark-green-ht-animation");
+    this.cancelKeyListenerRecCircle.classList.toggle("jutsuper-animate-opacity-1-to-0");
   }
 
   /**

@@ -73,12 +73,7 @@
         margin-bottom: 20px
       "
     >
-      <div>
-        Awaiting JavaScript...
-      </div>
-      <div style="color: red">
-        (page may not work)
-      </div>
+      Awaiting JavaScript...
     </div>
     <div class="jutsuper-settings-dev-area">
       <!-- Start of the area that gets injected -->
@@ -87,7 +82,7 @@
         class="jutsuper-settings-frame"
       >
         <!-- Skip header -->
-        <div class="jutsuper-heading">
+        <div class="jutsuper-settings-heading">
           <img
             id="jutsuper-settings-skip-header-icon"
             src="/src/assets/icon/skip.svg"
@@ -113,10 +108,10 @@
           for="jutsuper-settings-openings-bar"
           class="jutsuper-settings-section-bar"
         >
-          <label class="
-            jutsuper-slider-switch
-            jutsuper-right-margin-10
-          ">
+          <label
+            class="jutsuper-slider-switch"
+            style="margin-right: 10px;"
+          >
             <input
               id="jutsuper-settings-openings-switch"
               type="checkbox"
@@ -156,9 +151,9 @@
             class="jutsuper-settings-section-area"
           >
             <div class="
-              jutsuper-grid-container
-              jutsuper-grid-1-row
-              jutsuper-grid-2-cols
+              jutsuper-settings-grid-container
+              jutsuper-settings-grid-1-row
+              jutsuper-settings-grid-2-cols
             ">
               <div
                 id="jutsuper-settings-text-orders"
@@ -172,14 +167,14 @@
               <div>
                 <div
                   id="jutsuper-settings-openings-skip-order-selector"
-                  class="jutsuper-settings-radio-container"
+                  class="jutsuper-radio-container"
                 >
                   <input
                     id="jutsuper-settings-openings-skip-order-first"
                     class="
-                      jutsuper-settings-radio
+                      jutsuper-radio
                       jutsuper-inset-icon
-                      jutsuper-order-first-icon
+                      jutsuper-settings-order-first-icon
                       jutsuper-no-select
                     "
                     type="radio"
@@ -191,7 +186,7 @@
                   />
                   <input
                     id="jutsuper-settings-openings-skip-order-last"
-                    class="jutsuper-settings-radio jutsuper-inset-icon jutsuper-order-last-icon jutsuper-no-select"
+                    class="jutsuper-radio jutsuper-inset-icon jutsuper-settings-order-last-icon jutsuper-no-select"
                     type="radio"
                     name="jutsuper-settings-op-skip-order"
                     style="
@@ -216,7 +211,10 @@
           for="jutsuper-settings-endings-bar"
           class="jutsuper-settings-section-bar"
         >
-          <label class="jutsuper-slider-switch jutsuper-right-margin-10">
+          <label
+            class="jutsuper-slider-switch"
+            style="margin-right: 10px;"
+          >
             <input
               id="jutsuper-settings-endings-switch"
               type="checkbox"
@@ -253,9 +251,9 @@
             class="jutsuper-settings-section-area"
           >
           <div class="
-            jutsuper-grid-container
-            jutsuper-grid-2-rows
-            jutsuper-grid-2-cols
+            jutsuper-settings-grid-container
+            jutsuper-settings-grid-2-rows
+            jutsuper-settings-grid-2-cols
           ">
             <div
               id="jutsuper-settings-text-order"
@@ -268,16 +266,16 @@
             </div>
             <div
               id="jutsuper-settings-endings-skip-order-selector"
-              class="jutsuper-settings-radio-container"
+              class="jutsuper-radio-container"
             >
               <input
                 id="jutsuper-settings-endings-skip-order-first"
                 type="radio"
                 name="jutsuper-settings-ed-skip-order"
                 class="
-                  jutsuper-settings-radio
+                  jutsuper-radio
                   jutsuper-inset-icon
-                  jutsuper-order-first-icon
+                  jutsuper-settings-order-first-icon
                   jutsuper-no-select
                 "
                 style="
@@ -290,9 +288,9 @@
                 type="radio"
                 name="jutsuper-settings-ed-skip-order"
                 class="
-                  jutsuper-settings-radio
+                  jutsuper-radio
                   jutsuper-inset-icon
-                  jutsuper-order-last-icon
+                  jutsuper-settings-order-last-icon
                   jutsuper-no-select
                 "
                 style="
@@ -311,10 +309,7 @@
               Fullscreen
             </div>
             <div style="display: flex">
-              <label class="
-                jutsuper-slider-switch
-                jutsuper-right-margin-10
-              ">
+              <label class="jutsuper-slider-switch">
                 <input
                   id="jutsuper-settings-endings-fullscreen-switch"
                   type="checkbox"
@@ -330,8 +325,9 @@
         </div>
         <div class="jutsuper-settings-outer-section-area">
           <div class="
-            jutsuper-grid-container
-            jutsuper-grid-2-rows
+            jutsuper-settings-grid-container
+            jutsuper-settings-grid-2-rows
+            jutsuper-settings-grid-4-cols
           ">
             <div
               id="jutsuper-settings-text-delay"
@@ -360,7 +356,7 @@
             ">
               <div
                 id="jutsuper-settings-delay-num"
-                class="jutsuper-top-bottom-appear"
+                class="jutsuper-animate-small-top-to-bottom"
                 style="
                   display: inline-table;
                   justify-content: center;
@@ -390,7 +386,7 @@
               Cancel
             </div>
             <div
-              class="jutsuper-settings-key-label-container"
+              class="jutsuper-button-container"
               style="
                 position: relative;
               "
@@ -400,7 +396,7 @@
                 type="button"
                 value="Null"
                 class="
-                  jutsuper-settings-key-label
+                  jutsuper-button
                   jutsuper-no-select
                 "
                 style="
@@ -413,6 +409,8 @@
             </div>
             <div
               id="jutsuper-settings-cancel-key-listener-rec-circle"
+              class="jutsuper-record-icon"
+              style="opacity: 0;"
             >
             </div>
             <div>

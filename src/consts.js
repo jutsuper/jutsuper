@@ -499,8 +499,6 @@ const JutSuperCss = {
   keyframesBottomTopAppear: "jutsuper-bottom-top-anim-appear",
   /** @type {"jutsuper-bottom-top-anim"} */
   bottomTopAnim: "jutsuper-bottom-top-anim",
-  /** @type {"jutsuper-bottom-margin-right-5"} */
-  bottomMarginRight5: "jutsuper-bottom-margin-right-5",
   /** @type {"jutsuper-fullscreen"} */
   fullscreen: "jutsuper-fullscreen",
   /** @type {"jutsuper-top-index"} */
@@ -516,7 +514,6 @@ const JutSuperCss = {
  * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
  * @property {"jutsuper-bottom-top-anim-appear"} keyframesBottomTopAppear
  * @property {"jutsuper-bottom-top-anim"} bottomTopAnim
- * @property {"jutsuper-bottom-margin-right-5"} bottomMarginRight5
  * @property {"jutsuper-fullscreen"} fullscreen
  * @property {"jutsuper-top-index"} topIndex
  * @property {"jutsuper-visibility-hidden"} hidden
@@ -528,7 +525,6 @@ const JutSuperCss = {
  *   "jutsuper-vjs-settings-clip-area" |
  *   "jutsuper-bottom-top-anim-appear" |
  *   "jutsuper-bottom-top-anim" |
- *   "jutsuper-bottom-margin-right-5" |
  *   "jutsuper-fullscreen" |
  *   "jutsuper-top-index" |
  *   "jutsuper-visibility-hidden"

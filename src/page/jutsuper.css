@@ -1,3 +1,4 @@
+/* Global variables */
 :root {
   --jutsuper-color-grey: rgb(150, 150, 150);
   --jutsuper-color-light-green: #BDF283;
@@ -11,136 +12,96 @@
   --jutsuper-dur-mid: .25s;
   --jutsuper-dur-slow: .50s;
   --jutsuper-curve-fast-start-slow-end: cubic-bezier(0,.86,.24,.96);
+  /* Max setting's popup width */
   --jutsuper-size-settings-max-width: 220px;
+  /* Max setting's popup height */
   --jutsuper-size-settings-max-height: 280px;
+  /* Control the settings popup border radius */
   --jutsuper-size-settings-border-radius: 20px;
+  /* Control the default row height in a settings popup */
   --jutsuper-size-settings-row-height: 24px;
+  /* Control the "Openings" section height */
+  --jutsuper-size-settings-openings-section-height: 39px;
+  /* Control the "Endings" section height */
+  --jutsuper-size-settings-endings-section-height: 69px;
+  /* Control the `border-box` filling of an settings section tab when hovering */
+  --jutsuper-styling-settings-hover-tab-box-shadow: inset 0 -6px 0px -2px var(--jutsuper-color-light-green);
+  /* Control the `border-box` filling of an settings section tab when opened */
+  --jutsuper-styling-settings-active-tab-box-shadow: inset 0 -48px 0px -2px var(--jutsuper-color-light-green);
+  /* Control the rotation of a dropdown in the setting's tab when the section is opened */
+  --jutsuper-styling-settings-dropdown-rotation-active: rotate(180deg);
 }
 
-.jutsuper-vjs-icon:hover {
-  cursor: pointer !important;
+/* ////// */
+/* Common */
+/* ////// */
+
+/*
+  Style element as fullscreen
+  https://fullscreen.spec.whatwg.org/#user-agent-level-style-sheet-defaults
+*/
+.jutsuper-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: none !important;
+  object-fit: contain;
 }
 
-.jutsuper-vjs-settings-container {
-  position: absolute;
-  width: 100%;
-  height: calc(100% - 3.5em);
-  top: 0;
-  left: 0;
-  z-index: 1;
+/* Base styling for an inset icon */
+.jutsuper-inset-icon::before {
   display: flex;
-  padding: 20px;
-  justify-content: right;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+}
+
+/* Bring element to the top */
+.jutsuper-top-index {
+  z-index: 200;
+}
+
+/* Hide element using `visibility` */
+.jutsuper-visibility-hidden {
+  visibility: hidden !important;
+}
+
+/* Hide element using `display` */
+.jutsuper-display-hidden {
+  display: none !important;
+}
+
+/* Disable pointer events for the element */
+.jutsuper-no-pointer-events {
   pointer-events: none;
 }
 
-.jutsuper-vjs-settings-area-sized {
-  width: 100%;
-  height: 100%;
-  max-width: var(--jutsuper-size-settings-max-width);
-  max-height: var(--jutsuper-size-settings-max-height);
-  border-radius: var(--jutsuper-size-settings-border-radius);
+/* Disable the ability to select the element */
+.jutsuper-no-select {
+  user-select: none;
 }
 
-.jutsuper-vjs-settings-area {
-  align-self: end;
-  pointer-events: all;
-  background-color: white;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
-  font-family: "Roboto";
-  font-size: 1em;
-  font-weight: normal;
-  color: black;
+/* Float to right in a flex container */
+.jutsuper-flex-float-to-right {
+  margin-left: auto;
+  margin-right: 10px;
 }
 
-.jutsuper-vjs-settings-clip-area {
-  clip-path: border-box;
-  overflow-y: hidden;
-  overflow-x: scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
+/* ////////// */
+/* Animations */
+/* ////////// */
 
-.jutsuper-vjs-settings-clip-area::-webkit-scrollbar {
-  display: none;
-}
-
-.jutsuper-settings-frame {
-  height: inherit;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.jutsuper-settings-frame::-webkit-scrollbar {
-  display: none;
-}
-
-.jutsuper-heading {
-  display: flex;
-  margin: 10px;
-  margin-left: 20px;
-}
-
-.jutsuper-settings-section-bar {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  cursor: pointer;
-  min-height: 24px;
-  padding: 10px;
-  transition: var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.jutsuper-settings-section-clip-area {
-  height: 0;
-  overflow: hidden;
-  background-color: var(--jutsuper-color-light-green);
-  transition: var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
-}
-
-.jutsuper-settings-section-area {
-  padding: 15px;
-  padding-top: 0;
-}
-
-.jutsuper-settings-outer-section-area {
-  padding: 15px;
-}
-
-#jutsuper-settings-openings-bar:checked + label {
-  box-shadow: inset 0 -48px 0px -2px var(--jutsuper-color-light-green);
-  .jutsuper-settings-dropdown-icon {
-    transform: rotate(180deg);
-  }
-}
-
-#jutsuper-settings-openings-bar:checked ~ #jutsuper-settings-openings-section-clip {
-  height: 40px;
-  transition: var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
-}
-
-#jutsuper-settings-endings-bar:checked + label {
-  box-shadow: inset 0 -48px 0px -2px var(--jutsuper-color-light-green);
-  .jutsuper-settings-dropdown-icon {
-    transform: rotate(180deg);
-  }
-}
-
-#jutsuper-settings-endings-bar:checked ~ #jutsuper-settings-endings-section-clip {
-  height: 69px;
-}
-
-.jutsuper-settings-dropdown-icon {
-  transform-origin: center;
-  transition: var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
-}
-
-.jutsuper-settings-section-bar:hover {
-  box-shadow: inset 0 -6px 0px -2px var(--jutsuper-color-light-green);
-}
-
+/* Appear from bottom to top, used for the popup window */
 @keyframes jutsuper-bottom-top-anim-appear {
   0% {
     opacity: 0;
@@ -149,35 +110,6 @@
   100% {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes jutsuper-top-bottom-anim-appear {
-  0% {
-    opacity: 1;
-    transform: translateY(-.25em);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes jutsuper-settings-key-label-flashing-anim {
-  0% {
-    background-color: var(--jutsuper-color-darker-green);
-  }
-  100% {
-    background-color: var(--jutsuper-color-dark-green-half-transparent);
-  }
-}
-
-@keyframes jutsuper-opacity-1-to-0-anim {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
   }
 }
 
@@ -195,101 +127,255 @@
   transform: translateY(30px);
 }
 
-.jutsuper-top-bottom-appear {
-  animation-name: jutsuper-top-bottom-anim-appear;
+/* Appear from top to bottom, used for the delay number */
+@keyframes jutsuper-anim-small-top-to-bottom {
+  0% {
+    transform: translateY(-.25em);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.jutsuper-animate-small-top-to-bottom {
+  animation-name: jutsuper-anim-small-top-to-bottom;
   animation-duration: var(--jutsuper-dur-slow);
   animation-timing-function: var(--jutsuper-curve-fast-start-slow-end);
 }
 
-.jutsuper-bottom-margin-right-5 {
-  display: inline-block;
-  vertical-align: bottom;
-  margin-right: 5px;
+/* Flashing colors, used for the button that records cancel key */
+@keyframes jutsuper-anim-darker-to-dark-green-ht {
+  0% {
+    background-color: var(--jutsuper-color-darker-green);
+  }
+  100% {
+    background-color: var(--jutsuper-color-dark-green-half-transparent);
+  }
 }
 
-.jutsuper-fullscreen {
-  position: fixed !important;
-  inset: 0 !important;
-  margin: 0 !important;
-  box-sizing: border-box !important;
-  min-width: 0 !important;
-  max-width: none !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  width: 100% !important;
-  height: 100% !important;
-  transform: none !important;
-  object-fit: contain;
+.jutsuper-animate-darker-to-dark-green-ht-animation {
+  animation-name: jutsuper-anim-darker-to-dark-green-ht;
+  animation-duration: var(--jutsuper-dur-slow);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
 }
 
-.jutsuper-top-index {
-  z-index: 200;
+/*
+  Opacity from 1 to 0, used for the circle
+  that flashes next to the cancel key recording button
+*/
+@keyframes jutsuper-anim-opacity-1-to-0 {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
-.jutsuper-visibility-hidden {
-  visibility: hidden !important;
+.jutsuper-animate-opacity-1-to-0 {
+  animation-name: jutsuper-anim-opacity-1-to-0;
+  animation-duration: var(--jutsuper-dur-slow);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
 }
 
-.jutsuper-display-hidden {
-  display: none !important;
+/* /////////////// */
+/* VideoJS related */
+/* /////////////// */
+
+/* The icon in the player */
+.jutsuper-vjs-icon:hover {
+  cursor: pointer !important;
 }
 
-.jutsuper-margin-10 {
-  margin: 10px;
-}
-
-.jutsuper-left-margin-10 {
-  margin-left: 10px;
-}
-
-.jutsuper-right-margin-10 {
-  margin-right: 10px;
-}
-
-.jutsuper-no-pointer-events {
+/* An area for the popup */
+.jutsuper-vjs-settings-container {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 3.5em);
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  padding: 20px;
+  justify-content: right;
   pointer-events: none;
 }
 
-.jutsuper-no-select {
-  user-select: none;
+/*
+  Base selector for the popup sizing,
+  used in combination with `jutsuper-vjs-settings-area`
+  and `jutsuper-vjs-settings-clip-area`
+*/
+.jutsuper-vjs-settings-area-sized {
+  width: 100%;
+  height: 100%;
+  max-width: var(--jutsuper-size-settings-max-width);
+  max-height: var(--jutsuper-size-settings-max-height);
+  border-radius: var(--jutsuper-size-settings-border-radius);
 }
 
-.jutsuper-flex-float-to-right {
-  margin-left: auto;
-  margin-right: 10px;
+/* Fonts and shadows for the popup */
+.jutsuper-vjs-settings-area {
+  align-self: end;
+  pointer-events: all;
+  background-color: white;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+  font-family: "Roboto";
+  font-size: 1em;
+  font-weight: normal;
+  color: black;
 }
 
-.jutsuper-flip-180 {
-  transform: rotate(180deg);
+/* Clip the settings area to hide inner overflows */
+.jutsuper-vjs-settings-clip-area {
+  clip-path: border-box;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.jutsuper-light-green-bg-color {
+/* Hide scrollbar for webkit */
+.jutsuper-vjs-settings-clip-area::-webkit-scrollbar {
+  display: none;
+}
+
+/* ////////////// */
+/* Settings popup */
+/* ////////////// */
+
+/* Inner frame of the popup */
+.jutsuper-settings-frame {
+  height: inherit;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Hide scrollbar for webkit */
+.jutsuper-settings-frame::-webkit-scrollbar {
+  display: none;
+}
+
+/* Header properties (e.g. "Skip options" is a header) */
+.jutsuper-settings-heading {
+  display: flex;
+  margin: 10px;
+  margin-left: 20px;
+}
+
+/*
+  A bar for the sections
+  (e.g. `Openings` and `Endings`
+  with toggle switches are considered bars)
+*/
+.jutsuper-settings-section-bar {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  min-height: 24px;
+  padding: 10px;
+  transition: var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Clip the tab section to hide overflows */
+.jutsuper-settings-section-clip-area {
+  height: 0;
+  overflow: hidden;
   background-color: var(--jutsuper-color-light-green);
-}
-.jutsuper-light-green-bg-color:hover {
-  background-color: var(--jutsuper-color-light-green);
+  transition: var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
 }
 
-.jutsuper-grid-container {
+/* Inner tab section area */
+.jutsuper-settings-section-area {
+  padding: 15px;
+  padding-top: 0;
+}
+
+/* Section area that does not belong to a tab */
+.jutsuper-settings-outer-section-area {
+  padding: 15px;
+}
+
+/* Styling for a tab when hovering */
+.jutsuper-settings-section-bar:hover {
+  /* Basically just an underline */
+  box-shadow: var(--jutsuper-styling-settings-hover-tab-box-shadow)
+}
+
+/* "Openings" tab styling when opened */
+#jutsuper-settings-openings-bar:checked + label {
+  /* Fill the tab with color green */
+  box-shadow: var(--jutsuper-styling-settings-active-tab-box-shadow);
+  /* Rotate the dropdown icon */
+  .jutsuper-settings-dropdown-icon {
+    transform: var(--jutsuper-styling-settings-dropdown-rotation-active)
+  }
+}
+
+/* "Openings" tab section properties when opened */
+#jutsuper-settings-openings-bar:checked ~ #jutsuper-settings-openings-section-clip {
+  height: var(--jutsuper-size-settings-openings-section-height)
+}
+
+/* "Endings" tab styling when opened */
+#jutsuper-settings-endings-bar:checked + label {
+  /* Fill the tab with color green */
+  box-shadow: var(--jutsuper-styling-settings-active-tab-box-shadow);
+  /* Rotate the dropdown icon */
+  .jutsuper-settings-dropdown-icon {
+    transform: var(--jutsuper-styling-settings-dropdown-rotation-active)
+  }
+}
+
+/* "Endings" tab section properties when opened */
+#jutsuper-settings-endings-bar:checked ~ #jutsuper-settings-endings-section-clip {
+  height: var(--jutsuper-size-settings-endings-section-height)
+}
+
+/* Dropdown icon in a tab */
+.jutsuper-settings-dropdown-icon {
+  transform-origin: center;
+  transition: var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+}
+
+/* Base grid container for the settings popup */
+.jutsuper-settings-grid-container {
   display: grid;
-  grid-template-columns: min-content minmax(0, 1fr) 16px 12px;
-  grid-template-rows: repeat(3, minmax(auto, var(--jutsuper-size-settings-row-height)));
   gap: 6px;
 }
 
-.jutsuper-grid-1-row {
+.jutsuper-settings-grid-1-row {
   grid-template-rows: repeat(1, minmax(auto, var(--jutsuper-size-settings-row-height)));
 }
 
-.jutsuper-grid-2-rows {
+.jutsuper-settings-grid-2-rows {
   grid-template-rows: repeat(2, minmax(auto, var(--jutsuper-size-settings-row-height)));
 }
 
-.jutsuper-grid-2-cols {
+.jutsuper-settings-grid-3-rows {
+  grid-template-rows: repeat(3, minmax(auto, var(--jutsuper-size-settings-row-height)));
+}
+
+.jutsuper-settings-grid-2-cols {
   grid-template-columns: 50% 50%;
 }
 
+.jutsuper-settings-grid-4-cols {
+  grid-template-columns: min-content minmax(0, 1fr) 16px 12px;
+}
+
+/* ///////////// */
 /* Toggle slider */
+/* ///////////// */
+
+/* Base slider dimensions */
 .jutsuper-slider-switch {
   position: relative;
   display: inline-block;
@@ -297,12 +383,14 @@
   height: 24px;
 }
 
+/* Hide standard checkbox */
 .jutsuper-slider-switch input { 
   opacity: 0;
   width: 0;
   height: 0;
 }
 
+/* Slider's background when unchecked */
 .jutsuper-slider-bg-area {
   position: absolute;
   cursor: pointer;
@@ -315,10 +403,12 @@
   border-radius: 50px;
 }
 
+/* Slider's background when checked */
 input:checked + .jutsuper-slider-bg-area {
   background-color: var(--jutsuper-color-darker-green);
 }
 
+/* Slider's thumb when unchecked */
 .jutsuper-slider-bg-area:before {
   position: absolute;
   content: "";
@@ -331,32 +421,23 @@ input:checked + .jutsuper-slider-bg-area {
   border-radius: 50px;
 }
 
+/* Slider's thumb when checked */
 input:checked + .jutsuper-slider-bg-area:before {
   transform: translateX(20px);
 }
 
+/* //////////// */
 /* Range slider */
+/* //////////// */
+
+
+/* Base slider dimensions */
 .jutsuper-range {
   width: 100%;
   height: 100%;
 }
 
-.jutsuper-range-container {
-  position: relative;
-}
-
-.jutsuper-range-container::before {
-  /*content: "";*/
-  position: absolute;
-  background-image: url("/src/assets/icon/dropdown.svg");
-  background-repeat: no-repeat;
-  rotate: -90deg;
-  pointer-events: none;
-  background-size: 8px;
-  width: 8px;
-  height: 8px;
-}
-
+/* Standard input styling */
 input.jutsuper-range[type=range] {
   margin: 0;
   appearance: none;
@@ -366,12 +447,14 @@ input.jutsuper-range[type=range] {
   box-shadow: inset 0px 0px 0px 2px var(--jutsuper-color-darker-green);
   background-color: #00000000;
 
+  /* Hide the standard webkit thumb and show a custom filling instead */
   &::-webkit-slider-thumb {
     appearance: none;
     width: 0;
     box-shadow: -20rem 0 0 20rem var(--jutsuper-color-darker-green);
   }
 
+  /* Hide the standard gecko thumb and show a custom filling instead */
   &::-moz-range-thumb {
     appearance: none;
     border: none;
@@ -380,14 +463,19 @@ input.jutsuper-range[type=range] {
   }
 }
 
-/* Radio */
-.jutsuper-settings-radio-container {
+/* ///////////// */
+/* Radio buttons */
+/* ///////////// */
+
+/* Base container dimensions */
+.jutsuper-radio-container {
   display: flex;
   width: 100%;
   height: 100%;
 }
 
-input.jutsuper-settings-radio[type="radio"] {
+/* Standard input styling */
+input.jutsuper-radio[type="radio"] {
   appearance: none;
   box-shadow: inset 0px 0px 0px 2px var(--jutsuper-color-darker-green);
   margin-left: 1px;
@@ -395,48 +483,46 @@ input.jutsuper-settings-radio[type="radio"] {
   transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
 }
 
-input.jutsuper-settings-radio:checked[type="radio"] {
+/* Styling of a checked radio button */
+input.jutsuper-radio:checked[type="radio"] {
   background-color: var(--jutsuper-color-darker-green)
 }
 
-input.jutsuper-settings-radio:first-child[type="radio"] {
+/* Leftmost button styling */
+input.jutsuper-radio:first-child[type="radio"] {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   margin-left: 0;
 }
 
-input.jutsuper-settings-radio:last-child[type="radio"] {
+/* Rightmost button styling */
+input.jutsuper-radio:last-child[type="radio"] {
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
   margin-right: 0;
 }
 
-.jutsuper-settings-radio {
+/* The radio button styling */
+.jutsuper-radio {
   cursor: pointer;
   margin: 0;
 }
 
-.jutsuper-inset-icon::before {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
-}
-
-.jutsuper-order-first-icon::before {
+/* An icon for the "Skip first occurrence" option */
+.jutsuper-settings-order-first-icon::before {
   content: url("/src/assets/icon/first.svg");
 }
 
-.jutsuper-order-last-icon::before {
+/* An icon for the "Skip last occurrence" option */
+.jutsuper-settings-order-last-icon::before {
   content: url("/src/assets/icon/last.svg");
 }
 
+/* //////////// */
+/* Basic button */
+/* //////////// */
 
-/* Key label button */
-.jutsuper-settings-key-label {
+.jutsuper-button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -451,19 +537,11 @@ input.jutsuper-settings-radio:last-child[type="radio"] {
   padding: 0;
 }
 
-.jutsuper-settings-key-label:before {
-  width: 100px;
-}
+/* //////// */
+/* REC icon */
+/* //////// */
 
-.jutsuper-settings-key-label-flashing {
-  animation-name: jutsuper-settings-key-label-flashing-anim;
-  animation-duration: var(--jutsuper-dur-slow);
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: alternate-reverse;
-}
-
-.jutsuper-settings-key-label-record-icon-flashing:before {
+.jutsuper-record-icon:before {
   display: flex;
   content: "\2022";
   width: 100%;
@@ -473,9 +551,4 @@ input.jutsuper-settings-radio:last-child[type="radio"] {
   font-size: 2em;
   line-height: 0;
   color: #CF1B2B;
-  animation-name: jutsuper-opacity-1-to-0-anim;
-  animation-duration: var(--jutsuper-dur-slow);
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: alternate-reverse;
 }
