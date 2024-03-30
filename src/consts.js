@@ -36,7 +36,8 @@ export {
   JutSuperMessagingMessageKeys,
   JutSuperMessagingMessageActionsKeys,
   JutSuperMessagingMessageRequestsRequestKeys,
-  JutSuperMessagingMessageRequestsResponseKeys
+  JutSuperMessagingMessageRequestsResponseKeys,
+  JutSuperKeyCodeLabelOverrides
 }
 
 
@@ -1106,3 +1107,30 @@ const JutSuperMessagingMessageRequestsResponseKeys = {
  *   "windowState"
  * )} JutSuperMessagingMessageRequestsResponseKeysKeys
  */
+
+
+/**
+ * # Names for key codes
+ * @readonly
+ * @enum {JutSuperKeyCodeLabelOverridesType}
+ */
+const JutSuperKeyCodeLabelOverrides = {
+  "Escape": "Esc",
+  "ScrollLock": "ScrLock",
+  "Backspace": "Bksp",
+  "PageUp": "PgUp",
+  "PageDown": "PgDown",
+  " ": "Space",
+  "Control": "Ctrl",
+  "CapsLock": "Caps",
+  "ArrowLeft": "Left",
+  "ArrowRight": "Right",
+  "ArrowUp": "Up",
+  "ArrowDown": "Down",
+  "ContextMenu": "Ctx",
+  "Unidentified": "Null"
+}
+/** 
+ * @typedef {Record<string, string} JutSuperKeyCodeLabelOverridesType
+ * @typedef {string} JutSuperKeyCodeLabelOverridesKeys
+*/

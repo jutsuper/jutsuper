@@ -6,187 +6,84 @@
       rel="stylesheet"
       href="jutsuper.css"
     >
-    <link
-      href="/src/assets/font/Roboto-Regular.ttf"
-    >
+    </script>
     <style>
       body {
-        background-color: cadetblue;
+        background-color: black;
       }
-      .area {
+      .hidden {
+        display: none;
+      }
+      .jutsuper-settings-dev-area {
         background-color: white;
         clip-path: border-box;
         width: 220px;
         height: 247px;
-        border-radius: 20px;
+        border-radius: var(--jutsuper-size-settings-border-radius);
         overflow: hidden;
         justify-content: left;
         font-family: "Roboto";
         font-size: 1em;
         color: black;
       }
-      .inner-area {
-        overflow-y: scroll;
-        height: inherit;
-      }
     </style>
     <script>
-      console.log("injecting fonts");
-      const fonts = [
-        ["Roboto", "/src/assets/font/Roboto-Regular.ttf", "truetype", "normal"],
-        ["Roboto", "/src/assets/font/Roboto-Bold.ttf", "truetype", "bold"]
-      ]
-      const newStyle = document.createElement("style");
+      (function injectFonts() {
+        const fonts = [
+          ["Roboto", "/src/assets/font/Roboto-Regular.ttf", "truetype", "normal"],
+          ["Roboto", "/src/assets/font/Roboto-Bold.ttf", "truetype", "bold"]
+        ]
+        const newStyle = document.createElement("style");
 
-      for (const font of fonts) {
-        const family = font[0];
-        const url = font[1];
-        const format = font[2]
-        const weight = font[3];
+        for (const font of fonts) {
+          const family = font[0];
+          const url = font[1];
+          const format = font[2]
+          const weight = font[3];
 
-        let ff = "";
-        ff += "@font-face {\n";
-        ff += "  font-family: \"" + family + "\";";
-        ff += "  font-weight: " + weight + ";";
-        ff += "  src: url(\"" + url + "\") format(\"" + format + "\");";
-        ff += "}";
+          let ff = "";
+          ff += "@font-face {\n";
+          ff += "  font-family: \"" + family + "\";";
+          ff += "  font-weight: " + weight + ";";
+          ff += "  src: url(\"" + url + "\") format(\"" + format + "\");";
+          ff += "}";
 
-        newStyle.appendChild(document.createTextNode(ff))
-      }
+          newStyle.appendChild(document.createTextNode(ff))
+        }
 
-      document.head.appendChild(newStyle);
-
-      const KEY_CODE_LABELS = {
-        8: "Bksp",
-        9: "Tab",
-        12: "Null",
-        13: "Enter",
-        16: "Shift",
-        17: "Ctrl",
-        18: "Alt",
-        19: "PsBk",
-        20: "Caps",
-        27: "Esc",
-        32: "Space",
-        33: "PgUp",
-        34: "PgDown",
-        35: "End",
-        36: "Home",
-        37: "Left",
-        38: "Up",
-        39: "Right",
-        40: "Down",
-        45: "Insert",
-        46: "Delete",
-        48: "0",
-        49: "1",
-        50: "2",
-        51: "3",
-        52: "4",
-        53: "5",
-        54: "6",
-        55: "7",
-        56: "8",
-        57: "9",
-        65: "A",
-        66: "B",
-        67: "C",
-        68: "D",
-        69: "E",
-        70: "F",
-        71: "G",
-        72: "H",
-        73: "I",
-        74: "J",
-        75: "K",
-        76: "L",
-        77: "M",
-        78: "N",
-        79: "O",
-        80: "P",
-        81: "Q",
-        82: "R",
-        83: "S",
-        84: "T",
-        85: "U",
-        86: "V",
-        87: "W",
-        88: "X",
-        89: "Y",
-        90: "Z",
-        91: "Win",
-        93: "RMB",
-        96: "Np0",
-        97: "Np1",
-        98: "Np2",
-        99: "Np3",
-        100: "Np4",
-        101: "Np5",
-        102: "Np6",
-        103: "Np7",
-        104: "Np8",
-        105: "Np9",
-        106: "Np*",
-        107: "Np+",
-        109: "Np-",
-        110: "Np.",
-        111: "Np/",
-        112: "F1",
-        113: "F2",
-        114: "F3",
-        115: "F4",
-        116: "F5",
-        117: "F6",
-        118: "F7",
-        119: "F8",
-        120: "F9",
-        121: "F10",
-        122: "F11",
-        123: "F12",
-        144: "NumLock",
-        145: "ScrlLock",
-        182: "MyPC",
-        183: "MyCalc",
-        186: ";",
-        187: "=",
-        188: ",",
-        189: "-",
-        190: ".",
-        191: "/",
-        192: "`",
-        219: "[",
-        220: "\\",
-        221: "]",
-        222: "'"
-      }
+        document.head.appendChild(newStyle);
+      })();
+      (function injectMainScriptOnPageLoad() {
+        window.addEventListener("load", () => {
+          const script = document.createElement("script");
+          script.src = "/src/page/settings.js";
+          script.type = "module";
+          document.getElementsByTagName("head")[0].append(script);
+        });
+      })();
     </script>
   </head>
   <body>
-    <div class="area">
+    <div class="jutsuper-settings-dev-area hidden">
       <!-- Start of the area that gets injected -->
       <div
         id="jutsuper-settings-root"
-        class="inner-area jutsuper-settings-frame"
+        class="jutsuper-settings-frame"
       >
-        <script>
-          window.jutsuperSettingsCloseOtherBars = (thisArg) => {
-            const bars = document.getElementsByName("bars");
-            for (const bar of bars) {
-              if (bar.id !== thisArg.id) {
-                bar.checked = false;
-              }
-            }
-          }
-        </script>
         <!-- Skip header -->
         <div class="jutsuper-heading">
           <img
             id="jutsuper-settings-skip-header-icon"
             src="/src/assets/icon/skip.svg"
-            class="jutsuper-settings-skip-icon jutsuper-right-margin-10 jutsuper-no-pointer-events jutsuper-no-select"
+            style="margin-right: 10px"
+            class="
+              jutsuper-settings-skip-icon
+              jutsuper-no-pointer-events
+              jutsuper-no-select
+            "
           />
-          <h>
-            Настройки пропуска
+          <h id="jutsuper-settings-text-skip-options">
+            Skip options
           </h>
         </div>
         <!-- Openings bar -->
@@ -194,31 +91,43 @@
           id="jutsuper-settings-openings-bar"
           class="jutsuper-display-hidden"
           type="checkbox"
-          name="bars"
-          onchange="window.jutsuperSettingsCloseOtherBars(this)"
-          checked
+          name="jutsuper-settings-bar"
         >
         <label
           for="jutsuper-settings-openings-bar"
           class="jutsuper-settings-section-bar"
         >
-          <label class="jutsuper-slider-switch jutsuper-right-margin-10">
-            <input type="checkbox">
+          <label class="
+            jutsuper-slider-switch
+            jutsuper-right-margin-10
+          ">
+            <input
+              id="jutsuper-settings-openings-switch"
+              type="checkbox"
+            >
             <span
               id="jutsuper-settings-openings-slider"
               class="jutsuper-slider-bg-area"
             ></span>
           </label>
-          <h
-            id="jutsuper-settings-openings-title"
-            class="jutsuper-no-pointer-events jutsuper-no-select"
+          <div
+            id="jutsuper-settings-text-openings"
+            class="
+              jutsuper-no-pointer-events
+              jutsuper-no-select
+            "
           >
-            Опенинги
-          </h>
+            Openings
+          </div>
           <img
             id="jutsuper-settings-openings-bar-dropdown-icon"
             src="/src/assets/icon/dropdown.svg"
-            class="jutsuper-settings-dropdown-icon jutsuper-flex-float-to-right jutsuper-no-pointer-events jutsuper-no-select"
+            class="
+              jutsuper-settings-dropdown-icon
+              jutsuper-flex-float-to-right
+              jutsuper-no-pointer-events
+              jutsuper-no-select
+            "
           />
         </label>
         <!-- Openings settings -->
@@ -230,26 +139,49 @@
             id="jutsuper-settings-openings-section"
             class="jutsuper-settings-section-area"
           >
-            <div class="jutsuper-grid-container jutsuper-grid-1-row jutsuper-grid-2-cols">
-              <div style="display: flex;align-items: center;">
-                Порядок
+            <div class="
+              jutsuper-grid-container
+              jutsuper-grid-1-row
+              jutsuper-grid-2-cols
+            ">
+              <div
+                id="jutsuper-settings-text-orders"
+                style="
+                  display: flex;
+                  align-items: center;
+                "
+              >
+                Order
               </div>
               <div>
-                <div class="jutsuper-settings-radio-container">
+                <div
+                  id="jutsuper-settings-openings-skip-order-selector"
+                  class="jutsuper-settings-radio-container"
+                >
                   <input
                     id="jutsuper-settings-openings-skip-order-first"
-                    class="jutsuper-settings-radio jutsuper-inset-icon jutsuper-order-first-icon jutsuper-no-select"
+                    class="
+                      jutsuper-settings-radio
+                      jutsuper-inset-icon
+                      jutsuper-order-first-icon
+                      jutsuper-no-select
+                    "
                     type="radio"
-                    name="op-skip-order"
-                    style="width: 100%;overflow: hidden;text-overflow:ellipsis"
-                    checked
+                    name="jutsuper-settings-op-skip-order"
+                    style="
+                      width: 100%;
+                      overflow: hidden;
+                    "
                   />
                   <input
                     id="jutsuper-settings-openings-skip-order-last"
                     class="jutsuper-settings-radio jutsuper-inset-icon jutsuper-order-last-icon jutsuper-no-select"
                     type="radio"
-                    name="op-skip-order"
-                    style="width: 100%;overflow: hidden;text-overflow:ellipsis"
+                    name="jutsuper-settings-op-skip-order"
+                    style="
+                      width: 100%;
+                      overflow: hidden;
+                    "
                   />
                 </div>
               </div>
@@ -262,30 +194,37 @@
           id="jutsuper-settings-endings-bar"
           class="jutsuper-display-hidden"
           type="checkbox"
-          name="bars"
-          onchange="window.jutsuperSettingsCloseOtherBars(this)"
+          name="jutsuper-settings-bar"
         >
         <label
           for="jutsuper-settings-endings-bar"
           class="jutsuper-settings-section-bar"
         >
           <label class="jutsuper-slider-switch jutsuper-right-margin-10">
-            <input type="checkbox">
+            <input
+              id="jutsuper-settings-endings-switch"
+              type="checkbox"
+            >
             <span
               id="jutsuper-settings-endings-slider"
               class="jutsuper-slider-bg-area"
             ></span>
           </label>
-          <h
-            id="jutsuper-settings-endings-title"
+          <div
+            id="jutsuper-settings-text-endings"
             class="jutsuper-no-pointer-events jutsuper-no-select"
           >
-            Эндинги
-          </h>
+            Endings
+          </div>
           <img
             id="jutsuper-settings-endings-bar-dropdown-icon"
             src="/src/assets/icon/dropdown.svg"
-            class="jutsuper-settings-dropdown-icon jutsuper-flex-float-to-right jutsuper-no-pointer-events jutsuper-no-select"
+            class="
+              jutsuper-settings-dropdown-icon
+              jutsuper-flex-float-to-right
+              jutsuper-no-pointer-events
+              jutsuper-no-select
+            "
           />
         </label>
         <!-- Endings settings -->
@@ -297,95 +236,167 @@
             id="jutsuper-settings-endings-settings"
             class="jutsuper-settings-section-area"
           >
-          <div class="jutsuper-grid-container jutsuper-grid-1-row jutsuper-grid-2-cols">
-            <div style="display: flex;align-items: center;">
-              Порядок
+          <div class="
+            jutsuper-grid-container
+            jutsuper-grid-2-rows
+            jutsuper-grid-2-cols
+          ">
+            <div
+              id="jutsuper-settings-text-order"
+              style="
+                display: flex;
+                align-items: center;
+              "
+            >
+              Order
             </div>
-            <div class="jutsuper-settings-radio-container">
+            <div
+              id="jutsuper-settings-endings-skip-order-selector"
+              class="jutsuper-settings-radio-container"
+            >
               <input
                 id="jutsuper-settings-endings-skip-order-first"
-                class="jutsuper-settings-radio jutsuper-inset-icon jutsuper-order-first-icon jutsuper-no-select"
                 type="radio"
-                name="ed-skip-order"
-                style="width: 100%;overflow: hidden;text-overflow:ellipsis"
-                checked
+                name="jutsuper-settings-ed-skip-order"
+                class="
+                  jutsuper-settings-radio
+                  jutsuper-inset-icon
+                  jutsuper-order-first-icon
+                  jutsuper-no-select
+                "
+                style="
+                  width: 100%;
+                  overflow: hidden;
+                "
               />
               <input
                 id="jutsuper-settings-endings-skip-order-last"
-                class="jutsuper-settings-radio jutsuper-inset-icon jutsuper-order-last-icon jutsuper-no-select"
                 type="radio"
-                name="ed-skip-order"
-                style="width: 100%;overflow: hidden;text-overflow:ellipsis"
+                name="jutsuper-settings-ed-skip-order"
+                class="
+                  jutsuper-settings-radio
+                  jutsuper-inset-icon
+                  jutsuper-order-last-icon
+                  jutsuper-no-select
+                "
+                style="
+                  width: 100%;
+                  overflow: hidden;
+                "
               />
+            </div>
+            <div
+              id="jutsuper-settings-text-fullscreen"
+              style="
+                display: flex;
+                align-items: center;
+              "
+            >
+              Fullscreen
+            </div>
+            <div style="display: flex">
+              <label class="
+                jutsuper-slider-switch
+                jutsuper-right-margin-10
+              ">
+                <input
+                  id="jutsuper-settings-endings-fullscreen-switch"
+                  type="checkbox"
+                >
+                <span
+                  id="jutsuper-settings-persist-fullscreen-slider"
+                  class="jutsuper-slider-bg-area"
+                ></span>
+              </label>
             </div>
           </div>
           </div>
         </div>
         <div class="jutsuper-settings-outer-section-area">
-          <div class="jutsuper-grid-container jutsuper-grid-2-rows">
-            <div style="display: flex;align-items: center;">
-              Задержка
+          <div class="
+            jutsuper-grid-container
+            jutsuper-grid-2-rows
+          ">
+            <div
+              id="jutsuper-settings-text-delay"
+              style="
+                display: flex;
+                align-items: center;
+              "
+            >
+              Delay
             </div>
             <div>
               <input
+                id="jutsuper-settings-delay-slider"
                 class="jutsuper-range"
                 type="range"
                 min="0"
                 max="10"
-                value="5"
-                oninput="
-                  const out = document.getElementById('jutsuper-settings-openings-delay-num');
-                  out.value = this.value;
-                  out.classList.add('jutsuper-display-hidden');
-                  setTimeout(() => {
-                    out.classList.remove('jutsuper-display-hidden');
-                  }, 1);
-                  
+                value="0"
+              >
+            </div>
+            <div style="
+              display: flex;
+              align-items: center;
+              text-align: end;
+              width: 100%;
+            ">
+              <div
+                id="jutsuper-settings-delay-num"
+                class="jutsuper-top-bottom-appear"
+                style="
+                  display: inline-table;
+                  justify-content: center;
+                  width: 100%
                 "
               >
+                0
+              </div>
             </div>
-            <div style="display: flex;align-items: center;text-align: end;width: 100%;">
-              <output
-                id="jutsuper-settings-openings-delay-num"
-                style="display: inline-table; justify-content: center;width: 100%"
-                class="jutsuper-top-bottom-appear"
-              >
-                5
-              </output>
+            <div
+              id="jutsuper-settings-text-seconds-short"
+              style="
+                display: flex;
+                align-items: center;
+                width: 100%;
+              "
+            >
+              s.
             </div>
-            <div style="display: flex;align-items: center;width: 100%;">
-              с.
-            </div>
-            <div style="display: flex;align-items: center;">
-              Отмена
+            <div
+              id="jutsuper-settings-text-cancel"
+              style="
+                display: flex;
+                align-items: center;
+              "
+            >
+              Cancel
             </div>
             <div
               class="jutsuper-settings-key-label-container"
-              style="position: relative;"
+              style="
+                position: relative;
+              "
             >
-              <!--
-                Using <input/> instead of a <button/>
-                because the parent (which is VJS)
-                enforces some CSS properties
-                for ALL buttons (wtf?) that conflicts
-                with our stuff
-              -->
               <input
-                id="jutsuper-settings-openings-cancel-key-button"
-                class="jutsuper-settings-key-label jutsuper-no-select"
+                id="jutsuper-settings-cancel-key-listener"
                 type="button"
-                style="width: 100%;height: 100%;overflow: hidden;text-overflow:ellipsis"
-                value="Shift"
-                onclick="
-                  this.isListening = !this.isListening;
-                  this.classList.toggle('jutsuper-settings-key-label-flashing');
-                  const rec = document.getElementById('jutsuper-settings-openings-cancel-key-record');
-                  rec.classList.toggle('jutsuper-settings-key-label-record-icon-flashing');
+                value="Null"
+                class="
+                  jutsuper-settings-key-label
+                  jutsuper-no-select
+                "
+                style="
+                  width: 100%;
+                  height: 100%;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
                 "
               />
             </div>
             <div
-              id="jutsuper-settings-openings-cancel-key-record"
+              id="jutsuper-settings-cancel-key-listener-rec-circle"
             >
             </div>
             <div>
@@ -395,6 +406,7 @@
         </div>
         </div>
         <script>
+          /*
           const opCancelBtn = document.getElementById("jutsuper-settings-openings-cancel-key-button");
           const opCancelRec = document.getElementById('jutsuper-settings-openings-cancel-key-record');
           opCancelBtn.isListening = false;
@@ -421,6 +433,7 @@
               opCancelRec.classList.remove("jutsuper-settings-key-label-record-icon-flashing")
             }
           });
+          */
         </script>
       </div>
       <!-- End of the area that gets injected -->

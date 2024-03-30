@@ -543,11 +543,13 @@ class JutSuper {
     this.settingsContainer.classList.add(jsuperCss.vjsSettingsContainer);
 
     this.settingsArea.id = domIds.vjsSettingsArea;
+    this.settingsArea.classList.add("jutsuper-vjs-settings-area-sized");
     this.settingsArea.classList.add(jsuperCss.vjsSettingsArea);
     this.settingsArea.classList.add(jsuperCss.bottomTopAnim);
     this.settingsArea.classList.add(jsuperCss.hidden);
 
     this.settingsClipArea.id = domIds.vjsSettingsClipArea;
+    this.settingsClipArea.classList.add("jutsuper-vjs-settings-area-sized");
     this.settingsClipArea.classList.add(jsuperCss.vjsSettingsClipArea);
     this.settingsClipArea.append(settingsContent);
     this.settingsArea.append(this.settingsClipArea);

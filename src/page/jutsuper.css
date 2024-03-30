@@ -11,12 +11,10 @@
   --jutsuper-dur-mid: .25s;
   --jutsuper-dur-slow: .50s;
   --jutsuper-curve-fast-start-slow-end: cubic-bezier(0,.86,.24,.96);
+  --jutsuper-size-settings-max-width: 220px;
+  --jutsuper-size-settings-max-height: 280px;
+  --jutsuper-size-settings-border-radius: 20px;
   --jutsuper-size-settings-row-height: 24px;
-}
-
-.jutsuper-vjs-icon {
-  /* background-image: added in a page script */
-  
 }
 
 .jutsuper-vjs-icon:hover {
@@ -36,12 +34,15 @@
   pointer-events: none;
 }
 
-.jutsuper-vjs-settings-area {
+.jutsuper-vjs-settings-area-sized {
   width: 100%;
   height: 100%;
-  max-width: 220px;
-  max-height: 400px;
-  border-radius: 20px;
+  max-width: var(--jutsuper-size-settings-max-width);
+  max-height: var(--jutsuper-size-settings-max-height);
+  border-radius: var(--jutsuper-size-settings-border-radius);
+}
+
+.jutsuper-vjs-settings-area {
   align-self: end;
   pointer-events: all;
   background-color: white;
@@ -53,11 +54,6 @@
 }
 
 .jutsuper-vjs-settings-clip-area {
-  width: 100%;
-  height: 100%;
-  max-width: 220px;
-  max-height: 400px;
-  border-radius: 20px;
   clip-path: border-box;
   overflow-y: hidden;
   overflow-x: scroll;
@@ -133,7 +129,7 @@
 }
 
 #jutsuper-settings-endings-bar:checked ~ #jutsuper-settings-endings-section-clip {
-  height: 40px;
+  height: 69px;
 }
 
 .jutsuper-settings-dropdown-icon {
@@ -290,7 +286,7 @@
 }
 
 .jutsuper-grid-2-cols {
-  grid-template-columns: min-content minmax(0, 1fr);
+  grid-template-columns: 50% 50%;
 }
 
 /* Toggle slider */
