@@ -6,5 +6,29 @@
   "extDescription": {
     "message": "Улучшенный автопропуск опенингов/эндингов на jut.su",
     "description": "Extension description"
+  },
+  "settingsSkipOptions": {
+    "message": "Настройки пропуска"
+  },
+  "settingsOpenings": {
+    "message": "Опенинги"
+  },
+  "settingsEndings": {
+    "message": "Эндинги"
+  },
+  "settingsOrder": {
+    "message": "Порядок"
+  },
+  "settingsFullscreen": {
+    "message": "Фуллскрин"
+  },
+  "settingsDelay": {
+    "message": "Задержка"
+  },
+  "settingsSecondsShort": {
+    "message": "с."
+  },
+  "settingsCancel": {
+    "message": "Отмена"
   }
 }

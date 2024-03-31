@@ -33,7 +33,7 @@ class JutSuperSettings {
       const keyLabel = util.getKeyLabelFromRawLabel(event.key);
 
       thisArg.cancelKeyListener.value = keyLabel;
-      thisArg.cancelKeyListener.classList.remove("jutsuper-animate-darker-to-dark-green-ht-animation");
+      thisArg.cancelKeyListener.classList.remove("jutsuper-animate-darker-to-dark-green-ht");
       thisArg.cancelKeyListener.isListening = false;
       thisArg.cancelKeyListenerRecCircle.classList.toggle("jutsuper-animate-opacity-1-to-0");
     });
@@ -57,7 +57,7 @@ class JutSuperSettings {
 
       if (!isInAreaRange) {
         thisArg.cancelKeyListener.isListening = false;
-        thisArg.cancelKeyListener.classList.remove("jutsuper-animate-darker-to-dark-green-ht-animation");
+        thisArg.cancelKeyListener.classList.remove("jutsuper-animate-darker-to-dark-green-ht");
         thisArg.cancelKeyListenerRecCircle.classList.remove("jutsuper-animate-opacity-1-to-0");
       }
     });
@@ -200,7 +200,7 @@ class JutSuperSettings {
    */
   onCancelRecorderClick(event) {
     this.cancelKeyListener.isListening = !this.cancelKeyListener.isListening;
-    this.cancelKeyListener.classList.toggle("jutsuper-animate-darker-to-dark-green-ht-animation");
+    this.cancelKeyListener.classList.toggle("jutsuper-animate-darker-to-dark-green-ht");
     this.cancelKeyListenerRecCircle.classList.toggle("jutsuper-animate-opacity-1-to-0");
   }
 

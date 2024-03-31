@@ -201,8 +201,6 @@ class JutSuper {
    * // endingRng === [ 1205, 1225 ] ||
    * // endingRng === [[ 1205, 1225 ], [ 1405, 1425 ]]
    * ```
-   * - `getOverlayRngsByFunctionName("skip_video_intro") ->  [ 83, 98 ]`
-   * - `getOverlayRngsByFunctionName("video_go_next_episode") -> [ 1405, 1425 ]`
    * @param {string} fn_name
    * @returns {number[][]}
    */
@@ -476,14 +474,14 @@ class JutSuper {
     this.vjsButton.el().style.backgroundPosition = "center";
 
     this.vjsButton.on("click", function() {
-      thisArg.settingsArea.classList.toggle(jsuperCss.hidden);
+      thisArg.settingsArea.classList.toggle(jsuperCss.visibilityHidden);
     });
     this.player.on("userinactive", function(event) {
       if (event.target.player.paused()) {
         return;
       }
-      if (!thisArg.settingsArea.classList.contains(jsuperCss.hidden)) {
-        thisArg.settingsArea.classList.add(jsuperCss.hidden);
+      if (!thisArg.settingsArea.classList.contains(jsuperCss.visibilityHidden)) {
+        thisArg.settingsArea.classList.add(jsuperCss.visibilityHidden);
       }
     })
 
@@ -532,8 +530,8 @@ class JutSuper {
     this.settingsArea.id = domIds.vjsSettingsArea;
     this.settingsArea.classList.add("jutsuper-vjs-settings-area-sized");
     this.settingsArea.classList.add(jsuperCss.vjsSettingsArea);
-    this.settingsArea.classList.add(jsuperCss.bottomTopAnim);
-    this.settingsArea.classList.add(jsuperCss.hidden);
+    this.settingsArea.classList.add(jsuperCss.animateBottomToTop);
+    this.settingsArea.classList.add(jsuperCss.visibilityHidden);
 
     this.settingsClipArea.id = domIds.vjsSettingsClipArea;
     this.settingsClipArea.classList.add("jutsuper-vjs-settings-area-sized");
@@ -547,12 +545,12 @@ class JutSuper {
     )
 
     document.getElementById(domIds.vjsSettingsContainer).append(this.settingsArea);
-    for (const icon of document.getElementsByClassName("jutsuper-settings-dropdown-icon")) {
+    for (const icon of document.getElementsByClassName("jutsuper-icon-dropdown")) {
       icon.setAttribute(
         "src", document.getElementById(assetIds.dropdownSvg).href
       )
     }
-    for (const icon of document.getElementsByClassName("jutsuper-settings-skip-icon")) {
+    for (const icon of document.getElementsByClassName("jutsuper-icon-skip")) {
       icon.setAttribute(
         "src", document.getElementById(assetIds.skipSvg).href
       )

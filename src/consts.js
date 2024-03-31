@@ -460,7 +460,61 @@ const JutSuperDomIds = {
   /** @type {"jutsuper-vjs-settings-clip-area"} */
   vjsSettingsClipArea: "jutsuper-vjs-settings-clip-area",
   /** @type {"jutsuper-settings-root"} */
-  settingsRoot: "jutsuper-settings-root"
+  settingsRoot: "jutsuper-settings-root",
+  /** @type {"jutsuper-settings-skip-header-icon"} */
+  settingsSkipHeaderIcon: "jutsuper-settings-skip-header-icon",
+  /** @type {"jutsuper-settings-text-skip-options"} */
+  settingsTextSkipOptions: "jutsuper-settings-text-skip-options",
+  /** @type {"jutsuper-settings-openings-switch"} */
+  settingsOpeningsSwitch: "jutsuper-settings-openings-switch",
+  /** @type {"jutsuper-settings-openings-slider"} */
+  settingsOpeningsSlider: "jutsuper-settings-openings-slider",
+  /** @type {"jutsuper-settings-text-openings"} */
+  settingsTextOpenings: "jutsuper-settings-text-openings",
+  /** @type {"jutsuper-settings-openings-bar-dropdown-icon"} */
+  settingsOpeningsBarDropdownIcon: "jutsuper-settings-openings-bar-dropdown-icon",
+  /** @type {"jutsuper-settings-openings-section"} */
+  settingsOpeningsSection: "jutsuper-settings-openings-section",
+  /** @type {"jutsuper-settings-text-order"} */
+  settingsTextOrder: "jutsuper-settings-text-order",
+  /** @type {"jutsuper-settings-openings-skip-order-selector"} */
+  settingsOpeningsSkipOrderSelector: "jutsuper-settings-openings-skip-order-selector",
+  /** @type {"jutsuper-settings-openings-skip-order-first"} */
+  settingsOpeningsSkipOrderFirst: "jutsuper-settings-openings-skip-order-first",
+  /** @type {"jutsuper-settings-openings-skip-order-last"} */
+  settingsOpeningsSkipOrderLast: "jutsuper-settings-openings-skip-order-last",
+  /** @type {"jutsuper-settings-endings-switch"} */
+  settingsEndingsSwitch: "jutsuper-settings-endings-switch",
+  /** @type {"jutsuper-settings-endings-slider"} */
+  settingsEndingsSlider: "jutsuper-settings-endings-slider",
+  /** @type {"jutsuper-settings-text-endings"} */
+  settingsTextEndings: "jutsuper-settings-text-endings",
+  /** @type {"jutsuper-settings-endings-bar-dropdown-icon"} */
+  settingsEndingsBarDropdownIcon: "jutsuper-settings-endings-bar-dropdown-icon",
+  /** @type {"jutsuper-settings-endings-settings"} */
+  settingsEndingsSettings: "jutsuper-settings-endings-settings",
+  /** @type {"jutsuper-settings-endings-skip-order-selector"} */
+  settingsEndingsSkipOrderSelector: "jutsuper-settings-endings-skip-order-selector",
+  /** @type {"jutsuper-settings-text-fullscreen"} */
+  settingsTextFullscreen: "jutsuper-settings-text-fullscreen",
+  /** @type {"jutsuper-settings-endings-fullscreen-switch"} */
+  settingsEndingsFullscreenSwitch: "jutsuper-settings-endings-fullscreen-switch",
+  /** @type {"jutsuper-settings-persist-fullscreen-slider"} */
+  settingsPersistFullscreenSlider: "jutsuper-settings-persist-fullscreen-slider",
+  /** @type {"jutsuper-settings-text-delay"} */
+  settingsTextDelay: "jutsuper-settings-text-delay",
+  /** @type {"jutsuper-settings-delay-slider"} */
+  settingsDelaySlider: "jutsuper-settings-delay-slider",
+  /** @type {"jutsuper-settings-delay-num"} */
+  settingsDelayNum: "jutsuper-settings-delay-num",
+  /** @type {"jutsuper-settings-text-seconds-short"} */
+  settingsTextSecondsShort: "jutsuper-settings-text-seconds-short",
+  /** @type {"jutsuper-settings-text-cancel"} */
+  settingsTextCancel: "jutsuper-settings-text-cancel",
+  /** @type {"jutsuper-settings-cancel-key-listener"} */
+  settingsCancelKeyListener: "jutsuper-settings-cancel-key-listener",
+  /** @type {"jutsuper-settings-cancel-key-listener-rec-circle"} */
+  settingsCancelKeyListenerRecCircle: "jutsuper-settings-cancel-key-listener-rec-circle",
 }
 /** 
  * @typedef JutSuperDomIdsType
@@ -469,13 +523,68 @@ const JutSuperDomIds = {
  * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
  * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
  * @property {"jutsuper-settings-root"} settingsRoot
+ * @property {"jutsuper-settings-skip-header-icon"} settingsSkipHeaderIcon
+ * @property {"jutsuper-settings-text-skip-options"} settingsTextSkipOptions
+ * @property {"jutsuper-settings-openings-switch"} settingsOpeningsSwitch
+ * @property {"jutsuper-settings-openings-slider"} settingsOpeningsSlider
+ * @property {"jutsuper-settings-text-openings"} settingsTextOpenings
+ * @property {"jutsuper-settings-openings-bar-dropdown-icon"} settingsOpeningsBarDropdownIcon
+ * @property {"jutsuper-settings-openings-section"} settingsOpeningsSection
+ * @property {"jutsuper-settings-text-order"} settingsTextOrder
+ * @property {"jutsuper-settings-openings-skip-order-selector"} settingsOpeningsSkipOrderSelector
+ * @property {"jutsuper-settings-openings-skip-order-first"} settingsOpeningsSkipOrderFirst
+ * @property {"jutsuper-settings-openings-skip-order-last"} settingsOpeningsSkipOrderLast
+ * @property {"jutsuper-settings-endings-switch"} settingsEndingsSwitch
+ * @property {"jutsuper-settings-endings-slider"} settingsEndingsSlider
+ * @property {"jutsuper-settings-text-endings"} settingsTextEndings
+ * @property {"jutsuper-settings-endings-bar-dropdown-icon"} settingsEndingsBarDropdownIcon
+ * @property {"jutsuper-settings-endings-settings"} settingsEndingsSettings
+ * @property {"jutsuper-settings-endings-skip-order-selector"} settingsEndingsSkipOrderSelector
+ * @property {"jutsuper-settings-text-fullscreen"} settingsTextFullscreen
+ * @property {"jutsuper-settings-endings-fullscreen-switch"} settingsEndingsFullscreenSwitch
+ * @property {"jutsuper-settings-persist-fullscreen-slider"} settingsPersistFullscreenSlider
+ * @property {"jutsuper-settings-text-delay"} settingsTextDelay
+ * @property {"jutsuper-settings-delay-slider"} settingsDelaySlider
+ * @property {"jutsuper-settings-delay-num"} settingsDelayNum
+ * @property {"jutsuper-settings-text-seconds-short"} settingsTextSecondsShort
+ * @property {"jutsuper-settings-text-cancel"} settingsTextCancel
+ * @property {"jutsuper-settings-cancel-key-listener"} settingsCancelKeyListener
+ * @property {"jutsuper-settings-cancel-key-listener-rec-circle"} settingsCancelKeyListenerRecCircle
  * 
  * @typedef {(
  *   "jutsuper-vjs-button" |
  *   "jutsuper-vjs-settings-container" |
  *   "jutsuper-vjs-settings-area" |
  *   "jutsuper-vjs-settings-clip-area" |
- *   "jutsuper-settings-root"
+ *   "jutsuper-settings-root" |
+ *   "jutsuper-settings-root" |
+ *   "jutsuper-settings-skip-header-icon" |
+ *   "jutsuper-settings-text-skip-options" |
+ *   "jutsuper-settings-openings-switch" |
+ *   "jutsuper-settings-openings-slider" |
+ *   "jutsuper-settings-text-openings" |
+ *   "jutsuper-settings-openings-bar-dropdown-icon" |
+ *   "jutsuper-settings-openings-section" |
+ *   "jutsuper-settings-text-order" |
+ *   "jutsuper-settings-openings-skip-order-selector" |
+ *   "jutsuper-settings-openings-skip-order-first" |
+ *   "jutsuper-settings-openings-skip-order-last" |
+ *   "jutsuper-settings-endings-switch" |
+ *   "jutsuper-settings-endings-slider" |
+ *   "jutsuper-settings-text-endings" |
+ *   "jutsuper-settings-endings-bar-dropdown-icon" |
+ *   "jutsuper-settings-endings-settings" |
+ *   "jutsuper-settings-endings-skip-order-selector" |
+ *   "jutsuper-settings-text-fullscreen" |
+ *   "jutsuper-settings-endings-fullscreen-switch" |
+ *   "jutsuper-settings-persist-fullscreen-slider" |
+ *   "jutsuper-settings-text-delay" |
+ *   "jutsuper-settings-delay-slider" |
+ *   "jutsuper-settings-delay-num" |
+ *   "jutsuper-settings-text-seconds-short" |
+ *   "jutsuper-settings-text-cancel" |
+ *   "jutsuper-settings-cancel-key-listener" |
+ *   "jutsuper-settings-cancel-key-listener-rec-circle" |
  * )} JutSuperDomIdsKeys
  */
 
@@ -487,47 +596,184 @@ const JutSuperDomIds = {
  * @enum {JutSuperCssType}
  */
 const JutSuperCss = {
+  /** Common */
+  /** @type {"jutsuper-fullscreen"} */
+  fullscreen: "jutsuper-fullscreen",
+  /** @type {"jutsuper-inset-icon"} */
+  insetIcon: "jutsuper-inset-icon",
+  /** @type {"jutsuper-top-index"} */
+  topIndex: "jutsuper-top-index",
+  /** @type {"jutsuper-visibility-hidden"} */
+  visibilityHidden: "jutsuper-visibility-hidden",
+  /** @type {"jutsuper-display-hidden"} */
+  displayHidden: "jutsuper-display-hidden",
+  /** @type {"jutsuper-no-pointer-events"} */
+  noPointerEvents: "jutsuper-no-pointer-events",
+  /** @type {"jutsuper-no-select"} */
+  noSelect: "jutsuper-no-select",
+  /** @type {"jutsuper-flex-float-to-right"} */
+  flexFloatToRight: "jutsuper-flex-float-to-right",
+
+  /** Animations */
+  /** @type {"jutsuper-animate-bottom-to-top"} */
+  animateBottomToTop: "jutsuper-animate-bottom-to-top",
+  /** @type {"jutsuper-animate-small-top-to-bottom"} */
+  animateSmallTopToBottom: "jutsuper-animate-small-top-to-bottom",
+  /** @type {"jutsuper-animate-darker-to-dark-green-ht"} */
+  animateDarkerToDarkGreenHt: "jutsuper-animate-darker-to-dark-green-ht",
+  /** @type {"jutsuper-animate-opacity-1-to-0"} */
+  animateOpacity1To0: "jutsuper-animate-opacity-1-to-0",
+
+  /** VideoJS related */
   /** @type {"jutsuper-vjs-icon"} */
   vjsIcon: "jutsuper-vjs-icon",
   /** @type {"jutsuper-vjs-settings-container"} */
   vjsSettingsContainer: "jutsuper-vjs-settings-container",
+  /** @type {"jutsuper-vjs-settings-area-sized"} */
+  vjsSettingsAreaSized: "jutsuper-vjs-settings-area-sized",
   /** @type {"jutsuper-vjs-settings-area"} */
   vjsSettingsArea: "jutsuper-vjs-settings-area",
   /** @type {"jutsuper-vjs-settings-clip-area"} */
   vjsSettingsClipArea: "jutsuper-vjs-settings-clip-area",
-  /** @type {"jutsuper-bottom-top-anim-appear"} */
-  keyframesBottomTopAppear: "jutsuper-bottom-top-anim-appear",
-  /** @type {"jutsuper-bottom-top-anim"} */
-  bottomTopAnim: "jutsuper-bottom-top-anim",
-  /** @type {"jutsuper-fullscreen"} */
-  fullscreen: "jutsuper-fullscreen",
-  /** @type {"jutsuper-top-index"} */
-  topIndex: "jutsuper-top-index",
-  /** @type {"jutsuper-visibility-hidden"} */
-  hidden: "jutsuper-visibility-hidden",
+
+  /** Settings popup */
+  /** @type {"jutsuper-settings-frame"} */
+  settingsFrame: "jutsuper-settings-frame",
+  /** @type {"jutsuper-settings-heading"} */
+  settingsHeading: "jutsuper-settings-heading",
+  /** @type {"jutsuper-settings-section-bar"} */
+  settingsSectionBar: "jutsuper-settings-section-bar",
+  /** @type {"jutsuper-settings-section-clip-area"} */
+  settingsSectionClipArea: "jutsuper-settings-section-clip-area",
+  /** @type {"jutsuper-settings-section-area"} */
+  settingsSectionArea: "jutsuper-settings-section-area",
+  /** @type {"jutsuper-settings-outer-section-area"} */
+  settingsOuterSectionArea: "jutsuper-settings-outer-section-area",
+  /** @type {"jutsuper-settings-dropdown-icon"} */
+  settingsDropdownIcon: "jutsuper-settings-dropdown-icon",
+  /** @type {"jutsuper-settings-grid-container"} */
+  settingsGridContainer: "jutsuper-settings-grid-container",
+  /** @type {"jutsuper-settings-grid-1-row"} */
+  settingsGrid1Row: "jutsuper-settings-grid-1-row",
+  /** @type {"jutsuper-settings-grid-2-rows"} */
+  settingsGrid2Rows: "jutsuper-settings-grid-2-rows",
+  /** @type {"jutsuper-settings-grid-3-rows"} */
+  settingsGrid3Rows: "jutsuper-settings-grid-3-rows",
+  /** @type {"jutsuper-settings-grid-2-cols"} */
+  settingsGrid2Cols: "jutsuper-settings-grid-2-cols",
+  /** @type {"jutsuper-settings-grid-4-cols"} */
+  settingsGrid4Cols: "jutsuper-settings-grid-4-cols",
+  /** @type {"jutsuper-settings-order-first-icon"} */
+  settingsOrderFirstIcon: "jutsuper-settings-order-first-icon",
+  /** @type {"jutsuper-settings-order-last-icon"} */
+  settingsOrderLastIcon: "jutsuper-settings-order-last-icon",
+
+  /** Toggle slider */
+  /** @type {"jutsuper-slider-switch"} */
+  sliderSwitch: "jutsuper-slider-switch",
+  /** @type {"jutsuper-slider-bg-area"} */
+  sliderBgArea: "jutsuper-slider-bg-area",
+
+  /** Range slider */
+  /** @type {"jutsuper-range"} */
+  range: "jutsuper-range",
+
+  /** Radio buttons */
+  /** @type {"jutsuper-radio-container"} */
+  radioContainer: "jutsuper-radio-container",
+  /** @type {"jutsuper-radio"} */
+  radio: "jutsuper-radio",
+
+  /** Basic button */
+  /** @type {"jutsuper-button"} */
+  button: "jutsuper-button",
+
+  /** REC icon */
+  /** @type {"jutsuper-record-icon"} */
+  recordIcon: "jutsuper-record-icon"
 }
-/** 
+/**
  * @typedef JutSuperCssType
+ * @property {"jutsuper-fullscreen"} fullscreen
+ * @property {"jutsuper-inset-icon"} insetIcon
+ * @property {"jutsuper-top-index"} topIndex
+ * @property {"jutsuper-visibility-hidden"} visibilityHidden
+ * @property {"jutsuper-display-hidden"} displayHidden
+ * @property {"jutsuper-no-pointer-events"} noPointerEvents
+ * @property {"jutsuper-no-select"} noSelect
+ * @property {"jutsuper-flex-float-to-right"} flexFloatToRight
+ * @property {"jutsuper-animate-bottom-to-top"} animateBottomToTop
+ * @property {"jutsuper-animate-small-top-to-bottom"} animateSmallTopToBottom
+ * @property {"jutsuper-animate-darker-to-dark-green-ht"} animateDarkerToDarkGreenHt
+ * @property {"jutsuper-animate-opacity-1-to-0"} animateOpacity1To0
  * @property {"jutsuper-vjs-icon"} vjsIcon
  * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
+ * @property {"jutsuper-vjs-settings-area-sized"} vjsSettingsAreaSized
  * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
  * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
- * @property {"jutsuper-bottom-top-anim-appear"} keyframesBottomTopAppear
- * @property {"jutsuper-bottom-top-anim"} bottomTopAnim
- * @property {"jutsuper-fullscreen"} fullscreen
- * @property {"jutsuper-top-index"} topIndex
- * @property {"jutsuper-visibility-hidden"} hidden
- * 
+ * @property {"jutsuper-settings-frame"} settingsFrame
+ * @property {"jutsuper-settings-heading"} settingsHeading
+ * @property {"jutsuper-settings-section-bar"} settingsSectionBar
+ * @property {"jutsuper-settings-section-clip-area"} settingsSectionClipArea
+ * @property {"jutsuper-settings-section-area"} settingsSectionArea
+ * @property {"jutsuper-settings-outer-section-area"} settingsOuterSectionArea
+ * @property {"jutsuper-settings-dropdown-icon"} settingsDropdownIcon
+ * @property {"jutsuper-settings-grid-container"} settingsGridContainer
+ * @property {"jutsuper-settings-grid-1-row"} settingsGrid1Row
+ * @property {"jutsuper-settings-grid-2-rows"} settingsGrid2Rows
+ * @property {"jutsuper-settings-grid-3-rows"} settingsGrid3Rows
+ * @property {"jutsuper-settings-grid-2-cols"} settingsGrid2Cols
+ * @property {"jutsuper-settings-grid-4-cols"} settingsGrid4Cols
+ * @property {"jutsuper-settings-order-first-icon"} settingsOrderFirstIcon
+ * @property {"jutsuper-settings-order-last-icon"} settingsOrderLastIcon
+ * @property {"jutsuper-slider-switch"} sliderSwitch
+ * @property {"jutsuper-slider-bg-area"} sliderBgArea
+ * @property {"jutsuper-range"} range
+ * @property {"jutsuper-radio-container"} radioContainer
+ * @property {"jutsuper-radio"} radio
+ * @property {"jutsuper-button"} button
+ * @property {"jutsuper-record-icon"} recordIcon
+ *
  * @typedef {(
+ *   "jutsuper-fullscreen" |
+ *   "jutsuper-inset-icon" |
+ *   "jutsuper-top-index" |
+ *   "jutsuper-visibility-hidden" |
+ *   "jutsuper-display-hidden" |
+ *   "jutsuper-no-pointer-events" |
+ *   "jutsuper-no-select" |
+ *   "jutsuper-flex-float-to-right" |
+ *   "jutsuper-animate-bottom-to-top" |
+ *   "jutsuper-animate-small-top-to-bottom" |
+ *   "jutsuper-animate-darker-to-dark-green-ht" |
+ *   "jutsuper-animate-opacity-1-to-0" |
  *   "jutsuper-vjs-icon" |
  *   "jutsuper-vjs-settings-container" |
+ *   "jutsuper-vjs-settings-area-sized" |
  *   "jutsuper-vjs-settings-area" |
  *   "jutsuper-vjs-settings-clip-area" |
- *   "jutsuper-bottom-top-anim-appear" |
- *   "jutsuper-bottom-top-anim" |
- *   "jutsuper-fullscreen" |
- *   "jutsuper-top-index" |
- *   "jutsuper-visibility-hidden"
+ *   "jutsuper-settings-frame" |
+ *   "jutsuper-settings-heading" |
+ *   "jutsuper-settings-section-bar" |
+ *   "jutsuper-settings-section-clip-area" |
+ *   "jutsuper-settings-section-area" |
+ *   "jutsuper-settings-outer-section-area" |
+ *   "jutsuper-settings-dropdown-icon" |
+ *   "jutsuper-settings-grid-container" |
+ *   "jutsuper-settings-grid-1-row" |
+ *   "jutsuper-settings-grid-2-rows" |
+ *   "jutsuper-settings-grid-3-rows" |
+ *   "jutsuper-settings-grid-2-cols" |
+ *   "jutsuper-settings-grid-4-cols" |
+ *   "jutsuper-settings-order-first-icon" |
+ *   "jutsuper-settings-order-last-icon" |
+ *   "jutsuper-slider-switch" |
+ *   "jutsuper-slider-bg-area" |
+ *   "jutsuper-range" |
+ *   "jutsuper-radio-container" |
+ *   "jutsuper-radio" |
+ *   "jutsuper-button" |
+ *   "jutsuper-record-icon"
  * )} JutSuperCssKeys
  */
 

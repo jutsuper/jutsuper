@@ -102,18 +102,7 @@
 /* ////////// */
 
 /* Appear from bottom to top, used for the popup window */
-@keyframes jutsuper-bottom-top-anim-appear {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.jutsuper-bottom-top-anim {
+.jutsuper-animate-bottom-to-top {
   visibility: visible;
   transform: translateY(0px);
   transition: 
@@ -121,14 +110,15 @@
     opacity var(--jutsuper-dur-fast) var(--jutsuper-curve-fast-start-slow-end),
     visibility var(--jutsuper-dur-fast) var(--jutsuper-curve-fast-start-slow-end);
 }
-.jutsuper-bottom-top-anim.jutsuper-visibility-hidden {
+
+.jutsuper-animate-bottom-to-top.jutsuper-visibility-hidden {
   opacity: 0;
   visibility: hidden;
   transform: translateY(30px);
 }
 
 /* Appear from top to bottom, used for the delay number */
-@keyframes jutsuper-anim-small-top-to-bottom {
+@keyframes jutsuper-keyframes-small-top-to-bottom {
   0% {
     transform: translateY(-.25em);
   }
@@ -138,13 +128,13 @@
 }
 
 .jutsuper-animate-small-top-to-bottom {
-  animation-name: jutsuper-anim-small-top-to-bottom;
+  animation-name: jutsuper-keyframes-small-top-to-bottom;
   animation-duration: var(--jutsuper-dur-slow);
   animation-timing-function: var(--jutsuper-curve-fast-start-slow-end);
 }
 
 /* Flashing colors, used for the button that records cancel key */
-@keyframes jutsuper-anim-darker-to-dark-green-ht {
+@keyframes jutsuper-keyframes-darker-to-dark-green-ht {
   0% {
     background-color: var(--jutsuper-color-darker-green);
   }
@@ -153,8 +143,8 @@
   }
 }
 
-.jutsuper-animate-darker-to-dark-green-ht-animation {
-  animation-name: jutsuper-anim-darker-to-dark-green-ht;
+.jutsuper-animate-darker-to-dark-green-ht {
+  animation-name: jutsuper-keyframes-darker-to-dark-green-ht;
   animation-duration: var(--jutsuper-dur-slow);
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
@@ -165,7 +155,7 @@
   Opacity from 1 to 0, used for the circle
   that flashes next to the cancel key recording button
 */
-@keyframes jutsuper-anim-opacity-1-to-0 {
+@keyframes jutsuper-keyframes-opacity-1-to-0 {
   0% {
     opacity: 1;
   }
@@ -175,7 +165,7 @@
 }
 
 .jutsuper-animate-opacity-1-to-0 {
-  animation-name: jutsuper-anim-opacity-1-to-0;
+  animation-name: jutsuper-keyframes-opacity-1-to-0;
   animation-duration: var(--jutsuper-dur-slow);
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
@@ -371,6 +361,16 @@
   grid-template-columns: min-content minmax(0, 1fr) 16px 12px;
 }
 
+/* An icon for the "Skip first occurrence" option */
+.jutsuper-settings-order-first-icon::before {
+  content: url("/src/assets/icon/first.svg");
+}
+
+/* An icon for the "Skip last occurrence" option */
+.jutsuper-settings-order-last-icon::before {
+  content: url("/src/assets/icon/last.svg");
+}
+
 /* ///////////// */
 /* Toggle slider */
 /* ///////////// */
@@ -506,16 +506,6 @@ input.jutsuper-radio:last-child[type="radio"] {
 .jutsuper-radio {
   cursor: pointer;
   margin: 0;
-}
-
-/* An icon for the "Skip first occurrence" option */
-.jutsuper-settings-order-first-icon::before {
-  content: url("/src/assets/icon/first.svg");
-}
-
-/* An icon for the "Skip last occurrence" option */
-.jutsuper-settings-order-last-icon::before {
-  content: url("/src/assets/icon/last.svg");
 }
 
 /* //////////// */

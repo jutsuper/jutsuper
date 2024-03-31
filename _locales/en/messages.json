@@ -6,5 +6,29 @@
   "extDescription": {
     "message": "Better autoskip of openings/endings on jut.su",
     "description": "Extension description"
+  },
+  "settingsSkipOptions": {
+    "message": "Skip options"
+  },
+  "settingsOpenings": {
+    "message": "Openings"
+  },
+  "settingsEndings": {
+    "message": "Endings"
+  },
+  "settingsOrder": {
+    "message": "Order"
+  },
+  "settingsFullscreen": {
+    "message": "Fullscreen"
+  },
+  "settingsDelay": {
+    "message": "Delay"
+  },
+  "settingsSecondsShort": {
+    "message": "s."
+  },
+  "settingsCancel": {
+    "message": "Cancel"
   }
 }
