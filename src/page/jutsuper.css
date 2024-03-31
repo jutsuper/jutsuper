@@ -354,7 +354,7 @@
 }
 
 .jutsuper-settings-grid-2-cols {
-  grid-template-columns: 50% 50%;
+  grid-template-columns: minmax(0, 50%) minmax(0, 50%);
 }
 
 .jutsuper-settings-grid-4-cols {
