@@ -51,10 +51,16 @@ var jsuperCss;
 var defaultFonts;
 
 /**
- * @typedef {import("/src/consts.js").JutSuDomAttributes} JutSuDomAttributes
- * @type {JutSuDomAttributes}
+ * @typedef {import("/src/consts.js").JutSuDomIds} JutSuDomIds
+ * @type {JutSuDomIds}
  */
-var jutsuAttrs;
+var jutsuIds;
+
+/**
+ * @typedef {import("/src/consts.js").JutSuDomClasses} JutSuDomClasses
+ * @type {JutSuDomClasses}
+ */
+var jutsuClasses;
 
 /**
  * @typedef {import("/src/consts.js").JutSuperIpcIds} JutSuperIpcIds
@@ -169,7 +175,8 @@ var JutSuperMessageBuilder;
   jsuperStorage = storageModule.jsuperStorage;
   jsuperCss = constsModule.JutSuperCss;
   defaultFonts = constsModule.JutSuperDefaultFonts;
-  jutsuAttrs = constsModule.JutSuDomAttributes;
+  jutsuIds = constsModule.JutSuDomIds;
+  jutsuClasses = constsModule.JutSuDomClasses;
   ipcIds = constsModule.JutSuperIpcIds;
   ipcKeys = constsModule.JutSuperIpcKeys;
   ipcAwaits = constsModule.JutSuperIpcAwaitStates;
@@ -656,16 +663,16 @@ class JutSuperContent {
           "body"
         )[0];
         const playerDiv = document.getElementById(
-          jutsuAttrs.playerDivId
+          jutsuIds.myPlayer
         );
         const header = document.getElementsByClassName(
-          jutsuAttrs.headerClassName
+          jutsuClasses.zFixHeader
         )[0];
         const infoPanel = document.getElementsByClassName(
-          jutsuAttrs.infoPanelClassName
+          jutsuClasses.infoPanel
         )[0];
         const footer = document.getElementsByClassName(
-          jutsuAttrs.footerClassName
+          jutsuClasses.footer
         )[0];
 
         // disable scrolling
@@ -678,7 +685,7 @@ class JutSuperContent {
         footer.style.display = "none";
 
         // add fullscreen styling to the player
-        playerDiv.classList.add(jutsuAttrs.playerFullscreenClassName);
+        playerDiv.classList.add(jutsuClasses.vjsFullscreen);
         // make the player full window size
         playerDiv.classList.add(jsuperCss.fullscreen);
         // put the player above everything

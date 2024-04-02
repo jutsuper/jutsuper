@@ -2,16 +2,13 @@
  * fuck this JSDoc verbosity,
  * no idea how to make it more compact
  * and preserve good annotations everywhere
- * 
- * NOTE:
- * This file can be accessed from the page,
- * tokens and passwords shouldn't be here
  */
 
 
 export {
   JutSuFunctions,
-  JutSuDomAttributes,
+  JutSuDomIds,
+  JutSuDomClasses,
   JutSuperBrowsers,
   JutSuperLogLevels,
   JutSuperLogDefaults,
@@ -20,6 +17,7 @@ export {
   JutSuperAssetPaths,
   JutSuperDomIds,
   JutSuperCss,
+  JutSuperInputNames,
   JutSuperDefaultFonts,
   JutSuperIpcDefaultNodeProps,
   JutSuperIpcJsDataTypes,
@@ -49,9 +47,8 @@ export {
 /**
  * # Describes exposed function names on `jut.su`
  * 
- * These functions are located
- * in the `window` object and called
- * by the names specified here.
+ * These functions are part
+ * of the `window` object
  * 
  * @readonly
  * @enum {JutsuFunctionsType}
@@ -83,16 +80,32 @@ const JutSuFunctions = {
 
 
 /**
- * # Describes DOM attributes on `jut.su`
+ * # Describes IDs of nodes on `jut.su`
+ * 
  * @readonly
- * @enum {JutsuDomAttributesType}
+ * @enum {JutSuDomIdsType}
  */
-const JutSuDomAttributes = {
-  /**
-   * # An ID of a `div` containing the player
-   * @type {"my-player"}
-   */
-  playerDivId: "my-player",
+const JutSuDomIds = {
+  /** @type {"my-player"} */
+  myPlayer: "my-player"
+}
+/**
+ * @typedef JutSuDomIdsType
+ * @property {"my-player"} myPlayer
+ *
+ * @typedef {(
+*   "my-player"
+* )} JutSuDomIdsKeys
+*/
+
+
+/**
+ * # Describes classes of nodes on `jut.su`
+ * 
+ * @readonly
+ * @enum {JutSuDomClassesType}
+ */
+const JutSuDomClasses = {
   /**
    * # Class name that the player has when in fullscreen
    * 
@@ -103,83 +116,90 @@ const JutSuDomAttributes = {
    * 
    * @type {"vjs-fullscreen"}
    */
-  playerFullscreenClassName: "vjs-fullscreen",
+  vjsFullscreen: "vjs-fullscreen",
   /**
    * # Class name of a fullscreen button in a player
    * @type {"vjs-fullscreen-control"}
    */
-  playerFullscreenButtonClassName: "vjs-fullscreen-control",
+  vjsFullscreenControl: "vjs-fullscreen-control",
   /**
    * # Class name of a subtitles button in a player
    * @type {"vjs-subtitles-button"}
    */
-  playerSubtitlesButtonClassName: "vjs-subtitles-button",
+  vjsSubtitlesButton: "vjs-subtitles-button",
   /**
    * # Class name of a share button in a player
    * @type {"vjs-share-control"}
    */
-  playerShareButtonClassName: "vjs-share-control",
+  vjsShareControl: "vjs-share-control",
   /**
    * # Class name of a thumbnail holder in a player
    * @type {"vjs-thumbnail-holder"}
    */
-  playerThumbnailHolderClassName: "vjs-thumbnail-holder",
+  vjsThumbnailHolder: "vjs-thumbnail-holder",
+  /**
+   * # Class name of an icon placeholder
+   * @type {"vjs-icon-placeholder"}
+   */
+  vjcIconPlaceholder: "vjs-icon-placeholder",
   /**
    * # Class name of a page header
    *
    * Used to get the page header and apply "display: none"
    * style to it (basically, hiding it)
-   * so it won't overlap with a fullscreen player
+   * so it won't overlap with a player
+   * in a custom fullscreen mode
    * 
    * @type {"z_fix_header"}
    */
-  headerClassName: "z_fix_header",
+  zFixHeader: "z_fix_header",
   /**
    * # Class name of info panel with a search bar
    * 
    * Used to get the page info panel and apply "display: none"
    * style to it (basically, hiding it)
-   * so it won't overlap with a fullscreen player
+   * so it won't overlap with a player
+   * in a custom fullscreen mode
    * 
    * @type {"info_panel"}
    */
-  infoPanelClassName: "info_panel",
+  infoPanel: "info_panel",
   /**
    * # Class name of a footer
    * 
    * Used to get the page footer and apply "display: none"
    * style to it (basically, hiding it)
-   * so it won't overlap with a fullscreen player
+   * so it won't overlap with a player
+   * in a custom fullscreen mode
    * 
    * @type {"footer"}
    */
-  footerClassName: "footer"
+  footer: "footer"
 }
-/** 
- * @typedef JutsuDomAttributesType
- * @property {"my-player"} playerDivId
- * @property {"vjs-fullscreen"} playerFullscreenClassName
- * @property {"vjs-fullscreen-control"} playerFullscreenButtonClassName
- * @property {"vjs-subtitles-button"} playerSubtitlesButtonClassName
- * @property {"vjs-share-control"} playerShareButtonClassName
- * @property {"vjs-thumbnail-holder"} playerThumbnailHolderClassName
- * @property {"z_fix_header"} headerClassName
- * @property {"info_panel"} infoPanelClassName
- * @property {"footer"} footerClassName
- * 
- * 
+/**
+ * @typedef JutSuDomClassesType
+ * @property {"vjs-fullscreen"} vjsFullscreen
+ * @property {"vjs-fullscreen-control"} vjsFullscreenControl
+ * @property {"vjs-subtitles-button"} vjsSubtitlesButton
+ * @property {"vjs-share-control"} vjsShareControl
+ * @property {"vjs-thumbnail-holder"} vjsThumbnailHolder
+ * @property {"vjs-icon-placeholder"} vjcIconPlaceholder
+ * @property {"z_fix_header"} zFixHeader
+ * @property {"info_panel"} infoPanel
+ * @property {"footer"} footer
+ *
  * @typedef {(
- *   "my-player" |
- *   "vjs-fullscreen" |
- *   "vjs-fullscreen-control" |
- *   "vjs-subtitles-button" |
- *   "vjs-share-control" |
- *   "vjs-thumbnail-holder" |
- *   "z_fix_header" |
- *   "info_panel" |
- *   "footer"
- * )} JutsuDomAttributesKeys
- */
+*   "vjs-fullscreen" |
+*   "vjs-fullscreen-control" |
+*   "vjs-subtitles-button" |
+*   "vjs-share-control" |
+*   "vjs-thumbnail-holder" |
+*   "vjs-icon-placeholder" |
+*   "z_fix_header" |
+*   "info_panel" |
+*   "footer"
+* )} JutSuDomClassesKeys
+*/
 
 
 /**
@@ -453,6 +473,8 @@ const JutSuperAssetPaths = {
 const JutSuperDomIds = {
   /** @type {"jutsuper-vjs-button"} */
   vjsButton: "jutsuper-vjs-button",
+
+  /** Settings */
   /** @type {"jutsuper-vjs-settings-container"} */
   vjsSettingsContainer: "jutsuper-vjs-settings-container",
   /** @type {"jutsuper-vjs-settings-area"} */
@@ -463,20 +485,14 @@ const JutSuperDomIds = {
   settingsRoot: "jutsuper-settings-root",
   /** @type {"jutsuper-settings-skip-header-icon"} */
   settingsSkipHeaderIcon: "jutsuper-settings-skip-header-icon",
-  /** @type {"jutsuper-settings-text-skip-options"} */
-  settingsTextSkipOptions: "jutsuper-settings-text-skip-options",
   /** @type {"jutsuper-settings-openings-switch"} */
   settingsOpeningsSwitch: "jutsuper-settings-openings-switch",
   /** @type {"jutsuper-settings-openings-slider"} */
   settingsOpeningsSlider: "jutsuper-settings-openings-slider",
-  /** @type {"jutsuper-settings-text-openings"} */
-  settingsTextOpenings: "jutsuper-settings-text-openings",
   /** @type {"jutsuper-settings-openings-bar-dropdown-icon"} */
   settingsOpeningsBarDropdownIcon: "jutsuper-settings-openings-bar-dropdown-icon",
   /** @type {"jutsuper-settings-openings-section"} */
   settingsOpeningsSection: "jutsuper-settings-openings-section",
-  /** @type {"jutsuper-settings-text-order"} */
-  settingsTextOrder: "jutsuper-settings-text-order",
   /** @type {"jutsuper-settings-openings-skip-order-selector"} */
   settingsOpeningsSkipOrderSelector: "jutsuper-settings-openings-skip-order-selector",
   /** @type {"jutsuper-settings-openings-skip-order-first"} */
@@ -487,36 +503,44 @@ const JutSuperDomIds = {
   settingsEndingsSwitch: "jutsuper-settings-endings-switch",
   /** @type {"jutsuper-settings-endings-slider"} */
   settingsEndingsSlider: "jutsuper-settings-endings-slider",
-  /** @type {"jutsuper-settings-text-endings"} */
-  settingsTextEndings: "jutsuper-settings-text-endings",
   /** @type {"jutsuper-settings-endings-bar-dropdown-icon"} */
   settingsEndingsBarDropdownIcon: "jutsuper-settings-endings-bar-dropdown-icon",
   /** @type {"jutsuper-settings-endings-settings"} */
   settingsEndingsSettings: "jutsuper-settings-endings-settings",
   /** @type {"jutsuper-settings-endings-skip-order-selector"} */
   settingsEndingsSkipOrderSelector: "jutsuper-settings-endings-skip-order-selector",
-  /** @type {"jutsuper-settings-text-fullscreen"} */
-  settingsTextFullscreen: "jutsuper-settings-text-fullscreen",
   /** @type {"jutsuper-settings-endings-fullscreen-switch"} */
   settingsEndingsFullscreenSwitch: "jutsuper-settings-endings-fullscreen-switch",
   /** @type {"jutsuper-settings-persist-fullscreen-slider"} */
   settingsPersistFullscreenSlider: "jutsuper-settings-persist-fullscreen-slider",
-  /** @type {"jutsuper-settings-text-delay"} */
-  settingsTextDelay: "jutsuper-settings-text-delay",
   /** @type {"jutsuper-settings-delay-slider"} */
   settingsDelaySlider: "jutsuper-settings-delay-slider",
   /** @type {"jutsuper-settings-delay-num"} */
   settingsDelayNum: "jutsuper-settings-delay-num",
-  /** @type {"jutsuper-settings-text-seconds-short"} */
-  settingsTextSecondsShort: "jutsuper-settings-text-seconds-short",
-  /** @type {"jutsuper-settings-text-cancel"} */
-  settingsTextCancel: "jutsuper-settings-text-cancel",
   /** @type {"jutsuper-settings-cancel-key-listener"} */
   settingsCancelKeyListener: "jutsuper-settings-cancel-key-listener",
   /** @type {"jutsuper-settings-cancel-key-listener-rec-circle"} */
   settingsCancelKeyListenerRecCircle: "jutsuper-settings-cancel-key-listener-rec-circle",
+
+  /** Text */
+  /** @type {"jutsuper-text-skip-options"} */
+  textSkipOptions: "jutsuper-text-skip-options",
+  /** @type {"jutsuper-text-openings"} */
+  textOpenings: "jutsuper-text-openings",
+  /** @type {"jutsuper-text-endings"} */
+  textEndings: "jutsuper-text-endings",
+  /** @type {"jutsuper-text-order"} */
+  textOrder: "jutsuper-text-order",
+  /** @type {"jutsuper-text-fullscreen"} */
+  textFullscreen: "jutsuper-text-fullscreen",
+  /** @type {"jutsuper-text-delay"} */
+  textDelay: "jutsuper-text-delay",
+  /** @type {"jutsuper-text-seconds-short"} */
+  textSecondsShort: "jutsuper-text-seconds-short",
+  /** @type {"jutsuper-text-cancel"} */
+  textCancel: "jutsuper-text-cancel",
 }
-/** 
+/**
  * @typedef JutSuperDomIdsType
  * @property {"jutsuper-vjs-button"} vjsButton
  * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
@@ -524,67 +548,66 @@ const JutSuperDomIds = {
  * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
  * @property {"jutsuper-settings-root"} settingsRoot
  * @property {"jutsuper-settings-skip-header-icon"} settingsSkipHeaderIcon
- * @property {"jutsuper-settings-text-skip-options"} settingsTextSkipOptions
  * @property {"jutsuper-settings-openings-switch"} settingsOpeningsSwitch
  * @property {"jutsuper-settings-openings-slider"} settingsOpeningsSlider
- * @property {"jutsuper-settings-text-openings"} settingsTextOpenings
  * @property {"jutsuper-settings-openings-bar-dropdown-icon"} settingsOpeningsBarDropdownIcon
  * @property {"jutsuper-settings-openings-section"} settingsOpeningsSection
- * @property {"jutsuper-settings-text-order"} settingsTextOrder
  * @property {"jutsuper-settings-openings-skip-order-selector"} settingsOpeningsSkipOrderSelector
  * @property {"jutsuper-settings-openings-skip-order-first"} settingsOpeningsSkipOrderFirst
  * @property {"jutsuper-settings-openings-skip-order-last"} settingsOpeningsSkipOrderLast
  * @property {"jutsuper-settings-endings-switch"} settingsEndingsSwitch
  * @property {"jutsuper-settings-endings-slider"} settingsEndingsSlider
- * @property {"jutsuper-settings-text-endings"} settingsTextEndings
  * @property {"jutsuper-settings-endings-bar-dropdown-icon"} settingsEndingsBarDropdownIcon
  * @property {"jutsuper-settings-endings-settings"} settingsEndingsSettings
  * @property {"jutsuper-settings-endings-skip-order-selector"} settingsEndingsSkipOrderSelector
- * @property {"jutsuper-settings-text-fullscreen"} settingsTextFullscreen
  * @property {"jutsuper-settings-endings-fullscreen-switch"} settingsEndingsFullscreenSwitch
  * @property {"jutsuper-settings-persist-fullscreen-slider"} settingsPersistFullscreenSlider
- * @property {"jutsuper-settings-text-delay"} settingsTextDelay
  * @property {"jutsuper-settings-delay-slider"} settingsDelaySlider
  * @property {"jutsuper-settings-delay-num"} settingsDelayNum
- * @property {"jutsuper-settings-text-seconds-short"} settingsTextSecondsShort
- * @property {"jutsuper-settings-text-cancel"} settingsTextCancel
  * @property {"jutsuper-settings-cancel-key-listener"} settingsCancelKeyListener
  * @property {"jutsuper-settings-cancel-key-listener-rec-circle"} settingsCancelKeyListenerRecCircle
- * 
+ * @property {"jutsuper-text-skip-options"} textSkipOptions
+ * @property {"jutsuper-text-openings"} textOpenings
+ * @property {"jutsuper-text-endings"} textEndings
+ * @property {"jutsuper-text-order"} textOrder
+ * @property {"jutsuper-text-fullscreen"} textFullscreen
+ * @property {"jutsuper-text-delay"} textDelay
+ * @property {"jutsuper-text-seconds-short"} textSecondsShort
+ * @property {"jutsuper-text-cancel"} textCancel
+ *
  * @typedef {(
  *   "jutsuper-vjs-button" |
  *   "jutsuper-vjs-settings-container" |
  *   "jutsuper-vjs-settings-area" |
  *   "jutsuper-vjs-settings-clip-area" |
  *   "jutsuper-settings-root" |
- *   "jutsuper-settings-root" |
  *   "jutsuper-settings-skip-header-icon" |
- *   "jutsuper-settings-text-skip-options" |
  *   "jutsuper-settings-openings-switch" |
  *   "jutsuper-settings-openings-slider" |
- *   "jutsuper-settings-text-openings" |
  *   "jutsuper-settings-openings-bar-dropdown-icon" |
  *   "jutsuper-settings-openings-section" |
- *   "jutsuper-settings-text-order" |
  *   "jutsuper-settings-openings-skip-order-selector" |
  *   "jutsuper-settings-openings-skip-order-first" |
  *   "jutsuper-settings-openings-skip-order-last" |
  *   "jutsuper-settings-endings-switch" |
  *   "jutsuper-settings-endings-slider" |
- *   "jutsuper-settings-text-endings" |
  *   "jutsuper-settings-endings-bar-dropdown-icon" |
  *   "jutsuper-settings-endings-settings" |
  *   "jutsuper-settings-endings-skip-order-selector" |
- *   "jutsuper-settings-text-fullscreen" |
  *   "jutsuper-settings-endings-fullscreen-switch" |
  *   "jutsuper-settings-persist-fullscreen-slider" |
- *   "jutsuper-settings-text-delay" |
  *   "jutsuper-settings-delay-slider" |
  *   "jutsuper-settings-delay-num" |
- *   "jutsuper-settings-text-seconds-short" |
- *   "jutsuper-settings-text-cancel" |
  *   "jutsuper-settings-cancel-key-listener" |
  *   "jutsuper-settings-cancel-key-listener-rec-circle" |
+ *   "jutsuper-text-skip-options" |
+ *   "jutsuper-text-openings" |
+ *   "jutsuper-text-endings" |
+ *   "jutsuper-text-order" |
+ *   "jutsuper-text-fullscreen" |
+ *   "jutsuper-text-delay" |
+ *   "jutsuper-text-seconds-short" |
+ *   "jutsuper-text-cancel"
  * )} JutSuperDomIdsKeys
  */
 
@@ -614,6 +637,12 @@ const JutSuperCss = {
   /** @type {"jutsuper-flex-float-to-right"} */
   flexFloatToRight: "jutsuper-flex-float-to-right",
 
+  /** Icons */
+  /** @type {"jutsuper-icon-skip"} */
+  iconSkip: "jutsuper-icon-skip",
+  /** @type {"jutsuper-icon-dropdown"} */
+  iconDropdown: "jutsuper-icon-dropdown",
+
   /** Animations */
   /** @type {"jutsuper-animate-bottom-to-top"} */
   animateBottomToTop: "jutsuper-animate-bottom-to-top",
@@ -625,8 +654,8 @@ const JutSuperCss = {
   animateOpacity1To0: "jutsuper-animate-opacity-1-to-0",
 
   /** VideoJS related */
-  /** @type {"jutsuper-vjs-icon"} */
-  vjsIcon: "jutsuper-vjs-icon",
+  /** @type {"jutsuper-vjs-button"} */
+  vjsButton: "jutsuper-vjs-button",
   /** @type {"jutsuper-vjs-settings-container"} */
   vjsSettingsContainer: "jutsuper-vjs-settings-container",
   /** @type {"jutsuper-vjs-settings-area-sized"} */
@@ -702,11 +731,13 @@ const JutSuperCss = {
  * @property {"jutsuper-no-pointer-events"} noPointerEvents
  * @property {"jutsuper-no-select"} noSelect
  * @property {"jutsuper-flex-float-to-right"} flexFloatToRight
+ * @property {"jutsuper-icon-skip"} iconSkip
+ * @property {"jutsuper-icon-dropdown"} iconDropdown
  * @property {"jutsuper-animate-bottom-to-top"} animateBottomToTop
  * @property {"jutsuper-animate-small-top-to-bottom"} animateSmallTopToBottom
  * @property {"jutsuper-animate-darker-to-dark-green-ht"} animateDarkerToDarkGreenHt
  * @property {"jutsuper-animate-opacity-1-to-0"} animateOpacity1To0
- * @property {"jutsuper-vjs-icon"} vjsIcon
+ * @property {"jutsuper-vjs-button"} vjsButton
  * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
  * @property {"jutsuper-vjs-settings-area-sized"} vjsSettingsAreaSized
  * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
@@ -735,47 +766,77 @@ const JutSuperCss = {
  * @property {"jutsuper-record-icon"} recordIcon
  *
  * @typedef {(
- *   "jutsuper-fullscreen" |
- *   "jutsuper-inset-icon" |
- *   "jutsuper-top-index" |
- *   "jutsuper-visibility-hidden" |
- *   "jutsuper-display-hidden" |
- *   "jutsuper-no-pointer-events" |
- *   "jutsuper-no-select" |
- *   "jutsuper-flex-float-to-right" |
- *   "jutsuper-animate-bottom-to-top" |
- *   "jutsuper-animate-small-top-to-bottom" |
- *   "jutsuper-animate-darker-to-dark-green-ht" |
- *   "jutsuper-animate-opacity-1-to-0" |
- *   "jutsuper-vjs-icon" |
- *   "jutsuper-vjs-settings-container" |
- *   "jutsuper-vjs-settings-area-sized" |
- *   "jutsuper-vjs-settings-area" |
- *   "jutsuper-vjs-settings-clip-area" |
- *   "jutsuper-settings-frame" |
- *   "jutsuper-settings-heading" |
- *   "jutsuper-settings-section-bar" |
- *   "jutsuper-settings-section-clip-area" |
- *   "jutsuper-settings-section-area" |
- *   "jutsuper-settings-outer-section-area" |
- *   "jutsuper-settings-dropdown-icon" |
- *   "jutsuper-settings-grid-container" |
- *   "jutsuper-settings-grid-1-row" |
- *   "jutsuper-settings-grid-2-rows" |
- *   "jutsuper-settings-grid-3-rows" |
- *   "jutsuper-settings-grid-2-cols" |
- *   "jutsuper-settings-grid-4-cols" |
- *   "jutsuper-settings-order-first-icon" |
- *   "jutsuper-settings-order-last-icon" |
- *   "jutsuper-slider-switch" |
- *   "jutsuper-slider-bg-area" |
- *   "jutsuper-range" |
- *   "jutsuper-radio-container" |
- *   "jutsuper-radio" |
- *   "jutsuper-button" |
- *   "jutsuper-record-icon"
- * )} JutSuperCssKeys
+*   "jutsuper-fullscreen" |
+*   "jutsuper-inset-icon" |
+*   "jutsuper-top-index" |
+*   "jutsuper-visibility-hidden" |
+*   "jutsuper-display-hidden" |
+*   "jutsuper-no-pointer-events" |
+*   "jutsuper-no-select" |
+*   "jutsuper-flex-float-to-right" |
+*   "jutsuper-icon-skip" |
+*   "jutsuper-icon-dropdown" |
+*   "jutsuper-animate-bottom-to-top" |
+*   "jutsuper-animate-small-top-to-bottom" |
+*   "jutsuper-animate-darker-to-dark-green-ht" |
+*   "jutsuper-animate-opacity-1-to-0" |
+*   "jutsuper-vjs-button" |
+*   "jutsuper-vjs-settings-container" |
+*   "jutsuper-vjs-settings-area-sized" |
+*   "jutsuper-vjs-settings-area" |
+*   "jutsuper-vjs-settings-clip-area" |
+*   "jutsuper-settings-frame" |
+*   "jutsuper-settings-heading" |
+*   "jutsuper-settings-section-bar" |
+*   "jutsuper-settings-section-clip-area" |
+*   "jutsuper-settings-section-area" |
+*   "jutsuper-settings-outer-section-area" |
+*   "jutsuper-settings-dropdown-icon" |
+*   "jutsuper-settings-grid-container" |
+*   "jutsuper-settings-grid-1-row" |
+*   "jutsuper-settings-grid-2-rows" |
+*   "jutsuper-settings-grid-3-rows" |
+*   "jutsuper-settings-grid-2-cols" |
+*   "jutsuper-settings-grid-4-cols" |
+*   "jutsuper-settings-order-first-icon" |
+*   "jutsuper-settings-order-last-icon" |
+*   "jutsuper-slider-switch" |
+*   "jutsuper-slider-bg-area" |
+*   "jutsuper-range" |
+*   "jutsuper-radio-container" |
+*   "jutsuper-radio" |
+*   "jutsuper-button" |
+*   "jutsuper-record-icon"
+* )} JutSuperCssKeys
+*/
+
+
+/**
+ * # Names used by <input> elements in the extension's HTML
+ * 
+ * @readonly
+ * @enum {JutSuperInputNamesType}
  */
+const JutSuperInputNames = {
+  /** @type {"jutsuper-settings-bar"} */
+  settingsBar: "jutsuper-settings-bar",
+  /** @type {"jutsuper-settings-op-skip-order"} */
+  settingsOpSkipOrder: "jutsuper-settings-op-skip-order",
+  /** @type {"jutsuper-settings-ed-skip-order"} */
+  settingsEdSkipOrder: "jutsuper-settings-ed-skip-order",
+}
+/**
+ * @typedef JutSuperInputNamesType
+ * @property {"jutsuper-settings-bar"} settingsBar
+ * @property {"jutsuper-settings-op-skip-order"} settingsOpSkipOrder
+ * @property {"jutsuper-settings-ed-skip-order"} settingsEdSkipOrder
+ * 
+ * @typedef {(
+ *   "jutsuper-settings-bar" |
+ *   "jutsuper-settings-op-skip-order" |
+ *   "jutsuper-settings-ed-skip-order"
+ * )} JutSuperInputNamesKeys
+*/
 
 
 /**

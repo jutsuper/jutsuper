@@ -10,7 +10,8 @@ import {
 } from "/src/browser.js"
 import {
   JutSuFunctions as jutsuFns,
-  JutSuDomAttributes as jutsuAttrs,
+  JutSuDomIds as jutsuIds,
+  JutSuDomClasses as jutsuClasses,
   JutSuperAssetIds as assetIds,
   JutSuperDomIds as domIds,
   JutSuperCss as jsuperCss,
@@ -63,7 +64,7 @@ class JutSuper {
     /** @type {unknown} */
     this.player = player;
     /** @type {HTMLElement} */
-    this.playerDiv = document.getElementById(jutsuAttrs.playerDivId);
+    this.playerDiv = document.getElementById(jutsuIds.myPlayer);
     /** @type {boolean} */
     this.openingTriggered = false;
     /** @type {boolean} */
@@ -128,7 +129,7 @@ class JutSuper {
       const isInAreaRange = isInXRange && isInYRange;
 
       if (!isInAreaRange) {
-        thisArg.settingsArea.classList.add(jsuperCss.hidden);
+        thisArg.settingsArea.classList.add(jsuperCss.visibilityHidden);
       }
     });
     this.injectFullscreenChangeListener();
@@ -382,7 +383,7 @@ class JutSuper {
       this.ipc.send({
         key: ipcKeys.isFullscreen,
         value: this.playerDiv.classList.contains(
-          jutsuAttrs.playerFullscreenClassName
+          jutsuClasses.vjsFullscreen
         )
       });
     }
@@ -411,7 +412,7 @@ class JutSuper {
      * will still be `true`
      */
     const isFullscreen = this.playerDiv.classList.contains(
-      jutsuAttrs.playerFullscreenClassName
+      jutsuClasses.vjsFullscreen
     );
 
     if (this.ipc.get(ipcKeys.isFullscreen).value !== isFullscreen) {
@@ -465,13 +466,14 @@ class JutSuper {
     };
 
     this.vjsButton = new Button(this.player, buttonOptions);
-    this.vjsButton.addClass(jsuperCss.vjsIcon);
-    this.vjsButton.el().id = domIds.vjsButton;
-    this.vjsButton.el().title = "JutSuper";
-    this.vjsButton.el().style.backgroundImage = `url(${iconUrl})`;
-    this.vjsButton.el().style.backgroundRepeat = "no-repeat";
-    this.vjsButton.el().style.backgroundSize = "20px";
-    this.vjsButton.el().style.backgroundPosition = "center";
+    this.vjsButton.addClass(jsuperCss.vjsButton);
+
+    const iconPlaceholder = this.vjsButton.el()
+      .getElementsByClassName(jutsuClasses.vjcIconPlaceholder)[0];
+    iconPlaceholder.id = domIds.vjsButton;
+    iconPlaceholder.title = "JutSuper";
+    iconPlaceholder.style.content = `url(${iconUrl})`;
+    iconPlaceholder.style.width = "20px";
 
     this.vjsButton.on("click", function() {
       thisArg.settingsArea.classList.toggle(jsuperCss.visibilityHidden);
@@ -489,14 +491,14 @@ class JutSuper {
     /** to make quality selector list overlap jutsuper settings */
     this.player.controlBar.qualitySelector.el().style.zIndex = "2" 
     /** to make thumbnail holder overlap jutsuper settings */
-    player.el().getElementsByClassName("vjs-thumbnail-holder")[0].style.zIndex = 2;
+    player.el().getElementsByClassName(jutsuClasses.vjsThumbnailHolder)[0].style.zIndex = 2;
 
     const insertedButton = this.player.el()
-      .getElementsByClassName(jsuperCss.vjsIcon)[0];
+      .getElementsByClassName(jsuperCss.vjsButton)[0];
 
     let anchorElement;
     const shareButtons = this.player.el()
-      .getElementsByClassName(jutsuAttrs.playerShareButtonClassName);
+      .getElementsByClassName(jutsuClasses.vjsShareControl);
 
     if (shareButtons.length > 0) {
       anchorElement = shareButtons[0]
@@ -528,13 +530,13 @@ class JutSuper {
     this.settingsContainer.classList.add(jsuperCss.vjsSettingsContainer);
 
     this.settingsArea.id = domIds.vjsSettingsArea;
-    this.settingsArea.classList.add("jutsuper-vjs-settings-area-sized");
+    this.settingsArea.classList.add(jsuperCss.vjsSettingsAreaSized);
     this.settingsArea.classList.add(jsuperCss.vjsSettingsArea);
     this.settingsArea.classList.add(jsuperCss.animateBottomToTop);
     this.settingsArea.classList.add(jsuperCss.visibilityHidden);
 
     this.settingsClipArea.id = domIds.vjsSettingsClipArea;
-    this.settingsClipArea.classList.add("jutsuper-vjs-settings-area-sized");
+    this.settingsClipArea.classList.add(jsuperCss.vjsSettingsAreaSized);
     this.settingsClipArea.classList.add(jsuperCss.vjsSettingsClipArea);
     this.settingsClipArea.append(settingsContent);
     this.settingsArea.append(this.settingsClipArea);
@@ -545,12 +547,12 @@ class JutSuper {
     )
 
     document.getElementById(domIds.vjsSettingsContainer).append(this.settingsArea);
-    for (const icon of document.getElementsByClassName("jutsuper-icon-dropdown")) {
+    for (const icon of document.getElementsByClassName(jsuperCss.iconDropdown)) {
       icon.setAttribute(
         "src", document.getElementById(assetIds.dropdownSvg).href
       )
     }
-    for (const icon of document.getElementsByClassName("jutsuper-icon-skip")) {
+    for (const icon of document.getElementsByClassName(jsuperCss.iconSkip)) {
       icon.setAttribute(
         "src", document.getElementById(assetIds.skipSvg).href
       )
@@ -647,16 +649,16 @@ class JutSuper {
       "body"
     )[0];
     const playerDiv = document.getElementById(
-      jutsuAttrs.playerDivId
+      jutsuIds.myPlayer
     );
     const header = document.getElementsByClassName(
-      jutsuAttrs.headerClassName
+      jutsuClasses.zFixHeader
     )[0];
     const infoPanel = document.getElementsByClassName(
-      jutsuAttrs.infoPanelClassName
+      jutsuClasses.infoPanel
     )[0];
     const footer = document.getElementsByClassName(
-      jutsuAttrs.footerClassName
+      jutsuClasses.footer
     )[0];
 
     // enable scrolling
@@ -669,7 +671,7 @@ class JutSuper {
     footer.style.display = null;
 
     // remove fullscreen styling from the player
-    playerDiv.classList.remove(jutsuAttrs.playerFullscreenClassName);
+    playerDiv.classList.remove(jutsuClasses.vjsFullscreen);
     // make the player regular size
     playerDiv.classList.remove(jsuperCss.fullscreen);
     // put the player in a normal position
@@ -729,7 +731,7 @@ class JutSuper {
 
     /** @type {HTMLButtonElement} */
     const fullscreenButton = document.getElementsByClassName(
-      jutsuAttrs.playerFullscreenButtonClassName
+      jutsuClasses.vjsFullscreenControl
     )[0];
 
     const thisArg = this;

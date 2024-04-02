@@ -97,6 +97,14 @@
   margin-right: 10px;
 }
 
+/* ///// */
+/* Icons */
+/* ///// */
+
+/* .jutsuper-icon-skip {} */
+
+/* .jutsuper-icon-dropdown {} */
+
 /* ////////// */
 /* Animations */
 /* ////////// */
@@ -177,7 +185,7 @@
 /* /////////////// */
 
 /* The icon in the player */
-.jutsuper-vjs-icon:hover {
+.jutsuper-vjs-button:hover {
   cursor: pointer !important;
 }
 
