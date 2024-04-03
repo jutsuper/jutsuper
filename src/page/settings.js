@@ -1,5 +1,7 @@
 import { jsuperUtil as util } from "/src/util.js";
 import { JutSuperCss as jsuperCss } from "/src/consts.js";
+import { JutSuperDomIds as domIds } from "/src/consts.js";
+import { JutSuperInputNames as inputNames } from "/src/consts.js";
 export { JutSuperSettings };
 
 
@@ -12,19 +14,19 @@ class JutSuperSettings {
 
     this.document = doc ? doc : document;
 
-    this.bars = this.document.getElementsByName("jutsuper-settings-bar");
-    this.opSkipSwitch = this.document.getElementById("jutsuper-settings-openings-switch");
-    this.opSkipOrderSelector = this.document.getElementById("jutsuper-settings-openings-skip-order-selector");
-    this.opSkipOrderFirstSelector = this.document.getElementById("jutsuper-settings-openings-skip-order-first");
-    this.opSkipOrderLastSelector = this.document.getElementById("jutsuper-settings-openings-skip-order-last");
-    this.edSkipSwitch = this.document.getElementById("jutsuper-settings-endings-switch");
-    this.edSkipOrderSelector = this.document.getElementById("jutsuper-settings-endings-skip-order-selector");
-    this.edSkipOrderFirstSelector = this.document.getElementById("jutsuper-settings-endings-skip-order-first");
-    this.edSkipOrderLastSelector = this.document.getElementById("jutsuper-settings-endings-skip-order-last");
-    this.edFullscreenSwitch = this.document.getElementById("jutsuper-settings-endings-fullscreen-switch");
-    this.delaySlider = this.document.getElementById("jutsuper-settings-delay-slider");
-    this.delayNum = this.document.getElementById("jutsuper-settings-delay-num");
-    this.cancelKeyListener = this.document.getElementById("jutsuper-settings-cancel-key-listener");
+    this.bars = this.document.getElementsByName(inputNames.settingsBar);
+    this.opSkipSwitch = this.document.getElementById(domIds.settingsOpeningsSwitch);
+    this.opSkipOrderSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderSelector);
+    this.opSkipOrderFirstSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderFirst);
+    this.opSkipOrderLastSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderLast);
+    this.edSkipSwitch = this.document.getElementById(domIds.settingsEndingsSwitch);
+    this.edSkipOrderSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderSelector);
+    this.edSkipOrderFirstSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderFirst);
+    this.edSkipOrderLastSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderLast);
+    this.edFullscreenSwitch = this.document.getElementById(domIds.settingsEndingsFullscreenSwitch);
+    this.delaySlider = this.document.getElementById(domIds.settingsDelaySlider);
+    this.delayNum = this.document.getElementById(domIds.settingsDelayNum);
+    this.cancelKeyListener = this.document.getElementById(domIds.settingsCancelKeyListener);
     this.cancelKeyListener.isListening = false;
     this.cancelKeyListener.addEventListener("keydown", event => {
       if (!thisArg.cancelKeyListener.isListening) {
@@ -34,11 +36,11 @@ class JutSuperSettings {
       const keyLabel = util.getKeyLabelFromRawLabel(event.key);
 
       thisArg.cancelKeyListener.value = keyLabel;
-      thisArg.cancelKeyListener.classList.remove("jutsuper-animate-darker-to-dark-green-ht");
+      thisArg.cancelKeyListener.classList.remove(jsuperCss.animateDarkerToDarkGreenHt);
       thisArg.cancelKeyListener.isListening = false;
-      thisArg.cancelKeyListenerRecCircle.classList.toggle("jutsuper-animate-opacity-1-to-0");
+      thisArg.cancelKeyListenerRecCircle.classList.toggle(jsuperCss.animateOpacity1To0);
     });
-    this.cancelKeyListenerRecCircle = this.document.getElementById("jutsuper-settings-cancel-key-listener-rec-circle");
+    this.cancelKeyListenerRecCircle = this.document.getElementById(domIds.settingsCancelKeyListenerRecCircle);
 
     this.bars.forEach(bar => bar.addEventListener("change", event => thisArg.closeOtherBars(event.target)))
 
@@ -58,17 +60,15 @@ class JutSuperSettings {
 
       if (!isInAreaRange) {
         thisArg.cancelKeyListener.isListening = false;
-        thisArg.cancelKeyListener.classList.remove("jutsuper-animate-darker-to-dark-green-ht");
-        thisArg.cancelKeyListenerRecCircle.classList.remove("jutsuper-animate-opacity-1-to-0");
+        thisArg.cancelKeyListener.classList.remove(jsuperCss.animateDarkerToDarkGreenHt);
+        thisArg.cancelKeyListenerRecCircle.classList.remove(jsuperCss.animateOpacity1To0);
       }
     });
 
-    // if in dev environment, show the dev area
+    // if in dev environment, hide the preload message
     if (window.JUTSUPER_DEBUG) {
-      const preloadMessage = this.document.getElementById("jutsuper-settings-dev-page-preload-message");
-      preloadMessage.classList.add("hidden");
-      const devArea = this.document.getElementsByClassName("jutsuper-settings-dev-area");
-      devArea[0].classList.remove("hidden");
+      const preloadMessage = this.document.getElementById(domIds.devPreloadMessage);
+      preloadMessage.classList.add(jsuperCss.devHidden);
     }
   }
 
@@ -201,8 +201,8 @@ class JutSuperSettings {
    */
   onCancelRecorderClick(event) {
     this.cancelKeyListener.isListening = !this.cancelKeyListener.isListening;
-    this.cancelKeyListener.classList.toggle("jutsuper-animate-darker-to-dark-green-ht");
-    this.cancelKeyListenerRecCircle.classList.toggle("jutsuper-animate-opacity-1-to-0");
+    this.cancelKeyListener.classList.toggle(jsuperCss.animateDarkerToDarkGreenHt);
+    this.cancelKeyListenerRecCircle.classList.toggle(jsuperCss.animateOpacity1To0);
   }
 
   /**

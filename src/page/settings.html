@@ -6,26 +6,6 @@
       rel="stylesheet"
       href="jutsuper.css"
     >
-    <style>
-      body {
-        background-color: black;
-      }
-      .hidden {
-        display: none;
-      }
-      .jutsuper-settings-dev-area {
-        background-color: white;
-        clip-path: border-box;
-        width: 220px;
-        height: 247px;
-        border-radius: var(--jutsuper-size-settings-border-radius);
-        overflow: hidden;
-        justify-content: left;
-        font-family: "Roboto";
-        font-size: 1em;
-        color: black;
-      }
-    </style>
     <script>
       (function setDebugFlag() {
         window.JUTSUPER_DEBUG = true;
@@ -65,9 +45,9 @@
       })();
     </script>
   </head>
-  <body>
+  <body class="jutsuper-dev-black-bg">
     <div 
-      id="jutsuper-settings-dev-page-preload-message"
+      id="jutsuper-dev-preload-message"
       style="
         color: white;
         margin-bottom: 20px
@@ -75,7 +55,7 @@
     >
       Awaiting JavaScript...
     </div>
-    <div class="jutsuper-settings-dev-area">
+    <div class="jutsuper-dev-settings-area">
       <!-- Start of the area that gets injected -->
       <div
         id="jutsuper-settings-root"

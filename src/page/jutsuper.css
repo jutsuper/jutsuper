@@ -97,13 +97,40 @@
   margin-right: 10px;
 }
 
+/* /// */
+/* Dev */
+/* /// */
+
+.jutsuper-dev-black-bg {
+  background-color: black;
+}
+
+.jutsuper-dev-hidden {
+  display: none;
+}
+
+.jutsuper-dev-settings-area {
+  background-color: white;
+  clip-path: border-box;
+  width: 220px;
+  height: 247px;
+  border-radius: var(--jutsuper-size-settings-border-radius);
+  overflow: hidden;
+  justify-content: left;
+  font-family: "Roboto";
+  font-size: 1em;
+  color: black;
+}
+
 /* ///// */
 /* Icons */
 /* ///// */
 
 /* .jutsuper-icon-skip {} */
 
-/* .jutsuper-icon-dropdown {} */
+.jutsuper-icon-dropdown {
+  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end)
+}
 
 /* ////////// */
 /* Animations */
@@ -312,7 +339,7 @@
   /* Fill the tab with color green */
   box-shadow: var(--jutsuper-styling-settings-active-tab-box-shadow);
   /* Rotate the dropdown icon */
-  .jutsuper-settings-dropdown-icon {
+  .jutsuper-icon-dropdown {
     transform: var(--jutsuper-styling-settings-dropdown-rotation-active)
   }
 }
@@ -327,7 +354,7 @@
   /* Fill the tab with color green */
   box-shadow: var(--jutsuper-styling-settings-active-tab-box-shadow);
   /* Rotate the dropdown icon */
-  .jutsuper-settings-dropdown-icon {
+  .jutsuper-icon-dropdown {
     transform: var(--jutsuper-styling-settings-dropdown-rotation-active)
   }
 }

@@ -474,6 +474,10 @@ const JutSuperDomIds = {
   /** @type {"jutsuper-vjs-button"} */
   vjsButton: "jutsuper-vjs-button",
 
+  /** Dev */
+  /** @type {"jutsuper-dev-preload-message"} */
+  devPreloadMessage: "jutsuper-dev-preload-message",
+
   /** Settings */
   /** @type {"jutsuper-vjs-settings-container"} */
   vjsSettingsContainer: "jutsuper-vjs-settings-container",
@@ -509,6 +513,10 @@ const JutSuperDomIds = {
   settingsEndingsSettings: "jutsuper-settings-endings-settings",
   /** @type {"jutsuper-settings-endings-skip-order-selector"} */
   settingsEndingsSkipOrderSelector: "jutsuper-settings-endings-skip-order-selector",
+  /** @type {"jutsuper-settings-endings-skip-order-first"} */
+  settingsEndingsSkipOrderFirst: "jutsuper-settings-endings-skip-order-first",
+  /** @type {"jutsuper-settings-endings-skip-order-last"} */
+  settingsEndingsSkipOrderLast: "jutsuper-settings-endings-skip-order-last",
   /** @type {"jutsuper-settings-endings-fullscreen-switch"} */
   settingsEndingsFullscreenSwitch: "jutsuper-settings-endings-fullscreen-switch",
   /** @type {"jutsuper-settings-persist-fullscreen-slider"} */
@@ -546,6 +554,7 @@ const JutSuperDomIds = {
  * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
  * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
  * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
+ * @property {"jutsuper-dev-preload-message"} devPreloadMessage
  * @property {"jutsuper-settings-root"} settingsRoot
  * @property {"jutsuper-settings-skip-header-icon"} settingsSkipHeaderIcon
  * @property {"jutsuper-settings-openings-switch"} settingsOpeningsSwitch
@@ -560,6 +569,8 @@ const JutSuperDomIds = {
  * @property {"jutsuper-settings-endings-bar-dropdown-icon"} settingsEndingsBarDropdownIcon
  * @property {"jutsuper-settings-endings-settings"} settingsEndingsSettings
  * @property {"jutsuper-settings-endings-skip-order-selector"} settingsEndingsSkipOrderSelector
+ * @property {"jutsuper-settings-endings-skip-order-first"} settingsEndingsSkipOrderFirst
+ * @property {"jutsuper-settings-endings-skip-order-last"} settingsEndingsSkipOrderLast
  * @property {"jutsuper-settings-endings-fullscreen-switch"} settingsEndingsFullscreenSwitch
  * @property {"jutsuper-settings-persist-fullscreen-slider"} settingsPersistFullscreenSlider
  * @property {"jutsuper-settings-delay-slider"} settingsDelaySlider
@@ -580,6 +591,7 @@ const JutSuperDomIds = {
  *   "jutsuper-vjs-settings-container" |
  *   "jutsuper-vjs-settings-area" |
  *   "jutsuper-vjs-settings-clip-area" |
+ *   "jutsuper-dev-preload-message" |
  *   "jutsuper-settings-root" |
  *   "jutsuper-settings-skip-header-icon" |
  *   "jutsuper-settings-openings-switch" |
@@ -594,6 +606,8 @@ const JutSuperDomIds = {
  *   "jutsuper-settings-endings-bar-dropdown-icon" |
  *   "jutsuper-settings-endings-settings" |
  *   "jutsuper-settings-endings-skip-order-selector" |
+ *   "jutsuper-settings-endings-skip-order-first" |
+ *   "jutsuper-settings-endings-skip-order-last" |
  *   "jutsuper-settings-endings-fullscreen-switch" |
  *   "jutsuper-settings-persist-fullscreen-slider" |
  *   "jutsuper-settings-delay-slider" |
@@ -636,6 +650,14 @@ const JutSuperCss = {
   noSelect: "jutsuper-no-select",
   /** @type {"jutsuper-flex-float-to-right"} */
   flexFloatToRight: "jutsuper-flex-float-to-right",
+
+  /** Dev */
+  /** @type {"jutsuper-dev-black-bg"} */
+  devBlackBg: "jutsuper-dev-black-bg",
+  /** @type {"jutsuper-dev-hidden"} */
+  devHidden: "jutsuper-dev-hidden",
+  /** @type {"jutsuper-dev-settings-area"} */
+  devSettingsArea: "jutsuper-dev-settings-area",
 
   /** Icons */
   /** @type {"jutsuper-icon-skip"} */
@@ -731,6 +753,9 @@ const JutSuperCss = {
  * @property {"jutsuper-no-pointer-events"} noPointerEvents
  * @property {"jutsuper-no-select"} noSelect
  * @property {"jutsuper-flex-float-to-right"} flexFloatToRight
+ * @property {"jutsuper-dev-black-bg"} devBlackBg
+ * @property {"jutsuper-dev-hidden"} devHidden
+ * @property {"jutsuper-dev-settings-area"} devSettingsArea
  * @property {"jutsuper-icon-skip"} iconSkip
  * @property {"jutsuper-icon-dropdown"} iconDropdown
  * @property {"jutsuper-animate-bottom-to-top"} animateBottomToTop
@@ -766,49 +791,52 @@ const JutSuperCss = {
  * @property {"jutsuper-record-icon"} recordIcon
  *
  * @typedef {(
-*   "jutsuper-fullscreen" |
-*   "jutsuper-inset-icon" |
-*   "jutsuper-top-index" |
-*   "jutsuper-visibility-hidden" |
-*   "jutsuper-display-hidden" |
-*   "jutsuper-no-pointer-events" |
-*   "jutsuper-no-select" |
-*   "jutsuper-flex-float-to-right" |
-*   "jutsuper-icon-skip" |
-*   "jutsuper-icon-dropdown" |
-*   "jutsuper-animate-bottom-to-top" |
-*   "jutsuper-animate-small-top-to-bottom" |
-*   "jutsuper-animate-darker-to-dark-green-ht" |
-*   "jutsuper-animate-opacity-1-to-0" |
-*   "jutsuper-vjs-button" |
-*   "jutsuper-vjs-settings-container" |
-*   "jutsuper-vjs-settings-area-sized" |
-*   "jutsuper-vjs-settings-area" |
-*   "jutsuper-vjs-settings-clip-area" |
-*   "jutsuper-settings-frame" |
-*   "jutsuper-settings-heading" |
-*   "jutsuper-settings-section-bar" |
-*   "jutsuper-settings-section-clip-area" |
-*   "jutsuper-settings-section-area" |
-*   "jutsuper-settings-outer-section-area" |
-*   "jutsuper-settings-dropdown-icon" |
-*   "jutsuper-settings-grid-container" |
-*   "jutsuper-settings-grid-1-row" |
-*   "jutsuper-settings-grid-2-rows" |
-*   "jutsuper-settings-grid-3-rows" |
-*   "jutsuper-settings-grid-2-cols" |
-*   "jutsuper-settings-grid-4-cols" |
-*   "jutsuper-settings-order-first-icon" |
-*   "jutsuper-settings-order-last-icon" |
-*   "jutsuper-slider-switch" |
-*   "jutsuper-slider-bg-area" |
-*   "jutsuper-range" |
-*   "jutsuper-radio-container" |
-*   "jutsuper-radio" |
-*   "jutsuper-button" |
-*   "jutsuper-record-icon"
-* )} JutSuperCssKeys
-*/
+ *   "jutsuper-fullscreen" |
+ *   "jutsuper-inset-icon" |
+ *   "jutsuper-top-index" |
+ *   "jutsuper-visibility-hidden" |
+ *   "jutsuper-display-hidden" |
+ *   "jutsuper-no-pointer-events" |
+ *   "jutsuper-no-select" |
+ *   "jutsuper-flex-float-to-right" |
+ *   "jutsuper-dev-black-bg" |
+ *   "jutsuper-dev-hidden" |
+ *   "jutsuper-dev-settings-area" |
+ *   "jutsuper-icon-skip" |
+ *   "jutsuper-icon-dropdown" |
+ *   "jutsuper-animate-bottom-to-top" |
+ *   "jutsuper-animate-small-top-to-bottom" |
+ *   "jutsuper-animate-darker-to-dark-green-ht" |
+ *   "jutsuper-animate-opacity-1-to-0" |
+ *   "jutsuper-vjs-button" |
+ *   "jutsuper-vjs-settings-container" |
+ *   "jutsuper-vjs-settings-area-sized" |
+ *   "jutsuper-vjs-settings-area" |
+ *   "jutsuper-vjs-settings-clip-area" |
+ *   "jutsuper-settings-frame" |
+ *   "jutsuper-settings-heading" |
+ *   "jutsuper-settings-section-bar" |
+ *   "jutsuper-settings-section-clip-area" |
+ *   "jutsuper-settings-section-area" |
+ *   "jutsuper-settings-outer-section-area" |
+ *   "jutsuper-settings-dropdown-icon" |
+ *   "jutsuper-settings-grid-container" |
+ *   "jutsuper-settings-grid-1-row" |
+ *   "jutsuper-settings-grid-2-rows" |
+ *   "jutsuper-settings-grid-3-rows" |
+ *   "jutsuper-settings-grid-2-cols" |
+ *   "jutsuper-settings-grid-4-cols" |
+ *   "jutsuper-settings-order-first-icon" |
+ *   "jutsuper-settings-order-last-icon" |
+ *   "jutsuper-slider-switch" |
+ *   "jutsuper-slider-bg-area" |
+ *   "jutsuper-range" |
+ *   "jutsuper-radio-container" |
+ *   "jutsuper-radio" |
+ *   "jutsuper-button" |
+ *   "jutsuper-record-icon"
+ * )} JutSuperCssKeys
+ */
 
 
 /**
