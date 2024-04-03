@@ -24,9 +24,9 @@
   --jutsuper-size-settings-openings-section-height: 39px;
   /* Control the "Endings" section height */
   --jutsuper-size-settings-endings-section-height: 69px;
-  /* Control the `border-box` filling of an settings section tab when hovering */
+  /* Control the `border-box` filling of a settings section tab when hovering */
   --jutsuper-styling-settings-hover-tab-box-shadow: inset 0 -6px 0px -2px var(--jutsuper-color-light-green);
-  /* Control the `border-box` filling of an settings section tab when opened */
+  /* Control the `border-box` filling of a settings section tab when opened */
   --jutsuper-styling-settings-active-tab-box-shadow: inset 0 -48px 0px -2px var(--jutsuper-color-light-green);
   /* Control the rotation of a dropdown in the setting's tab when the section is opened */
   --jutsuper-styling-settings-dropdown-rotation-active: rotate(180deg);
