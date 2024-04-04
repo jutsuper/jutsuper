@@ -1,5 +1,5 @@
 import { jsuperUtil as util } from "/src/util.js";
-import { JutSuperCss as jsuperCss } from "/src/consts.js";
+import { JutSuperClasses as jsuperCss } from "/src/consts.js";
 import { JutSuperDomIds as domIds } from "/src/consts.js";
 import { JutSuperInputNames as inputNames } from "/src/consts.js";
 export { JutSuperSettings };
@@ -23,6 +23,9 @@ class JutSuperSettings {
     this.edSkipOrderSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderSelector);
     this.edSkipOrderFirstSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderFirst);
     this.edSkipOrderLastSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderLast);
+    this.edSkipMaxNegativeButton = this.document.getElementById(domIds.settingsEndingsMaxSkipsNegativeButton);
+    this.edSkipMaxField = this.document.getElementById(domIds.settingsEndingsMaxSkipsField);
+    this.edSkipMaxPositiveButton = this.document.getElementById(domIds.settingsEndingsMaxSkipsPositiveButton);
     this.edFullscreenSwitch = this.document.getElementById(domIds.settingsEndingsFullscreenSwitch);
     this.delaySlider = this.document.getElementById(domIds.settingsDelaySlider);
     this.delayNum = this.document.getElementById(domIds.settingsDelayNum);
@@ -48,6 +51,10 @@ class JutSuperSettings {
     this.opSkipOrderSelector.addEventListener("change", this.onOpeningsSkipOrderChange);
     this.edSkipSwitch.addEventListener("change", this.onEndingsSwitchChange);
     this.edSkipOrderSelector.addEventListener("change", this.onEndingsSkipOrderChange);
+    this.edSkipMaxNegativeButton.addEventListener("click", event => thisArg.onEndingsSkipMaxNegative(event));
+    this.edSkipMaxPositiveButton.addEventListener("click", event => thisArg.onEndingsSkipMaxPositive(event));
+    this.edSkipMaxField.addEventListener("click", event => thisArg.onEndingsSkipMaxFieldClick(event));
+    this.edSkipMaxField.addEventListener("input", this.onEndingsSkipMaxFieldChange());
     this.edFullscreenSwitch.addEventListener("change", this.onEndingsFullscreenSliderChange);
     this.delaySlider.addEventListener("input", event => thisArg.onDelayChange(event));
     this.cancelKeyListener.addEventListener("click", event => thisArg.onCancelRecorderClick(event));
@@ -143,6 +150,81 @@ class JutSuperSettings {
 
   onEndingsSkipOrderChange() {
     
+  }
+
+  /**
+   * @param {number} value 
+   */
+  setEndingsSkipMax(value) {
+    this.edSkipMaxField.value = value;
+  }
+
+  /**
+   * @param {Event} event 
+   */
+  onEndingsSkipMaxNegative(event) {
+    if (this.edSkipMaxField.valueAsNumber < 1) {
+      return;
+    }
+
+    if (Number.isNaN(this.edSkipMaxField.valueAsNumber)) {
+      this.edSkipMaxField.valueAsNumber = 0;
+      return;
+    }
+
+    this.edSkipMaxField.valueAsNumber -= 1;
+
+    if (this.edSkipMaxField.valueAsNumber === 0) {
+      this.edSkipMaxField.classList.add("jutsuper-hide-text");
+      this.edSkipMaxField.classList.add("jutsuper-no-select");
+      this.edSkipMaxField.classList.add("jutsuper-icon-infinity");
+    }
+    else {
+      this.edSkipMaxField.classList.remove("jutsuper-hide-text");
+      this.edSkipMaxField.classList.remove("jutsuper-no-select");
+      this.edSkipMaxField.classList.remove("jutsuper-icon-infinity");
+    }
+  }
+
+  /**
+   * @param {Event} event 
+   */
+  onEndingsSkipMaxPositive(event) {
+    if (Number.isNaN(this.edSkipMaxField.valueAsNumber)) {
+      this.edSkipMaxField.valueAsNumber = 1;
+      return;
+    }
+
+    this.edSkipMaxField.valueAsNumber += 1;
+
+    if (this.edSkipMaxField.valueAsNumber === 0) {
+      this.edSkipMaxField.classList.add("jutsuper-hide-text");
+      this.edSkipMaxField.classList.add("jutsuper-no-select");
+      this.edSkipMaxField.classList.add("jutsuper-icon-infinity");
+    }
+    else {
+      this.edSkipMaxField.classList.remove("jutsuper-hide-text");
+      this.edSkipMaxField.classList.remove("jutsuper-no-select");
+      this.edSkipMaxField.classList.remove("jutsuper-icon-infinity");
+    }
+  }
+
+  /**
+   * @param {Event} event 
+   */
+  onEndingsSkipMaxFieldClick(event) {
+    if (this.edSkipMaxField.valueAsNumber === 0) {
+      this.edSkipMaxField.valueAsNumber = NaN;
+    }
+  }
+
+  onEndingsSkipMaxFieldChange() {
+    console.log("onEndingsSkipMaxFieldChange")
+    if (this.edSkipMaxField.valueAsNumber > 0) {
+      this.edSkipMaxField.classList.remove("jutsuper-hide-text");
+      this.edSkipMaxField.classList.remove("jutsuper-no-select");
+      this.edSkipMaxField.classList.remove("jutsuper-icon-infinity");
+    }
   }
 
   /**

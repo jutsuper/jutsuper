@@ -2,8 +2,6 @@ const OBJ = {
   /** Common */
   /** @type {"jutsuper-fullscreen"} */
   fullscreen: "jutsuper-fullscreen",
-  /** @type {"jutsuper-inset-icon"} */
-  insetIcon: "jutsuper-inset-icon",
   /** @type {"jutsuper-top-index"} */
   topIndex: "jutsuper-top-index",
   /** @type {"jutsuper-visibility-hidden"} */
@@ -26,10 +24,16 @@ const OBJ = {
   devSettingsArea: "jutsuper-dev-settings-area",
 
   /** Icons */
+  /** @type {"jutsuper-icon-inset"} */
+  iconInset: "jutsuper-icon-inset",
   /** @type {"jutsuper-icon-skip"} */
   iconSkip: "jutsuper-icon-skip",
   /** @type {"jutsuper-icon-dropdown"} */
   iconDropdown: "jutsuper-icon-dropdown",
+  /** @type {"jutsuper-icon-order-first"} */
+  iconOrderFirst: "jutsuper-icon-order-first",
+  /** @type {"jutsuper-icon-order-last"} */
+  iconOrderLast: "jutsuper-icon-order-last",
 
   /** Animations */
   /** @type {"jutsuper-animate-bottom-to-top"} */
@@ -78,12 +82,10 @@ const OBJ = {
   settingsGrid3Rows: "jutsuper-settings-grid-3-rows",
   /** @type {"jutsuper-settings-grid-2-cols"} */
   settingsGrid2Cols: "jutsuper-settings-grid-2-cols",
+  /** @type {"jutsuper-settings-grid-3-cols"} */
+  settingsGrid3Cols: "jutsuper-settings-grid-3-cols",
   /** @type {"jutsuper-settings-grid-4-cols"} */
   settingsGrid4Cols: "jutsuper-settings-grid-4-cols",
-  /** @type {"jutsuper-settings-order-first-icon"} */
-  settingsOrderFirstIcon: "jutsuper-settings-order-first-icon",
-  /** @type {"jutsuper-settings-order-last-icon"} */
-  settingsOrderLastIcon: "jutsuper-settings-order-last-icon",
 
   /** Toggle slider */
   /** @type {"jutsuper-slider-switch"} */
@@ -107,7 +109,27 @@ const OBJ = {
 
   /** REC icon */
   /** @type {"jutsuper-record-icon"} */
-  recordIcon: "jutsuper-record-icon"
+  recordIcon: "jutsuper-record-icon",
+
+  /** Text */
+  /** @type {"jutsuper-text-skip-options"} */
+  textSkipOptions: "jutsuper-text-skip-options",
+  /** @type {"jutsuper-text-openings"} */
+  textOpenings: "jutsuper-text-openings",
+  /** @type {"jutsuper-text-endings"} */
+  textEndings: "jutsuper-text-endings",
+  /** @type {"jutsuper-text-order"} */
+  textOrder: "jutsuper-text-order",
+  /** @type {"jutsuper-text-max"} */
+  textMax: "jutsuper-text-max",
+  /** @type {"jutsuper-text-fullscreen"} */
+  textFullscreen: "jutsuper-text-fullscreen",
+  /** @type {"jutsuper-text-delay"} */
+  textDelay: "jutsuper-text-delay",
+  /** @type {"jutsuper-text-seconds-short"} */
+  textSecondsShort: "jutsuper-text-seconds-short",
+  /** @type {"jutsuper-text-cancel"} */
+  textCancel: "jutsuper-text-cancel",
 }
 
 function main() {

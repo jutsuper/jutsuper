@@ -1,0 +1,6 @@
+<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="plus">
+<path id="vertical" d="M7 12L7 2" stroke="black" stroke-width="2" stroke-linecap="round"/>
+<path id="horizontal" d="M2 7L12 7" stroke="black" stroke-width="2" stroke-linecap="round"/>
+</g>
+</svg>

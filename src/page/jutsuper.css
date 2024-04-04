@@ -15,7 +15,7 @@
   /* Max setting's popup width */
   --jutsuper-size-settings-max-width: 220px;
   /* Max setting's popup height */
-  --jutsuper-size-settings-max-height: 280px;
+  --jutsuper-size-settings-max-height: 310px;
   /* Control the settings popup border radius */
   --jutsuper-size-settings-border-radius: 20px;
   /* Control the default row height in a settings popup */
@@ -23,13 +23,15 @@
   /* Control the "Openings" section height */
   --jutsuper-size-settings-openings-section-height: 39px;
   /* Control the "Endings" section height */
-  --jutsuper-size-settings-endings-section-height: 69px;
+  --jutsuper-size-settings-endings-section-height: 99px;
   /* Control the `border-box` filling of a settings section tab when hovering */
   --jutsuper-styling-settings-hover-tab-box-shadow: inset 0 -6px 0px -2px var(--jutsuper-color-light-green);
   /* Control the `border-box` filling of a settings section tab when opened */
   --jutsuper-styling-settings-active-tab-box-shadow: inset 0 -48px 0px -2px var(--jutsuper-color-light-green);
   /* Control the rotation of a dropdown in the setting's tab when the section is opened */
   --jutsuper-styling-settings-dropdown-rotation-active: rotate(180deg);
+  /* Control the default border size */
+  --jutsuper-styling-settings-border-size: 2px;
 }
 
 /* ////// */
@@ -55,17 +57,6 @@
   object-fit: contain;
 }
 
-/* Base styling for an inset icon */
-.jutsuper-inset-icon::before {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
-}
-
 /* Bring element to the top */
 .jutsuper-top-index {
   z-index: 200;
@@ -89,6 +80,11 @@
 /* Disable the ability to select the element */
 .jutsuper-no-select {
   user-select: none;
+}
+
+/* Hide text */
+.jutsuper-hide-text {
+  color: transparent;
 }
 
 /* Float to right in a flex container */
@@ -126,10 +122,49 @@
 /* Icons */
 /* ///// */
 
+/* Base styling for an inset icon */
+.jutsuper-icon-inset::before {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+}
+
 /* .jutsuper-icon-skip {} */
 
 .jutsuper-icon-dropdown {
   transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end)
+}
+
+/* An icon for the "Skip first occurrence" option */
+.jutsuper-icon-order-first::before {
+  content: url("/src/assets/icon/first.svg");
+}
+
+/* An icon for the "Skip last occurrence" option */
+.jutsuper-icon-order-last::before {
+  content: url("/src/assets/icon/last.svg");
+}
+
+/* Plus icon */
+.jutsuper-icon-plus::before {
+  content: url("/src/assets/icon/plus.svg");
+}
+
+/* Minus icon */
+.jutsuper-icon-minus::before {
+  content: url("/src/assets/icon/minus.svg");
+}
+
+/* Infinity icon */
+.jutsuper-icon-infinity {
+  background-image: url("/src/assets/icon/infinity.svg");
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
 }
 
 /* ////////// */
@@ -376,6 +411,10 @@
   gap: 6px;
 }
 
+.jutsuper-settings-grid-no-gap {
+  gap: 0;
+}
+
 .jutsuper-settings-grid-1-row {
   grid-template-rows: repeat(1, minmax(auto, var(--jutsuper-size-settings-row-height)));
 }
@@ -392,18 +431,12 @@
   grid-template-columns: minmax(0, 50%) minmax(0, 50%);
 }
 
+.jutsuper-settings-grid-3-cols {
+  grid-template-columns: minmax(30%, 30%) minmax(0%, 100%) minmax(30%, 30%);
+}
+
 .jutsuper-settings-grid-4-cols {
   grid-template-columns: min-content minmax(0, 1fr) 16px 12px;
-}
-
-/* An icon for the "Skip first occurrence" option */
-.jutsuper-settings-order-first-icon::before {
-  content: url("/src/assets/icon/first.svg");
-}
-
-/* An icon for the "Skip last occurrence" option */
-.jutsuper-settings-order-last-icon::before {
-  content: url("/src/assets/icon/last.svg");
 }
 
 /* ///////////// */
@@ -479,7 +512,7 @@ input.jutsuper-range[type=range] {
   border-radius: 50px;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: inset 0px 0px 0px 2px var(--jutsuper-color-darker-green);
+  box-shadow: inset 0px 0px 0px var(--jutsuper-styling-settings-border-size) var(--jutsuper-color-darker-green);
   background-color: #00000000;
 
   /* Hide the standard webkit thumb and show a custom filling instead */
@@ -512,7 +545,7 @@ input.jutsuper-range[type=range] {
 /* Standard input styling */
 input.jutsuper-radio[type="radio"] {
   appearance: none;
-  box-shadow: inset 0px 0px 0px 2px var(--jutsuper-color-darker-green);
+  box-shadow: inset 0px 0px 0px var(--jutsuper-styling-settings-border-size) var(--jutsuper-color-darker-green);
   margin-left: 1px;
   margin-right: 1px;
   transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
@@ -560,6 +593,70 @@ input.jutsuper-radio:last-child[type="radio"] {
   cursor: pointer;
   border: none;
   padding: 0;
+}
+
+/* ///////// */
+/* Numberbox */
+/* ///////// */
+
+input.jutsuper-numberbox[type=number] {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  appearance: textfield;
+  border: 0;
+  border-top: var(--jutsuper-styling-settings-border-size) solid var(--jutsuper-color-darker-green);
+  border-bottom: var(--jutsuper-styling-settings-border-size) solid var(--jutsuper-color-darker-green);
+  outline: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: transparent;
+
+  &:focus {
+    background-image: none;
+    color: inherit;
+  }
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+}
+
+button.jutsuper-numberbox-button {
+  height: 100%;
+  width: 100%;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  border: var(--jutsuper-styling-settings-border-size) solid var(--jutsuper-color-darker-green) !important;
+  background: none;
+  transition: all var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end) !important;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    background-color: var(--jutsuper-color-darker-green);
+  }
+
+  &:first-child {
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    border-right: 0 !important;
+  }
+
+  &:last-child {
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-left: 0 !important;
+  }
 }
 
 /* //////// */

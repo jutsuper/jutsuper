@@ -14,7 +14,7 @@ import {
   JutSuDomClasses as jutsuClasses,
   JutSuperAssetIds as assetIds,
   JutSuperDomIds as domIds,
-  JutSuperCss as jsuperCss,
+  JutSuperClasses as jsuperCss,
   JutSuperIpcIds as ipcIds,
   JutSuperIpcKeys as ipcKeys,
   JutSuperIpcLoadingStates as ipcLoadings,
@@ -56,7 +56,7 @@ class JutSuper {
     this.settingsArea = document.createElement("div");
     /** @type {HTMLDivElement} */
     this.settingsClipArea = document.createElement("div");
-    /** @type {HTMLButtonElement} */
+    /** @type {unknown} */
     this.vjsButton = undefined;
 
     /** @type {JutSuperIpc} */
@@ -118,17 +118,23 @@ class JutSuper {
 
     await this.initializeIpcValues();
     document.addEventListener("mousedown", function(event) {
-      const clickedOnVjsButton = event.target.id === domIds.vjsButton;
-      if (clickedOnVjsButton) {
+      const vjsButtonBoundaries = thisArg.vjsButton.el().getBoundingClientRect();
+      const isInVjsButtonXRange = event.clientX >= vjsButtonBoundaries.left && event.clientX <= vjsButtonBoundaries.right;
+      const isInVjsButtonYRange = event.clientY >= vjsButtonBoundaries.top && event.clientY <= vjsButtonBoundaries.bottom;
+      const isInVjsButtonAreaRange = isInVjsButtonXRange && isInVjsButtonYRange;
+      
+      if (isInVjsButtonAreaRange) {
+        // event gets handled by the button itself
         return;
       }
 
-      const boundaries = thisArg.settingsArea.getBoundingClientRect();
-      const isInXRange = event.clientX >= boundaries.left && event.clientX <= boundaries.right;
-      const isInYRange = event.clientY >= boundaries.top && event.clientY <= boundaries.bottom;
-      const isInAreaRange = isInXRange && isInYRange;
+      const settingsAreaBoundaries = thisArg.settingsArea.getBoundingClientRect();
+      const isInSettingsXRange = event.clientX >= settingsAreaBoundaries.left && event.clientX <= settingsAreaBoundaries.right;
+      const isInSettingsYRange = event.clientY >= settingsAreaBoundaries.top && event.clientY <= settingsAreaBoundaries.bottom;
+      const isInSettingsAreaRange = isInSettingsXRange && isInSettingsYRange;
 
-      if (!isInAreaRange) {
+      if (!isInSettingsAreaRange) {
+        // hide settings area
         thisArg.settingsArea.classList.add(jsuperCss.visibilityHidden);
       }
     });
@@ -470,12 +476,12 @@ class JutSuper {
 
     const iconPlaceholder = this.vjsButton.el()
       .getElementsByClassName(jutsuClasses.vjcIconPlaceholder)[0];
-    iconPlaceholder.id = domIds.vjsButton;
+    iconPlaceholder.id = domIds.vjsButtonIcon;
     iconPlaceholder.title = "JutSuper";
     iconPlaceholder.style.content = `url(${iconUrl})`;
     iconPlaceholder.style.width = "20px";
 
-    this.vjsButton.on("click", function() {
+    this.vjsButton.on("click", function(event) {
       thisArg.settingsArea.classList.toggle(jsuperCss.visibilityHidden);
     });
     this.player.on("userinactive", function(event) {
@@ -547,6 +553,7 @@ class JutSuper {
     )
 
     document.getElementById(domIds.vjsSettingsContainer).append(this.settingsArea);
+
     for (const icon of document.getElementsByClassName(jsuperCss.iconDropdown)) {
       icon.setAttribute(
         "src", document.getElementById(assetIds.dropdownSvg).href

@@ -39,8 +39,8 @@ var regexp;
 var jsuperStorage;
 
 /**
- * @typedef {import("/src/consts.js").JutSuperCss} JutSuperCss
- * @type {JutSuperCss}
+ * @typedef {import("/src/consts.js").JutSuperClasses} JutSuperClasses
+ * @type {JutSuperClasses}
  */
 var jsuperCss;
 
@@ -67,6 +67,13 @@ var jutsuClasses;
  * @type {JutSuperIpcIds}
  */
 var ipcIds;
+
+
+/**
+ * @typedef {import("/src/consts.js").JutSuperIpcDefaultNodeProps} JutSuperIpcDefaultNodeProps
+ * @type {JutSuperIpcDefaultNodeProps}
+ */
+var ipcDefaultNodeProps;
 
 /**
  * @typedef {import("/src/consts.js").JutSuperIpcKeys} JutSuperIpcKeys
@@ -173,11 +180,12 @@ var JutSuperMessageBuilder;
   jsuperLog = logModule.jsuperLog;
   regexp = constsModule.JutSuperRegex;
   jsuperStorage = storageModule.jsuperStorage;
-  jsuperCss = constsModule.JutSuperCss;
+  jsuperCss = constsModule.JutSuperClasses;
   defaultFonts = constsModule.JutSuperDefaultFonts;
   jutsuIds = constsModule.JutSuDomIds;
   jutsuClasses = constsModule.JutSuDomClasses;
   ipcIds = constsModule.JutSuperIpcIds;
+  ipcDefaultNodeProps = constsModule.JutSuperIpcDefaultNodeProps;
   ipcKeys = constsModule.JutSuperIpcKeys;
   ipcAwaits = constsModule.JutSuperIpcAwaitStates;
   ipcBoolRequests = constsModule.JutSuperIpcBoolRequestStates;
@@ -222,6 +230,14 @@ class JutSuperContent {
     /** @type {JutSuperIpc} */
     this.ipc = new JutSuperIpcBuilder()
       .createCommunicationNode()
+      .identifyAs(ipcIds.content)
+      .build();
+    
+    /** @type {JutSuperIpc} */
+    this.settingsIpc = new JutSuperIpcBuilder()
+      .createCommunicationNode()
+      .communicationNodeTagIs(ipcDefaultNodeProps.settingsTag)
+      .communicationNodeIdIs(ipcDefaultNodeProps.settingsId)
       .identifyAs(ipcIds.content)
       .build();
 

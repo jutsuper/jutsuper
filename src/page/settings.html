@@ -6,6 +6,11 @@
       rel="stylesheet"
       href="jutsuper.css"
     >
+    <link
+      href="/src/assets/icon/infinity.svg"
+      rel="preload"
+      as="image"
+    >
     <script>
       (function setDebugFlag() {
         window.JUTSUPER_DEBUG = true;
@@ -73,7 +78,7 @@
               jutsuper-no-select
             "
           />
-          <h id="jutsuper-text-skip-options">
+          <h class="jutsuper-text-skip-options">
             Skip options
           </h>
         </div>
@@ -102,8 +107,8 @@
             ></span>
           </label>
           <div
-            id="jutsuper-text-openings"
             class="
+              jutsuper-text-openings
               jutsuper-no-pointer-events
               jutsuper-no-select
             "
@@ -136,7 +141,7 @@
               jutsuper-settings-grid-2-cols
             ">
               <div
-                id="jutsuper-text-order"
+                class="jutsuper-text-order"
                 style="
                   display: flex;
                   align-items: center;
@@ -153,8 +158,8 @@
                     id="jutsuper-settings-openings-skip-order-first"
                     class="
                       jutsuper-radio
-                      jutsuper-inset-icon
-                      jutsuper-settings-order-first-icon
+                      jutsuper-icon-inset
+                      jutsuper-icon-order-first
                       jutsuper-no-select
                     "
                     type="radio"
@@ -166,7 +171,7 @@
                   />
                   <input
                     id="jutsuper-settings-openings-skip-order-last"
-                    class="jutsuper-radio jutsuper-inset-icon jutsuper-settings-order-last-icon jutsuper-no-select"
+                    class="jutsuper-radio jutsuper-icon-inset jutsuper-icon-order-last jutsuper-no-select"
                     type="radio"
                     name="jutsuper-settings-op-skip-order"
                     style="
@@ -205,8 +210,7 @@
             ></span>
           </label>
           <div
-            id="jutsuper-text-endings"
-            class="jutsuper-no-pointer-events jutsuper-no-select"
+            class="jutsuper-text-endings jutsuper-no-pointer-events jutsuper-no-select"
           >
             Endings
           </div>
@@ -232,11 +236,11 @@
           >
           <div class="
             jutsuper-settings-grid-container
-            jutsuper-settings-grid-2-rows
+            jutsuper-settings-grid-3-rows
             jutsuper-settings-grid-2-cols
           ">
             <div
-              id="jutsuper-text-order"
+              class="jutsuper-text-order"
               style="
                 display: flex;
                 align-items: center;
@@ -254,8 +258,8 @@
                 name="jutsuper-settings-ed-skip-order"
                 class="
                   jutsuper-radio
-                  jutsuper-inset-icon
-                  jutsuper-settings-order-first-icon
+                  jutsuper-icon-inset
+                  jutsuper-icon-order-first
                   jutsuper-no-select
                 "
                 style="
@@ -269,8 +273,8 @@
                 name="jutsuper-settings-ed-skip-order"
                 class="
                   jutsuper-radio
-                  jutsuper-inset-icon
-                  jutsuper-settings-order-last-icon
+                  jutsuper-icon-inset
+                  jutsuper-icon-order-last
                   jutsuper-no-select
                 "
                 style="
@@ -280,7 +284,40 @@
               />
             </div>
             <div
-              id="jutsuper-text-fullscreen"
+              class="jutsuper-text-max"
+              style="
+                display: flex;
+                align-items: center;
+              "
+            >
+              Max
+            </div>
+            <div
+              class="
+                jutsuper-settings-grid-container
+                jutsuper-settings-grid-no-gap
+                jutsuper-settings-grid-1-row
+                jutsuper-settings-grid-3-cols
+              "
+            >
+              <button
+                id="jutsuper-settings-endings-max-skips-negative-button"
+                class="jutsuper-numberbox-button jutsuper-icon-inset jutsuper-icon-minus"
+              ></button>
+              <input
+                id="jutsuper-settings-endings-max-skips-field"
+                class="jutsuper-numberbox"
+                type="number"
+                min="0"
+                value="3"
+              />
+              <button
+                id="jutsuper-settings-endings-max-skips-positive-button"
+                class="jutsuper-numberbox-button jutsuper-icon-inset jutsuper-icon-plus"
+              ></button>
+            </div>
+            <div
+              class="jutsuper-text-fullscreen"
               style="
                 display: flex;
                 align-items: center;

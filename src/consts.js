@@ -16,7 +16,7 @@ export {
   JutSuperAssetIds,
   JutSuperAssetPaths,
   JutSuperDomIds,
-  JutSuperCss,
+  JutSuperClasses,
   JutSuperInputNames,
   JutSuperDefaultFonts,
   JutSuperIpcDefaultNodeProps,
@@ -24,6 +24,7 @@ export {
   JutSuperIpcJsDataTypesArray,
   JutSuperIpcIds,
   JutSuperIpcKeys,
+  JutSuperIpcSettingsKeys,
   JutSuperStorageKeys,
   JutSuperStorageTransitionKeys,
   JutSuperStorageSettingsKeys,
@@ -473,6 +474,8 @@ const JutSuperAssetPaths = {
 const JutSuperDomIds = {
   /** @type {"jutsuper-vjs-button"} */
   vjsButton: "jutsuper-vjs-button",
+  /** @type {"jutsuper-vjs-button-icon"} */
+  vjsButtonIcon: "jutsuper-vjs-button-icon",
 
   /** Dev */
   /** @type {"jutsuper-dev-preload-message"} */
@@ -517,6 +520,12 @@ const JutSuperDomIds = {
   settingsEndingsSkipOrderFirst: "jutsuper-settings-endings-skip-order-first",
   /** @type {"jutsuper-settings-endings-skip-order-last"} */
   settingsEndingsSkipOrderLast: "jutsuper-settings-endings-skip-order-last",
+  /** @type {"jutsuper-settings-endings-max-skips-positive-button"} */
+  settingsEndingsMaxSkipsPositiveButton: "jutsuper-settings-endings-max-skips-positive-button",
+  /** @type {"jutsuper-settings-endings-max-skips-field"} */
+  settingsEndingsMaxSkipsField: "jutsuper-settings-endings-max-skips-field",
+  /** @type {"jutsuper-settings-endings-max-skips-negative-button"} */
+  settingsEndingsMaxSkipsNegativeButton: "jutsuper-settings-endings-max-skips-negative-button",
   /** @type {"jutsuper-settings-endings-fullscreen-switch"} */
   settingsEndingsFullscreenSwitch: "jutsuper-settings-endings-fullscreen-switch",
   /** @type {"jutsuper-settings-persist-fullscreen-slider"} */
@@ -529,28 +538,11 @@ const JutSuperDomIds = {
   settingsCancelKeyListener: "jutsuper-settings-cancel-key-listener",
   /** @type {"jutsuper-settings-cancel-key-listener-rec-circle"} */
   settingsCancelKeyListenerRecCircle: "jutsuper-settings-cancel-key-listener-rec-circle",
-
-  /** Text */
-  /** @type {"jutsuper-text-skip-options"} */
-  textSkipOptions: "jutsuper-text-skip-options",
-  /** @type {"jutsuper-text-openings"} */
-  textOpenings: "jutsuper-text-openings",
-  /** @type {"jutsuper-text-endings"} */
-  textEndings: "jutsuper-text-endings",
-  /** @type {"jutsuper-text-order"} */
-  textOrder: "jutsuper-text-order",
-  /** @type {"jutsuper-text-fullscreen"} */
-  textFullscreen: "jutsuper-text-fullscreen",
-  /** @type {"jutsuper-text-delay"} */
-  textDelay: "jutsuper-text-delay",
-  /** @type {"jutsuper-text-seconds-short"} */
-  textSecondsShort: "jutsuper-text-seconds-short",
-  /** @type {"jutsuper-text-cancel"} */
-  textCancel: "jutsuper-text-cancel",
 }
 /**
  * @typedef JutSuperDomIdsType
  * @property {"jutsuper-vjs-button"} vjsButton
+ * @property {"jutsuper-vjs-button-icon"} vjsButtonIcon
  * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
  * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
  * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
@@ -577,14 +569,6 @@ const JutSuperDomIds = {
  * @property {"jutsuper-settings-delay-num"} settingsDelayNum
  * @property {"jutsuper-settings-cancel-key-listener"} settingsCancelKeyListener
  * @property {"jutsuper-settings-cancel-key-listener-rec-circle"} settingsCancelKeyListenerRecCircle
- * @property {"jutsuper-text-skip-options"} textSkipOptions
- * @property {"jutsuper-text-openings"} textOpenings
- * @property {"jutsuper-text-endings"} textEndings
- * @property {"jutsuper-text-order"} textOrder
- * @property {"jutsuper-text-fullscreen"} textFullscreen
- * @property {"jutsuper-text-delay"} textDelay
- * @property {"jutsuper-text-seconds-short"} textSecondsShort
- * @property {"jutsuper-text-cancel"} textCancel
  *
  * @typedef {(
  *   "jutsuper-vjs-button" |
@@ -613,15 +597,7 @@ const JutSuperDomIds = {
  *   "jutsuper-settings-delay-slider" |
  *   "jutsuper-settings-delay-num" |
  *   "jutsuper-settings-cancel-key-listener" |
- *   "jutsuper-settings-cancel-key-listener-rec-circle" |
- *   "jutsuper-text-skip-options" |
- *   "jutsuper-text-openings" |
- *   "jutsuper-text-endings" |
- *   "jutsuper-text-order" |
- *   "jutsuper-text-fullscreen" |
- *   "jutsuper-text-delay" |
- *   "jutsuper-text-seconds-short" |
- *   "jutsuper-text-cancel"
+ *   "jutsuper-settings-cancel-key-listener-rec-circle"
  * )} JutSuperDomIdsKeys
  */
 
@@ -630,14 +606,12 @@ const JutSuperDomIds = {
  * # CSS styles of this extension
  * 
  * @readonly
- * @enum {JutSuperCssType}
+ * @enum {JutSuperClassesType}
  */
-const JutSuperCss = {
+const JutSuperClasses = {
   /** Common */
   /** @type {"jutsuper-fullscreen"} */
   fullscreen: "jutsuper-fullscreen",
-  /** @type {"jutsuper-inset-icon"} */
-  insetIcon: "jutsuper-inset-icon",
   /** @type {"jutsuper-top-index"} */
   topIndex: "jutsuper-top-index",
   /** @type {"jutsuper-visibility-hidden"} */
@@ -660,10 +634,16 @@ const JutSuperCss = {
   devSettingsArea: "jutsuper-dev-settings-area",
 
   /** Icons */
+  /** @type {"jutsuper-icon-inset"} */
+  iconInset: "jutsuper-icon-inset",
   /** @type {"jutsuper-icon-skip"} */
   iconSkip: "jutsuper-icon-skip",
   /** @type {"jutsuper-icon-dropdown"} */
   iconDropdown: "jutsuper-icon-dropdown",
+  /** @type {"jutsuper-icon-order-first"} */
+  iconOrderFirst: "jutsuper-icon-order-first",
+  /** @type {"jutsuper-icon-order-last"} */
+  iconOrderLast: "jutsuper-icon-order-last",
 
   /** Animations */
   /** @type {"jutsuper-animate-bottom-to-top"} */
@@ -712,12 +692,10 @@ const JutSuperCss = {
   settingsGrid3Rows: "jutsuper-settings-grid-3-rows",
   /** @type {"jutsuper-settings-grid-2-cols"} */
   settingsGrid2Cols: "jutsuper-settings-grid-2-cols",
+  /** @type {"jutsuper-settings-grid-3-cols"} */
+  settingsGrid3Cols: "jutsuper-settings-grid-3-cols",
   /** @type {"jutsuper-settings-grid-4-cols"} */
   settingsGrid4Cols: "jutsuper-settings-grid-4-cols",
-  /** @type {"jutsuper-settings-order-first-icon"} */
-  settingsOrderFirstIcon: "jutsuper-settings-order-first-icon",
-  /** @type {"jutsuper-settings-order-last-icon"} */
-  settingsOrderLastIcon: "jutsuper-settings-order-last-icon",
 
   /** Toggle slider */
   /** @type {"jutsuper-slider-switch"} */
@@ -741,12 +719,31 @@ const JutSuperCss = {
 
   /** REC icon */
   /** @type {"jutsuper-record-icon"} */
-  recordIcon: "jutsuper-record-icon"
+  recordIcon: "jutsuper-record-icon",
+
+  /** Text */
+  /** @type {"jutsuper-text-skip-options"} */
+  textSkipOptions: "jutsuper-text-skip-options",
+  /** @type {"jutsuper-text-openings"} */
+  textOpenings: "jutsuper-text-openings",
+  /** @type {"jutsuper-text-endings"} */
+  textEndings: "jutsuper-text-endings",
+  /** @type {"jutsuper-text-order"} */
+  textOrder: "jutsuper-text-order",
+  /** @type {"jutsuper-text-max"} */
+  textMax: "jutsuper-text-max",
+  /** @type {"jutsuper-text-fullscreen"} */
+  textFullscreen: "jutsuper-text-fullscreen",
+  /** @type {"jutsuper-text-delay"} */
+  textDelay: "jutsuper-text-delay",
+  /** @type {"jutsuper-text-seconds-short"} */
+  textSecondsShort: "jutsuper-text-seconds-short",
+  /** @type {"jutsuper-text-cancel"} */
+  textCancel: "jutsuper-text-cancel",
 }
 /**
- * @typedef JutSuperCssType
+ * @typedef JutSuperClassesType
  * @property {"jutsuper-fullscreen"} fullscreen
- * @property {"jutsuper-inset-icon"} insetIcon
  * @property {"jutsuper-top-index"} topIndex
  * @property {"jutsuper-visibility-hidden"} visibilityHidden
  * @property {"jutsuper-display-hidden"} displayHidden
@@ -756,8 +753,11 @@ const JutSuperCss = {
  * @property {"jutsuper-dev-black-bg"} devBlackBg
  * @property {"jutsuper-dev-hidden"} devHidden
  * @property {"jutsuper-dev-settings-area"} devSettingsArea
+ * @property {"jutsuper-icon-inset"} iconInset
  * @property {"jutsuper-icon-skip"} iconSkip
  * @property {"jutsuper-icon-dropdown"} iconDropdown
+ * @property {"jutsuper-icon-order-first"} iconOrderFirst
+ * @property {"jutsuper-icon-order-last"} iconOrderLast
  * @property {"jutsuper-animate-bottom-to-top"} animateBottomToTop
  * @property {"jutsuper-animate-small-top-to-bottom"} animateSmallTopToBottom
  * @property {"jutsuper-animate-darker-to-dark-green-ht"} animateDarkerToDarkGreenHt
@@ -779,9 +779,8 @@ const JutSuperCss = {
  * @property {"jutsuper-settings-grid-2-rows"} settingsGrid2Rows
  * @property {"jutsuper-settings-grid-3-rows"} settingsGrid3Rows
  * @property {"jutsuper-settings-grid-2-cols"} settingsGrid2Cols
+ * @property {"jutsuper-settings-grid-3-cols"} settingsGrid3Cols
  * @property {"jutsuper-settings-grid-4-cols"} settingsGrid4Cols
- * @property {"jutsuper-settings-order-first-icon"} settingsOrderFirstIcon
- * @property {"jutsuper-settings-order-last-icon"} settingsOrderLastIcon
  * @property {"jutsuper-slider-switch"} sliderSwitch
  * @property {"jutsuper-slider-bg-area"} sliderBgArea
  * @property {"jutsuper-range"} range
@@ -789,10 +788,18 @@ const JutSuperCss = {
  * @property {"jutsuper-radio"} radio
  * @property {"jutsuper-button"} button
  * @property {"jutsuper-record-icon"} recordIcon
+ * @property {"jutsuper-text-skip-options"} textSkipOptions
+ * @property {"jutsuper-text-openings"} textOpenings
+ * @property {"jutsuper-text-endings"} textEndings
+ * @property {"jutsuper-text-order"} textOrder
+ * @property {"jutsuper-text-max"} textMax
+ * @property {"jutsuper-text-fullscreen"} textFullscreen
+ * @property {"jutsuper-text-delay"} textDelay
+ * @property {"jutsuper-text-seconds-short"} textSecondsShort
+ * @property {"jutsuper-text-cancel"} textCancel
  *
  * @typedef {(
  *   "jutsuper-fullscreen" |
- *   "jutsuper-inset-icon" |
  *   "jutsuper-top-index" |
  *   "jutsuper-visibility-hidden" |
  *   "jutsuper-display-hidden" |
@@ -802,8 +809,11 @@ const JutSuperCss = {
  *   "jutsuper-dev-black-bg" |
  *   "jutsuper-dev-hidden" |
  *   "jutsuper-dev-settings-area" |
+ *   "jutsuper-icon-inset" |
  *   "jutsuper-icon-skip" |
  *   "jutsuper-icon-dropdown" |
+ *   "jutsuper-icon-order-first" |
+ *   "jutsuper-icon-order-last" |
  *   "jutsuper-animate-bottom-to-top" |
  *   "jutsuper-animate-small-top-to-bottom" |
  *   "jutsuper-animate-darker-to-dark-green-ht" |
@@ -825,17 +835,25 @@ const JutSuperCss = {
  *   "jutsuper-settings-grid-2-rows" |
  *   "jutsuper-settings-grid-3-rows" |
  *   "jutsuper-settings-grid-2-cols" |
+ *   "jutsuper-settings-grid-3-cols" |
  *   "jutsuper-settings-grid-4-cols" |
- *   "jutsuper-settings-order-first-icon" |
- *   "jutsuper-settings-order-last-icon" |
  *   "jutsuper-slider-switch" |
  *   "jutsuper-slider-bg-area" |
  *   "jutsuper-range" |
  *   "jutsuper-radio-container" |
  *   "jutsuper-radio" |
  *   "jutsuper-button" |
- *   "jutsuper-record-icon"
- * )} JutSuperCssKeys
+ *   "jutsuper-record-icon" |
+ *   "jutsuper-text-skip-options" |
+ *   "jutsuper-text-openings" |
+ *   "jutsuper-text-endings" |
+ *   "jutsuper-text-order" |
+ *   "jutsuper-text-max" |
+ *   "jutsuper-text-fullscreen" |
+ *   "jutsuper-text-delay" |
+ *   "jutsuper-text-seconds-short" |
+ *   "jutsuper-text-cancel"
+ * )} JutSuperClassesKeys
  */
 
 
@@ -926,14 +944,21 @@ const JutSuperIpcDefaultNodeProps = {
   tag: "jutsuper-ipc",
   /** @type {"jutsuper-ipc"} */
   id: "jutsuper-ipc",
+  /** @type {"jutsuper-settings-ipc"} */
+  settingsTag: "jutsuper-settings-ipc",
+  /** @type {"jutsuper-settings-ipc"} */
+  settingsId: "jutsuper-settings-ipc"
 }
 /** 
  * @typedef JutSuperIpcDefaultNodePropsType
  * @property {"jutsuper-ipc"} tag
  * @property {"jutsuper-ipc"} id
+ * @property {"jutsuper-settings-ipc"} settingsTag
+ * @property {"jutsuper-settings-ipc"} settingsId
  * 
  * @typedef {(
- *   "jutsuper-ipc"
+ *   "jutsuper-ipc" |
+ *   "jutsuper-settings-ipc"
  * )} JutSuperIpcDefaultNodePropsKeys
  */
 
@@ -1148,6 +1173,51 @@ const JutSuperIpcKeys = {
  *   "data-inject-custom-fullscreen-exit" |
  *   "data-max-continuous-episode-switches"
  * )} JutSuperIpcKeysKeys
+ */
+
+
+/**
+ * # Describes keys used in settings' IPC
+ * @readonly
+ * @enum {JutSuperIpcSettingsKeysType}
+ */
+const JutSuperIpcSettingsKeys = {
+  /** @type {"data-openings-do-skip"} */
+  openingsDoSkip: "data-openings-do-skip",
+  /** @type {"data-openings-skip-order"} */
+  openingsSkipOrder: "data-openings-skip-order",
+  /** @type {"data-endings-do-skip"} */
+  endingsDoSkip: "data-endings-do-skip",
+  /** @type {"data-endings-skip-order"} */
+  endingsSkipOrder: "data-endings-skip-order",
+  /** @type {"data-endings-do-persist-fullscreen"} */
+  endingsDoPersistFullscreen: "data-endings-do-persist-fullscreen",
+  /** @type {"data-endings-max-skips"} */
+  endingsMaxSkips: "data-endings-max-skips",
+  /** @type {"data-skip-delay-ms"} */
+  skipDelayMs: "data-skip-delay-ms",
+  /** @type {"data-skip-cancel-key"} */
+  skipCancelKey: "data-skip-cancel-key"
+}
+/**
+ * @typedef JutSuperIpcSettingsKeysType
+ * @property {"data-openings-do-skip"} openingsDoSkip
+ * @property {"data-openings-skip-order"} openingsSkipOrder
+ * @property {"data-endings-do-skip"} endingsDoSkip
+ * @property {"data-endings-skip-order"} endingsSkipOrder
+ * @property {"data-endings-do-persist-fullscreen"} endingsDoPersistFullscreen
+ * @property {"data-skip-delay-ms"} skipDelayMs
+ * @property {"data-skip-cancel-key"} skipCancelKey
+ *
+ * @typedef {(
+ *   "data-openings-do-skip" |
+ *   "data-openings-skip-order" |
+ *   "data-endings-do-skip" |
+ *   "data-endings-skip-order" |
+ *   "data-endings-do-persist-fullscreen" |
+ *   "data-skip-delay-ms" |
+ *   "data-skip-cancel-key"
+ * )} JutSuperIpcSettingsKeysKeys
  */
 
 
