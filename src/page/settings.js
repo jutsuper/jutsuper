@@ -177,7 +177,7 @@ class JutSuperSettings {
       asString = value;
     }
 
-    if (Number.isNaN(asNumber) || asNumber < 0) {
+    if (Number.isNaN(asNumber) || asNumber < 0 || !asString) {
       this.edSkipMaxField.value = "0";
     }
     else {
