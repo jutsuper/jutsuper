@@ -540,10 +540,17 @@ class JutSuper {
     this.settingsArea.classList.add(jsuperCss.vjsSettingsArea);
     this.settingsArea.classList.add(jsuperCss.animateBottomToTop);
     this.settingsArea.classList.add(jsuperCss.visibilityHidden);
+    this.settingsArea.style.height = "auto";
+    this.settingsArea.style.maxHeight = "100%";
+    this.settingsArea.style.overflowY = "auto";
+    this.settingsArea.style.scrollbarWidth = "none";
 
     this.settingsClipArea.id = domIds.vjsSettingsClipArea;
     this.settingsClipArea.classList.add(jsuperCss.vjsSettingsAreaSized);
     this.settingsClipArea.classList.add(jsuperCss.vjsSettingsClipArea);
+    this.settingsClipArea.style.height = "auto";
+    this.settingsClipArea.style.maxHeight = "inherit";
+    this.settingsClipArea.style.overflowY = "auto";
     this.settingsClipArea.append(settingsContent);
     this.settingsArea.append(this.settingsClipArea);
 
