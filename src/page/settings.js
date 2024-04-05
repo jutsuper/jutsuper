@@ -160,10 +160,29 @@ class JutSuperSettings {
   }
 
   /**
-   * @param {number} value 
+   * @param {number | string} value 
    */
   setEndingsSkipMax(value) {
-    this.edSkipMaxField.value = value;
+    /** @type {number} */
+    let asNumber;
+    /** @type {string} */
+    let asString;
+
+    if (value.constructor === Number) {
+      asNumber = value;
+      asString = value.toString();
+    }
+    else if (value.constructor === String) {
+      asNumber = new Number(value).valueOf();
+      asString = value;
+    }
+
+    if (Number.isNaN(asNumber) || asNumber < 0) {
+      this.edSkipMaxField.value = "0";
+    }
+    else {
+      this.edSkipMaxField.value = asString;
+    }
   }
 
   /**
