@@ -1,5 +1,5 @@
 import { jsuperUtil as util } from "/src/util.js";
-import { JutSuperClasses as jsuperCss } from "/src/consts.js";
+import { JutSuperDomClasses as domClasses } from "/src/consts.js";
 import { JutSuperDomIds as domIds } from "/src/consts.js";
 import { JutSuperInputNames as inputNames } from "/src/consts.js";
 export { JutSuperSettings };
@@ -18,14 +18,14 @@ class JutSuperSettings {
 
     this.bars = this.document.getElementsByName(inputNames.settingsBar);
     this.opSkipSwitch = this.document.getElementById(domIds.settingsOpeningsSwitch);
-    this.opSectionBar = this.document.getElementById("jutsuper-settings-openings-bar-label");
-    this.opClipSection = this.document.getElementById("jutsuper-settings-openings-section-clip");
+    this.opSectionBar = this.document.getElementById(domIds.settingsOpeningsBarLabel);
+    this.opClipSection = this.document.getElementById(domIds.settingsOpeningsSectionClip);
     this.opSkipOrderSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderSelector);
     this.opSkipOrderFirstSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderFirst);
     this.opSkipOrderLastSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderLast);
     this.edSkipSwitch = this.document.getElementById(domIds.settingsEndingsSwitch);
-    this.edSectionBar = this.document.getElementById("jutsuper-settings-endings-bar-label");
-    this.edClipSection = this.document.getElementById("jutsuper-settings-endings-section-clip");
+    this.edSectionBar = this.document.getElementById(domIds.settingsEndingsBarLabel);
+    this.edClipSection = this.document.getElementById(domIds.settingsEndingsSectionClip);
     this.edSkipOrderSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderSelector);
     this.edSkipOrderFirstSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderFirst);
     this.edSkipOrderLastSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderLast);
@@ -45,9 +45,9 @@ class JutSuperSettings {
       const keyLabel = util.getKeyLabelFromRawLabel(event.key);
 
       thisArg.cancelKeyListener.value = keyLabel;
-      thisArg.cancelKeyListener.classList.remove(jsuperCss.animateDarkerToDarkGreenHt);
+      thisArg.cancelKeyListener.classList.remove(domClasses.animateDarkerToDarkGreenHt);
       thisArg.cancelKeyListener.isListening = false;
-      thisArg.cancelKeyListenerRecCircle.classList.toggle(jsuperCss.animateOpacity1To0);
+      thisArg.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
     });
     this.cancelKeyListenerRecCircle = this.document.getElementById(domIds.settingsCancelKeyListenerRecCircle);
 
@@ -74,15 +74,15 @@ class JutSuperSettings {
 
       if (!isInAreaRange) {
         thisArg.cancelKeyListener.isListening = false;
-        thisArg.cancelKeyListener.classList.remove(jsuperCss.animateDarkerToDarkGreenHt);
-        thisArg.cancelKeyListenerRecCircle.classList.remove(jsuperCss.animateOpacity1To0);
+        thisArg.cancelKeyListener.classList.remove(domClasses.animateDarkerToDarkGreenHt);
+        thisArg.cancelKeyListenerRecCircle.classList.remove(domClasses.animateOpacity1To0);
       }
     });
 
     // if in dev environment, hide the preload message
     if (window.JUTSUPER_DEBUG) {
       const preloadMessage = this.document.getElementById(domIds.devPreloadMessage);
-      preloadMessage.classList.add(jsuperCss.devHidden);
+      preloadMessage.classList.add(domClasses.devHidden);
     }
   }
 
@@ -108,22 +108,6 @@ class JutSuperSettings {
    */
   onOpeningsSwitchChange(event) {
     const state = event.target.checked;
-
-    if (state === true) {
-      /** 
-      this.opSectionBar.classList.remove("jutsuper-grayscale");
-      this.opClipSection.classList.remove("jutsuper-grayscale");
-      this.opClipSection.classList.remove("jutsuper-no-pointer-events");
-      */
-    }
-    else {
-      /** 
-      this.opSectionBar.classList.add("jutsuper-grayscale");
-      this.opClipSection.classList.add("jutsuper-grayscale");
-      this.opClipSection.classList.add("jutsuper-no-pointer-events");
-      */
-    }
-
     console.log("skipOpenings =", state);
   }
 
@@ -161,22 +145,6 @@ class JutSuperSettings {
    */
   onEndingsSwitchChange(event) {
     const state = event.target.checked;
-
-    if (state === true) {
-      /** 
-      this.edSectionBar.classList.remove("jutsuper-grayscale");
-      this.edClipSection.classList.remove("jutsuper-grayscale");
-      this.edClipSection.classList.remove("jutsuper-no-pointer-events");
-      */
-    }
-    else {
-      /** 
-      this.edSectionBar.classList.add("jutsuper-grayscale");
-      this.edClipSection.classList.add("jutsuper-grayscale");
-      this.edClipSection.classList.add("jutsuper-no-pointer-events");
-      */
-    }
-
     console.log("skipEndings =", state);
   }
 
@@ -215,19 +183,6 @@ class JutSuperSettings {
 
     this.edSkipMaxField.value = `${value - 1}`;
 
-    /**
-    if (value === 0) {
-      this.edSkipMaxField.classList.add("jutsuper-hide-text");
-      this.edSkipMaxField.classList.add("jutsuper-no-select");
-      this.edSkipMaxField.classList.add("jutsuper-icon-infinity");
-    }
-    else {
-      this.edSkipMaxField.classList.remove("jutsuper-hide-text");
-      this.edSkipMaxField.classList.remove("jutsuper-no-select");
-      this.edSkipMaxField.classList.remove("jutsuper-icon-infinity");
-    }
-    */
-
     console.log(this.edSkipMaxField.value);
   }
 
@@ -243,19 +198,6 @@ class JutSuperSettings {
     }
 
     this.edSkipMaxField.value = `${value + 1}`;
-
-    /** 
-    if (value === 0) {
-      this.edSkipMaxField.classList.add("jutsuper-hide-text");
-      this.edSkipMaxField.classList.add("jutsuper-no-select");
-      this.edSkipMaxField.classList.add("jutsuper-icon-infinity");
-    }
-    else {
-      this.edSkipMaxField.classList.remove("jutsuper-hide-text");
-      this.edSkipMaxField.classList.remove("jutsuper-no-select");
-      this.edSkipMaxField.classList.remove("jutsuper-icon-infinity");
-    }
-    */
 
     console.log(this.edSkipMaxField.value);
   }
@@ -338,9 +280,9 @@ class JutSuperSettings {
       this.delayNum.innerText = event.target.value;
     }
     
-    this.delayNum.classList.add("jutsuper-display-hidden");
+    this.delayNum.classList.add(domClasses.displayHidden);
     setTimeout(() => {
-      this.delayNum.classList.remove("jutsuper-display-hidden");
+      this.delayNum.classList.remove(domClasses.displayHidden);
     }, 1);
   }
 
@@ -354,8 +296,8 @@ class JutSuperSettings {
    */
   onCancelRecorderClick(event) {
     this.cancelKeyListener.isListening = !this.cancelKeyListener.isListening;
-    this.cancelKeyListener.classList.toggle(jsuperCss.animateDarkerToDarkGreenHt);
-    this.cancelKeyListenerRecCircle.classList.toggle(jsuperCss.animateOpacity1To0);
+    this.cancelKeyListener.classList.toggle(domClasses.animateDarkerToDarkGreenHt);
+    this.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
   }
 
   /**

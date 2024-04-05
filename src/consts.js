@@ -16,7 +16,7 @@ export {
   JutSuperAssetIds,
   JutSuperAssetPaths,
   JutSuperDomIds,
-  JutSuperClasses,
+  JutSuperDomClasses,
   JutSuperInputNames,
   JutSuperDefaultFonts,
   JutSuperIpcDefaultNodeProps,
@@ -492,12 +492,16 @@ const JutSuperDomIds = {
   settingsRoot: "jutsuper-settings-root",
   /** @type {"jutsuper-settings-skip-header-icon"} */
   settingsSkipHeaderIcon: "jutsuper-settings-skip-header-icon",
+  /** @type {"jutsuper-settings-openings-bar-label"} */
+  settingsOpeningsBarLabel: "jutsuper-settings-openings-bar-label",
   /** @type {"jutsuper-settings-openings-switch"} */
   settingsOpeningsSwitch: "jutsuper-settings-openings-switch",
   /** @type {"jutsuper-settings-openings-slider"} */
   settingsOpeningsSlider: "jutsuper-settings-openings-slider",
   /** @type {"jutsuper-settings-openings-bar-dropdown-icon"} */
   settingsOpeningsBarDropdownIcon: "jutsuper-settings-openings-bar-dropdown-icon",
+  /** @type {"jutsuper-settings-openings-section-clip"} */
+  settingsOpeningsSectionClip: "jutsuper-settings-openings-section-clip",
   /** @type {"jutsuper-settings-openings-section"} */
   settingsOpeningsSection: "jutsuper-settings-openings-section",
   /** @type {"jutsuper-settings-openings-skip-order-selector"} */
@@ -506,14 +510,18 @@ const JutSuperDomIds = {
   settingsOpeningsSkipOrderFirst: "jutsuper-settings-openings-skip-order-first",
   /** @type {"jutsuper-settings-openings-skip-order-last"} */
   settingsOpeningsSkipOrderLast: "jutsuper-settings-openings-skip-order-last",
+  /** @type {"jutsuper-settings-endings-bar-label"} */
+  settingsEndingsBarLabel: "jutsuper-settings-endings-bar-label",
   /** @type {"jutsuper-settings-endings-switch"} */
   settingsEndingsSwitch: "jutsuper-settings-endings-switch",
   /** @type {"jutsuper-settings-endings-slider"} */
   settingsEndingsSlider: "jutsuper-settings-endings-slider",
   /** @type {"jutsuper-settings-endings-bar-dropdown-icon"} */
   settingsEndingsBarDropdownIcon: "jutsuper-settings-endings-bar-dropdown-icon",
-  /** @type {"jutsuper-settings-endings-settings"} */
-  settingsEndingsSettings: "jutsuper-settings-endings-settings",
+  /** @type {"jutsuper-settings-endings-section-clip"} */
+  settingsEndingsSectionClip: "jutsuper-settings-endings-section-clip",
+  /** @type {"jutsuper-settings-endings-section"} */
+  settingsEndingsSection: "jutsuper-settings-endings-section",
   /** @type {"jutsuper-settings-endings-skip-order-selector"} */
   settingsEndingsSkipOrderSelector: "jutsuper-settings-endings-skip-order-selector",
   /** @type {"jutsuper-settings-endings-skip-order-first"} */
@@ -543,26 +551,33 @@ const JutSuperDomIds = {
  * @typedef JutSuperDomIdsType
  * @property {"jutsuper-vjs-button"} vjsButton
  * @property {"jutsuper-vjs-button-icon"} vjsButtonIcon
+ * @property {"jutsuper-dev-preload-message"} devPreloadMessage
  * @property {"jutsuper-vjs-settings-container"} vjsSettingsContainer
  * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
  * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
- * @property {"jutsuper-dev-preload-message"} devPreloadMessage
  * @property {"jutsuper-settings-root"} settingsRoot
  * @property {"jutsuper-settings-skip-header-icon"} settingsSkipHeaderIcon
+ * @property {"jutsuper-settings-openings-bar-label"} settingsOpeningsBarLabel
  * @property {"jutsuper-settings-openings-switch"} settingsOpeningsSwitch
  * @property {"jutsuper-settings-openings-slider"} settingsOpeningsSlider
  * @property {"jutsuper-settings-openings-bar-dropdown-icon"} settingsOpeningsBarDropdownIcon
+ * @property {"jutsuper-settings-openings-section-clip"} settingsOpeningsSectionClip
  * @property {"jutsuper-settings-openings-section"} settingsOpeningsSection
  * @property {"jutsuper-settings-openings-skip-order-selector"} settingsOpeningsSkipOrderSelector
  * @property {"jutsuper-settings-openings-skip-order-first"} settingsOpeningsSkipOrderFirst
  * @property {"jutsuper-settings-openings-skip-order-last"} settingsOpeningsSkipOrderLast
+ * @property {"jutsuper-settings-endings-bar-label"} settingsEndingsBarLabel
  * @property {"jutsuper-settings-endings-switch"} settingsEndingsSwitch
  * @property {"jutsuper-settings-endings-slider"} settingsEndingsSlider
  * @property {"jutsuper-settings-endings-bar-dropdown-icon"} settingsEndingsBarDropdownIcon
- * @property {"jutsuper-settings-endings-settings"} settingsEndingsSettings
+ * @property {"jutsuper-settings-endings-section-clip"} settingsEndingsSectionClip
+ * @property {"jutsuper-settings-endings-section"} settingsEndingsSection
  * @property {"jutsuper-settings-endings-skip-order-selector"} settingsEndingsSkipOrderSelector
  * @property {"jutsuper-settings-endings-skip-order-first"} settingsEndingsSkipOrderFirst
  * @property {"jutsuper-settings-endings-skip-order-last"} settingsEndingsSkipOrderLast
+ * @property {"jutsuper-settings-endings-max-skips-positive-button"} settingsEndingsMaxSkipsPositiveButton
+ * @property {"jutsuper-settings-endings-max-skips-field"} settingsEndingsMaxSkipsField
+ * @property {"jutsuper-settings-endings-max-skips-negative-button"} settingsEndingsMaxSkipsNegativeButton
  * @property {"jutsuper-settings-endings-fullscreen-switch"} settingsEndingsFullscreenSwitch
  * @property {"jutsuper-settings-persist-fullscreen-slider"} settingsPersistFullscreenSlider
  * @property {"jutsuper-settings-delay-slider"} settingsDelaySlider
@@ -572,26 +587,34 @@ const JutSuperDomIds = {
  *
  * @typedef {(
  *   "jutsuper-vjs-button" |
+ *   "jutsuper-vjs-button-icon" |
+ *   "jutsuper-dev-preload-message" |
  *   "jutsuper-vjs-settings-container" |
  *   "jutsuper-vjs-settings-area" |
  *   "jutsuper-vjs-settings-clip-area" |
- *   "jutsuper-dev-preload-message" |
  *   "jutsuper-settings-root" |
  *   "jutsuper-settings-skip-header-icon" |
+ *   "jutsuper-settings-openings-bar-label" |
  *   "jutsuper-settings-openings-switch" |
  *   "jutsuper-settings-openings-slider" |
  *   "jutsuper-settings-openings-bar-dropdown-icon" |
+ *   "jutsuper-settings-openings-section-clip" |
  *   "jutsuper-settings-openings-section" |
  *   "jutsuper-settings-openings-skip-order-selector" |
  *   "jutsuper-settings-openings-skip-order-first" |
  *   "jutsuper-settings-openings-skip-order-last" |
+ *   "jutsuper-settings-endings-bar-label" |
  *   "jutsuper-settings-endings-switch" |
  *   "jutsuper-settings-endings-slider" |
  *   "jutsuper-settings-endings-bar-dropdown-icon" |
- *   "jutsuper-settings-endings-settings" |
+ *   "jutsuper-settings-endings-section-clip" |
+ *   "jutsuper-settings-endings-section" |
  *   "jutsuper-settings-endings-skip-order-selector" |
  *   "jutsuper-settings-endings-skip-order-first" |
  *   "jutsuper-settings-endings-skip-order-last" |
+ *   "jutsuper-settings-endings-max-skips-positive-button" |
+ *   "jutsuper-settings-endings-max-skips-field" |
+ *   "jutsuper-settings-endings-max-skips-negative-button" |
  *   "jutsuper-settings-endings-fullscreen-switch" |
  *   "jutsuper-settings-persist-fullscreen-slider" |
  *   "jutsuper-settings-delay-slider" |
@@ -606,9 +629,9 @@ const JutSuperDomIds = {
  * # CSS styles of this extension
  * 
  * @readonly
- * @enum {JutSuperClassesType}
+ * @enum {JutSuperDomClassesType}
  */
-const JutSuperClasses = {
+const JutSuperDomClasses = {
   /** Common */
   /** @type {"jutsuper-fullscreen"} */
   fullscreen: "jutsuper-fullscreen",
@@ -742,7 +765,7 @@ const JutSuperClasses = {
   textCancel: "jutsuper-text-cancel",
 }
 /**
- * @typedef JutSuperClassesType
+ * @typedef JutSuperDomClassesType
  * @property {"jutsuper-fullscreen"} fullscreen
  * @property {"jutsuper-top-index"} topIndex
  * @property {"jutsuper-visibility-hidden"} visibilityHidden
@@ -853,7 +876,7 @@ const JutSuperClasses = {
  *   "jutsuper-text-delay" |
  *   "jutsuper-text-seconds-short" |
  *   "jutsuper-text-cancel"
- * )} JutSuperClassesKeys
+ * )} JutSuperDomClassesKeys
  */
 
 

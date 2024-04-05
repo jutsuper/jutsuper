@@ -14,7 +14,7 @@ import {
   JutSuDomClasses as jutsuClasses,
   JutSuperAssetIds as assetIds,
   JutSuperDomIds as domIds,
-  JutSuperClasses as jsuperCss,
+  JutSuperDomClasses as domClasses,
   JutSuperIpcIds as ipcIds,
   JutSuperIpcKeys as ipcKeys,
   JutSuperIpcLoadingStates as ipcLoadings,
@@ -135,7 +135,7 @@ class JutSuper {
 
       if (!isInSettingsAreaRange) {
         // hide settings area
-        thisArg.settingsArea.classList.add(jsuperCss.visibilityHidden);
+        thisArg.settingsArea.classList.add(domClasses.visibilityHidden);
       }
     });
     this.injectFullscreenChangeListener();
@@ -472,7 +472,7 @@ class JutSuper {
     };
 
     this.vjsButton = new Button(this.player, buttonOptions);
-    this.vjsButton.addClass(jsuperCss.vjsButton);
+    this.vjsButton.addClass(domClasses.vjsButton);
 
     const iconPlaceholder = this.vjsButton.el()
       .getElementsByClassName(jutsuClasses.vjcIconPlaceholder)[0];
@@ -482,14 +482,14 @@ class JutSuper {
     iconPlaceholder.style.width = "20px";
 
     this.vjsButton.on("click", function(event) {
-      thisArg.settingsArea.classList.toggle(jsuperCss.visibilityHidden);
+      thisArg.settingsArea.classList.toggle(domClasses.visibilityHidden);
     });
     this.player.on("userinactive", function(event) {
       if (event.target.player.paused()) {
         return;
       }
-      if (!thisArg.settingsArea.classList.contains(jsuperCss.visibilityHidden)) {
-        thisArg.settingsArea.classList.add(jsuperCss.visibilityHidden);
+      if (!thisArg.settingsArea.classList.contains(domClasses.visibilityHidden)) {
+        thisArg.settingsArea.classList.add(domClasses.visibilityHidden);
       }
     })
 
@@ -500,7 +500,7 @@ class JutSuper {
     player.el().getElementsByClassName(jutsuClasses.vjsThumbnailHolder)[0].style.zIndex = 2;
 
     const insertedButton = this.player.el()
-      .getElementsByClassName(jsuperCss.vjsButton)[0];
+      .getElementsByClassName(domClasses.vjsButton)[0];
 
     let anchorElement;
     const shareButtons = this.player.el()
@@ -533,21 +533,21 @@ class JutSuper {
       .getElementById(domIds.settingsRoot);
 
     this.settingsContainer.id = domIds.vjsSettingsContainer;
-    this.settingsContainer.classList.add(jsuperCss.vjsSettingsContainer);
+    this.settingsContainer.classList.add(domClasses.vjsSettingsContainer);
 
     this.settingsArea.id = domIds.vjsSettingsArea;
-    this.settingsArea.classList.add(jsuperCss.vjsSettingsAreaSized);
-    this.settingsArea.classList.add(jsuperCss.vjsSettingsArea);
-    this.settingsArea.classList.add(jsuperCss.animateBottomToTop);
-    this.settingsArea.classList.add(jsuperCss.visibilityHidden);
+    this.settingsArea.classList.add(domClasses.vjsSettingsAreaSized);
+    this.settingsArea.classList.add(domClasses.vjsSettingsArea);
+    this.settingsArea.classList.add(domClasses.animateBottomToTop);
+    this.settingsArea.classList.add(domClasses.visibilityHidden);
     this.settingsArea.style.height = "auto";
     this.settingsArea.style.maxHeight = "100%";
     this.settingsArea.style.overflowY = "auto";
     this.settingsArea.style.scrollbarWidth = "none";
 
     this.settingsClipArea.id = domIds.vjsSettingsClipArea;
-    this.settingsClipArea.classList.add(jsuperCss.vjsSettingsAreaSized);
-    this.settingsClipArea.classList.add(jsuperCss.vjsSettingsClipArea);
+    this.settingsClipArea.classList.add(domClasses.vjsSettingsAreaSized);
+    this.settingsClipArea.classList.add(domClasses.vjsSettingsClipArea);
     this.settingsClipArea.style.height = "auto";
     this.settingsClipArea.style.maxHeight = "inherit";
     this.settingsClipArea.style.overflowY = "auto";
@@ -561,12 +561,12 @@ class JutSuper {
 
     document.getElementById(domIds.vjsSettingsContainer).append(this.settingsArea);
 
-    for (const icon of document.getElementsByClassName(jsuperCss.iconDropdown)) {
+    for (const icon of document.getElementsByClassName(domClasses.iconDropdown)) {
       icon.setAttribute(
         "src", document.getElementById(assetIds.dropdownSvg).href
       )
     }
-    for (const icon of document.getElementsByClassName(jsuperCss.iconSkip)) {
+    for (const icon of document.getElementsByClassName(domClasses.iconSkip)) {
       icon.setAttribute(
         "src", document.getElementById(assetIds.skipSvg).href
       )
@@ -687,9 +687,9 @@ class JutSuper {
     // remove fullscreen styling from the player
     playerDiv.classList.remove(jutsuClasses.vjsFullscreen);
     // make the player regular size
-    playerDiv.classList.remove(jsuperCss.fullscreen);
+    playerDiv.classList.remove(domClasses.fullscreen);
     // put the player in a normal position
-    playerDiv.classList.remove(jsuperCss.topIndex);
+    playerDiv.classList.remove(domClasses.topIndex);
 
     this.player.isFullscreen(false);
     this.isCustomFullscreen = false;

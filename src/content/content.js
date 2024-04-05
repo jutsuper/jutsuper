@@ -39,10 +39,10 @@ var regexp;
 var jsuperStorage;
 
 /**
- * @typedef {import("/src/consts.js").JutSuperClasses} JutSuperClasses
- * @type {JutSuperClasses}
+ * @typedef {import("/src/consts.js").JutSuperDomClasses} JutSuperDomClasses
+ * @type {JutSuperDomClasses}
  */
-var jsuperCss;
+var domClasses;
 
 /**
  * @typedef {import("/src/consts.js").FontDescriptor} FontDescriptor
@@ -180,7 +180,7 @@ var JutSuperMessageBuilder;
   jsuperLog = logModule.jsuperLog;
   regexp = constsModule.JutSuperRegex;
   jsuperStorage = storageModule.jsuperStorage;
-  jsuperCss = constsModule.JutSuperClasses;
+  domClasses = constsModule.JutSuperDomClasses;
   defaultFonts = constsModule.JutSuperDefaultFonts;
   jutsuIds = constsModule.JutSuDomIds;
   jutsuClasses = constsModule.JutSuDomClasses;
@@ -703,9 +703,9 @@ class JutSuperContent {
         // add fullscreen styling to the player
         playerDiv.classList.add(jutsuClasses.vjsFullscreen);
         // make the player full window size
-        playerDiv.classList.add(jsuperCss.fullscreen);
+        playerDiv.classList.add(domClasses.fullscreen);
         // put the player above everything
-        playerDiv.classList.add(jsuperCss.topIndex);
+        playerDiv.classList.add(domClasses.topIndex);
 
         // inject function to be able to exit
         // this custom fullscreen mode
