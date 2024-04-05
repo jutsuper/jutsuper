@@ -1,6 +1,7 @@
 /* Global variables */
 :root {
-  --jutsuper-color-grey: rgb(150, 150, 150);
+  --jutsuper-color-gray: rgb(150, 150, 150);
+  --jutsuper-color-light-gray: rgb(200, 200, 200);
   --jutsuper-color-light-green: #BDF283;
   --jutsuper-color-dark-green: #9BC76C;
   --jutsuper-color-dark-green-half-transparent: #ACDD77;
@@ -93,6 +94,10 @@
   margin-right: 10px;
 }
 
+.jutsuper-grayscale {
+  filter: grayscale();
+}
+
 /* /// */
 /* Dev */
 /* /// */
@@ -106,10 +111,12 @@
 }
 
 .jutsuper-dev-settings-area {
+  position: absolute;
+  bottom: 0;
   background-color: white;
   clip-path: border-box;
   width: 220px;
-  height: 247px;
+  /*height: 247px;*/
   border-radius: var(--jutsuper-size-settings-border-radius);
   overflow: hidden;
   justify-content: left;
@@ -342,14 +349,17 @@
   padding: 10px;
   transition: var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
   -webkit-tap-highlight-color: transparent;
+  filter: grayscale();
 }
 
-/* Clip the tab section to hide overflows */
+/* Tab section clip to hide overflows (enabled state) */
 .jutsuper-settings-section-clip-area {
   height: 0;
   overflow: hidden;
   background-color: var(--jutsuper-color-light-green);
-  transition: var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
+  transition: all var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
+  filter: grayscale();
+  pointer-events: none;
 }
 
 /* Inner tab section area */
@@ -375,13 +385,31 @@
   box-shadow: var(--jutsuper-styling-settings-active-tab-box-shadow);
   /* Rotate the dropdown icon */
   .jutsuper-icon-dropdown {
-    transform: var(--jutsuper-styling-settings-dropdown-rotation-active)
+    transform: var(--jutsuper-styling-settings-dropdown-rotation-active);
   }
+}
+
+/* "Openings" tab styling when opened */
+#jutsuper-settings-openings-switch:checked ~ label {
+  /* Fill the tab with color green */
+  box-shadow: var(--jutsuper-styling-settings-active-tab-box-shadow);
 }
 
 /* "Openings" tab section properties when opened */
 #jutsuper-settings-openings-bar:checked ~ #jutsuper-settings-openings-section-clip {
-  height: var(--jutsuper-size-settings-openings-section-height)
+  height: var(--jutsuper-size-settings-openings-section-height);
+}
+
+/* Disable grayscale on an "Openings" tab when the switch is enabled */
+#jutsuper-settings-openings-bar-label:has(label #jutsuper-settings-openings-switch:checked) {
+  filter: none;
+}
+
+/* Disable grayscale and enable pointer events on an "Openings" section when the switch is enabled */
+#jutsuper-settings-openings-bar-label:has(label #jutsuper-settings-openings-switch:checked) +
+#jutsuper-settings-openings-section-clip {
+  filter: none;
+  pointer-events: all;
 }
 
 /* "Endings" tab styling when opened */
@@ -390,13 +418,25 @@
   box-shadow: var(--jutsuper-styling-settings-active-tab-box-shadow);
   /* Rotate the dropdown icon */
   .jutsuper-icon-dropdown {
-    transform: var(--jutsuper-styling-settings-dropdown-rotation-active)
+    transform: var(--jutsuper-styling-settings-dropdown-rotation-active);
   }
 }
 
 /* "Endings" tab section properties when opened */
 #jutsuper-settings-endings-bar:checked ~ #jutsuper-settings-endings-section-clip {
   height: var(--jutsuper-size-settings-endings-section-height)
+}
+
+/* Disable grayscale on an "Endings" tab when the switch is enabled */
+#jutsuper-settings-endings-bar-label:has(label #jutsuper-settings-endings-switch:checked) {
+  filter: none;
+}
+
+/* Disable grayscale and enable pointer events on an "Endings" section when the switch is enabled */
+#jutsuper-settings-endings-bar-label:has(label #jutsuper-settings-endings-switch:checked) +
+#jutsuper-settings-endings-section-clip {
+  filter: none;
+  pointer-events: all;
 }
 
 /* Dropdown icon in a tab */
@@ -466,7 +506,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--jutsuper-color-grey);
+  background-color: var(--jutsuper-color-gray);
   transition: var(--jutsuper-dur-fast);
   border-radius: 50px;
 }
@@ -599,7 +639,7 @@ input.jutsuper-radio:last-child[type="radio"] {
 /* Numberbox */
 /* ///////// */
 
-input.jutsuper-numberbox[type=number] {
+input.jutsuper-numberbox[type=text] {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -614,7 +654,10 @@ input.jutsuper-numberbox[type=number] {
   padding: 0;
   font-size: 0.9em;
   font-weight: bold;
+  background-position-x: center;
+  background-position-y: center;
   background-color: transparent;
+  transition: all var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
 
   &:focus {
     background-image: none;
@@ -626,6 +669,23 @@ input.jutsuper-numberbox[type=number] {
     appearance: none;
     margin: 0;
   }
+}
+
+input.jutsuper-numberbox[type=text]:invalid {
+  background-image: url("/src/assets/icon/infinity.svg");
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  color: transparent;
+}
+
+input.jutsuper-numberbox[type=text]:invalid:focus {
+  background-image: url("/src/assets/icon/infinity.svg");
+  background-repeat: no-repeat;
+  background-position-x: right;
+  background-position-y: top;
+  background-size: 8px;
+  color: inherit;
 }
 
 button.jutsuper-numberbox-button {

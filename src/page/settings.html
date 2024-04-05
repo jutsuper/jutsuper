@@ -50,15 +50,17 @@
       })();
     </script>
   </head>
-  <body class="jutsuper-dev-black-bg">
-    <div 
+  <body class="jutsuper-dev-black-bg" style="position: absolute; height: 50vh">
+    <div style="height: 50px">
+      <div 
       id="jutsuper-dev-preload-message"
       style="
         color: white;
-        margin-bottom: 20px
+        margin-bottom: 20px;
       "
-    >
-      Awaiting JavaScript...
+      >
+        Awaiting JavaScript...
+      </div>
     </div>
     <div class="jutsuper-dev-settings-area">
       <!-- Start of the area that gets injected -->
@@ -90,6 +92,7 @@
           name="jutsuper-settings-bar"
         >
         <label
+          id="jutsuper-settings-openings-bar-label"
           for="jutsuper-settings-openings-bar"
           class="jutsuper-settings-section-bar"
         >
@@ -156,14 +159,14 @@
                 >
                   <input
                     id="jutsuper-settings-openings-skip-order-first"
+                    type="radio"
+                    name="jutsuper-settings-op-skip-order"
                     class="
                       jutsuper-radio
                       jutsuper-icon-inset
                       jutsuper-icon-order-first
                       jutsuper-no-select
                     "
-                    type="radio"
-                    name="jutsuper-settings-op-skip-order"
                     style="
                       width: 100%;
                       overflow: hidden;
@@ -171,9 +174,14 @@
                   />
                   <input
                     id="jutsuper-settings-openings-skip-order-last"
-                    class="jutsuper-radio jutsuper-icon-inset jutsuper-icon-order-last jutsuper-no-select"
                     type="radio"
                     name="jutsuper-settings-op-skip-order"
+                    class="
+                      jutsuper-radio
+                      jutsuper-icon-inset
+                      jutsuper-icon-order-last
+                      jutsuper-no-select
+                    "
                     style="
                       width: 100%;
                       overflow: hidden;
@@ -193,6 +201,7 @@
           name="jutsuper-settings-bar"
         >
         <label
+          id="jutsuper-settings-endings-bar-label"
           for="jutsuper-settings-endings-bar"
           class="jutsuper-settings-section-bar"
         >
@@ -306,10 +315,12 @@
               ></button>
               <input
                 id="jutsuper-settings-endings-max-skips-field"
-                class="jutsuper-numberbox"
-                type="number"
+                type="text"
                 min="0"
-                value="3"
+                value="0"
+                pattern="^[1-9]\d*$"
+                class="jutsuper-numberbox"
+                required
               />
               <button
                 id="jutsuper-settings-endings-max-skips-positive-button"

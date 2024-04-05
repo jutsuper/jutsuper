@@ -14,12 +14,18 @@ class JutSuperSettings {
 
     this.document = doc ? doc : document;
 
+    this.numberRegex = /[0-9]+/;
+
     this.bars = this.document.getElementsByName(inputNames.settingsBar);
     this.opSkipSwitch = this.document.getElementById(domIds.settingsOpeningsSwitch);
+    this.opSectionBar = this.document.getElementById("jutsuper-settings-openings-bar-label");
+    this.opClipSection = this.document.getElementById("jutsuper-settings-openings-section-clip");
     this.opSkipOrderSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderSelector);
     this.opSkipOrderFirstSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderFirst);
     this.opSkipOrderLastSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderLast);
     this.edSkipSwitch = this.document.getElementById(domIds.settingsEndingsSwitch);
+    this.edSectionBar = this.document.getElementById("jutsuper-settings-endings-bar-label");
+    this.edClipSection = this.document.getElementById("jutsuper-settings-endings-section-clip");
     this.edSkipOrderSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderSelector);
     this.edSkipOrderFirstSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderFirst);
     this.edSkipOrderLastSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderLast);
@@ -47,14 +53,15 @@ class JutSuperSettings {
 
     this.bars.forEach(bar => bar.addEventListener("change", event => thisArg.closeOtherBars(event.target)))
 
-    this.opSkipSwitch.addEventListener("change", this.onOpeningsSwitchChange);
+    this.opSkipSwitch.addEventListener("change", event => this.onOpeningsSwitchChange(event));
     this.opSkipOrderSelector.addEventListener("change", this.onOpeningsSkipOrderChange);
-    this.edSkipSwitch.addEventListener("change", this.onEndingsSwitchChange);
+    this.edSkipSwitch.addEventListener("change", event => this.onEndingsSwitchChange(event));
     this.edSkipOrderSelector.addEventListener("change", this.onEndingsSkipOrderChange);
     this.edSkipMaxNegativeButton.addEventListener("click", event => thisArg.onEndingsSkipMaxNegative(event));
     this.edSkipMaxPositiveButton.addEventListener("click", event => thisArg.onEndingsSkipMaxPositive(event));
     this.edSkipMaxField.addEventListener("click", event => thisArg.onEndingsSkipMaxFieldClick(event));
-    this.edSkipMaxField.addEventListener("input", this.onEndingsSkipMaxFieldChange());
+    this.edSkipMaxField.addEventListener("input", event => this.onEndingsSkipMaxFieldInput(event));
+    this.edSkipMaxField.addEventListener("keydown", event => this.onEndingsSkipMaxFieldKeydown(event));
     this.edFullscreenSwitch.addEventListener("change", this.onEndingsFullscreenSliderChange);
     this.delaySlider.addEventListener("input", event => thisArg.onDelayChange(event));
     this.cancelKeyListener.addEventListener("click", event => thisArg.onCancelRecorderClick(event));
@@ -100,8 +107,24 @@ class JutSuperSettings {
    * @param {Event} event 
    */
   onOpeningsSwitchChange(event) {
-    const state = event.target.checked
-    console.log("skipOpenings =", state)
+    const state = event.target.checked;
+
+    if (state === true) {
+      /** 
+      this.opSectionBar.classList.remove("jutsuper-grayscale");
+      this.opClipSection.classList.remove("jutsuper-grayscale");
+      this.opClipSection.classList.remove("jutsuper-no-pointer-events");
+      */
+    }
+    else {
+      /** 
+      this.opSectionBar.classList.add("jutsuper-grayscale");
+      this.opClipSection.classList.add("jutsuper-grayscale");
+      this.opClipSection.classList.add("jutsuper-no-pointer-events");
+      */
+    }
+
+    console.log("skipOpenings =", state);
   }
 
   /**
@@ -137,8 +160,24 @@ class JutSuperSettings {
    * @param {Event} event 
    */
   onEndingsSwitchChange(event) {
-    const state = event.target.checked
-    console.log("skipEndings =", state)
+    const state = event.target.checked;
+
+    if (state === true) {
+      /** 
+      this.edSectionBar.classList.remove("jutsuper-grayscale");
+      this.edClipSection.classList.remove("jutsuper-grayscale");
+      this.edClipSection.classList.remove("jutsuper-no-pointer-events");
+      */
+    }
+    else {
+      /** 
+      this.edSectionBar.classList.add("jutsuper-grayscale");
+      this.edClipSection.classList.add("jutsuper-grayscale");
+      this.edClipSection.classList.add("jutsuper-no-pointer-events");
+      */
+    }
+
+    console.log("skipEndings =", state);
   }
 
   /**
@@ -163,18 +202,21 @@ class JutSuperSettings {
    * @param {Event} event 
    */
   onEndingsSkipMaxNegative(event) {
-    if (this.edSkipMaxField.valueAsNumber < 1) {
+    const value = new Number(this.edSkipMaxField.value).valueOf();
+
+    if (value < 1) {
       return;
     }
 
-    if (Number.isNaN(this.edSkipMaxField.valueAsNumber)) {
-      this.edSkipMaxField.valueAsNumber = 0;
+    if (Number.isNaN(value)) {
+      this.edSkipMaxField.value = "0";
       return;
     }
 
-    this.edSkipMaxField.valueAsNumber -= 1;
+    this.edSkipMaxField.value = `${value - 1}`;
 
-    if (this.edSkipMaxField.valueAsNumber === 0) {
+    /**
+    if (value === 0) {
       this.edSkipMaxField.classList.add("jutsuper-hide-text");
       this.edSkipMaxField.classList.add("jutsuper-no-select");
       this.edSkipMaxField.classList.add("jutsuper-icon-infinity");
@@ -184,20 +226,26 @@ class JutSuperSettings {
       this.edSkipMaxField.classList.remove("jutsuper-no-select");
       this.edSkipMaxField.classList.remove("jutsuper-icon-infinity");
     }
+    */
+
+    console.log(this.edSkipMaxField.value);
   }
 
   /**
    * @param {Event} event 
    */
   onEndingsSkipMaxPositive(event) {
-    if (Number.isNaN(this.edSkipMaxField.valueAsNumber)) {
-      this.edSkipMaxField.valueAsNumber = 1;
+    const value = new Number(this.edSkipMaxField.value).valueOf();
+
+    if (Number.isNaN(value)) {
+      this.edSkipMaxField.value = "1";
       return;
     }
 
-    this.edSkipMaxField.valueAsNumber += 1;
+    this.edSkipMaxField.value = `${value + 1}`;
 
-    if (this.edSkipMaxField.valueAsNumber === 0) {
+    /** 
+    if (value === 0) {
       this.edSkipMaxField.classList.add("jutsuper-hide-text");
       this.edSkipMaxField.classList.add("jutsuper-no-select");
       this.edSkipMaxField.classList.add("jutsuper-icon-infinity");
@@ -207,6 +255,9 @@ class JutSuperSettings {
       this.edSkipMaxField.classList.remove("jutsuper-no-select");
       this.edSkipMaxField.classList.remove("jutsuper-icon-infinity");
     }
+    */
+
+    console.log(this.edSkipMaxField.value);
   }
 
   /**
@@ -218,12 +269,32 @@ class JutSuperSettings {
     }
   }
 
-  onEndingsSkipMaxFieldChange() {
-    console.log("onEndingsSkipMaxFieldChange")
-    if (this.edSkipMaxField.valueAsNumber > 0) {
-      this.edSkipMaxField.classList.remove("jutsuper-hide-text");
-      this.edSkipMaxField.classList.remove("jutsuper-no-select");
-      this.edSkipMaxField.classList.remove("jutsuper-icon-infinity");
+  /**
+   * @param {Event} event 
+   */
+  onEndingsSkipMaxFieldInput(event) {
+    /** @type {string} */
+    let stringValue = this.edSkipMaxField.value;
+
+    while (stringValue.startsWith("0")) {
+      stringValue = stringValue.slice(1);
+    }
+
+    let numberMatches = stringValue.match(this.numberRegex);
+
+    if (!numberMatches || numberMatches.length < 1) {
+      this.edSkipMaxField.value = "0"
+    } else {
+      this.edSkipMaxField.value = numberMatches[0]
+    }
+  }
+
+  /**
+   * @param {KeyboardEvent} event 
+   */
+  onEndingsSkipMaxFieldKeydown(event) {
+    if (event.key === "Enter") {
+      this.edSkipMaxField.blur();
     }
   }
 
