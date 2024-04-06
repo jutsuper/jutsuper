@@ -157,6 +157,10 @@ class JutSuperSettingsPopup {
       case skipOrder.lastOccurrence:
         this.opSkipOrderLastSelector.checked = true;
         break
+      case null:
+        this.opSkipOrderFirstSelector.checked = false;
+        this.opSkipOrderLastSelector.checked = false;
+        break
     }
   }
 
@@ -197,6 +201,10 @@ class JutSuperSettingsPopup {
         break;
       case skipOrder.lastOccurrence:
         this.edSkipOrderLastSelector.checked = true;
+        break
+      case null:
+        this.edSkipOrderFirstSelector.checked = false;
+        this.edSkipOrderLastSelector.checked = false;
         break
     }
   }
