@@ -18,7 +18,7 @@ export {
  * @typedef JutSuperSettingsObject
  * @property {JutSuperSettingsOpeningsObject} openings
  * @property {JutSuperSettingsEndingsObject} endings
- * @property {number} skipDelayMs
+ * @property {number} skipDelayS
  * @property {string} skipCancelKey
  */
 
@@ -65,7 +65,7 @@ class JutSuperSettings {
         doPersistFullscreen: true,
         maxSkips: 0
       },
-      skipDelayMs: 3000,
+      skipDelayS: 3,
       skipCancelKey: "Shift"
     }
   }
@@ -143,7 +143,7 @@ class JutSuperSettings {
    * @returns {void}
    */
   setSkipDelayMs(value) {
-    this.#object.skipDelayMs = value;
+    this.#object.skipDelayS = value;
   }
 
   /**

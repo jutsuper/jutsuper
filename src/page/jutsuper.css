@@ -371,6 +371,9 @@
 /* Section area that does not belong to a tab */
 .jutsuper-settings-outer-section-area {
   padding: 15px;
+  filter: grayscale();
+  pointer-events: none;
+  transition: all var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end)
 }
 
 /* Styling for a tab when hovering */
@@ -435,6 +438,19 @@
 /* Disable grayscale and enable pointer events on an "Endings" section when the switch is enabled */
 #jutsuper-settings-endings-bar-label:has(label #jutsuper-settings-endings-switch:checked) +
 #jutsuper-settings-endings-section-clip {
+  filter: none;
+  pointer-events: all;
+}
+
+#jutsuper-settings-root:has(
+  #jutsuper-settings-openings-bar-label
+  .jutsuper-slider-switch
+  #jutsuper-settings-openings-switch:checked,
+
+  #jutsuper-settings-endings-bar-label
+  .jutsuper-slider-switch
+  #jutsuper-settings-endings-switch:checked
+) .jutsuper-settings-outer-section-area {
   filter: none;
   pointer-events: all;
 }
@@ -571,6 +587,11 @@ input.jutsuper-range[type=range] {
   }
 }
 
+#jutsuper-settings-shared-area:has(input.jutsuper-range[type=range][value="0"]) #jutsuper-settings-cancel-key-listener {
+  filter: grayscale();
+  pointer-events: none;
+}
+
 /* ///////////// */
 /* Radio buttons */
 /* ///////////// */
@@ -633,6 +654,7 @@ input.jutsuper-radio:last-child[type="radio"] {
   cursor: pointer;
   border: none;
   padding: 0;
+  transition: all var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
 }
 
 /* ///////// */

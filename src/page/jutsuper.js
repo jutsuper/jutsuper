@@ -22,7 +22,7 @@ import {
   JutSuperIpcBoolRequestStates as ipcBoolRequests
 } from "/src/consts.js";
 import {
-  JutSuperSettings
+  JutSuperSettingsPopup
 } from "/src/page/settings.js";
 
 
@@ -572,7 +572,7 @@ class JutSuper {
       )
     }
 
-    this.settingsPopup = new JutSuperSettings(document);
+    this.settingsPopup = new JutSuperSettingsPopup(document);
   }
 
   /**

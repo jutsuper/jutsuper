@@ -2,10 +2,16 @@ import { jsuperUtil as util } from "/src/util.js";
 import { JutSuperDomClasses as domClasses } from "/src/consts.js";
 import { JutSuperDomIds as domIds } from "/src/consts.js";
 import { JutSuperInputNames as inputNames } from "/src/consts.js";
-export { JutSuperSettings };
+import { JutSuperSettingsSkipOrder as skipOrder } from "/src/settings.js";
+export { JutSuperSettingsPopup };
 
 
-class JutSuperSettings {
+/**
+ * @typedef {import("/src/settings.js").JutSuperSettingsObject} JutSuperSettingsObject
+ * @typedef {import("/src/settings.js").JutSuperSettingsSkipOrderKeys} JutSuperSettingsSkipOrderKeys
+ */
+
+class JutSuperSettingsPopup {
   /**
    * @param {Document} doc 
    */
@@ -59,7 +65,6 @@ class JutSuperSettings {
     this.edSkipOrderSelector.addEventListener("change", this.onEndingsSkipOrderChange);
     this.edSkipMaxNegativeButton.addEventListener("click", event => thisArg.onEndingsSkipMaxNegative(event));
     this.edSkipMaxPositiveButton.addEventListener("click", event => thisArg.onEndingsSkipMaxPositive(event));
-    this.edSkipMaxField.addEventListener("click", event => thisArg.onEndingsSkipMaxFieldClick(event));
     this.edSkipMaxField.addEventListener("input", event => this.onEndingsSkipMaxFieldInput(event));
     this.edSkipMaxField.addEventListener("keydown", event => this.onEndingsSkipMaxFieldKeydown(event));
     this.edFullscreenSwitch.addEventListener("change", this.onEndingsFullscreenSliderChange);
@@ -84,6 +89,21 @@ class JutSuperSettings {
       const preloadMessage = this.document.getElementById(domIds.devPreloadMessage);
       preloadMessage.classList.add(domClasses.devHidden);
     }
+  }
+
+  /**
+   * # Set parameters according to the object
+   * @param {JutSuperSettingsObject} obj
+   */
+  setFromObject(obj) {
+    this.setDoSkipOpenings(obj.openings.doSkip);
+    this.setOpeningsSkipOrder(obj.openings.skipOrder);
+    this.setDoSkipEndings(obj.endings.doSkip);
+    this.setEndingsSkipOrder(obj.endings.skipOrder);
+    this.setEndingsSkipMax(obj.endings.maxSkips);
+    this.setEndingsPersistFullscreen(obj.endings.doPersistFullscreen);
+    this.setDelay(obj.skipDelayS);
+    this.setCancelKey(obj.skipCancelKey);
   }
 
   /**
@@ -118,19 +138,23 @@ class JutSuperSettings {
     this.opSkipSwitch.checked = value;
   }
 
+  /////////////////////////
+  // Openings skip order //
+  /////////////////////////
+
   onOpeningsSkipOrderChange() {
     
   }
 
   /**
-   * @param {boolean} value 
+   * @param {JutSuperSettingsSkipOrderKeys} value 
    */
   setOpeningsSkipOrder(value) {
     switch (value) {
-      case "first":
+      case skipOrder.firstOccurrence:
         this.opSkipOrderFirstSelector.checked = true;
         break;
-      case "last":
+      case skipOrder.lastOccurrence:
         this.opSkipOrderLastSelector.checked = true;
         break
     }
@@ -155,9 +179,31 @@ class JutSuperSettings {
     this.edSkipSwitch.checked = value;
   }
 
+  ////////////////////////
+  // Endings skip order //
+  ////////////////////////
+
   onEndingsSkipOrderChange() {
     
   }
+
+  /**
+   * @param {JutSuperSettingsSkipOrderKeys} value 
+   */
+  setEndingsSkipOrder(value) {
+    switch (value) {
+      case skipOrder.firstOccurrence:
+        this.edSkipOrderFirstSelector.checked = true;
+        break;
+      case skipOrder.lastOccurrence:
+        this.edSkipOrderLastSelector.checked = true;
+        break
+    }
+  }
+
+  ///////////////////////
+  // Endings max skips //
+  ///////////////////////
 
   /**
    * @param {number | string} value 
@@ -224,15 +270,6 @@ class JutSuperSettings {
   /**
    * @param {Event} event 
    */
-  onEndingsSkipMaxFieldClick(event) {
-    if (this.edSkipMaxField.valueAsNumber === 0) {
-      this.edSkipMaxField.valueAsNumber = NaN;
-    }
-  }
-
-  /**
-   * @param {Event} event 
-   */
   onEndingsSkipMaxFieldInput(event) {
     /** @type {string} */
     let stringValue = this.edSkipMaxField.value;
@@ -259,23 +296,13 @@ class JutSuperSettings {
     }
   }
 
-  /**
-   * @param {boolean} value 
-   */
-  setEndingsSkipOrder(value) {
-    switch (value) {
-      case "first":
-        this.edSkipOrderFirstSelector.checked = true;
-        break;
-      case "last":
-        this.edSkipOrderLastSelector.checked = true;
-        break
-    }
-  }
-
   onEndingsFullscreenSliderChange() {
     
   }
+
+  ////////////////////////////////
+  // Endings persist fullscreen //
+  ////////////////////////////////
 
   /**
    * @param {boolean} value 
@@ -284,9 +311,9 @@ class JutSuperSettings {
     this.edFullscreenSwitch.checked = value;
   }
 
-  ////////////
-  // Shared //
-  ////////////
+  ///////////////////////
+  // Shared skip delay //
+  ///////////////////////
 
   /**
    * @param {Event | number} event 
@@ -294,9 +321,11 @@ class JutSuperSettings {
   onDelayChange(event) {
     if (typeof event === "number" || typeof event === "string") {
       this.delayNum.innerText = event;
+      this.delaySlider.setAttribute("value", `${event}`);
     }
     else {
       this.delayNum.innerText = event.target.value;
+      this.delaySlider.setAttribute("value", `${event.target.value}`);
     }
     
     this.delayNum.classList.add(domClasses.displayHidden);
@@ -309,6 +338,10 @@ class JutSuperSettings {
     this.delaySlider.value = value;
     this.onDelayChange(value);
   }
+
+  //////////////////////////
+  // Shared cancel button //
+  //////////////////////////
 
   /**
    * @param {Event} event 
@@ -328,5 +361,5 @@ class JutSuperSettings {
 }
 
 if (window.JUTSUPER_DEBUG) {
-  window.jsuperSettings = new JutSuperSettings(document);
+  window.jsuperSettings = new JutSuperSettingsPopup(document);
 }
