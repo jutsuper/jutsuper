@@ -297,12 +297,7 @@ class JutSuperContent {
     this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
     this.injectDocument(head, this.urlSettingsHtml, assetIds.settingsHtml);
 
-    this.listenSettingsChange();
-    this.listenEssentialsLoadState();
-    this.listenFullscreenChange();
-    this.listenFullscreenControl();
-    this.listenEpisodeSwitchPrepStates();
-    this.listenWindowStatesRequests();
+    this.asyncInit();
   }
 
   /////////////////////////////
@@ -408,6 +403,18 @@ class JutSuperContent {
     node.appendChild(elm);
   }
 
+  async asyncInit() {
+    this.loadSettingsStorage();
+    this.loadTransitionStorage();
+
+    this.listenSettingsChange();
+    this.listenEssentialsLoadState();
+    this.listenFullscreenChange();
+    this.listenFullscreenControl();
+    this.listenEpisodeSwitchPrepStates();
+    this.listenWindowStatesRequests();
+  }
+
   ////////////////////////////
   // Settings change listen //
   ////////////////////////////
@@ -504,7 +511,6 @@ class JutSuperContent {
   }
 
   async handleEssentialsLoaded() {
-    await this.loadSettingsStorage();
     this.sendSettings();
     await this.loadTransitionStorageAndClear();
   }

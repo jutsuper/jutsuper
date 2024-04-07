@@ -11,7 +11,10 @@ import {
   JutSuperIpcBuilder,
   JutSuperIpcRecvParamsBuilder
 } from "/src/ipc.js";
-import { JutSuperSettingsSkipOrder as skipOrder } from "/src/settings.js";
+import {
+  JutSuperSettings,
+  JutSuperSettingsSkipOrder as skipOrder
+} from "/src/settings.js";
 import { jsuperUtil as util } from "/src/util.js";
 export { JutSuperSettingsPopup };
 
@@ -106,6 +109,10 @@ class JutSuperSettingsPopup {
       }
     });
 
+    window.jsuperSettings = new JutSuperSettings().setUndefined().get();
+    /** @type {JutSuperSettingsObject} */
+    this.exposedSettings = window.jsuperSettings;
+
     if (!window.JUTSUPER_DEBUG) {
       /** @type {JutSuperIpc} */
       this.ipc = new JutSuperIpcBuilder()
@@ -121,21 +128,6 @@ class JutSuperSettingsPopup {
       const preloadMessage = this.document.getElementById(domIds.devPreloadMessage);
       preloadMessage.classList.add(domClasses.devHidden);
     }
-  }
-
-  /**
-   * # Set parameters according to the object
-   * @param {JutSuperSettingsObject} obj
-   */
-  setFromObject(obj) {
-    this.setDoSkipOpenings(obj.openings.doSkip);
-    this.setOpeningsSkipOrder(obj.openings.skipOrder);
-    this.setDoSkipEndings(obj.endings.doSkip);
-    this.setEndingsSkipOrder(obj.endings.skipOrder);
-    this.setEndingsSkipMax(obj.endings.maxSkips);
-    this.setEndingsPersistFullscreen(obj.endings.doPersistFullscreen);
-    this.setDelay(obj.skipDelayS);
-    this.setCancelKey(obj.skipCancelKey);
   }
 
   /**
@@ -159,6 +151,8 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onOpeningsSwitchChange(event) {
+    this.exposedSettings.openings.doSkip = event.target.checked;
+
     if (!window.JUTSUPER_DEBUG) {
       this.ipc.send({
         key: ipcSettingsKeys.openingsDoSkip,
@@ -171,7 +165,7 @@ class JutSuperSettingsPopup {
    * @param {boolean} value 
    */
   setDoSkipOpenings(value) {
-    console.log("setDoSkipOpenings.this", this);
+    this.exposedSettings.openings.doSkip = value;
     this.opSkipSwitch.checked = value;
   }
 
@@ -183,6 +177,8 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onOpeningsSkipOrderChange(event) {
+    this.exposedSettings.openings.skipOrder = this.getSelectedOpeningsSkipOrder();
+
     if (!window.JUTSUPER_DEBUG) {
       this.ipc.send({
         key: ipcSettingsKeys.openingsSkipOrder,
@@ -195,6 +191,8 @@ class JutSuperSettingsPopup {
    * @param {JutSuperSettingsSkipOrderKeys} value 
    */
   setOpeningsSkipOrder(value) {
+    this.exposedSettings.openings.skipOrder = value;
+
     switch (value) {
       case skipOrder.firstOccurrence:
         this.opSkipOrderFirstSelector.checked = true;
@@ -226,6 +224,8 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onEndingsSwitchChange(event) {
+    this.exposedSettings.endings.doSkip = event.target.checked;
+
     if (!window.JUTSUPER_DEBUG) {
       this.ipc.send({
         key: ipcSettingsKeys.endingsDoSkip,
@@ -238,6 +238,7 @@ class JutSuperSettingsPopup {
    * @param {boolean} value 
    */
   setDoSkipEndings(value) {
+    this.exposedSettings.endings.doSkip = value;
     this.edSkipSwitch.checked = value;
   }
 
@@ -248,7 +249,9 @@ class JutSuperSettingsPopup {
   /**
    * @param {Event} event 
    */
-  onEndingsSkipOrderChange() {
+  onEndingsSkipOrderChange(event) {
+    this.exposedSettings.endings.skipOrder = this.getSelectedEndingsSkipOrder();
+
     if (!window.JUTSUPER_DEBUG) {
       this.ipc.send({
         key: ipcSettingsKeys.openingsSkipOrder,
@@ -261,6 +264,8 @@ class JutSuperSettingsPopup {
    * @param {JutSuperSettingsSkipOrderKeys} value 
    */
   setEndingsSkipOrder(value) {
+    this.exposedSettings.endings.skipOrder = value;
+
     switch (value) {
       case skipOrder.firstOccurrence:
         this.edSkipOrderFirstSelector.checked = true;
@@ -292,6 +297,8 @@ class JutSuperSettingsPopup {
    * @param {number} value 
    */
   onEndingsSkipMaxChange(value) {
+    this.exposedSettings.endings.maxSkips = value;
+
     if (!window.JUTSUPER_DEBUG) {
       this.ipc.send({
         key: ipcSettingsKeys.endingsMaxSkips,
@@ -414,6 +421,8 @@ class JutSuperSettingsPopup {
    * @param {Event} event
    */
   onEndingsFullscreenSliderChange(event) {
+    this.exposedSettings.endings.doPersistFullscreen = event.target.checked;
+
     if (!window.JUTSUPER_DEBUG) {
       this.ipc.send({
         key: ipcSettingsKeys.endingsDoPersistFullscreen,
@@ -426,6 +435,7 @@ class JutSuperSettingsPopup {
    * @param {boolean} value 
    */
   setEndingsPersistFullscreen(value) {
+    this.exposedSettings.endings.doPersistFullscreen = value;
     this.edFullscreenSwitch.checked = value;
   }
 
@@ -434,7 +444,7 @@ class JutSuperSettingsPopup {
   ///////////////////////
 
   /**
-   * @param {Event | number} event 
+   * @param {Event | number | string} event 
    */
   onDelayChange(event) {
     if (["undefined", "null"].includes(typeof event)) {
@@ -465,6 +475,7 @@ class JutSuperSettingsPopup {
       
       const thisArg = this;
       this.delaySliderTimeoutId = setTimeout(function() {
+        thisArg.exposedSettings.skipDelayS = newValue;
         thisArg.ipc.send({
           key: ipcSettingsKeys.skipDelayS,
           value: newValue
@@ -511,6 +522,7 @@ class JutSuperSettingsPopup {
     const keyLabel = util.getKeyLabelFromRawLabel(event.key);
 
     if (!window.JUTSUPER_DEBUG) {
+      this.exposedSettings.skipCancelKey = keyLabel;
       this.ipc.send({
         key: ipcSettingsKeys.skipCancelKey,
         value: keyLabel
@@ -527,6 +539,7 @@ class JutSuperSettingsPopup {
    * @param {string} value 
    */
   setCancelKey(value) {
+    this.exposedSettings.skipCancelKey = util.getKeyLabelFromRawLabel(value);
     this.cancelKeyListener.value = util.getKeyLabelFromRawLabel(value);
   }
 
