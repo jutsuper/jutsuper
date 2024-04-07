@@ -69,6 +69,7 @@ class JutSuperSettingsPopup {
     this.edFullscreenSwitch = this.document.getElementById(domIds.settingsEndingsFullscreenSwitch);
     /** @type {HTMLInputElement} */
     this.delaySlider = this.document.getElementById(domIds.settingsDelaySlider);
+    this.delaySliderTimeoutId = undefined;
     /** @type {HTMLDivElement} */
     this.delayNum = this.document.getElementById(domIds.settingsDelayNum);
     /** @type {HTMLInputElement} */
@@ -454,10 +455,21 @@ class JutSuperSettingsPopup {
     }
     
     if (!window.JUTSUPER_DEBUG) {
-      this.ipc.send({
-        key: ipcSettingsKeys.skipDelayS,
-        value: newValue
-      });
+      // send this setting to backend with a delay
+      // of 0.5s, because user may play with the slider
+      // really quickly, which will impact performance
+      // if sending immediately
+      if (typeof this.delaySliderTimeoutId !== "undefined") {
+        clearTimeout(this.delaySliderTimeoutId);
+      }
+      
+      const thisArg = this;
+      this.delaySliderTimeoutId = setTimeout(function() {
+        thisArg.ipc.send({
+          key: ipcSettingsKeys.skipDelayS,
+          value: newValue
+        });
+      }, 500);
     }
 
     this.delayNum.classList.add(domClasses.displayHidden);

@@ -425,27 +425,35 @@ class JutSuperContent {
       try {
         switch (evt.key) {
           case ipcSettingsKeys.openingsDoSkip:
+            if (this.settings.get().openings.doSkip === evt.value) { continue }
             this.settings.setDoSkipOpenings(evt.value);
             break;
           case ipcSettingsKeys.openingsSkipOrder:
+            if (this.settings.get().openings.skipOrder === evt.value) { continue }
             this.settings.setOpeningsSkipOrder(evt.value);
             break;
           case ipcSettingsKeys.endingsDoSkip:
+            if (this.settings.get().endings.doSkip === evt.value) { continue }
             this.settings.setDoSkipEndings(evt.value);
             break;
           case ipcSettingsKeys.endingsSkipOrder:
+            if (this.settings.get().endings.skipOrder === evt.value) { continue }
             this.settings.setEndingsSkipOrder(evt.value);
             break;
           case ipcSettingsKeys.endingsMaxSkips:
+            if (this.settings.get().endings.maxSkips === evt.value) { continue }
             this.settings.setEndingsMaxSkips(evt.value);
             break;
           case ipcSettingsKeys.endingsDoPersistFullscreen:
+            if (this.settings.get().endings.doPersistFullscreen === evt.value) { continue }
             this.settings.setEndingsPersistFullscreen(evt.value);
             break;
           case ipcSettingsKeys.skipDelayS:
+            if (this.settings.get().skipDelayS === evt.value) { continue }
             this.settings.setSkipDelayS(evt.value);
             break;
           case ipcSettingsKeys.skipCancelKey:
+            if (this.settings.get().skipCancelKey === evt.value) { continue }
             this.settings.setSkipCancelKey(evt.value);
             break;
           default:
