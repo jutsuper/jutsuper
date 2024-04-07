@@ -76,6 +76,12 @@ var ipcDefaultNodeProps;
 var ipcKeys;
 
 /**
+ * @typedef {import("/src/consts.js").JutSuperIpcSettingsKeys} JutSuperIpcSettingsKeys
+ * @type {JutSuperIpcSettingsKeys}
+ */
+var ipcSettingsKeys;
+
+/**
  * @typedef {import("/src/consts.js").JutSuperIpcAwaitStates} JutSuperIpcAwaitStates
  * @type {JutSuperIpcAwaitStates}
  */
@@ -202,6 +208,7 @@ var JutSuperSettings;
   ipcIds = constsModule.JutSuperIpcIds;
   ipcDefaultNodeProps = constsModule.JutSuperIpcDefaultNodeProps;
   ipcKeys = constsModule.JutSuperIpcKeys;
+  ipcSettingsKeys = constsModule.JutSuperIpcSettingsKeys;
   ipcAwaits = constsModule.JutSuperIpcAwaitStates;
   ipcBoolRequests = constsModule.JutSuperIpcBoolRequestStates;
   ipcLoadingStates = constsModule.JutSuperIpcLoadingStates;
@@ -249,7 +256,6 @@ class JutSuperContent {
       .createCommunicationNode()
       .identifyAs(ipcIds.content)
       .build();
-    
     /** @type {JutSuperIpc} */
     this.settingsIpc = new JutSuperIpcBuilder()
       .createCommunicationNode()
@@ -434,6 +440,8 @@ class JutSuperContent {
   }
 
   async handleEssentialsLoaded() {
+    await this.loadSettingsStorage();
+    this.sendSettings();
     await this.loadTransitionStorageAndClear();
   }
 
@@ -775,10 +783,11 @@ class JutSuperContent {
     let transition = await jsuperStorage.getTransition();
 
     if (transition === undefined) {
-      transition = {}
+      this.transition.setUndefined();
     }
-
-    this.transition.set(transition);
+    else {
+      this.transition.set(transition)
+    }
   }
 
   /**
@@ -806,10 +815,12 @@ class JutSuperContent {
     let settings = await jsuperStorage.getSettings();
 
     if (settings === undefined) {
-      settings = {}
+      this.settings.setDefaults();
+      await jsuperStorage.setSettings(this.settings.get());
     }
-
-    this.settings.set(settings);
+    else {
+      this.settings.set(settings)
+    }
   }
 
   requestPlay() {
@@ -820,7 +831,38 @@ class JutSuperContent {
   }
 
   sendSettings() {
-    
+    this.settingsIpc.send({
+      key: ipcSettingsKeys.openingsDoSkip,
+      value: this.settings.get().openings.doSkip
+    });
+    this.settingsIpc.send({
+      key: ipcSettingsKeys.openingsSkipOrder,
+      value: this.settings.get().openings.skipOrder
+    });
+    this.settingsIpc.send({
+      key: ipcSettingsKeys.endingsDoSkip,
+      value: this.settings.get().endings.doSkip
+    });
+    this.settingsIpc.send({
+      key: ipcSettingsKeys.endingsSkipOrder,
+      value: this.settings.get().endings.skipOrder
+    });
+    this.settingsIpc.send({
+      key: ipcSettingsKeys.endingsMaxSkips,
+      value: this.settings.get().endings.maxSkips
+    });
+    this.settingsIpc.send({
+      key: ipcSettingsKeys.endingsDoPersistFullscreen,
+      value: this.settings.get().endings.doPersistFullscreen
+    });
+    this.settingsIpc.send({
+      key: ipcSettingsKeys.skipDelayS,
+      value: this.settings.get().skipDelayS
+    });
+    this.settingsIpc.send({
+      key: ipcSettingsKeys.skipCancelKey,
+      value: this.settings.get().skipCancelKey
+    });
   }
 
   /**

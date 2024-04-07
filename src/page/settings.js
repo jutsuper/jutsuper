@@ -1,8 +1,18 @@
-import { jsuperUtil as util } from "/src/util.js";
-import { JutSuperDomClasses as domClasses } from "/src/consts.js";
-import { JutSuperDomIds as domIds } from "/src/consts.js";
-import { JutSuperInputNames as inputNames } from "/src/consts.js";
+import {
+  JutSuperDomClasses as domClasses,
+  JutSuperDomIds as domIds,
+  JutSuperInputNames as inputNames,
+  JutSuperIpcDefaultNodeProps as ipcDefaultNodeProps,
+  JutSuperIpcIds as ipcIds,
+  JutSuperIpcSettingsKeys as ipcSettingsKeys
+} from "/src/consts.js";
+import {
+  JutSuperIpc,
+  JutSuperIpcBuilder,
+  JutSuperIpcRecvParamsBuilder
+} from "/src/ipc.js";
 import { JutSuperSettingsSkipOrder as skipOrder } from "/src/settings.js";
+import { jsuperUtil as util } from "/src/util.js";
 export { JutSuperSettingsPopup };
 
 
@@ -16,6 +26,7 @@ class JutSuperSettingsPopup {
    * @param {Document} doc 
    */
   constructor(doc) {
+    this.LOCATION = JutSuperSettingsPopup.name;
     const thisArg = this;
 
     this.document = doc ? doc : document;
@@ -105,6 +116,16 @@ class JutSuperSettingsPopup {
       }
     });
 
+    if (!window.JUTSUPER_DEBUG) {
+      /** @type {JutSuperIpc} */
+      this.ipc = new JutSuperIpcBuilder()
+        .communicationNodeTagIs(ipcDefaultNodeProps.settingsTag)
+        .communicationNodeIdIs(ipcDefaultNodeProps.settingsId)
+        .identifyAs(ipcIds.page)
+        .build();
+      this.listenIpcChanges(true);
+    }
+
     // if in dev environment, hide the preload message
     if (window.JUTSUPER_DEBUG) {
       const preloadMessage = this.document.getElementById(domIds.devPreloadMessage);
@@ -155,6 +176,7 @@ class JutSuperSettingsPopup {
    * @param {boolean} value 
    */
   setDoSkipOpenings(value) {
+    console.log("setDoSkipOpenings.this", this);
     this.opSkipSwitch.checked = value;
   }
 
@@ -361,8 +383,12 @@ class JutSuperSettingsPopup {
     }, 1);
   }
 
+  /**
+   * 
+   * @param {number | string} value 
+   */
   setDelay(value) {
-    this.delaySlider.value = value;
+    this.delaySlider.value = value.toString();
     this.onDelayChange(value);
   }
 
@@ -384,6 +410,74 @@ class JutSuperSettingsPopup {
    */
   setCancelKey(value) {
     this.cancelKeyListener.value = util.getKeyLabelFromRawLabel(value);
+  }
+
+  /////////////////////////
+  // IPC change listener //
+  /////////////////////////
+
+  /**
+   * @param {boolean} doReadInitial
+   * @returns {Promise<never>}
+   */
+  async listenIpcChanges(doReadInitial) {
+    if (doReadInitial) {
+      this.loadInitialIpcSettings();
+    }
+
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .build();
+    
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt);
+
+      try {
+        switch (evt.key) {
+          case ipcSettingsKeys.openingsDoSkip:
+            this.setDoSkipOpenings(evt.value);
+            break;
+          case ipcSettingsKeys.openingsSkipOrder:
+            this.setOpeningsSkipOrder(evt.value);
+            break;
+          case ipcSettingsKeys.endingsDoSkip:
+            this.setDoSkipEndings(evt.value);
+            break;
+          case ipcSettingsKeys.endingsSkipOrder:
+            this.setEndingsSkipOrder(evt.value);
+            break;
+          case ipcSettingsKeys.endingsMaxSkips:
+            this.setEndingsSkipMax(evt.value);
+            break;
+          case ipcSettingsKeys.endingsDoPersistFullscreen:
+            this.setEndingsPersistFullscreen(evt.value);
+            break;
+          case ipcSettingsKeys.skipDelayS:
+            this.setDelay(evt.value);
+            break;
+          case ipcSettingsKeys.skipCancelKey:
+            this.setCancelKey(evt.value);
+            break;
+          default:
+            throw jsuperErrors.unhandledCaseError({
+              location: this.LOCATION,
+              target: `${evt.key}=${evt.value}`
+            });
+        }
+      } catch (e) {
+        jsuperLog.error(new Error, e);
+      }
+    }
+  }
+
+  loadInitialIpcSettings() {
+    this.setDoSkipOpenings(this.ipc.get(ipcSettingsKeys.openingsDoSkip).value);
+    this.setOpeningsSkipOrder(this.ipc.get(ipcSettingsKeys.openingsSkipOrder).value);
+    this.setDoSkipEndings(this.ipc.get(ipcSettingsKeys.endingsDoSkip).value);
+    this.setEndingsSkipOrder(this.ipc.get(ipcSettingsKeys.endingsSkipOrder).value);
+    this.setEndingsSkipMax(this.ipc.get(ipcSettingsKeys.endingsMaxSkips).value);
+    this.setEndingsPersistFullscreen(this.ipc.get(ipcSettingsKeys.endingsDoPersistFullscreen).value);
+    this.setDelay(this.ipc.get(ipcSettingsKeys.skipDelayS).value);
+    this.setCancelKey(this.ipc.get(ipcSettingsKeys.skipCancelKey).value);
   }
 }
 

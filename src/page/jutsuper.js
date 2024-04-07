@@ -17,6 +17,7 @@ import {
   JutSuperDomClasses as domClasses,
   JutSuperIpcIds as ipcIds,
   JutSuperIpcKeys as ipcKeys,
+  JutSuperIpcDefaultNodeProps as ipcDefaultNodeProps,
   JutSuperIpcLoadingStates as ipcLoadings,
   JutSuperIpcAwaitStates as ipcAwaits,
   JutSuperIpcBoolRequestStates as ipcBoolRequests
@@ -60,7 +61,13 @@ class JutSuper {
     this.vjsButton = undefined;
 
     /** @type {JutSuperIpc} */
-    this.ipc = new JutSuperIpcBuilder().identifyAs(ipcIds.page).build()
+    this.ipc = new JutSuperIpcBuilder().identifyAs(ipcIds.page).build();
+    /** @type {JutSuperIpc} */
+    this.settingsIpc = new JutSuperIpcBuilder()
+      .communicationNodeTagIs(ipcDefaultNodeProps.settingsTag)
+      .communicationNodeIdIs(ipcDefaultNodeProps.settingsId)
+      .identifyAs(ipcIds.page)
+      .build();
     /** @type {unknown} */
     this.player = player;
     /** @type {HTMLElement} */

@@ -18,6 +18,7 @@ export {
  * @typedef {import("/src/consts.js").JutSuperIpcJsDataTypesKeys} JutSuperIpcJsDataTypesKeys
  * @typedef {import("/src/consts.js").JutSuperIpcKeys} JutSuperIpcKeys
  * @typedef {import("/src/consts.js").JutSuperIpcKeysKeys} JutSuperIpcKeysKeys
+ * @typedef {import("/src/consts.js").JutSuperIpcSettingsKeysKeys} JutSuperIpcSettingsKeysKeys
  */
 /**
  * @typedef JutSuperIpcUnparsedValueDescriptor
@@ -194,7 +195,7 @@ class JutSuperIpc {
   }
 
   /**
-   * @param {JutSuperIpcKeysKeys} key
+   * @param {JutSuperIpcKeysKeys | JutSuperIpcSettingsKeysKeys} key
    * @returns {JutSuperIpcValueDescriptor}
    */
   get(key) {

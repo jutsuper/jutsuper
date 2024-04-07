@@ -1191,12 +1191,12 @@ const JutSuperIpcSettingsKeys = {
   endingsDoSkip: "data-endings-do-skip",
   /** @type {"data-endings-skip-order"} */
   endingsSkipOrder: "data-endings-skip-order",
-  /** @type {"data-endings-do-persist-fullscreen"} */
-  endingsDoPersistFullscreen: "data-endings-do-persist-fullscreen",
   /** @type {"data-endings-max-skips"} */
   endingsMaxSkips: "data-endings-max-skips",
-  /** @type {"data-skip-delay-ms"} */
-  skipDelayMs: "data-skip-delay-ms",
+  /** @type {"data-endings-do-persist-fullscreen"} */
+  endingsDoPersistFullscreen: "data-endings-do-persist-fullscreen",
+  /** @type {"data-skip-delay-s"} */
+  skipDelayS: "data-skip-delay-s",
   /** @type {"data-skip-cancel-key"} */
   skipCancelKey: "data-skip-cancel-key"
 }
@@ -1206,8 +1206,9 @@ const JutSuperIpcSettingsKeys = {
  * @property {"data-openings-skip-order"} openingsSkipOrder
  * @property {"data-endings-do-skip"} endingsDoSkip
  * @property {"data-endings-skip-order"} endingsSkipOrder
+ * @property {"data-endings-max-skips"} endingsMaxSkips
  * @property {"data-endings-do-persist-fullscreen"} endingsDoPersistFullscreen
- * @property {"data-skip-delay-ms"} skipDelayMs
+ * @property {"data-skip-delay-s"} skipDelayS
  * @property {"data-skip-cancel-key"} skipCancelKey
  *
  * @typedef {(
@@ -1215,8 +1216,9 @@ const JutSuperIpcSettingsKeys = {
  *   "data-openings-skip-order" |
  *   "data-endings-do-skip" |
  *   "data-endings-skip-order" |
+ *   "data-endings-max-skips" |
  *   "data-endings-do-persist-fullscreen" |
- *   "data-skip-delay-ms" |
+ *   "data-skip-delay-s" |
  *   "data-skip-cancel-key"
  * )} JutSuperIpcSettingsKeysKeys
  */
