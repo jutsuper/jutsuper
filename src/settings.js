@@ -1,5 +1,8 @@
 export {
   JutSuperSettings,
+  JutSuperSettingsEndingsObjectKeys,
+  JutSuperSettingsOpeningsObjectKeys,
+  JutSuperSettingsObjectKeys,
   JutSuperSettingsSkipOrder
 };
 
@@ -21,6 +24,87 @@ export {
  * @property {number} skipDelayS
  * @property {string} skipCancelKey
  */
+
+
+/**
+ * @readonly
+ * @enum {JutSuperSettingsEndingsObjectKeysType}
+ */
+const JutSuperSettingsEndingsObjectKeys = {
+  /** @type {"doSkip"} */
+  doSkip: "doSkip",
+  /** @type {"skipOrder"} */
+  skipOrder: "skipOrder",
+  /** @type {"doPersistFullscreen"} */
+  doPersistFullscreen: "doPersistFullscreen",
+  /** @type {"maxSkips"} */
+  maxSkips: "maxSkips"
+}
+/**
+ * @typedef JutSuperSettingsEndingsObjectKeysType
+ * @property {"doSkip"} doSkip
+ * @property {"skipOrder"} skipOrder
+ * @property {"doPersistFullscreen"} doPersistFullscreen
+ * @property {"maxSkips"} maxSkips
+ *
+ * @typedef {(
+ *   "doSkip" |
+ *   "skipOrder" |
+ *   "doPersistFullscreen" |
+ *   "maxSkips"
+ * )} JutSuperSettingsEndingsObjectKeysKeys
+ */
+
+/**
+ * @readonly
+ * @enum {JutSuperSettingsObjectKeysType}
+ */
+const JutSuperSettingsOpeningsObjectKeys = {
+  /** @type {"doSkip"} */
+  doSkip: "doSkip",
+  /** @type {"skipOrder"} */
+  skipOrder: "skipOrder"
+}
+/**
+ * @typedef JutSuperSettingsOpeningsObjectKeysType
+ * @property {"doSkip"} doSkip
+ * @property {"skipOrder"} skipOrder
+ *
+ * @typedef {(
+ *   "doSkip" |
+ *   "skipOrder"
+ * )} JutSuperSettingsOpeningsObjectKeysKeys
+ */
+
+
+/**
+ * @readonly
+ * @enum {JutSuperSettingsObjectKeysType}
+ */
+const JutSuperSettingsObjectKeys = {
+  /** @type {"openings"} */
+  openings: "openings",
+  /** @type {"endings"} */
+  endings: "endings",
+  /** @type {"skipDelayS"} */
+  skipDelayS: "skipDelayS",
+  /** @type {"skipCancelKey"} */
+  skipCancelKey: "skipCancelKey"
+}
+/**
+ * @typedef JutSuperSettingsObjectKeysType
+ * @property {"openings"} openings
+ * @property {"endings"} endings
+ * @property {"skipDelayS"} skipDelayS
+ * @property {"skipCancelKey"} skipCancelKey
+ *
+ * @typedef {(
+*   "openings" |
+*   "endings" |
+*   "skipDelayS" |
+*   "skipCancelKey"
+* )} JutSuperSettingsObjectKeysKeys
+*/
 
 
 /**
@@ -50,9 +134,10 @@ class JutSuperSettings {
   #object;
 
   constructor() {
-    this.#object = {};
+    this.setUndefined();
   }
 
+  /** @returns {JutSuperSettings} */
   setDefaults() {
     this.#object = {
       openings: {
@@ -67,7 +152,36 @@ class JutSuperSettings {
       },
       skipDelayS: 3,
       skipCancelKey: "Shift"
-    }
+    };
+    return this;
+  }
+
+  /** @returns {JutSuperSettings} */
+  setUndefined() {
+    this.#object = {
+      openings: {
+        doSkip: undefined,
+        skipOrder: undefined
+      },
+      endings: {
+        doSkip: undefined,
+        skipOrder: undefined,
+        doPersistFullscreen: undefined,
+        maxSkips: undefined
+      },
+      skipDelayS: undefined,
+      skipCancelKey: undefined
+    };
+    return this;
+  }
+
+  /**
+   * @param {JutSuperSettingsObject} value
+   * @returns {JutSuperSettings}
+   */
+  set(value) {
+    this.#object = value;
+    return this;
   }
 
   /**

@@ -15,7 +15,7 @@ class JutSuperUtil {
 
   /**
    * @param {string} rawLabel
-   * @returns {[string]}
+   * @returns {string}
    */
   getKeyLabelFromRawLabel(rawLabel) {
     const overrideValue = keyLabels[rawLabel];

@@ -57,6 +57,12 @@ export { BrowserWindowStates };
  * @property {number} top
  * @property {string} type
  * @property {number} width
+ * 
+ * @typedef BrowserStorage
+ * @property {function(Record<string, any> | string=): Promise<Record<string, any>>} get
+ * @property {function(Record<string, any> | string=): Promise<void>} set
+ * @property {function(Record<string, any> | string=): Promise<void>} remove
+ * @property {function(): Promise<void>} clear
  */
 
 

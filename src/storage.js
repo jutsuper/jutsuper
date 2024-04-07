@@ -1,23 +1,52 @@
-export { JutSuperStorage, jsuperStorage };
-import {
-  JutSuperStorageKeys as storageKeys,
-  JutSuperStorageTransitionKeys as transitionKeys,
-  JutSuperStorageSettingsKeys as settingsKeys
-} from "/src/consts.js";
+import { JutSuperTransition } from "/src/transition.js";
+import { JutSuperSettings } from "/src/settings.js";
+export {
+  JutSuperStorage,
+  JutSuperStorageKeys,
+  jsuperStorage
+};
 
 
 /**
- * @typedef {import("/src/consts.js").JutSuperStorageKeysKeys} JutSuperStorageKeysKeys
- * @typedef {import("/src/consts.js").JutSuperStorageKeysTypes} JutSuperStorageKeysTypes
- * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeysKeys} JutSuperStorageTransitionKeysKeys
- * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeysTypes} JutSuperStorageTransitionKeysTypes
- * @typedef {import("/src/consts.js").JutSuperStorageSettingsKeysKeys} JutSuperStorageSettingsKeysKeys
- * @typedef {import("/src/consts.js").JutSuperStorageSettingsKeysTypes} JutSuperStorageSettingsKeysTypes
+ * @typedef {import("/src/browser.js").BrowserStorage} BrowserStorage
+ * @typedef {import("/src/transition.js").JutSuperTransitionObject} JutSuperTransitionObject
+ * @typedef {import("/src/transition.js").JutSuperTransitionObjectKeys} JutSuperTransitionObjectKeys
+ * @typedef {import("/src/settings.js").JutSuperSettingsObject} JutSuperSettingsObject
+ * @typedef {import("/src/settings.js").JutSuperSettingsObjectKeys} JutSuperSettingsObjectKeys
+ * @typedef {import("/src/settings.js").JutSuperSettingsOpeningsObjectKeys} JutSuperSettingsOpeningsObjectKeys
+ * @typedef {import("/src/settings.js").JutSuperSettingsEndingsObjectKeys} JutSuperSettingsEndingsObjectKeys
+ */
+
+
+/**
+ * # Object of a persistent extension storage
+ * @readonly
+ * @enum {JutSuperStorageKeysType}
+ */
+const JutSuperStorageKeys = {
+  /** @type {"transition"} */
+  transition: "transition",
+  /** @type {"settings"} */
+  settings: "settings"
+}
+/**
+ * @typedef JutSuperStorageKeysType
+ * @property {"transition"} transition
+ * @property {"settings"} settings
+ *
+ * @typedef JutSuperStorageKeysTypes
+ * @property {JutSuperTransitionObject} [transition]
+ * @property {JutSuperSettingsObject} [settings]
+ * 
+ * @typedef {(
+ *   "transition" |
+ *   "settings"
+ * )} JutSuperStorageKeysKeys
  */
 
 
 class JutSuperStorage {
-  /** @type {unknown} */
+  /** @type {BrowserStorage} */
   #storage;
 
   constructor() {
@@ -30,19 +59,30 @@ class JutSuperStorage {
 
   /**
    * # Get `transition` object from storage
-   * @returns {Promise<JutSuperStorageTransitionKeysTypes>}
+   * @returns {Promise<JutSuperTransitionObject>}
    */
   async getTransition() {
     return (await this.#storage.get(storageKeys.transition))[storageKeys.transition];
   }
   /**
    * # Set `transition` object in storage
-   * @param {JutSuperStorageTransitionKeysTypes} value 
+   * @param {JutSuperTransitionObject} value 
    */
   async setTransition(value) {
     const map = {};
     map[storageKeys.transition] = value;
     await this.#storage.set(map);
+  }
+  /**
+   * # Set default `transition` object in storage
+   * @returns
+   */
+  async setDefaultTransition() {
+    const transition = new JutSuperTransition().setDefaults().get();
+    const map = {};
+    map[storageKeys.transition] = transition;
+    await this.#storage.set(map);
+    return transition;
   }
   /**
    * # Remove `transition` object from storage
@@ -57,19 +97,30 @@ class JutSuperStorage {
 
   /**
    * # Get `settings` object from storage
-   * @returns {Promise<JutSuperStorageSettingsKeysTypes>}
+   * @returns {Promise<JutSuperSettingsObject>}
    */
   async getSettings() {
     return (await this.#storage.get(storageKeys.settings))[storageKeys.settings];
   }
   /**
    * # Set `settings` object in storage
-   * @param {JutSuperStorageSettingsKeysTypes} value 
+   * @param {JutSuperSettingsObject} value 
    */
   async setSettings(value) {
     const map = {};
     map[storageKeys.settings] = value;
     await this.#storage.set(map);
+  }
+  /**
+   * # Set default `settings` object in storage
+   * @returns {Promise<JutSuperSettingsObject>}
+   */
+  async setDefaultSettings() {
+    const settings = new JutSuperSettings().setDefaults().get();
+    const map = {};
+    map[storageKeys.settings] = settings;
+    await this.#storage.set(map);
+    return settings;
   }
   /**
    * # Remove `settings` object from storage
@@ -101,66 +152,6 @@ class JutSuperStorage {
    */
   async removeAll() {
     await this.#storage.clear();
-  }
-
-  /////////////////////////////
-  // transition.isFullscreen //
-  /////////////////////////////
-
-  /**
-   * @returns {Promise<boolean>}
-   */
-  async getIsFullscreen() {
-    const transition = await this.getTransition();
-    return transition[transitionKeys.isFullscreen];
-  }
-  /**
-   * @param {boolean} value 
-   */
-  async setIsFullscreen(value) {
-    const transition = await this.getTransition();
-    transition[transitionKeys.isFullscreen] = value;
-    return this.setTransition(transition);
-  }
-
-  ///////////////////////////////////
-  // transition.isSwitchingEpisode //
-  ///////////////////////////////////
-
-  /**
-   * @returns {Promise<boolean>}
-   */
-  async getIsSwitchingEpisode() {
-    const transition = await this.getTransition();
-    return transition[transitionKeys.isSwitchingEpisode];
-  }
-  /**
-   * @param {boolean} value 
-   */
-  async setIsSwitchingEpisode(value) {
-    const transition = await this.getTransition();
-    transition[transitionKeys.isSwitchingEpisode] = value;
-    return this.setTransition(transition);
-  }
-
-  ///////////////////////////////////////////////
-  // settingsKeys.maxContinuousEpisodeSwitches //
-  ///////////////////////////////////////////////
-
-  /**
-   * @returns {Promise<number>}
-   */
-  async getMaxContinuousEpisodeSwitches() {
-    const settings = await this.getSettings();
-    return settings[settingsKeys.maxContinuousEpisodeSwitches];
-  }
-  /**
-   * @param {number} value 
-   */
-  async setMaxContinuousEpisodeSwitches(value) {
-    const settings = await this.getSettings();
-    settings[settingsKeys.maxContinuousEpisodeSwitches] = value;
-    return this.setSettings(settings);
   }
 }
 

@@ -58,11 +58,11 @@ class JutSuperActionsMessageBuilder {
 }
 
 class JutSuperRequestsRequestMessageBuilder {
-  /** @type {JutSuperRequestsRequestMessageBuilder} */
+  /** @type {JutSuperRequestsRequestMessage} */
   #message
   
   constructor() {
-    /** @type {JutSuperRequestsRequestMessageBuilder} */
+    /** @type {JutSuperRequestsRequestMessage} */
     this.#message = {};
   }
 
@@ -75,7 +75,7 @@ class JutSuperRequestsRequestMessageBuilder {
   }
 
   /**
-   * @returns {JutSuperRequestsRequestMessageBuilder}
+   * @returns {JutSuperRequestsRequestMessage}
    */
   build() {
     return this.#message
@@ -101,7 +101,7 @@ class JutSuperRequestsResponseMessageBuilder {
   }
 
   /**
-   * @returns {JutSuperRequestsResponseMessageBuilder}
+   * @returns {JutSuperRequestsResponseMessage}
    */
   build() {
     return this.#message

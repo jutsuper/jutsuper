@@ -27,12 +27,6 @@ var jsuperErrors;
 var jsuperLog;
 
 /**
- * @typedef {import("/src/consts.js").JutSuperRegex} JutSuperRegex
- * @type {JutSuperRegex}
- */
-var regexp;
-
-/**
  * @typedef {import("/src/storage.js").JutSuperStorage} JutSuperStorage
  * @type {JutSuperStorage}
  */
@@ -100,16 +94,22 @@ var ipcBoolRequests;
 var ipcLoadingStates;
 
 /**
- * @typedef {import("/src/consts.js").JutSuperStorageKeys} JutSuperStorageKeys
+ * @typedef {import("/src/storage.js").JutSuperStorageKeys} JutSuperStorageKeys
  * @type {JutSuperStorageKeys}
  */
 var storageKeys;
 
 /**
- * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeys} JutSuperStorageTransitionKeys
- * @type {JutSuperStorageTransitionKeys}
+ * @typedef {import("/src/transition.js").JutSuperTransitionObjectKeys} JutSuperTransitionObjectKeys
+ * @type {JutSuperTransitionObjectKeys}
  */
 var transitionKeys;
+
+/**
+ * @typedef {import("/src/settings.js").JutSuperSettingsObjectKeys} JutSuperSettingsObjectKeys
+ * @type {JutSuperSettingsObjectKeys}
+ */
+var settingsKeys;
 
 /**
  * @typedef {import("/src/consts.js").JutSuperAssetPaths} JutSuperAssetPaths
@@ -159,6 +159,18 @@ var JutSuperRequestsRequestMessageBuilder;
  */
 var JutSuperMessageBuilder;
 
+/**
+ * @typedef {import("/src/transition.js").JutSuperTransition} JutSuperTransition
+ * @type {typeof import("/src/transition.js").JutSuperTransition}
+ */
+var JutSuperTransition;
+
+/**
+ * @typedef {import("/src/settings.js").JutSuperSettings} JutSuperSettings
+ * @type {typeof import("/src/settings.js").JutSuperSettings}
+ */
+var JutSuperSettings;
+
 
 /** Import modules */
 (async function() {
@@ -174,11 +186,14 @@ var JutSuperMessageBuilder;
   const storageModule = await import(browser.runtime.getURL("/src/storage.js"));
   /** @type {typeof import("/src/messaging.js")} */
   const messagingModule = await import(browser.runtime.getURL("/src/messaging.js"));
+  /** @type {typeof import("/src/transition.js")} */
+  const transitionModule = await import(browser.runtime.getURL("/src/transition.js"));
+  /** @type {typeof import("/src/settings.js")} */
+  const settingsModule = await import(browser.runtime.getURL("/src/settings.js"));
 
   browsers = constsModule.JutSuperBrowsers;
   jsuperErrors = errorModule.jsuperErrors;
   jsuperLog = logModule.jsuperLog;
-  regexp = constsModule.JutSuperRegex;
   jsuperStorage = storageModule.jsuperStorage;
   domClasses = constsModule.JutSuperDomClasses;
   defaultFonts = constsModule.JutSuperDefaultFonts;
@@ -190,8 +205,9 @@ var JutSuperMessageBuilder;
   ipcAwaits = constsModule.JutSuperIpcAwaitStates;
   ipcBoolRequests = constsModule.JutSuperIpcBoolRequestStates;
   ipcLoadingStates = constsModule.JutSuperIpcLoadingStates;
-  storageKeys = constsModule.JutSuperStorageKeys;
-  transitionKeys = constsModule.JutSuperStorageTransitionKeys;
+  storageKeys = storageModule.JutSuperStorageKeys;
+  transitionKeys = transitionModule.JutSuperTransitionObjectKeys;
+  settingsKeys = settingsModule.JutSuperSettingsObjectKeys;
   assetPaths = constsModule.JutSuperAssetPaths;
   assetIds = constsModule.JutSuperAssetIds;
   JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
@@ -200,6 +216,8 @@ var JutSuperMessageBuilder;
   JutSuperActionsMessageBuilder = messagingModule.JutSuperActionsMessageBuilder;
   JutSuperRequestsRequestMessageBuilder = messagingModule.JutSuperRequestsRequestMessageBuilder;
   JutSuperMessageBuilder = messagingModule.JutSuperMessageBuilder;
+  JutSuperTransition = transitionModule.JutSuperTransition;
+  JutSuperSettings = settingsModule.JutSuperSettings;
 })().then(() => {
   jutsuperContent = new JutSuperContent();
 })
@@ -207,9 +225,10 @@ var JutSuperMessageBuilder;
 
 /**
  * @typedef {import("/src/ipc.js").JutSuperIpcValueDescriptor} JutSuperIpcValueDescriptor
- * @typedef {import("/src/consts.js").JutSuperStorageTransitionKeysTypes} JutSuperStorageTransitionKeysTypes
  * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessage} JutSuperRequestsResponseMessage
  * @typedef {import("/src/browser.js").BrowserWindowStatesKeys} BrowserWindowStatesKeys
+ * @typedef {import("/src/transition.js").JutSuperTransitionObject} JutSuperTransitionObject
+ * @typedef {import("/src/settings.js").JutSuperSettingsObject} JutSuperSettingsObject
  */
 
 
@@ -222,10 +241,8 @@ class JutSuperContent {
     /** @type {string} */
     this.LOCATION = JutSuperContent.name;
 
-    /** @type {boolean} */
-    this.isFullscreen = undefined;
-    /** @type {boolean} */
-    this.isSwitchingEpisode = undefined;
+    this.transition = new JutSuperTransition().setUndefined();
+    this.settings = new JutSuperSettings().setUndefined();
 
     /** @type {JutSuperIpc} */
     this.ipc = new JutSuperIpcBuilder()
@@ -330,7 +347,7 @@ class JutSuperContent {
    * @param {HTMLElement} node
    * @param {string} url
    * @param {string} id
-   * @returns {void}
+   * @returns {Promise<void>}
    */
   async injectCss(node, url, id) {
     const attrs = {
@@ -447,7 +464,7 @@ class JutSuperContent {
    * @param {boolean} state 
    */
   async handleFullscreenChange(state) {
-    this.isFullscreen = state;
+    this.transition.setIsFullscreen(state);
   }
 
   ////////////////////////////////////
@@ -548,7 +565,7 @@ class JutSuperContent {
             break;
           default:
             throw jsuperErrors.unhandledCaseError({
-              location: thisArg.LOCATION,
+              location: this.LOCATION,
               target: `${evt.key}=${evt.value}`
             });
         }
@@ -636,7 +653,7 @@ class JutSuperContent {
   }
 
   async handleEpisodeSwitchRequest() {
-    this.isSwitchingEpisode = true;
+    this.transition.setIsFullscreen(true);
     await this.commitTransitionStorage();
 
     // send callback that
@@ -747,12 +764,7 @@ class JutSuperContent {
    * @returns {Promise<void>}
    */
   async commitTransitionStorage() {
-    /** @type {JutSuperStorageTransitionKeysTypes} */
-    const transition = {};
-    transition[transitionKeys.isFullscreen] = this.isFullscreen;
-    transition[transitionKeys.isSwitchingEpisode] = this.isSwitchingEpisode;
-
-    await jsuperStorage.setTransition(transition);
+    await jsuperStorage.setTransition(this.transition.get());
   }
 
   /**
@@ -766,8 +778,7 @@ class JutSuperContent {
       transition = {}
     }
 
-    this.isFullscreen = transition[transitionKeys.isFullscreen];
-    this.isSwitchingEpisode = transition[transitionKeys.isSwitchingEpisode];
+    this.transition.set(transition);
   }
 
   /**
@@ -779,11 +790,37 @@ class JutSuperContent {
     await jsuperStorage.removeTransition();
   }
 
+  /**
+   * # Save settings
+   * @returns {Promise<void>}
+   */
+  async commitSettingsStorage() {
+    await jsuperStorage.setSettings(this.settings.get());
+  }
+
+  /**
+   * # Load settings
+   * @returns {Promise<void>}
+   */
+  async loadSettingsStorage() {
+    let settings = await jsuperStorage.getSettings();
+
+    if (settings === undefined) {
+      settings = {}
+    }
+
+    this.settings.set(settings);
+  }
+
   requestPlay() {
     this.ipc.send({
       key: ipcKeys.playingControl,
       value: ipcBoolRequests.requestTrue
     });
+  }
+
+  sendSettings() {
+    
   }
 
   /**

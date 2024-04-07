@@ -12,7 +12,6 @@ export {
   JutSuperBrowsers,
   JutSuperLogLevels,
   JutSuperLogDefaults,
-  JutSuperRegex,
   JutSuperAssetIds,
   JutSuperAssetPaths,
   JutSuperDomIds,
@@ -25,9 +24,6 @@ export {
   JutSuperIpcIds,
   JutSuperIpcKeys,
   JutSuperIpcSettingsKeys,
-  JutSuperStorageKeys,
-  JutSuperStorageTransitionKeys,
-  JutSuperStorageSettingsKeys,
   JutSuperIpcLoadingStates,
   JutSuperIpcAwaitStates,
   JutSuperIpcBoolRequestStates,
@@ -42,6 +38,7 @@ export {
 
 /**
  * @typedef {import("/src/browser.js").BrowserWindowStatesKeys} BrowserWindowStatesKeys
+ * @typedef {import("/src/settings.js").JutSuperSettingsObject} JutSuperSettingsObject
  */
 
 
@@ -215,7 +212,7 @@ const JutSuDomClasses = {
 const JutSuperBrowsers = {
   /**
    * # Chrome, Opera, Yandex Browser, etc.
-   * @type {"blick"}
+   * @type {"blink"}
    */
   blink: "blink",
   /**
@@ -321,25 +318,6 @@ const JutSuperLogDefaults = {
  * @property {JutSuperLogLevelsKeys[]} levels
  * @property {JutSuperLogLevelsKeys[]} pathLevels
  */
-
-
-/**
- * # Regex patterns
- * 
- * @readonly
- * @enum {JutSuperRegexType}
- */
-const JutSuperRegex = {
-  cssUrl: /(?<=url\().*(?=\))/,
-}
-/** 
- * @typedef JutSuperRegexType
- * @property {RegExp} cssUrl
- * 
- * @typedef {(
-*   "(?<=url\().*(?=\))"
-* )} JutSuperRegexKeys
-*/
 
 
 /**
@@ -1097,7 +1075,7 @@ const JutSuperIpcKeys = {
    * @see {JutSuperIpcAwaitStatesKeys}
    * @see {BrowserWindowStatesKeys}
    *
-   * @type {"data-fullscreen-control"}
+   * @type {"data-window-state"}
    */
   windowState: "data-window-state",
   /**
@@ -1241,82 +1219,6 @@ const JutSuperIpcSettingsKeys = {
  *   "data-skip-delay-ms" |
  *   "data-skip-cancel-key"
  * )} JutSuperIpcSettingsKeysKeys
- */
-
-
-/**
- * # Object of a persistent extension storage
- * @readonly
- * @enum {JutSuperStorageKeysType}
- */
-const JutSuperStorageKeys = {
-  /** @type {"transition"} */
-  transition: "transition",
-  /** @type {"settings"} */
-  settings: "settings"
-}
-/**
- * @typedef JutSuperStorageKeysType
- * @property {"transition"} transition
- * @property {"settings"} settings
- *
- * @typedef JutSuperStorageKeysTypes
- * @property {JutSuperStorageTransitionKeysType} [transition]
- * @property {JutSuperStorageSettingsKeysType} [settings]
- * 
- * @typedef {(
-*   "transition" |
-*   "settings"
-* )} JutSuperStorageKeysKeys
- */
-
-
-/**
- * # Episode switch temporary values
- * @readonly
- * @enum {JutSuperStorageTransitionKeysType}
- */
-const JutSuperStorageTransitionKeys = {
-  /** @type {"isFullscreen"} */
-  isFullscreen: "isFullscreen",
-  /** @type {"isSwitchingEpisode"} */
-  isSwitchingEpisode: "isSwitchingEpisode"
-}
-/**
- * @typedef JutSuperStorageTransitionKeysType
- * @property {"isFullscreen"} isFullscreen
- * @property {"isSwitchingEpisode"} isSwitchingEpisode
- *
- * @typedef JutSuperStorageTransitionKeysTypes
- * @property {boolean} [isFullscreen]
- * @property {boolean} [isSwitchingEpisode]
- * 
- * @typedef {(
- *   "isFullscreen" |
- *   "isSwitchingEpisode"
- * )} JutSuperStorageTransitionKeysKeys
- */
-
-
-/**
- * # Extension settings
- * @readonly
- * @enum {JutSuperStorageSettingsKeysType}
- */
-const JutSuperStorageSettingsKeys = {
-  /** @type {"maxContinuousEpisodeSwitches"} */
-  maxContinuousEpisodeSwitches: "maxContinuousEpisodeSwitches",
-}
-/**
- * @typedef JutSuperStorageSettingsKeysType
- * @property {"maxContinuousEpisodeSwitches"} maxContinuousEpisodeSwitches
- *
- * @typedef JutSuperStorageSettingsKeysTypes
- * @property {number} [maxContinuousEpisodeSwitches]
- * 
- * @typedef {(
- *   "maxContinuousEpisodeSwitches" 
- * )} JutSuperStorageSettingsKeysKeys
  */
 
 
@@ -1538,23 +1440,22 @@ const JutSuperMessagingMessageRequestsResponseKeys = {
  * @readonly
  * @enum {JutSuperKeyCodeLabelOverridesType}
  */
-const JutSuperKeyCodeLabelOverrides = {
-  "Escape": "Esc",
-  "ScrollLock": "ScrLock",
-  "Backspace": "Bksp",
-  "PageUp": "PgUp",
-  "PageDown": "PgDown",
-  " ": "Space",
-  "Control": "Ctrl",
-  "CapsLock": "Caps",
-  "ArrowLeft": "Left",
-  "ArrowRight": "Right",
-  "ArrowUp": "Up",
-  "ArrowDown": "Down",
-  "ContextMenu": "Ctx",
-  "Unidentified": "Null"
-}
+const JutSuperKeyCodeLabelOverrides = {}
+JutSuperKeyCodeLabelOverrides["Escape"] = "Esc";
+JutSuperKeyCodeLabelOverrides["ScrollLock"] = "ScrLock";
+JutSuperKeyCodeLabelOverrides["Backspace"] = "Bksp";
+JutSuperKeyCodeLabelOverrides["PageUp"] = "PgUp";
+JutSuperKeyCodeLabelOverrides["PageDown"] = "PgDown";
+JutSuperKeyCodeLabelOverrides[" "] = "Space";
+JutSuperKeyCodeLabelOverrides["Control"] = "Ctrl";
+JutSuperKeyCodeLabelOverrides["CapsLock"] = "Caps";
+JutSuperKeyCodeLabelOverrides["ArrowLeft"] = "Left";
+JutSuperKeyCodeLabelOverrides["ArrowRight"] = "Right";
+JutSuperKeyCodeLabelOverrides["ArrowUp"] = "Up";
+JutSuperKeyCodeLabelOverrides["ArrowDown"] = "Down";
+JutSuperKeyCodeLabelOverrides["ContextMenu"] = "Ctx";
+JutSuperKeyCodeLabelOverrides["Unidentified"] = "Null";
 /** 
- * @typedef {Record<string, string} JutSuperKeyCodeLabelOverridesType
+ * @typedef {Record<string, string>} JutSuperKeyCodeLabelOverridesType
  * @typedef {string} JutSuperKeyCodeLabelOverridesKeys
 */

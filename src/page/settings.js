@@ -22,25 +22,45 @@ class JutSuperSettingsPopup {
 
     this.numberRegex = /[0-9]+/;
 
+    /** @type {HTMLInputElement[]} */
     this.bars = this.document.getElementsByName(inputNames.settingsBar);
+    /** @type {HTMLInputElement} */
     this.opSkipSwitch = this.document.getElementById(domIds.settingsOpeningsSwitch);
+    /** @type {HTMLLabelElement} */
     this.opSectionBar = this.document.getElementById(domIds.settingsOpeningsBarLabel);
+    /** @type {HTMLDivElement} */
     this.opClipSection = this.document.getElementById(domIds.settingsOpeningsSectionClip);
+    /** @type {HTMLDivElement} */
     this.opSkipOrderSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderSelector);
+    /** @type {HTMLInputElement} */
     this.opSkipOrderFirstSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderFirst);
+    /** @type {HTMLInputElement} */
     this.opSkipOrderLastSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderLast);
+    /** @type {HTMLInputElement} */
     this.edSkipSwitch = this.document.getElementById(domIds.settingsEndingsSwitch);
+    /** @type {HTMLLabelElement} */
     this.edSectionBar = this.document.getElementById(domIds.settingsEndingsBarLabel);
+    /** @type {HTMLDivElement} */
     this.edClipSection = this.document.getElementById(domIds.settingsEndingsSectionClip);
+    /** @type {HTMLDivElement} */
     this.edSkipOrderSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderSelector);
+    /** @type {HTMLInputElement} */
     this.edSkipOrderFirstSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderFirst);
+    /** @type {HTMLInputElement} */
     this.edSkipOrderLastSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderLast);
+    /** @type {HTMLButtonElement} */
     this.edSkipMaxNegativeButton = this.document.getElementById(domIds.settingsEndingsMaxSkipsNegativeButton);
+    /** @type {HTMLInputElement} */
     this.edSkipMaxField = this.document.getElementById(domIds.settingsEndingsMaxSkipsField);
+    /** @type {HTMLButtonElement} */
     this.edSkipMaxPositiveButton = this.document.getElementById(domIds.settingsEndingsMaxSkipsPositiveButton);
+    /** @type {HTMLInputElement} */
     this.edFullscreenSwitch = this.document.getElementById(domIds.settingsEndingsFullscreenSwitch);
+    /** @type {HTMLInputElement} */
     this.delaySlider = this.document.getElementById(domIds.settingsDelaySlider);
+    /** @type {HTMLDivElement} */
     this.delayNum = this.document.getElementById(domIds.settingsDelayNum);
+    /** @type {HTMLInputElement} */
     this.cancelKeyListener = this.document.getElementById(domIds.settingsCancelKeyListener);
     this.cancelKeyListener.isListening = false;
     this.cancelKeyListener.addEventListener("keydown", event => {
@@ -55,6 +75,7 @@ class JutSuperSettingsPopup {
       thisArg.cancelKeyListener.isListening = false;
       thisArg.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
     });
+    /** @type {HTMLDivElement} */
     this.cancelKeyListenerRecCircle = this.document.getElementById(domIds.settingsCancelKeyListenerRecCircle);
 
     this.bars.forEach(bar => bar.addEventListener("change", event => thisArg.closeOtherBars(event.target)))
@@ -127,8 +148,7 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onOpeningsSwitchChange(event) {
-    const state = event.target.checked;
-    console.log("skipOpenings =", state);
+
   }
 
   /**
@@ -172,8 +192,7 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onEndingsSwitchChange(event) {
-    const state = event.target.checked;
-    console.log("skipEndings =", state);
+
   }
 
   /**
@@ -328,7 +347,7 @@ class JutSuperSettingsPopup {
    */
   onDelayChange(event) {
     if (typeof event === "number" || typeof event === "string") {
-      this.delayNum.innerText = event;
+      this.delayNum.innerText = event.toString();
       this.delaySlider.setAttribute("value", `${event}`);
     }
     else {
@@ -369,5 +388,5 @@ class JutSuperSettingsPopup {
 }
 
 if (window.JUTSUPER_DEBUG) {
-  window.jsuperSettings = new JutSuperSettingsPopup(document);
+  window.jsuperSettingsPopup = new JutSuperSettingsPopup(document);
 }
