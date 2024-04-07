@@ -306,6 +306,8 @@ class JutSuper {
     const time = this.player.currentTime();
 
     if (
+      // skipping openings is enabled in settings
+      window.jsuperSettings.openings.doSkip &&
       // does the opening range exists
       this.openingSkipperRngs.length > 0 &&
       // is current time in the opening skipper region
@@ -325,6 +327,8 @@ class JutSuper {
       this.startSkippingOpening();
     }
     else if (
+      // skipping endings is enabled in settings
+      window.jsuperSettings.endings.doSkip &&
       // does the ending range exists
       this.endingSkipperRngs.length > 0 &&
       // is current time in the ending skipper region

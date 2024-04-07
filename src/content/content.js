@@ -731,7 +731,7 @@ class JutSuperContent {
   }
 
   async handleEpisodeSwitchRequest() {
-    this.transition.setIsFullscreen(true);
+    this.transition.setIsSwitchingEpisode(true);
     await this.commitTransitionStorage();
 
     // send callback that
