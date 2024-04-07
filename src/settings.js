@@ -256,7 +256,7 @@ class JutSuperSettings {
    * @param {number} value 
    * @returns {void}
    */
-  setSkipDelayMs(value) {
+  setSkipDelayS(value) {
     this.#object.skipDelayS = value;
   }
 

@@ -248,6 +248,8 @@ class JutSuperContent {
     /** @type {string} */
     this.LOCATION = JutSuperContent.name;
 
+    console.log(JutSuperContent.name);
+
     this.transition = new JutSuperTransition().setUndefined();
     this.settings = new JutSuperSettings().setUndefined();
 
@@ -295,7 +297,7 @@ class JutSuperContent {
     this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
     this.injectDocument(head, this.urlSettingsHtml, assetIds.settingsHtml);
 
-
+    this.listenSettingsChange();
     this.listenEssentialsLoadState();
     this.listenFullscreenChange();
     this.listenFullscreenControl();
@@ -404,6 +406,60 @@ class JutSuperContent {
     JutSuperContent.applyAttrs(elm, attrs);
 
     node.appendChild(elm);
+  }
+
+  ////////////////////////////
+  // Settings change listen //
+  ////////////////////////////
+
+  /**
+   * @returns {Promise<never>}
+   */
+  async listenSettingsChange() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .build();
+    
+    for await (const evt of this.settingsIpc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt);
+
+      try {
+        switch (evt.key) {
+          case ipcSettingsKeys.openingsDoSkip:
+            this.settings.setDoSkipOpenings(evt.value);
+            break;
+          case ipcSettingsKeys.openingsSkipOrder:
+            this.settings.setOpeningsSkipOrder(evt.value);
+            break;
+          case ipcSettingsKeys.endingsDoSkip:
+            this.settings.setDoSkipEndings(evt.value);
+            break;
+          case ipcSettingsKeys.endingsSkipOrder:
+            this.settings.setEndingsSkipOrder(evt.value);
+            break;
+          case ipcSettingsKeys.endingsMaxSkips:
+            this.settings.setEndingsMaxSkips(evt.value);
+            break;
+          case ipcSettingsKeys.endingsDoPersistFullscreen:
+            this.settings.setEndingsPersistFullscreen(evt.value);
+            break;
+          case ipcSettingsKeys.skipDelayS:
+            this.settings.setSkipDelayS(evt.value);
+            break;
+          case ipcSettingsKeys.skipCancelKey:
+            this.settings.setSkipCancelKey(evt.value);
+            break;
+          default:
+            throw jsuperErrors.unhandledCaseError({
+              location: this.LOCATION,
+              target: `${evt.key}=${evt.value}`
+            });
+        }
+      } catch (e) {
+        jsuperLog.error(new Error, e);
+      }
+
+      await this.commitSettingsStorage();
+    }
   }
 
   /////////////////////////////
@@ -773,6 +829,7 @@ class JutSuperContent {
    */
   async commitTransitionStorage() {
     await jsuperStorage.setTransition(this.transition.get());
+    jsuperLog.debug(new Error, "commited transition storage");
   }
 
   /**
@@ -805,6 +862,7 @@ class JutSuperContent {
    */
   async commitSettingsStorage() {
     await jsuperStorage.setSettings(this.settings.get());
+    jsuperLog.debug(new Error, "commited settings storage");
   }
 
   /**

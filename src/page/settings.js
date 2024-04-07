@@ -74,34 +74,23 @@ class JutSuperSettingsPopup {
     /** @type {HTMLInputElement} */
     this.cancelKeyListener = this.document.getElementById(domIds.settingsCancelKeyListener);
     this.cancelKeyListener.isListening = false;
-    this.cancelKeyListener.addEventListener("keydown", event => {
-      if (!thisArg.cancelKeyListener.isListening) {
-        return
-      }
-
-      const keyLabel = util.getKeyLabelFromRawLabel(event.key);
-
-      thisArg.cancelKeyListener.value = keyLabel;
-      thisArg.cancelKeyListener.classList.remove(domClasses.animateDarkerToDarkGreenHt);
-      thisArg.cancelKeyListener.isListening = false;
-      thisArg.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
-    });
     /** @type {HTMLDivElement} */
     this.cancelKeyListenerRecCircle = this.document.getElementById(domIds.settingsCancelKeyListenerRecCircle);
 
     this.bars.forEach(bar => bar.addEventListener("change", event => thisArg.closeOtherBars(event.target)))
 
     this.opSkipSwitch.addEventListener("change", event => this.onOpeningsSwitchChange(event));
-    this.opSkipOrderSelector.addEventListener("change", this.onOpeningsSkipOrderChange);
+    this.opSkipOrderSelector.addEventListener("change", event => this.onOpeningsSkipOrderChange(event));
     this.edSkipSwitch.addEventListener("change", event => this.onEndingsSwitchChange(event));
-    this.edSkipOrderSelector.addEventListener("change", this.onEndingsSkipOrderChange);
+    this.edSkipOrderSelector.addEventListener("change", event => this.onEndingsSkipOrderChange(event));
     this.edSkipMaxNegativeButton.addEventListener("click", event => thisArg.onEndingsSkipMaxNegative(event));
     this.edSkipMaxPositiveButton.addEventListener("click", event => thisArg.onEndingsSkipMaxPositive(event));
     this.edSkipMaxField.addEventListener("input", event => this.onEndingsSkipMaxFieldInput(event));
     this.edSkipMaxField.addEventListener("keydown", event => this.onEndingsSkipMaxFieldKeydown(event));
-    this.edFullscreenSwitch.addEventListener("change", this.onEndingsFullscreenSliderChange);
+    this.edFullscreenSwitch.addEventListener("change", event => this.onEndingsFullscreenSliderChange(event));
     this.delaySlider.addEventListener("input", event => thisArg.onDelayChange(event));
     this.cancelKeyListener.addEventListener("click", event => thisArg.onCancelRecorderClick(event));
+    this.cancelKeyListener.addEventListener("keydown", event => this.onCancelRecorderKeyDown(event));
 
     this.document.addEventListener("mousedown", event => {
       const boundaries = thisArg.cancelKeyListener.getBoundingClientRect();
@@ -169,7 +158,12 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onOpeningsSwitchChange(event) {
-
+    if (!window.JUTSUPER_DEBUG) {
+      this.ipc.send({
+        key: ipcSettingsKeys.openingsDoSkip,
+        value: event.target.checked
+      });
+    }
   }
 
   /**
@@ -184,8 +178,16 @@ class JutSuperSettingsPopup {
   // Openings skip order //
   /////////////////////////
 
-  onOpeningsSkipOrderChange() {
-    
+  /**
+   * @param {Event} event 
+   */
+  onOpeningsSkipOrderChange(event) {
+    if (!window.JUTSUPER_DEBUG) {
+      this.ipc.send({
+        key: ipcSettingsKeys.openingsSkipOrder,
+        value: this.getSelectedOpeningsSkipOrder()
+      });
+    }
   }
 
   /**
@@ -206,6 +208,15 @@ class JutSuperSettingsPopup {
     }
   }
 
+  getSelectedOpeningsSkipOrder() {
+    if (this.opSkipOrderFirstSelector.checked) {
+      return skipOrder.firstOccurrence
+    }
+    else if (this.opSkipOrderLastSelector.checked) {
+      return skipOrder.lastOccurrence
+    }
+  }
+
   /////////////
   // Endings //
   /////////////
@@ -214,7 +225,12 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onEndingsSwitchChange(event) {
-
+    if (!window.JUTSUPER_DEBUG) {
+      this.ipc.send({
+        key: ipcSettingsKeys.endingsDoSkip,
+        value: event.target.checked
+      });
+    }
   }
 
   /**
@@ -228,8 +244,16 @@ class JutSuperSettingsPopup {
   // Endings skip order //
   ////////////////////////
 
+  /**
+   * @param {Event} event 
+   */
   onEndingsSkipOrderChange() {
-    
+    if (!window.JUTSUPER_DEBUG) {
+      this.ipc.send({
+        key: ipcSettingsKeys.openingsSkipOrder,
+        value: this.getSelectedEndingsSkipOrder()
+      });
+    }
   }
 
   /**
@@ -250,14 +274,39 @@ class JutSuperSettingsPopup {
     }
   }
 
+  getSelectedEndingsSkipOrder() {
+    if (this.edSkipOrderFirstSelector.checked) {
+      return skipOrder.firstOccurrence
+    }
+    else if (this.edSkipOrderLastSelector.checked) {
+      return skipOrder.lastOccurrence
+    }
+  }
+
   ///////////////////////
   // Endings max skips //
   ///////////////////////
 
   /**
+   * @param {number} value 
+   */
+  onEndingsSkipMaxChange(value) {
+    if (!window.JUTSUPER_DEBUG) {
+      this.ipc.send({
+        key: ipcSettingsKeys.endingsMaxSkips,
+        value: value
+      });
+    }
+  }
+
+  /**
    * @param {number | string} value 
    */
   setEndingsSkipMax(value) {
+    if (["undefined", "null"].includes(typeof value)) {
+      return;
+    }
+
     /** @type {number} */
     let asNumber;
     /** @type {string} */
@@ -274,46 +323,52 @@ class JutSuperSettingsPopup {
 
     if (Number.isNaN(asNumber) || asNumber < 0 || !asString) {
       this.edSkipMaxField.value = "0";
+      asString = "0"
+      asNumber = 0;
     }
     else {
       this.edSkipMaxField.value = asString;
     }
+
+    this.onEndingsSkipMaxChange(asNumber);
   }
 
   /**
    * @param {Event} event 
    */
   onEndingsSkipMaxNegative(event) {
-    const value = new Number(this.edSkipMaxField.value).valueOf();
+    const curValue = new Number(this.edSkipMaxField.value).valueOf();
 
-    if (value < 1) {
+    if (curValue < 1) {
       return;
     }
 
-    if (Number.isNaN(value)) {
+    if (Number.isNaN(curValue)) {
       this.edSkipMaxField.value = "0";
       return;
     }
 
-    this.edSkipMaxField.value = `${value - 1}`;
+    const newValue = curValue - 1;
+    this.edSkipMaxField.value = `${newValue}`;
 
-    console.log(this.edSkipMaxField.value);
+    this.onEndingsSkipMaxChange(newValue);
   }
 
   /**
    * @param {Event} event 
    */
   onEndingsSkipMaxPositive(event) {
-    const value = new Number(this.edSkipMaxField.value).valueOf();
+    const curValue = new Number(this.edSkipMaxField.value).valueOf();
 
-    if (Number.isNaN(value)) {
+    if (Number.isNaN(curValue)) {
       this.edSkipMaxField.value = "1";
       return;
     }
 
-    this.edSkipMaxField.value = `${value + 1}`;
+    const newValue = curValue + 1;
+    this.edSkipMaxField.value = `${newValue}`;
 
-    console.log(this.edSkipMaxField.value);
+    this.onEndingsSkipMaxChange(newValue);
   }
 
   /**
@@ -327,13 +382,18 @@ class JutSuperSettingsPopup {
       stringValue = stringValue.slice(1);
     }
 
+    let newValue;
     let numberMatches = stringValue.match(this.numberRegex);
 
     if (!numberMatches || numberMatches.length < 1) {
-      this.edSkipMaxField.value = "0"
+      this.edSkipMaxField.value = "0";
+      newValue = 0;
     } else {
-      this.edSkipMaxField.value = numberMatches[0]
+      this.edSkipMaxField.value = numberMatches[0];
+      newValue = new Number(numberMatches[0]).valueOf();
     }
+
+    this.onEndingsSkipMaxChange(newValue);
   }
 
   /**
@@ -345,13 +405,21 @@ class JutSuperSettingsPopup {
     }
   }
 
-  onEndingsFullscreenSliderChange() {
-    
-  }
-
   ////////////////////////////////
   // Endings persist fullscreen //
   ////////////////////////////////
+
+  /**
+   * @param {Event} event
+   */
+  onEndingsFullscreenSliderChange(event) {
+    if (!window.JUTSUPER_DEBUG) {
+      this.ipc.send({
+        key: ipcSettingsKeys.endingsDoPersistFullscreen,
+        value: event.target.checked
+      });
+    }
+  }
 
   /**
    * @param {boolean} value 
@@ -368,15 +436,30 @@ class JutSuperSettingsPopup {
    * @param {Event | number} event 
    */
   onDelayChange(event) {
+    if (["undefined", "null"].includes(typeof event)) {
+      return;
+    }
+
+    let newValue;
+
     if (typeof event === "number" || typeof event === "string") {
+      newValue = new Number(event).valueOf();
       this.delayNum.innerText = event.toString();
       this.delaySlider.setAttribute("value", `${event}`);
     }
     else {
+      newValue = new Number(event.target.value).valueOf();
       this.delayNum.innerText = event.target.value;
       this.delaySlider.setAttribute("value", `${event.target.value}`);
     }
     
+    if (!window.JUTSUPER_DEBUG) {
+      this.ipc.send({
+        key: ipcSettingsKeys.skipDelayS,
+        value: newValue
+      });
+    }
+
     this.delayNum.classList.add(domClasses.displayHidden);
     setTimeout(() => {
       this.delayNum.classList.remove(domClasses.displayHidden);
@@ -402,6 +485,29 @@ class JutSuperSettingsPopup {
   onCancelRecorderClick(event) {
     this.cancelKeyListener.isListening = !this.cancelKeyListener.isListening;
     this.cancelKeyListener.classList.toggle(domClasses.animateDarkerToDarkGreenHt);
+    this.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
+  }
+
+  /**
+   * @param {Event} event 
+   */
+  onCancelRecorderKeyDown(event) {
+    if (!this.cancelKeyListener.isListening) {
+      return
+    }
+
+    const keyLabel = util.getKeyLabelFromRawLabel(event.key);
+
+    if (!window.JUTSUPER_DEBUG) {
+      this.ipc.send({
+        key: ipcSettingsKeys.skipCancelKey,
+        value: keyLabel
+      });
+    }
+
+    this.cancelKeyListener.value = keyLabel;
+    this.cancelKeyListener.classList.remove(domClasses.animateDarkerToDarkGreenHt);
+    this.cancelKeyListener.isListening = false;
     this.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
   }
 
