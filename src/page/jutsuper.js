@@ -286,6 +286,13 @@ class JutSuper {
       value: ipcAwaits.completed
     })
 
+    if (!window.jsuperSettings.endings.doPersistFullscreen) {
+      this.ipc.send({
+        key: ipcKeys.fullscreenControl,
+        value: ipcBoolRequests.requestFalse
+      });
+    }
+
     jsuperLog.log(new Error, "+ next episode prep promise fulfulled");
     window[jutsuFns.skipEndingFnName]();
   }

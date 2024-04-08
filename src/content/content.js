@@ -769,7 +769,7 @@ class JutSuperContent {
 
       this.requestPlay();
 
-      if (transition.isFullscreen) {
+      if (this.settings.get().endings.doPersistFullscreen && transition.isFullscreen) {
         const body = document.getElementsByTagName(
           "body"
         )[0];
