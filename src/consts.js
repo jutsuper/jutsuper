@@ -1259,12 +1259,15 @@ const JutSuperIpcKeys = {
    */
   injectCustomFullscreenExit: "data-inject-custom-fullscreen-exit",
   /**
-   * # How many times the extension should skip endings
+   * # Is episode switch allowed (is is limited by `endings.maxSkips`)
    * 
-   * @see {number} for possible values
-   * @type {"data-max-continuous-episode-switches"}
+   * ## Possible values
+   * @see {JutSuperIpcAwaitStates}
+   * @see {boolean}
+   * 
+   * @type {"data-is-episode-switch-allowed"}
    */
-  maxContinuousEpisodeSwitches: "data-max-continuous-episode-switches"
+  isEpisodeSwitchAllowed: "data-is-episode-switch-allowed"
 }
 /** 
  * @typedef JutSuperIpcKeysType
@@ -1276,7 +1279,7 @@ const JutSuperIpcKeys = {
  * @property {"data-episode-switch-prep"} episodeSwitchPrep
  * @property {"data-is-episode-switched-automatically"} isEpisodeSwitchedAutomatically
  * @property {"data-inject-custom-fullscreen-exit"} injectCustomFullscreenExit
- * @property {"data-max-continuous-episode-switches"} maxContinuousEpisodeSwitches
+ * @property {"data-is-episode-switch-allowed"} isEpisodeSwitchAllowed
  * 
  * @typedef {(
  *   "data-essentials-loading-state" |
@@ -1286,7 +1289,8 @@ const JutSuperIpcKeys = {
  *   "data-episode-switch-prep" |
  *   "data-is-episode-switched-automatically" |
  *   "data-inject-custom-fullscreen-exit" |
- *   "data-max-continuous-episode-switches"
+ *   "data-max-continuous-episode-switches" |
+ *   "data-is-episode-switch-allowed"
  * )} JutSuperIpcKeysKeys
  */
 

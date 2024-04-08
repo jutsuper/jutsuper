@@ -423,6 +423,7 @@ class JutSuperContent {
     this.listenEssentialsLoadState();
     this.listenFullscreenChange();
     this.listenFullscreenControl();
+    this.listenEpisodeSwitchAllowanceRequests();
     this.listenEpisodeSwitchPrepStates();
     this.listenWindowStatesRequests();
   }
@@ -683,6 +684,61 @@ class JutSuperContent {
     );
   }
 
+  ////////////////////////////////////////////////
+  // Episode switch allowance requests handling //
+  ////////////////////////////////////////////////
+
+  async listenEpisodeSwitchAllowanceRequests() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvOnlyTheseKeys(ipcKeys.isEpisodeSwitchAllowed)
+      .build();
+
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt);
+
+      switch (evt.value) {
+        case ipcAwaits.request:
+          await this.handleEpisodeSwitchAllowanceRequest();
+          break;
+        default:
+          jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
+            location: this.LOCATION,
+            target: `${evt.key}=${evt.value}`
+          }).message);
+      }
+    }
+
+    throw jsuperErrors.unexpectedEndError({
+      location: this.LOCATION,
+      target: `${this.listenEpisodeSwitchAllowanceRequests.name}()`
+    });
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  isEpisodeSwitchAllowed() {
+    const switchesCount = typeof this.transition.get().switchesCount !== "undefined" ?
+      this.transition.get().switchesCount : 0;
+    const maxSkips = this.settings.get().endings.maxSkips;
+
+    if (
+      maxSkips > 0 &&
+      switchesCount >= maxSkips
+    ) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  async handleEpisodeSwitchAllowanceRequest() {
+    this.ipc.send({
+      key: ipcKeys.isEpisodeSwitchAllowed,
+      value: this.isEpisodeSwitchAllowed()
+    });
+  }
+
   ////////////////////////////////////
   // Episode switch states handling //
   ////////////////////////////////////
@@ -744,23 +800,17 @@ class JutSuperContent {
   }
 
   async handleEpisodeSwitchRequest() {
-    const switchesCount = typeof this.transition.get().switchesCount !== "undefined" ?
-      this.transition.get().switchesCount : 0;
-    const maxSkips = this.settings.get().endings.maxSkips;
-
-    if (
-      maxSkips > 0 &&
-      switchesCount >= maxSkips
-    ) {
+    if (!this.isEpisodeSwitchAllowed()) {
       // send rejection, since
       // we have exceeded max allowed skips
-      this.ipc.send({
+      return this.ipc.send({
         key: ipcKeys.episodeSwitchPrep,
         value: ipcAwaits.rejected
       });
-
-      return;
     }
+    
+    const switchesCount = typeof this.transition.get().switchesCount !== "undefined" ?
+      this.transition.get().switchesCount : 0;
 
     this.transition.setIsSwitchingEpisode(true);
     this.transition.setSwitchesCount(switchesCount + 1);

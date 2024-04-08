@@ -326,6 +326,20 @@ class JutSuper {
       return;
     }
 
+    this.ipc.send({
+      key: ipcKeys.isEpisodeSwitchAllowed,
+      value: ipcAwaits.request
+    });
+
+    /** @type {boolean} */
+    const isAllowed = (await this.ipc.recvOnce({
+      key: ipcKeys.isEpisodeSwitchAllowed,
+    })).value;
+
+    if (!isAllowed) {
+      return;
+    }
+
     jsuperLog.debug(new Error, "JutSuper: able to skip ending");
 
     const actionResult = await this.startSkipAction();
@@ -598,7 +612,6 @@ class JutSuper {
   }
 
   hideSkipPopup() {
-    console.log("hideSkipPopup")
     this.skipArea.classList.add(domClasses.visibilityHidden);
   }
 
