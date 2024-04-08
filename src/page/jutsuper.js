@@ -17,6 +17,7 @@ import {
   JutSuperDomClasses as domClasses,
   JutSuperIpcIds as ipcIds,
   JutSuperIpcKeys as ipcKeys,
+  JutSuperIpcSettingsKeys as ipcSettingsKeys,
   JutSuperIpcDefaultNodeProps as ipcDefaultNodeProps,
   JutSuperIpcLoadingStates as ipcLoadings,
   JutSuperIpcAwaitStates as ipcAwaits,
@@ -117,6 +118,7 @@ class JutSuper {
 
     this.listenPlayRequests();
     this.listenCustomFullscreenExitInjectRequest();
+    this.listenSettingsChange();
 
     this.#initPage().then(() => {
       jsuperLog.debug(new Error, `${this.LOCATION}: constructed`);
@@ -299,20 +301,25 @@ class JutSuper {
     
     jsuperLog.log(new Error, "o next episode prep promise awaiting");
 
-    await this.ipc.recvOnce({
-      key: ipcKeys.episodeSwitchPrep,
-      value: ipcAwaits.completed
-    })
+    const switchResponse = await this.ipc.recvOnce({
+      key: ipcKeys.episodeSwitchPrep
+    });
 
-    if (!window.jsuperSettings.endings.doPersistFullscreen) {
-      this.ipc.send({
-        key: ipcKeys.fullscreenControl,
-        value: ipcBoolRequests.requestFalse
-      });
+    if (switchResponse.value === ipcAwaits.rejected) {
+      return;
     }
-
-    jsuperLog.log(new Error, "+ next episode prep promise fulfulled");
-    window[jutsuFns.skipEndingFnName]();
+    
+    if (switchResponse.value === ipcAwaits.completed) {
+      if (!window.jsuperSettings.endings.doPersistFullscreen) {
+        this.ipc.send({
+          key: ipcKeys.fullscreenControl,
+          value: ipcBoolRequests.requestFalse
+        });
+      }
+  
+      jsuperLog.log(new Error, "+ next episode prep promise fulfulled");
+      window[jutsuFns.skipEndingFnName]();
+    }
   }
   
   /**
@@ -818,6 +825,40 @@ class JutSuper {
     });
 
     this.listenResolutionChange();
+  }
+
+  /**
+   * @returns {Promise<never>}
+   */
+  async listenSettingsChange() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvFromMyself()
+      .build();
+    
+    for await (const evt of this.settingsIpc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt);
+
+      try {
+        switch (evt.key) {
+          case ipcSettingsKeys.endingsMaxSkips:
+            this.handleEndingsMaxSkipsChange();
+            break
+          default:
+            break;
+            throw jsuperErrors.unhandledCaseError({
+              location: this.LOCATION,
+              target: `${evt.key}=${evt.value}`
+            });
+        }
+      } catch (e) {
+        jsuperLog.error(new Error, e);
+      }
+    }
+  }
+
+  handleEndingsMaxSkipsChange() {
+    this.endingTriggered = false;
+    console.log("retriggered ending");
   }
 }
 

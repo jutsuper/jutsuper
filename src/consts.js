@@ -1261,6 +1261,8 @@ const JutSuperIpcAwaitStates = {
   awaiting: "awaiting",
   /** @type {"aborted"} */
   aborted: "aborted",
+  /** @type {"rejected"} */
+  rejected: "rejected",
   /** @type {"paused"} */
   paused: "paused",
   /** @type {"continuation"} */
@@ -1274,6 +1276,7 @@ const JutSuperIpcAwaitStates = {
  * @property {"request"} request
  * @property {"awaiting"} awaiting
  * @property {"aborted"} aborted
+ * @property {"rejected"} rejected
  * @property {"paused"} paused
  * @property {"continuation"} continuation
  * @property {"completed"} completed
@@ -1283,6 +1286,7 @@ const JutSuperIpcAwaitStates = {
  *   "request" |
  *   "awaiting" |
  *   "aborted" |
+ *   "rejected" |
  *   "paused" |
  *   "continuation" |
  *   "completed"

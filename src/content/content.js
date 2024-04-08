@@ -731,7 +731,26 @@ class JutSuperContent {
   }
 
   async handleEpisodeSwitchRequest() {
+    const switchesCount = typeof this.transition.get().switchesCount !== "undefined" ?
+      this.transition.get().switchesCount : 0;
+    const maxSkips = this.settings.get().endings.maxSkips;
+
+    if (
+      maxSkips > 0 &&
+      switchesCount >= maxSkips
+    ) {
+      // send rejection, since
+      // we have exceeded max allowed skips
+      this.ipc.send({
+        key: ipcKeys.episodeSwitchPrep,
+        value: ipcAwaits.rejected
+      });
+
+      return;
+    }
+
     this.transition.setIsSwitchingEpisode(true);
+    this.transition.setSwitchesCount(switchesCount + 1);
     await this.commitTransitionStorage();
 
     // send callback that

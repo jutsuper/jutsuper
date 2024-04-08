@@ -8,6 +8,7 @@ export {
  * @typedef JutSuperTransitionObject
  * @property {boolean} isFullscreen
  * @property {boolean} isSwitchingEpisode
+ * @property {number} switchesCount
  */
 
 
@@ -19,16 +20,20 @@ const JutSuperTransitionObjectKeys = {
   /** @type {"isFullscreen"} */
   isFullscreen: "isFullscreen",
   /** @type {"isSwitchingEpisode"} */
-  isSwitchingEpisode: "isSwitchingEpisode"
+  isSwitchingEpisode: "isSwitchingEpisode",
+  /** @type {"switchesCount"} */
+  switchesCount: "switchesCount"
 }
 /**
  * @typedef JutSuperTransitionObjectKeysType
  * @property {"isFullscreen"} isFullscreen
  * @property {"isSwitchingEpisode"} isSwitchingEpisode
+ * @property {"switchesCount"} switchesCount
  *
  * @typedef {(
  *   "isFullscreen" |
- *   "isSwitchingEpisode"
+ *   "isSwitchingEpisode" |
+ *   "switchesCount"
  * )} JutSuperTransitionObjectKeysKeys
  */
 
@@ -45,7 +50,8 @@ class JutSuperTransition {
   setDefaults() {
     this.#object = {
       isFullscreen: false,
-      isSwitchingEpisode: false
+      isSwitchingEpisode: false,
+      switchesCount: 0,
     };
     return this;
   }
@@ -54,7 +60,8 @@ class JutSuperTransition {
   setUndefined() {
     this.#object = {
       isFullscreen: undefined,
-      isSwitchingEpisode: undefined
+      isSwitchingEpisode: undefined,
+      switchesCount: undefined,
     };
     return this;
   }
@@ -90,5 +97,13 @@ class JutSuperTransition {
    */
   setIsSwitchingEpisode(value) {
     this.#object.isSwitchingEpisode = value;
+  }
+
+  /**
+   * @param {number} value 
+   * @returns {void}
+   */
+  setSwitchesCount(value) {
+    this.#object.switchesCount = value;
   }
 }
