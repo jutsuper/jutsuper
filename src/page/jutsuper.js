@@ -23,6 +23,9 @@ import {
   JutSuperIpcBoolRequestStates as ipcBoolRequests
 } from "/src/consts.js";
 import {
+  JutSuperSettingsSkipOrder as skipOrder
+} from "/src/settings.js";
+import {
   JutSuperSettingsPopup
 } from "/src/page/settings.js";
 
@@ -83,15 +86,15 @@ class JutSuper {
      * @example
      * ```
      * // if there is one skipper, it may be
-     * [ 83, 98 ]
+     * [[ 83, 98 ]]
      * // if there are multiple skippers, it may be
      * [[ 83, 98 ], [ 100, 115 ]]
      * ```
      * @type {number[][]} 
      */
-    this.openingSkipperRngs = this.getOverlayRngsByFunctionName(
+    this.openingSkipperRngs = this.sortOverlayRngs(this.getOverlayRngsByFunctionName(
       jutsuFns.skipOpeningFnName
-    );
+    ));
     /**
      * # Time ranges when it's possible to skip the ending
      * (in seconds)
@@ -99,15 +102,15 @@ class JutSuper {
      * @example
      * ```
      * // if there is one skipper, it may be
-     * [ 1205, 1225 ]
+     * [[ 1205, 1225 ]]
      * // if there are multiple skippers, it may be
      * [[ 1205, 1225 ], [ 1405, 1425 ]]
      * ```
      * @type {number[][]} 
      */
-    this.endingSkipperRngs = this.getOverlayRngsByFunctionName(
+    this.endingSkipperRngs = this.sortOverlayRngs(this.getOverlayRngsByFunctionName(
       jutsuFns.skipEndingFnName
-    );
+    ));
 
     jsuperLog.debug(new Error, "openingSkipperRngs is", this.openingSkipperRngs);
     jsuperLog.debug(new Error, "endingSkipperRngs is", this.endingSkipperRngs);
@@ -163,7 +166,7 @@ class JutSuper {
       return false;
     }
 
-    if (typeof range[0] === "number") {
+    if (typeof range[0] === "number" && typeof range[1] === "number") {
       /** @type {number[]} */
       range;
 
@@ -171,7 +174,7 @@ class JutSuper {
       const end = range[1]
       return value >= start && value < end
     }
-    else if (range[0].constructor === Array) {
+    else if (range[0].constructor === Array && range[1].constructor === Array) {
       /** @type {number[][]} */
       range;
 
@@ -208,11 +211,11 @@ class JutSuper {
    * ```
    * const openingRng = getOverlayRngsByFunctionName("skip_video_intro");
    * // example values:
-   * // openingRng === [ 83, 98 ] ||
+   * // openingRng === [[ 83, 98 ]] ||
    * // openingRng === [[ 83, 98 ], [ 100, 115 ]]
    * const endingRng = getOverlayRngsByFunctionName("video_go_next_episode");
    * // example values:
-   * // endingRng === [ 1205, 1225 ] ||
+   * // endingRng === [[ 1205, 1225 ]] ||
    * // endingRng === [[ 1205, 1225 ], [ 1405, 1425 ]]
    * ```
    * @param {string} fn_name
@@ -228,6 +231,21 @@ class JutSuper {
     }
 
     return ranges;
+  }
+
+  /**
+   * # Sort ranges by the first number in the range
+   * 
+   * @example
+   * ```
+   * const sorted = sortOverlayRngs([[ 1405, 1425 ], [ 1205, 1225 ]])
+   * // console.assert(sorted === [[ 1205, 1225 ], [ 1405, 1425 ]])
+   * ```
+   * @param {number[][]} rngs
+   * @return {number[][]}
+   */
+  sortOverlayRngs(rngs) {
+    return rngs.sort((a, b) => a[0] - b[0]);
   }
 
   /**
@@ -312,13 +330,30 @@ class JutSuper {
   checkForKeyTimestamps() {
     const time = this.player.currentTime();
 
+    let selectedOpeningsRange;
+    let selectedEndingsRange;
+
+    if (window.jsuperSettings.openings.skipOrder === skipOrder.firstOccurrence) {
+      selectedOpeningsRange = this.openingSkipperRngs[0];
+    }
+    else if (window.jsuperSettings.openings.skipOrder === skipOrder.lastOccurrence) {
+      selectedOpeningsRange = this.openingSkipperRngs[1];
+    }
+
+    if (window.jsuperSettings.endings.skipOrder === skipOrder.firstOccurrence) {
+      selectedEndingsRange = this.endingSkipperRngs[0];
+    }
+    else if (window.jsuperSettings.endings.skipOrder === skipOrder.lastOccurrence) {
+      selectedEndingsRange = this.endingSkipperRngs[1];
+    }
+
     if (
       // skipping openings is enabled in settings
       window.jsuperSettings.openings.doSkip &&
       // does the opening range exists
-      this.openingSkipperRngs.length > 0 &&
+      typeof selectedOpeningsRange !== "undefined" && selectedOpeningsRange.length > 0 &&
       // is current time in the opening skipper region
-      JutSuper.isInRangeExclusive(time, this.openingSkipperRngs) &&
+      JutSuper.isInRangeExclusive(time, selectedOpeningsRange) &&
       // is currently playing
       !this.player.paused()
     ) {
@@ -337,9 +372,9 @@ class JutSuper {
       // skipping endings is enabled in settings
       window.jsuperSettings.endings.doSkip &&
       // does the ending range exists
-      this.endingSkipperRngs.length > 0 &&
+      typeof selectedEndingsRange !== "undefined" && selectedEndingsRange.length > 0 &&
       // is current time in the ending skipper region
-      JutSuper.isInRangeExclusive(time, this.endingSkipperRngs) &&
+      JutSuper.isInRangeExclusive(time, selectedEndingsRange) &&
       // is currently playing
       !this.player.paused()
     ) {
