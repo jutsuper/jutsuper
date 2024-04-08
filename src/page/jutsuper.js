@@ -29,6 +29,9 @@ import {
 import {
   JutSuperSettingsPopup
 } from "/src/page/settings.js";
+import {
+  jsuperUtil
+} from "/src/util.js";
 
 
 /** @type {JutSuper} */
@@ -54,9 +57,17 @@ class JutSuper {
     this.isCustomFullscreen = false;
     /** @type {number | undefined} */
     this.peakScreenHeight = undefined;
+    /** @type {boolean} */
+    this.regionSkipCancelled = false;
+    /** @type {boolean} */
+    this.awaitingSkipCancel = false;
 
     /** @type {HTMLDivElement} */
-    this.settingsContainer = document.createElement("div");
+    this.vjsContainer = document.createElement("div");
+    /** @type {HTMLDivElement} */
+    this.skipArea = document.createElement("div");
+    /** @type {HTMLDivElement} */
+    this.skipClipArea = document.createElement("div");
     /** @type {HTMLDivElement} */
     this.settingsArea = document.createElement("div");
     /** @type {HTMLDivElement} */
@@ -116,6 +127,20 @@ class JutSuper {
     jsuperLog.debug(new Error, "openingSkipperRngs is", this.openingSkipperRngs);
     jsuperLog.debug(new Error, "endingSkipperRngs is", this.endingSkipperRngs);
 
+    const thisArg = this;
+    document.addEventListener("keydown", function(event) {
+      if (!thisArg.awaitingSkipCancel) {
+        return;
+      }
+
+      const keyLabel = jsuperUtil.getKeyLabelFromRawLabel(event.key);
+      if (keyLabel !== window.jsuperSettings.skipCancelKey) {
+        return;
+      }
+
+      thisArg.regionSkipCancelled = true;
+    });
+
     this.listenPlayRequests();
     this.listenCustomFullscreenExitInjectRequest();
     this.listenSettingsChange();
@@ -152,7 +177,7 @@ class JutSuper {
     });
     this.injectFullscreenChangeListener();
     this.injectTimeupdateListener();
-    await this.injectSettings();
+    await this.injectOverlays();
   }
 
   /**
@@ -176,7 +201,7 @@ class JutSuper {
       const end = range[1]
       return value >= start && value < end
     }
-    else if (range[0].constructor === Array && range[1].constructor === Array) {
+    else if (range[0].constructor === Array) {
       /** @type {number[][]} */
       range;
 
@@ -254,7 +279,7 @@ class JutSuper {
    * # Start opening skip countdown
    * @returns {void}
    */
-  startSkippingOpening() {
+  async startSkippingOpening() {
     if (!cur_time_cookie) {
       jsuperLog.error(new Error,
         "JutSuper: cannot start skipping opening, " +
@@ -267,6 +292,11 @@ class JutSuper {
 
     jsuperLog.debug(new Error, "JutSuper: able to skip opening");
 
+    const actionResult = await this.startSkipAction();
+    if (actionResult === "cancelled") {
+      return;
+    }
+
     window[jutsuFns.skipOpeningFnName]();
   }
 
@@ -275,6 +305,10 @@ class JutSuper {
    * @returns {void}
    */
   stopSkippingOpening() {
+    if (this.awaitingSkipCancel) {
+      this.regionSkipCancelled = true;
+    }
+
     jsuperLog.debug(new Error, "JutSuper: not skipping opening anymore");
   }
   
@@ -294,12 +328,17 @@ class JutSuper {
 
     jsuperLog.debug(new Error, "JutSuper: able to skip ending");
 
+    const actionResult = await this.startSkipAction();
+    if (actionResult === "cancelled") {
+      return;
+    }
+
     this.ipc.send({
       key: ipcKeys.episodeSwitchPrep,
       value: ipcAwaits.request
     });
     
-    jsuperLog.log(new Error, "o next episode prep promise awaiting");
+    jsuperLog.debug(new Error, "o next episode prep promise awaiting");
 
     const switchResponse = await this.ipc.recvOnce({
       key: ipcKeys.episodeSwitchPrep
@@ -317,7 +356,7 @@ class JutSuper {
         });
       }
   
-      jsuperLog.log(new Error, "+ next episode prep promise fulfulled");
+      jsuperLog.debug(new Error, "+ next episode prep promise fulfulled");
       window[jutsuFns.skipEndingFnName]();
     }
   }
@@ -327,7 +366,48 @@ class JutSuper {
    * @returns {void}
    */
   stopSkippingEnding() {
+    if (this.awaitingSkipCancel) {
+      this.regionSkipCancelled = true;
+    }
+
     jsuperLog.debug(new Error, "JutSuper: not skipping ending anymore");
+  }
+
+  /**
+   * @returns {Promise<"timeout" | "cancelled">}
+   */
+  async startSkipAction() {
+    this.awaitingSkipCancel = true;
+
+    const delay = typeof window.jsuperSettings.skipDelayS !== "undefined" ?
+      window.jsuperSettings.skipDelayS : 0;
+
+    if (delay < 1) {
+      return "timeout";
+    }
+
+    this.showSkipPopup();
+
+    const delayArray = Array.from({length: delay * 10}, (_, i) => i + 1).reverse();
+
+    for (let i = 0; i <= delayArray.length; i++) {
+      const percentage = 100 * i / delayArray.length;
+      this.setSkipPopupCountdownLineWidth(100 - percentage);
+
+      if (this.regionSkipCancelled) {
+        this.regionSkipCancelled = false;
+        this.awaitingSkipCancel = false;
+        this.hideSkipPopup();
+        return "cancelled";
+      }
+
+      await jsuperUtil.asyncSleep(100);
+    }
+
+    this.regionSkipCancelled = false;
+    this.awaitingSkipCancel = false;
+    this.hideSkipPopup();
+    return "timeout";
   }
 
   /**
@@ -340,14 +420,20 @@ class JutSuper {
     let selectedOpeningsRange;
     let selectedEndingsRange;
 
-    if (window.jsuperSettings.openings.skipOrder === skipOrder.firstOccurrence) {
+    if (window.jsuperSettings.openings.skipOrder === skipOrder.anyOccurrence) {
+      selectedOpeningsRange = this.openingSkipperRngs;
+    }
+    else if (window.jsuperSettings.openings.skipOrder === skipOrder.firstOccurrence) {
       selectedOpeningsRange = this.openingSkipperRngs[0];
     }
     else if (window.jsuperSettings.openings.skipOrder === skipOrder.lastOccurrence) {
       selectedOpeningsRange = this.openingSkipperRngs[1];
     }
 
-    if (window.jsuperSettings.endings.skipOrder === skipOrder.firstOccurrence) {
+    if (window.jsuperSettings.endings.skipOrder === skipOrder.anyOccurrence) {
+      selectedEndingsRange = this.endingSkipperRngs;
+    }
+    else if (window.jsuperSettings.endings.skipOrder === skipOrder.firstOccurrence) {
       selectedEndingsRange = this.endingSkipperRngs[0];
     }
     else if (window.jsuperSettings.endings.skipOrder === skipOrder.lastOccurrence) {
@@ -407,19 +493,6 @@ class JutSuper {
         this.stopSkippingEnding();
       }
     }
-  }
-
-  /**
-   * @returns {HTMLDivElement}
-   */
-  generateSettingsButton() {
-    const Button = videojs.getComponent("Button");
-    const button = new Button(this.player, {
-      clickHandler: function(event) {
-        console.log("clicked");
-      }
-    });
-    return button;
   }
 
   /**
@@ -520,10 +593,40 @@ class JutSuper {
     );
   }
 
+  showSkipPopup() {
+    this.skipArea.classList.remove(domClasses.visibilityHidden);
+  }
+
+  hideSkipPopup() {
+    console.log("hideSkipPopup")
+    this.skipArea.classList.add(domClasses.visibilityHidden);
+  }
+
+  /**
+   * @param {Event} event 
+   */
+  onSkipPopupCancelClick(event) {
+    this.regionSkipCancelled = true;
+  }
+
+  /**
+   * @param {string} key 
+   */
+  setSkipPopupCancelKeyLabel(key) {
+    document.getElementById(domIds.skipKeyLabel).innerText = key;
+  }
+
+  /**
+   * @param {string | number} percent 
+   */
+  setSkipPopupCountdownLineWidth(percent) {
+    document.getElementById(domIds.skipCountdownLine).style.width = `${percent}%`;
+  }
+
   /**
    * @returns {Promise<void>}
    */
-  async injectSettings() {
+  async injectOverlays() {
     const thisArg = this;
     const Button = this.player.constructor.getComponent("Button");
     const iconUrl = document.getElementById(assetIds.squareWhiteLogo48Svg).getAttribute("href");
@@ -583,6 +686,15 @@ class JutSuper {
       );
     }
 
+    const skipAreaHtmlTemplate = document.createElement("template");
+    const skipAreaHtmlString = await (await fetch(
+      document.getElementById(assetIds.skipHtml).href
+    )).text();
+    skipAreaHtmlTemplate.innerHTML = skipAreaHtmlString;
+    const skipContent = skipAreaHtmlTemplate
+      .content
+      .getElementById(domIds.skipRoot);
+
     const settingsAreaHtmlTemplate = document.createElement("template");
     const settingsAreaHtmlString = await (await fetch(
       document.getElementById(assetIds.settingsHtml).href
@@ -592,12 +704,31 @@ class JutSuper {
       .content
       .getElementById(domIds.settingsRoot);
 
-    this.settingsContainer.id = domIds.vjsSettingsContainer;
-    this.settingsContainer.classList.add(domClasses.vjsSettingsContainer);
+    this.vjsContainer.id = domIds.vjsContainer;
+    this.vjsContainer.classList.add(domClasses.vjsContainer);
+
+    this.skipArea.id = domIds.vjsSkipArea;
+    this.skipArea.classList.add(domClasses.vjsSkipPopupAreaSized);
+    this.skipArea.classList.add(domClasses.vjsPopupArea);
+    this.skipArea.classList.add(domClasses.vjsSkipPopupArea);
+    this.skipArea.classList.add(domClasses.animateYAppear);
+    this.skipArea.classList.add(domClasses.animateTopToBottom);
+    this.skipArea.classList.add(domClasses.visibilityHidden);
+    this.skipArea.style.scrollbarWidth = "none";
+
+    this.skipClipArea.id = domIds.vjsSkipClipArea;
+    this.skipClipArea.classList.add(domClasses.vjsSkipPopupAreaSized);
+    this.skipClipArea.classList.add(domClasses.vjsPopupClipArea);
+    this.skipClipArea.style.height = "max-content";
+    this.skipClipArea.style.width = "max-content";
+    this.skipClipArea.append(skipContent);
+    this.skipArea.append(this.skipClipArea);
 
     this.settingsArea.id = domIds.vjsSettingsArea;
-    this.settingsArea.classList.add(domClasses.vjsSettingsAreaSized);
-    this.settingsArea.classList.add(domClasses.vjsSettingsArea);
+    this.settingsArea.classList.add(domClasses.vjsSettingsPopupAreaSized);
+    this.settingsArea.classList.add(domClasses.vjsPopupArea);
+    this.settingsArea.classList.add(domClasses.vjsSettingsPopupArea);
+    this.settingsArea.classList.add(domClasses.animateYAppear);
     this.settingsArea.classList.add(domClasses.animateBottomToTop);
     this.settingsArea.classList.add(domClasses.visibilityHidden);
     this.settingsArea.style.height = "auto";
@@ -606,8 +737,8 @@ class JutSuper {
     this.settingsArea.style.scrollbarWidth = "none";
 
     this.settingsClipArea.id = domIds.vjsSettingsClipArea;
-    this.settingsClipArea.classList.add(domClasses.vjsSettingsAreaSized);
-    this.settingsClipArea.classList.add(domClasses.vjsSettingsClipArea);
+    this.settingsClipArea.classList.add(domClasses.vjsSettingsPopupAreaSized);
+    this.settingsClipArea.classList.add(domClasses.vjsPopupClipArea);
     this.settingsClipArea.style.height = "auto";
     this.settingsClipArea.style.maxHeight = "inherit";
     this.settingsClipArea.style.overflowY = "auto";
@@ -615,11 +746,17 @@ class JutSuper {
     this.settingsArea.append(this.settingsClipArea);
 
     this.player.el().insertBefore(
-      this.settingsContainer,
+      this.vjsContainer,
       this.player.el().firstChild
     )
 
-    document.getElementById(domIds.vjsSettingsContainer).append(this.settingsArea);
+    const vjsContainer = document.getElementById(domIds.vjsContainer);
+    vjsContainer.append(this.skipArea);
+    vjsContainer.append(this.settingsArea);
+
+    document.getElementById(domIds.skipRoot).addEventListener(
+      "click", event => this.onSkipPopupCancelClick(event)
+    );
 
     for (const icon of document.getElementsByClassName(domClasses.iconDropdown)) {
       icon.setAttribute(
@@ -633,6 +770,7 @@ class JutSuper {
     }
 
     this.settingsPopup = new JutSuperSettingsPopup(document);
+    document.getElementById(domIds.skipKeyLabel).innerText = window.jsuperSettings.skipCancelKey;
   }
 
   /**

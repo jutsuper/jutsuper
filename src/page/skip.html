@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="jutsuper.css"
+    >
+    <script>
+      (function setDebugFlag() {
+        window.JUTSUPER_DEBUG = true;
+      })();
+      (function injectFonts() {
+        const fonts = [
+          ["Roboto", "/src/assets/font/Roboto-Regular.ttf", "truetype", "normal"],
+          ["Roboto", "/src/assets/font/Roboto-Bold.ttf", "truetype", "bold"]
+        ]
+        const newStyle = document.createElement("style");
+
+        for (const font of fonts) {
+          const family = font[0];
+          const url = font[1];
+          const format = font[2]
+          const weight = font[3];
+
+          let ff = "";
+          ff += "@font-face {\n";
+          ff += "  font-family: \"" + family + "\";";
+          ff += "  font-weight: " + weight + ";";
+          ff += "  src: url(\"" + url + "\") format(\"" + format + "\");";
+          ff += "}";
+
+          newStyle.appendChild(document.createTextNode(ff))
+        }
+
+        document.head.appendChild(newStyle);
+      })();
+      (function injectMainScriptOnPageLoad() {
+        window.addEventListener("load", () => {
+          const script = document.createElement("script");
+          script.src = "/src/page/skip.js";
+          script.type = "module";
+          document.getElementsByTagName("head")[0].append(script);
+        });
+      })();
+    </script>
+  </head>
+  <body class="jutsuper-dev-black-bg" style="position: absolute; height: 50vh">
+    <div style="height: 50px">
+      <div 
+      id="jutsuper-dev-preload-message"
+      style="
+        color: white;
+        margin-bottom: 20px;
+      "
+      >
+        Awaiting JavaScript...
+      </div>
+    </div>
+    <div class="jutsuper-dev-skip-area">
+      <!-- Start of the area that gets injected -->
+      <div
+        id="jutsuper-skip-root"
+        class="jutsuper-skip-frame"
+      >
+        <div class="jutsuper-skip-frame-content">
+          <div class="jutsuper-skip-header">
+            <img
+              src="/src/assets/icon/skip.svg"
+              width="15px"
+              class="
+                jutsuper-icon-skip
+                jutsuper-no-pointer-events
+                jutsuper-no-select
+              "
+            />
+            <div class="jutsuper-text-skipping">
+              Skipping
+            </div>
+          </div>
+          <div class="jutsuper-skip-options-container">
+            <div class="jutsuper-text-or">
+              Cancel
+            </div>
+            <div
+              id="jutsuper-skip-key-label"
+              class="jutsuper-key-label"
+            >
+              Null
+            </div>
+          </div>
+        </div>
+        <div
+          id="jutsuper-skip-countdown-line"
+          class="jutsuper-skip-countdown-line"
+          style="width: 100%;"
+        >
+        </div>
+      </div>
+      <!-- End of the area that gets injected -->
+    </div>
+  </body>
+</html>

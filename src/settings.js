@@ -112,6 +112,8 @@ const JutSuperSettingsObjectKeys = {
  * @enum {JutSuperSettingsSkipOrderType}
  */
 const JutSuperSettingsSkipOrder = {
+  /** @type {"anyOccurrence"} */
+  anyOccurrence: "anyOccurrence",
   /** @type {"firstOccurrence"} */
   firstOccurrence: "firstOccurrence",
   /** @type {"lastOccurrence"} */
@@ -119,10 +121,12 @@ const JutSuperSettingsSkipOrder = {
 }
 /**
  * @typedef JutSuperSettingsSkipOrderType
+ * @property {"anyOccurrence"} anyOccurrence
  * @property {"firstOccurrence"} firstOccurrence
  * @property {"lastOccurrence"} lastOccurrence
  * 
  * @typedef {(
+ *   "anyOccurrence" |
  *   "firstOccurrence" |
  *   "lastOccurrence"
  * )} JutSuperSettingsSkipOrderKeys
@@ -142,11 +146,11 @@ class JutSuperSettings {
     this.#object = {
       openings: {
         doSkip: true,
-        skipOrder: JutSuperSettingsSkipOrder.firstOccurrence
+        skipOrder: JutSuperSettingsSkipOrder.anyOccurrence
       },
       endings: {
         doSkip: true,
-        skipOrder: JutSuperSettingsSkipOrder.firstOccurrence,
+        skipOrder: JutSuperSettingsSkipOrder.anyOccurrence,
         doPersistFullscreen: true,
         maxSkips: 0
       },

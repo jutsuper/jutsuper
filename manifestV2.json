@@ -43,6 +43,7 @@
     "/src/assets/logo/square-black-48.svg",
     "/src/assets/icon/dropdown.svg",
     "/src/assets/icon/skip.svg",
+    "/src/assets/icon/any.svg",
     "/src/assets/icon/first.svg",
     "/src/assets/icon/last.svg",
     "/src/consts.js",
@@ -51,8 +52,10 @@
     "/src/ipc.js",
     "/src/page/jutsuper.js",
     "/src/page/jutsuper.css",
+    "/src/page/settings.js",
     "/src/page/settings.html",
-    "/src/page/settings.js"
+    "/src/page/skip.js",
+    "/src/page/skip.html"
   ],
   "icons": {
     "128": "/src/assets/logo/square-green-128.png"

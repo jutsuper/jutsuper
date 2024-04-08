@@ -33,6 +33,12 @@ var jsuperLog;
 var jsuperStorage;
 
 /**
+ * @typedef {import("/src/consts.js").JutSuperDomIds} JutSuperDomIds
+ * @type {JutSuperDomIds}
+ */
+var domIds;
+
+/**
  * @typedef {import("/src/consts.js").JutSuperDomClasses} JutSuperDomClasses
  * @type {JutSuperDomClasses}
  */
@@ -201,6 +207,7 @@ var JutSuperSettings;
   jsuperErrors = errorModule.jsuperErrors;
   jsuperLog = logModule.jsuperLog;
   jsuperStorage = storageModule.jsuperStorage;
+  domIds = constsModule.JutSuperDomIds;
   domClasses = constsModule.JutSuperDomClasses;
   defaultFonts = constsModule.JutSuperDefaultFonts;
   jutsuIds = constsModule.JutSuDomIds;
@@ -281,9 +288,13 @@ class JutSuperContent {
     /** @type {string} */
     this.urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
     /** @type {string} */
-    this.urlSettingsJs = browser.runtime.getURL("/src/page/settings.js");
+    this.urlSettingsJs = browser.runtime.getURL(assetPaths.settingsJs);
     /** @type {string} */
     this.urlSettingsHtml = browser.runtime.getURL(assetPaths.settingsHtml);
+    /** @type {string} */
+    this.urlSkipJs = browser.runtime.getURL(assetPaths.skipJs);
+    /** @type {string} */
+    this.urlSkipHtml = browser.runtime.getURL(assetPaths.skipHtml);
 
     const head = document.getElementsByTagName("head")[0];
 
@@ -296,6 +307,7 @@ class JutSuperContent {
     this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
     this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
     this.injectDocument(head, this.urlSettingsHtml, assetIds.settingsHtml);
+    this.injectDocument(head, this.urlSkipHtml, assetIds.skipHtml);
 
     this.asyncInit();
   }
@@ -462,6 +474,7 @@ class JutSuperContent {
           case ipcSettingsKeys.skipCancelKey:
             if (this.settings.get().skipCancelKey === evt.value) { continue }
             this.settings.setSkipCancelKey(evt.value);
+            document.getElementById(domIds.skipKeyLabel).innerText = evt.value;
             break;
           default:
             throw jsuperErrors.unhandledCaseError({

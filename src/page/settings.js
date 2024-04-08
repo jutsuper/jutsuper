@@ -47,6 +47,8 @@ class JutSuperSettingsPopup {
     /** @type {HTMLDivElement} */
     this.opSkipOrderSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderSelector);
     /** @type {HTMLInputElement} */
+    this.opSkipOrderAnySelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderAny);
+    /** @type {HTMLInputElement} */
     this.opSkipOrderFirstSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderFirst);
     /** @type {HTMLInputElement} */
     this.opSkipOrderLastSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderLast);
@@ -58,6 +60,8 @@ class JutSuperSettingsPopup {
     this.edClipSection = this.document.getElementById(domIds.settingsEndingsSectionClip);
     /** @type {HTMLDivElement} */
     this.edSkipOrderSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderSelector);
+    /** @type {HTMLInputElement} */
+    this.edSkipOrderAnySelector = this.document.getElementById(domIds.settingsEndingsSkipOrderAny);
     /** @type {HTMLInputElement} */
     this.edSkipOrderFirstSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderFirst);
     /** @type {HTMLInputElement} */
@@ -120,7 +124,8 @@ class JutSuperSettingsPopup {
         .communicationNodeIdIs(ipcDefaultNodeProps.settingsId)
         .identifyAs(ipcIds.page)
         .build();
-      this.listenIpcChanges(true);
+      this.loadInitialIpcSettings();
+      this.listenIpcChanges();
     }
 
     // if in dev environment, hide the preload message
@@ -194,6 +199,9 @@ class JutSuperSettingsPopup {
     this.exposedSettings.openings.skipOrder = value;
 
     switch (value) {
+      case skipOrder.anyOccurrence:
+        this.opSkipOrderAnySelector.checked = true;
+        break;
       case skipOrder.firstOccurrence:
         this.opSkipOrderFirstSelector.checked = true;
         break;
@@ -208,7 +216,10 @@ class JutSuperSettingsPopup {
   }
 
   getSelectedOpeningsSkipOrder() {
-    if (this.opSkipOrderFirstSelector.checked) {
+    if (this.opSkipOrderAnySelector.checked) {
+      return skipOrder.anyOccurrence
+    }
+    else if (this.opSkipOrderFirstSelector.checked) {
       return skipOrder.firstOccurrence
     }
     else if (this.opSkipOrderLastSelector.checked) {
@@ -267,6 +278,9 @@ class JutSuperSettingsPopup {
     this.exposedSettings.endings.skipOrder = value;
 
     switch (value) {
+      case skipOrder.anyOccurrence:
+        this.edSkipOrderAnySelector.checked = true;
+        break;
       case skipOrder.firstOccurrence:
         this.edSkipOrderFirstSelector.checked = true;
         break;
@@ -281,7 +295,10 @@ class JutSuperSettingsPopup {
   }
 
   getSelectedEndingsSkipOrder() {
-    if (this.edSkipOrderFirstSelector.checked) {
+    if (this.edSkipOrderAnySelector.checked) {
+      return skipOrder.anyOccurrence
+    }
+    else if (this.edSkipOrderFirstSelector.checked) {
       return skipOrder.firstOccurrence
     }
     else if (this.edSkipOrderLastSelector.checked) {
@@ -548,14 +565,9 @@ class JutSuperSettingsPopup {
   /////////////////////////
 
   /**
-   * @param {boolean} doReadInitial
    * @returns {Promise<never>}
    */
-  async listenIpcChanges(doReadInitial) {
-    if (doReadInitial) {
-      this.loadInitialIpcSettings();
-    }
-
+  async listenIpcChanges() {
     const cfg = new JutSuperIpcRecvParamsBuilder()
       .build();
     

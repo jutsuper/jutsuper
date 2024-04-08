@@ -1,7 +1,8 @@
 /* Global variables */
 :root {
   --jutsuper-color-gray: rgb(150, 150, 150);
-  --jutsuper-color-light-gray: rgb(200, 200, 200);
+  --jutsuper-color-light-light-gray: rgb(200, 200, 200);
+  --jutsuper-color-light-dark-gray: rgb(40, 40, 40);
   --jutsuper-color-light-green: #BDF283;
   --jutsuper-color-dark-green: #9BC76C;
   --jutsuper-color-dark-green-half-transparent: #ACDD77;
@@ -13,12 +14,12 @@
   --jutsuper-dur-mid: .25s;
   --jutsuper-dur-slow: .50s;
   --jutsuper-curve-fast-start-slow-end: cubic-bezier(0,.86,.24,.96);
+  /* Control the popup's border radius */
+  --jutsuper-size-border-radius: 20px;
   /* Max setting's popup width */
   --jutsuper-size-settings-max-width: 220px;
   /* Max setting's popup height */
   --jutsuper-size-settings-max-height: 310px;
-  /* Control the settings popup border radius */
-  --jutsuper-size-settings-border-radius: 20px;
   /* Control the default row height in a settings popup */
   --jutsuper-size-settings-row-height: 24px;
   /* Control the "Openings" section height */
@@ -116,8 +117,22 @@
   background-color: white;
   clip-path: border-box;
   width: 220px;
-  /*height: 247px;*/
-  border-radius: var(--jutsuper-size-settings-border-radius);
+  border-radius: var(--jutsuper-size-border-radius);
+  overflow: hidden;
+  justify-content: left;
+  font-family: "Roboto";
+  font-size: 1em;
+  color: black;
+}
+
+.jutsuper-dev-skip-area {
+  position: absolute;
+  bottom: 0;
+  background-color: white;
+  clip-path: border-box;
+  width: max-content;
+  height: max-content;
+  border-radius: var(--jutsuper-size-border-radius);
   overflow: hidden;
   justify-content: left;
   font-family: "Roboto";
@@ -144,6 +159,11 @@
 
 .jutsuper-icon-dropdown {
   transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end)
+}
+
+/* An icon for the "Skip any occurrence" option */
+.jutsuper-icon-order-any::before {
+  content: url("/src/assets/icon/any.svg");
 }
 
 /* An icon for the "Skip first occurrence" option */
@@ -178,8 +198,8 @@
 /* Animations */
 /* ////////// */
 
-/* Appear from bottom to top, used for the popup window */
-.jutsuper-animate-bottom-to-top {
+/* Appear from bottom to top, used for the settings popup window */
+.jutsuper-animate-y-appear {
   visibility: visible;
   transform: translateY(0px);
   transition: 
@@ -188,10 +208,16 @@
     visibility var(--jutsuper-dur-fast) var(--jutsuper-curve-fast-start-slow-end);
 }
 
-.jutsuper-animate-bottom-to-top.jutsuper-visibility-hidden {
+.jutsuper-animate-y-appear.jutsuper-animate-bottom-to-top.jutsuper-visibility-hidden {
   opacity: 0;
   visibility: hidden;
   transform: translateY(30px);
+}
+
+.jutsuper-animate-y-appear.jutsuper-animate-top-to-bottom.jutsuper-visibility-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-30px);
 }
 
 /* Appear from top to bottom, used for the delay number */
@@ -258,8 +284,8 @@
   cursor: pointer !important;
 }
 
-/* An area for the popup */
-.jutsuper-vjs-settings-container {
+/* An area for popups */
+.jutsuper-vjs-container {
   position: absolute;
   width: 100%;
   height: calc(100% - 3.5em);
@@ -272,22 +298,8 @@
   pointer-events: none;
 }
 
-/*
-  Base selector for the popup sizing,
-  used in combination with `jutsuper-vjs-settings-area`
-  and `jutsuper-vjs-settings-clip-area`
-*/
-.jutsuper-vjs-settings-area-sized {
-  width: 100%;
-  height: 100%;
-  max-width: var(--jutsuper-size-settings-max-width);
-  max-height: var(--jutsuper-size-settings-max-height);
-  border-radius: var(--jutsuper-size-settings-border-radius);
-}
-
-/* Fonts and shadows for the popup */
-.jutsuper-vjs-settings-area {
-  align-self: end;
+/* Props for all extension popups */
+.jutsuper-vjs-popup-area {
   pointer-events: all;
   background-color: white;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
@@ -297,8 +309,8 @@
   color: black;
 }
 
-/* Clip the settings area to hide inner overflows */
-.jutsuper-vjs-settings-clip-area {
+/* Clip the popup area to hide inner overflows */
+.jutsuper-vjs-popup-clip-area {
   clip-path: border-box;
   overflow-y: hidden;
   overflow-x: scroll;
@@ -307,8 +319,42 @@
 }
 
 /* Hide scrollbar for webkit */
-.jutsuper-vjs-settings-clip-area::-webkit-scrollbar {
+.jutsuper-vjs-popup-clip-area::-webkit-scrollbar {
   display: none;
+}
+
+/*
+  Base selector for the skip popup sizing,
+  used in combination with `jutsuper-vjs-skip-popup-area`
+  and `jutsuper-vjs-popup-clip-area`
+*/
+.jutsuper-vjs-skip-popup-area-sized {
+  width: max-content;
+  height: max-content;
+  border-radius: var(--jutsuper-size-border-radius);
+}
+
+/* Props specifically for the skip popup */
+.jutsuper-vjs-skip-popup-area {
+  margin-right: auto;
+}
+
+/*
+  Base selector for the settings popup sizing,
+  used in combination with `jutsuper-vjs-settings-area`
+  and `jutsuper-vjs-popup-clip-area`
+*/
+.jutsuper-vjs-settings-popup-area-sized {
+  width: 100%;
+  height: 100%;
+  max-width: var(--jutsuper-size-settings-max-width);
+  max-height: var(--jutsuper-size-settings-max-height);
+  border-radius: var(--jutsuper-size-border-radius);
+}
+
+/* Props specifically for the settings popup */
+.jutsuper-vjs-settings-popup-area {
+  align-self: end;
 }
 
 /* ////////////// */
@@ -495,6 +541,46 @@
   grid-template-columns: min-content minmax(0, 1fr) 16px 12px;
 }
 
+/* ////////// */
+/* Skip popup */
+/* ////////// */
+
+.jutsuper-skip-frame {
+  position: relative;
+  height: inherit;
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.jutsuper-skip-frame-content {
+  height: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  padding: 14px;
+  cursor: pointer;
+}
+
+.jutsuper-skip-header {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.jutsuper-skip-options-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.jutsuper-skip-countdown-line {
+  background-color: var(--jutsuper-color-darker-green);
+  position: absolute;
+  bottom: 0;
+  height: 5px;
+  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+}
+
 /* ///////////// */
 /* Toggle slider */
 /* ///////////// */
@@ -553,7 +639,6 @@ input:checked + .jutsuper-slider-bg-area:before {
 /* //////////// */
 /* Range slider */
 /* //////////// */
-
 
 /* Base slider dimensions */
 .jutsuper-range {
@@ -755,4 +840,19 @@ button.jutsuper-numberbox-button {
   font-size: 2em;
   line-height: 0;
   color: #CF1B2B;
+}
+
+/* ///////// */
+/* Key label */
+/* ///////// */
+
+.jutsuper-key-label {
+  background-color: var(--jutsuper-color-light-dark-gray);
+  border-radius: 50px;
+  padding: 2px;
+  padding-left: 16px;
+  padding-right: 16px;
+  color: white;
+  pointer-events: none;
+  user-select: none;
 }

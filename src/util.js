@@ -9,8 +9,8 @@ class JutSuperUtil {
    * @param {number} ms
    * @returns {Promise<void>}
    */
-  async asyncSleep(ms) {
-    return await new Promise(r => setTimeout(r, ms));
+  asyncSleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
   }
 
   /**
