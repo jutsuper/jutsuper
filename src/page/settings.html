@@ -92,11 +92,13 @@
           name="jutsuper-settings-bar"
         >
         <label
+          title="Openings settings"
           id="jutsuper-settings-openings-bar-label"
           for="jutsuper-settings-openings-bar"
           class="jutsuper-settings-section-bar"
         >
           <label
+            title="Toggle openings skip"
             class="jutsuper-slider-switch"
             style="margin-right: 10px;"
           >
@@ -144,6 +146,7 @@
               jutsuper-settings-grid-2-cols
             ">
               <div
+                title="Which region to skip if multiple regions are available"
                 class="jutsuper-text-order"
                 style="
                   display: flex;
@@ -158,6 +161,7 @@
                   class="jutsuper-radio-container"
                 >
                   <input
+                    title="Skip any region"
                     id="jutsuper-settings-openings-skip-order-any"
                     type="radio"
                     name="jutsuper-settings-op-skip-order"
@@ -173,6 +177,7 @@
                     "
                   />
                   <input
+                    title="Skip only first region"
                     id="jutsuper-settings-openings-skip-order-first"
                     type="radio"
                     name="jutsuper-settings-op-skip-order"
@@ -188,6 +193,7 @@
                     "
                   />
                   <input
+                    title="Skip only last region"
                     id="jutsuper-settings-openings-skip-order-last"
                     type="radio"
                     name="jutsuper-settings-op-skip-order"
@@ -216,11 +222,13 @@
           name="jutsuper-settings-bar"
         >
         <label
+          title="Endings settings"
           id="jutsuper-settings-endings-bar-label"
           for="jutsuper-settings-endings-bar"
           class="jutsuper-settings-section-bar"
         >
           <label
+            title="Toggle endings skip"
             class="jutsuper-slider-switch"
             style="margin-right: 10px;"
           >
@@ -264,6 +272,7 @@
             jutsuper-settings-grid-2-cols
           ">
             <div
+              title="Which region to skip if multiple regions are available"
               class="jutsuper-text-order"
               style="
                 display: flex;
@@ -277,6 +286,7 @@
               class="jutsuper-radio-container"
             >
               <input
+                title="Skip any region"
                 id="jutsuper-settings-endings-skip-order-any"
                 type="radio"
                 name="jutsuper-settings-ed-skip-order"
@@ -292,6 +302,7 @@
                 "
               />
               <input
+                title="Skip only first region"
                 id="jutsuper-settings-endings-skip-order-first"
                 type="radio"
                 name="jutsuper-settings-ed-skip-order"
@@ -307,6 +318,7 @@
                 "
               />
               <input
+                title="Skip only last region"
                 id="jutsuper-settings-endings-skip-order-last"
                 type="radio"
                 name="jutsuper-settings-ed-skip-order"
@@ -323,6 +335,7 @@
               />
             </div>
             <div
+              title="Maximum continuous episode switches"
               class="jutsuper-text-max"
               style="
                 display: flex;
@@ -358,6 +371,7 @@
               ></button>
             </div>
             <div
+              title="Persist fullscreen after episode switch"
               class="jutsuper-text-fullscreen"
               style="
                 display: flex;
@@ -367,7 +381,10 @@
               Fullscreen
             </div>
             <div style="display: flex">
-              <label class="jutsuper-slider-switch">
+              <label
+                title="Toggle fullscreen persistency"
+                class="jutsuper-slider-switch"
+              >
                 <input
                   id="jutsuper-settings-endings-fullscreen-switch"
                   type="checkbox"
@@ -390,6 +407,7 @@
               jutsuper-settings-grid-4-cols
             ">
             <div
+              title="Delay before skipping"
               class="jutsuper-text-delay"
               style="
                 display: flex;
@@ -437,6 +455,7 @@
               s.
             </div>
             <div
+              title="Key to cancel skipping"
               class="jutsuper-text-cancel"
               style="
                 display: flex;
@@ -453,6 +472,7 @@
               "
             >
               <input
+                title="Press to record cancellation key"
                 id="jutsuper-settings-cancel-key-listener"
                 type="button"
                 value="Null"
