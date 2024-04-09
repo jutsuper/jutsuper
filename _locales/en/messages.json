@@ -39,5 +39,47 @@
   },
   "skipping": {
     "message": "Skipping"
+  },
+  "openingsSettings": {
+    "message": "Openings settings"
+  },
+  "toggleOpeningsSkip": {
+    "message": "Toggle openings skip"
+  },
+  "whichRegionToSkip": {
+    "message": "Which region to skip if multiple regions are available"
+  },
+  "skipAnyRegion": {
+    "message": "Skip any region"
+  },
+  "skipFirstRegion": {
+    "message": "Skip only first region"
+  },
+  "skipLastRegion": {
+    "message": "Skip only last region"
+  },
+  "endingsSettings": {
+    "message": "Endings settings"
+  },
+  "toggleEndingsSkip": {
+    "message": "Toggle endings skip"
+  },
+  "maxEpisodeSwitches": {
+    "message": "Maximum continuous episode switches"
+  },
+  "persistFullscreen": {
+    "message": "Persist fullscreen after episode switch"
+  },
+  "toggleFullscreenPersistency": {
+    "message": "Toggle fullscreen persistency"
+  },
+  "delayBeforeSkipping": {
+    "message": "Delay before skipping"
+  },
+  "keyToCancelSkipping": {
+    "message": "Key to cancel skipping"
+  },
+  "setCancelKey": {
+    "message": "Set cancellation key"
   }
 }

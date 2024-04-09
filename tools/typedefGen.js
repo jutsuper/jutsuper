@@ -32,6 +32,8 @@ const OBJ = {
   iconSkip: "jutsuper-icon-skip",
   /** @type {"jutsuper-icon-dropdown"} */
   iconDropdown: "jutsuper-icon-dropdown",
+  /** @type {"jutsuper-icon-order-any"} */
+  iconOrderAny: "jutsuper-icon-order-any",
   /** @type {"jutsuper-icon-order-first"} */
   iconOrderFirst: "jutsuper-icon-order-first",
   /** @type {"jutsuper-icon-order-last"} */
@@ -158,10 +160,40 @@ const OBJ = {
   textSecondsShort: "jutsuper-text-seconds-short",
   /** @type {"jutsuper-text-cancel"} */
   textCancel: "jutsuper-text-cancel",
+  /** @type {"jutsuper-text-to-cancel"} */
+  textToCancel: "jutsuper-text-to-cancel",
   /** @type {"jutsuper-text-skipping"} */
   textSkipping: "jutsuper-text-skipping",
-  /** @type {"jutsuper-text-or"} */
-  textOr: "jutsuper-text-or"
+
+  /** Tooltips */
+  /** @type {"jutsuper-tooltip-openings-settings"} */
+  tooltipOpeningsSettings: "jutsuper-tooltip-openings-settings",
+  /** @type {"jutsuper-tooltip-toggle-openings-skip"} */
+  tooltipToggleOpeningsSkip: "jutsuper-tooltip-toggle-openings-skip",
+  /** @type {"jutsuper-tooltip-which-region-to-skip"} */
+  tooltipWhichRegionToSkip: "jutsuper-tooltip-which-region-to-skip",
+  /** @type {"jutsuper-tooltip-skip-any-region"} */
+  tooltipSkipAnyRegion: "jutsuper-tooltip-skip-any-region",
+  /** @type {"jutsuper-tooltip-skip-first-region"} */
+  tooltipSkipFirstRegion: "jutsuper-tooltip-skip-first-region",
+  /** @type {"jutsuper-tooltip-skip-last-region"} */
+  tooltipSkipLastRegion: "jutsuper-tooltip-skip-last-region",
+  /** @type {"jutsuper-tooltip-endings-settings"} */
+  tooltipEndingsSettings: "jutsuper-tooltip-endings-settings",
+  /** @type {"jutsuper-tooltip-toggle-endings-skip"} */
+  tooltipToggleEndingsSkip: "jutsuper-tooltip-toggle-endings-skip",
+  /** @type {"jutsuper-tooltip-max-episode-switches"} */
+  tooltipMaxEpisodeSwitches: "jutsuper-tooltip-max-episode-switches",
+  /** @type {"jutsuper-tooltip-persist-fullscreen"} */
+  tooltipPersistFullscreen: "jutsuper-tooltip-persist-fullscreen",
+  /** @type {"jutsuper-tooltip-toggle-fullscreen-persistency"} */
+  tooltipToggleFullscreenPersistency: "jutsuper-tooltip-toggle-fullscreen-persistency",
+  /** @type {"jutsuper-tooltip-delay-before-skipping"} */
+  tooltipDelayBeforeSkipping: "jutsuper-tooltip-delay-before-skipping",
+  /** @type {"jutsuper-tooltip-key-to-cancel-skipping"} */
+  tooltipKeyToCancelSkipping: "jutsuper-tooltip-key-to-cancel-skipping",
+  /** @type {"jutsuper-tooltip-set-cancel-key"} */
+  tooltipSetCancelKey: "jutsuper-tooltip-set-cancel-key"
 }
 
 function main() {

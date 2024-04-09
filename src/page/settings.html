@@ -95,11 +95,17 @@
           title="Openings settings"
           id="jutsuper-settings-openings-bar-label"
           for="jutsuper-settings-openings-bar"
-          class="jutsuper-settings-section-bar"
+          class="
+            jutsuper-settings-section-bar
+            jutsuper-tooltip-openings-settings
+          "
         >
           <label
             title="Toggle openings skip"
-            class="jutsuper-slider-switch"
+            class="
+              jutsuper-slider-switch
+              jutsuper-tooltip-toggle-openings-skip
+            "
             style="margin-right: 10px;"
           >
             <input
@@ -147,7 +153,10 @@
             ">
               <div
                 title="Which region to skip if multiple regions are available"
-                class="jutsuper-text-order"
+                class="
+                  jutsuper-text-order
+                  jutsuper-tooltip-which-region-to-skip
+                "
                 style="
                   display: flex;
                   align-items: center;
@@ -170,6 +179,7 @@
                       jutsuper-icon-inset
                       jutsuper-icon-order-any
                       jutsuper-no-select
+                      jutsuper-tooltip-skip-any-region
                     "
                     style="
                       width: 100%;
@@ -186,6 +196,7 @@
                       jutsuper-icon-inset
                       jutsuper-icon-order-first
                       jutsuper-no-select
+                      jutsuper-tooltip-skip-first-region
                     "
                     style="
                       width: 100%;
@@ -202,6 +213,7 @@
                       jutsuper-icon-inset
                       jutsuper-icon-order-last
                       jutsuper-no-select
+                      jutsuper-tooltip-skip-last-region
                     "
                     style="
                       width: 100%;
@@ -225,11 +237,17 @@
           title="Endings settings"
           id="jutsuper-settings-endings-bar-label"
           for="jutsuper-settings-endings-bar"
-          class="jutsuper-settings-section-bar"
+          class="
+            jutsuper-settings-section-bar
+            jutsuper-tooltip-endings-settings
+          "
         >
           <label
             title="Toggle endings skip"
-            class="jutsuper-slider-switch"
+            class="
+              jutsuper-slider-switch
+              jutsuper-tooltip-toggle-endings-skip
+            "
             style="margin-right: 10px;"
           >
             <input
@@ -273,7 +291,10 @@
           ">
             <div
               title="Which region to skip if multiple regions are available"
-              class="jutsuper-text-order"
+              class="
+                jutsuper-text-order
+                jutsuper-tooltip-which-region-to-skip
+              "
               style="
                 display: flex;
                 align-items: center;
@@ -295,6 +316,7 @@
                   jutsuper-icon-inset
                   jutsuper-icon-order-any
                   jutsuper-no-select
+                  jutsuper-tooltip-skip-any-region
                 "
                 style="
                   width: 100%;
@@ -311,6 +333,7 @@
                   jutsuper-icon-inset
                   jutsuper-icon-order-first
                   jutsuper-no-select
+                  jutsuper-tooltip-skip-first-region
                 "
                 style="
                   width: 100%;
@@ -327,6 +350,7 @@
                   jutsuper-icon-inset
                   jutsuper-icon-order-last
                   jutsuper-no-select
+                  jutsuper-tooltip-skip-last-region
                 "
                 style="
                   width: 100%;
@@ -336,7 +360,10 @@
             </div>
             <div
               title="Maximum continuous episode switches"
-              class="jutsuper-text-max"
+              class="
+                jutsuper-text-max
+                jutsuper-tooltip-max-episode-switches
+              "
               style="
                 display: flex;
                 align-items: center;
@@ -372,7 +399,10 @@
             </div>
             <div
               title="Persist fullscreen after episode switch"
-              class="jutsuper-text-fullscreen"
+              class="
+                jutsuper-text-fullscreen
+                jutsuper-tooltip-persist-fullscreen
+              "
               style="
                 display: flex;
                 align-items: center;
@@ -383,7 +413,10 @@
             <div style="display: flex">
               <label
                 title="Toggle fullscreen persistency"
-                class="jutsuper-slider-switch"
+                class="
+                  jutsuper-slider-switch
+                  jutsuper-tooltip-toggle-fullscreen-persistency
+                "
               >
                 <input
                   id="jutsuper-settings-endings-fullscreen-switch"
@@ -408,7 +441,10 @@
             ">
             <div
               title="Delay before skipping"
-              class="jutsuper-text-delay"
+              class="
+                jutsuper-text-delay
+                jutsuper-tooltip-delay-before-skipping
+              "
               style="
                 display: flex;
                 align-items: center;
@@ -456,7 +492,10 @@
             </div>
             <div
               title="Key to cancel skipping"
-              class="jutsuper-text-cancel"
+              class="
+                jutsuper-text-cancel
+                jutsuper-tooltip-key-to-cancel-skipping
+              "
               style="
                 display: flex;
                 align-items: center;
@@ -472,13 +511,14 @@
               "
             >
               <input
-                title="Press to record cancellation key"
+                title="Set cancellation key"
                 id="jutsuper-settings-cancel-key-listener"
                 type="button"
                 value="Null"
                 class="
                   jutsuper-button
                   jutsuper-no-select
+                  jutsuper-tooltip-set-cancel-key
                 "
                 style="
                   width: 100%;
@@ -495,7 +535,6 @@
             >
             </div>
             <div>
-              
             </div>
           </div>
         </div>

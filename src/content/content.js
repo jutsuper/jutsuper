@@ -232,6 +232,33 @@ var JutSuperSettings;
   JutSuperMessageBuilder = messagingModule.JutSuperMessageBuilder;
   JutSuperTransition = transitionModule.JutSuperTransition;
   JutSuperSettings = settingsModule.JutSuperSettings;
+
+  LOCALE_TEXT[domClasses.textSkipOptions] = browser.i18n.getMessage("skipOptions");
+  LOCALE_TEXT[domClasses.textOpenings] = browser.i18n.getMessage("openings");
+  LOCALE_TEXT[domClasses.textEndings] = browser.i18n.getMessage("endings");
+  LOCALE_TEXT[domClasses.textOrder] = browser.i18n.getMessage("order");
+  LOCALE_TEXT[domClasses.textMax] = browser.i18n.getMessage("max");
+  LOCALE_TEXT[domClasses.textFullscreen] = browser.i18n.getMessage("fullscreen");
+  LOCALE_TEXT[domClasses.textDelay] = browser.i18n.getMessage("delay");
+  LOCALE_TEXT[domClasses.textSecondsShort] = browser.i18n.getMessage("secondsShort");
+  LOCALE_TEXT[domClasses.textCancel] = browser.i18n.getMessage("cancel");
+  LOCALE_TEXT[domClasses.textToCancel] = browser.i18n.getMessage("toCancel");
+  LOCALE_TEXT[domClasses.textSkipping] = browser.i18n.getMessage("skipping");
+
+  LOCALE_TOOLTIPS[domClasses.tooltipOpeningsSettings] = browser.i18n.getMessage("openingsSettings");
+  LOCALE_TOOLTIPS[domClasses.tooltipToggleOpeningsSkip] = browser.i18n.getMessage("toggleOpeningsSkip");
+  LOCALE_TOOLTIPS[domClasses.tooltipWhichRegionToSkip] = browser.i18n.getMessage("whichRegionToSkip");
+  LOCALE_TOOLTIPS[domClasses.tooltipSkipAnyRegion] = browser.i18n.getMessage("skipAnyRegion");
+  LOCALE_TOOLTIPS[domClasses.tooltipSkipFirstRegion] = browser.i18n.getMessage("skipFirstRegion");
+  LOCALE_TOOLTIPS[domClasses.tooltipSkipLastRegion] = browser.i18n.getMessage("skipLastRegion");
+  LOCALE_TOOLTIPS[domClasses.tooltipEndingsSettings] = browser.i18n.getMessage("endingsSettings");
+  LOCALE_TOOLTIPS[domClasses.tooltipToggleEndingsSkip] = browser.i18n.getMessage("toggleEndingsSkip");
+  LOCALE_TOOLTIPS[domClasses.tooltipMaxEpisodeSwitches] = browser.i18n.getMessage("maxEpisodeSwitches");
+  LOCALE_TOOLTIPS[domClasses.tooltipPersistFullscreen] = browser.i18n.getMessage("persistFullscreen");
+  LOCALE_TOOLTIPS[domClasses.tooltipToggleFullscreenPersistency] = browser.i18n.getMessage("toggleFullscreenPersistency");
+  LOCALE_TOOLTIPS[domClasses.tooltipDelayBeforeSkipping] = browser.i18n.getMessage("delayBeforeSkipping");
+  LOCALE_TOOLTIPS[domClasses.tooltipKeyToCancelSkipping] = browser.i18n.getMessage("keyToCancelSkipping");
+  LOCALE_TOOLTIPS[domClasses.tooltipSetCancelKey] = browser.i18n.getMessage("setCancelKey");
 })().then(() => {
   jutsuperContent = new JutSuperContent();
 })
@@ -244,6 +271,12 @@ var JutSuperSettings;
  * @typedef {import("/src/transition.js").JutSuperTransitionObject} JutSuperTransitionObject
  * @typedef {import("/src/settings.js").JutSuperSettingsObject} JutSuperSettingsObject
  */
+
+
+/** @type {Record<string, string>} */
+const LOCALE_TEXT = {};
+/** @type {Record<string, string>} */
+const LOCALE_TOOLTIPS = {};
 
 
 /** @type {JutSuperContent} */
@@ -947,51 +980,17 @@ class JutSuperContent {
   }
 
   async handleLocaleInitializationRequest() {
-    const skipOptions = browser.i18n.getMessage("skipOptions");
-    const openings = browser.i18n.getMessage("openings");
-    const endings = browser.i18n.getMessage("endings");
-    const order = browser.i18n.getMessage("order");
-    const max = browser.i18n.getMessage("max");
-    const fullscreen = browser.i18n.getMessage("fullscreen");
-    const delay = browser.i18n.getMessage("delay");
-    const secondsShort = browser.i18n.getMessage("secondsShort");
-    const cancel = browser.i18n.getMessage("cancel");
-    const toCancel = browser.i18n.getMessage("toCancel");
-    const skipping = browser.i18n.getMessage("skipping");
+    for (const [cls, message] of Object.entries(LOCALE_TEXT)) {
+      [...document.getElementsByClassName(cls)].forEach(
+        (value, index, array) => value.innerHTML = message
+      );
+    }
 
-    [...document.getElementsByClassName(domClasses.textSkipOptions)].forEach(
-      (value, index, array) => value.innerHTML = skipOptions
-    );
-    [...document.getElementsByClassName(domClasses.textOpenings)].forEach(
-      (value, index, array) => value.innerHTML = openings
-    );
-    [...document.getElementsByClassName(domClasses.textEndings)].forEach(
-      (value, index, array) => value.innerHTML = endings
-    );
-    [...document.getElementsByClassName(domClasses.textOrder)].forEach(
-      (value, index, array) => value.innerHTML = order
-    );
-    [...document.getElementsByClassName(domClasses.textMax)].forEach(
-      (value, index, array) => value.innerHTML = max
-    );
-    [...document.getElementsByClassName(domClasses.textFullscreen)].forEach(
-      (value, index, array) => value.innerHTML = fullscreen
-    );
-    [...document.getElementsByClassName(domClasses.textDelay)].forEach(
-      (value, index, array) => value.innerHTML = delay
-    );
-    [...document.getElementsByClassName(domClasses.textSecondsShort)].forEach(
-      (value, index, array) => value.innerHTML = secondsShort
-    );
-    [...document.getElementsByClassName(domClasses.textCancel)].forEach(
-      (value, index, array) => value.innerHTML = cancel
-    );
-    [...document.getElementsByClassName(domClasses.textToCancel)].forEach(
-      (value, index, array) => value.innerHTML = toCancel
-    );
-    [...document.getElementsByClassName(domClasses.textSkipping)].forEach(
-      (value, index, array) => value.innerHTML = skipping
-    );
+    for (const [cls, tooltip] of Object.entries(LOCALE_TOOLTIPS)) {
+      [...document.getElementsByClassName(cls)].forEach(
+        (value, index, array) => value.setAttribute("title", tooltip)
+      );
+    }
   }
 
   ////////////////////////////

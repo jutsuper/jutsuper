@@ -39,5 +39,47 @@
   },
   "skipping": {
     "message": "Пропуск"
+  },
+  "openingsSettings": {
+    "message": "Настройки опенингов"
+  },
+  "toggleOpeningsSkip": {
+    "message": "Переключить пропуск опенингов"
+  },
+  "whichRegionToSkip": {
+    "message": "Какой регион пропускать если доступно несколько регионов"
+  },
+  "skipAnyRegion": {
+    "message": "Пропускать любой регион"
+  },
+  "skipFirstRegion": {
+    "message": "Пропускать только первый регион"
+  },
+  "skipLastRegion": {
+    "message": "Пропускать только последний регион"
+  },
+  "endingsSettings": {
+    "message": "Настройки эндингов"
+  },
+  "toggleEndingsSkip": {
+    "message": "Переключить пропуск эндингов"
+  },
+  "maxEpisodeSwitches": {
+    "message": "Макимальное количество автоматических пропусков"
+  },
+  "persistFullscreen": {
+    "message": "Сохранять полноэкранный режим после пропуска"
+  },
+  "toggleFullscreenPersistency": {
+    "message": "Переключить сохранение полноэкранного режима"
+  },
+  "delayBeforeSkipping": {
+    "message": "Задержка перед пропуском"
+  },
+  "keyToCancelSkipping": {
+    "message": "Клавиша для отмены пропуска"
+  },
+  "setCancelKey": {
+    "message": "Задать клавишу для отмены пропуска"
   }
 }

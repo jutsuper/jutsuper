@@ -825,6 +825,36 @@ const JutSuperDomClasses = {
   textToCancel: "jutsuper-text-to-cancel",
   /** @type {"jutsuper-text-skipping"} */
   textSkipping: "jutsuper-text-skipping",
+
+  /** Tooltips */
+  /** @type {"jutsuper-tooltip-openings-settings"} */
+  tooltipOpeningsSettings: "jutsuper-tooltip-openings-settings",
+  /** @type {"jutsuper-tooltip-toggle-openings-skip"} */
+  tooltipToggleOpeningsSkip: "jutsuper-tooltip-toggle-openings-skip",
+  /** @type {"jutsuper-tooltip-which-region-to-skip"} */
+  tooltipWhichRegionToSkip: "jutsuper-tooltip-which-region-to-skip",
+  /** @type {"jutsuper-tooltip-skip-any-region"} */
+  tooltipSkipAnyRegion: "jutsuper-tooltip-skip-any-region",
+  /** @type {"jutsuper-tooltip-skip-first-region"} */
+  tooltipSkipFirstRegion: "jutsuper-tooltip-skip-first-region",
+  /** @type {"jutsuper-tooltip-skip-last-region"} */
+  tooltipSkipLastRegion: "jutsuper-tooltip-skip-last-region",
+  /** @type {"jutsuper-tooltip-endings-settings"} */
+  tooltipEndingsSettings: "jutsuper-tooltip-endings-settings",
+  /** @type {"jutsuper-tooltip-toggle-endings-skip"} */
+  tooltipToggleEndingsSkip: "jutsuper-tooltip-toggle-endings-skip",
+  /** @type {"jutsuper-tooltip-max-episode-switches"} */
+  tooltipMaxEpisodeSwitches: "jutsuper-tooltip-max-episode-switches",
+  /** @type {"jutsuper-tooltip-persist-fullscreen"} */
+  tooltipPersistFullscreen: "jutsuper-tooltip-persist-fullscreen",
+  /** @type {"jutsuper-tooltip-toggle-fullscreen-persistency"} */
+  tooltipToggleFullscreenPersistency: "jutsuper-tooltip-toggle-fullscreen-persistency",
+  /** @type {"jutsuper-tooltip-delay-before-skipping"} */
+  tooltipDelayBeforeSkipping: "jutsuper-tooltip-delay-before-skipping",
+  /** @type {"jutsuper-tooltip-key-to-cancel-skipping"} */
+  tooltipKeyToCancelSkipping: "jutsuper-tooltip-key-to-cancel-skipping",
+  /** @type {"jutsuper-tooltip-set-cancel-key"} */
+  tooltipSetCancelKey: "jutsuper-tooltip-set-cancel-key"
 }
 /**
  * @typedef JutSuperDomClassesType
@@ -897,6 +927,20 @@ const JutSuperDomClasses = {
  * @property {"jutsuper-text-cancel"} textCancel
  * @property {"jutsuper-text-to-cancel"} textToCancel
  * @property {"jutsuper-text-skipping"} textSkipping
+ * @property {"jutsuper-tooltip-openings-settings"} tooltipOpeningsSettings
+ * @property {"jutsuper-tooltip-toggle-openings-skip"} tooltipToggleOpeningsSkip
+ * @property {"jutsuper-tooltip-which-region-to-skip"} tooltipWhichRegionToSkip
+ * @property {"jutsuper-tooltip-skip-any-region"} tooltipSkipAnyRegion
+ * @property {"jutsuper-tooltip-skip-first-region"} tooltipSkipFirstRegion
+ * @property {"jutsuper-tooltip-skip-last-region"} tooltipSkipLastRegion
+ * @property {"jutsuper-tooltip-endings-settings"} tooltipEndingsSettings
+ * @property {"jutsuper-tooltip-toggle-endings-skip"} tooltipToggleEndingsSkip
+ * @property {"jutsuper-tooltip-max-episode-switches"} tooltipMaxEpisodeSwitches
+ * @property {"jutsuper-tooltip-persist-fullscreen"} tooltipPersistFullscreen
+ * @property {"jutsuper-tooltip-toggle-fullscreen-persistency"} tooltipToggleFullscreenPersistency
+ * @property {"jutsuper-tooltip-delay-before-skipping"} tooltipDelayBeforeSkipping
+ * @property {"jutsuper-tooltip-key-to-cancel-skipping"} tooltipKeyToCancelSkipping
+ * @property {"jutsuper-tooltip-set-cancel-key"} tooltipSetCancelKey
  *
  * @typedef {(
  *   "jutsuper-fullscreen" |
@@ -967,7 +1011,21 @@ const JutSuperDomClasses = {
  *   "jutsuper-text-seconds-short" |
  *   "jutsuper-text-cancel" |
  *   "jutsuper-text-to-cancel" |
- *   "jutsuper-text-skipping"
+ *   "jutsuper-text-skipping" |
+ *   "jutsuper-tooltip-openings-settings" |
+ *   "jutsuper-tooltip-toggle-openings-skip" |
+ *   "jutsuper-tooltip-which-region-to-skip" |
+ *   "jutsuper-tooltip-skip-any-region" |
+ *   "jutsuper-tooltip-skip-first-region" |
+ *   "jutsuper-tooltip-skip-last-region" |
+ *   "jutsuper-tooltip-endings-settings" |
+ *   "jutsuper-tooltip-toggle-endings-skip" |
+ *   "jutsuper-tooltip-max-episode-switches" |
+ *   "jutsuper-tooltip-persist-fullscreen" |
+ *   "jutsuper-tooltip-toggle-fullscreen-persistency" |
+ *   "jutsuper-tooltip-delay-before-skipping" |
+ *   "jutsuper-tooltip-key-to-cancel-skipping" |
+ *   "jutsuper-tooltip-set-cancel-key"
  * )} JutSuperDomClassesKeys
  */
 
