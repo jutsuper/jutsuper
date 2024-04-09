@@ -821,10 +821,10 @@ const JutSuperDomClasses = {
   textSecondsShort: "jutsuper-text-seconds-short",
   /** @type {"jutsuper-text-cancel"} */
   textCancel: "jutsuper-text-cancel",
+  /** @type {"jutsuper-text-to-cancel"} */
+  textToCancel: "jutsuper-text-to-cancel",
   /** @type {"jutsuper-text-skipping"} */
   textSkipping: "jutsuper-text-skipping",
-  /** @type {"jutsuper-text-or"} */
-  textOr: "jutsuper-text-or"
 }
 /**
  * @typedef JutSuperDomClassesType
@@ -895,8 +895,8 @@ const JutSuperDomClasses = {
  * @property {"jutsuper-text-delay"} textDelay
  * @property {"jutsuper-text-seconds-short"} textSecondsShort
  * @property {"jutsuper-text-cancel"} textCancel
+ * @property {"jutsuper-text-to-cancel"} textToCancel
  * @property {"jutsuper-text-skipping"} textSkipping
- * @property {"jutsuper-text-or"} textOr
  *
  * @typedef {(
  *   "jutsuper-fullscreen" |
@@ -966,8 +966,8 @@ const JutSuperDomClasses = {
  *   "jutsuper-text-delay" |
  *   "jutsuper-text-seconds-short" |
  *   "jutsuper-text-cancel" |
- *   "jutsuper-text-skipping" |
- *   "jutsuper-text-or"
+ *   "jutsuper-text-to-cancel" |
+ *   "jutsuper-text-skipping"
  * )} JutSuperDomClassesKeys
  */
 
@@ -1267,7 +1267,16 @@ const JutSuperIpcKeys = {
    * 
    * @type {"data-is-episode-switch-allowed"}
    */
-  isEpisodeSwitchAllowed: "data-is-episode-switch-allowed"
+  isEpisodeSwitchAllowed: "data-is-episode-switch-allowed",
+  /**
+   * # Invoke initialization of extension content locale
+   * 
+   * ## Possible values
+   * @see {JutSuperIpcAwaitStates}
+   * 
+   * @type {"data-locale-initialization-control"}
+   */
+  localeInitializationControl: "data-locale-initialization-control"
 }
 /** 
  * @typedef JutSuperIpcKeysType
@@ -1280,6 +1289,7 @@ const JutSuperIpcKeys = {
  * @property {"data-is-episode-switched-automatically"} isEpisodeSwitchedAutomatically
  * @property {"data-inject-custom-fullscreen-exit"} injectCustomFullscreenExit
  * @property {"data-is-episode-switch-allowed"} isEpisodeSwitchAllowed
+ * @property {"data-locale-initialization-control"} localeInitializationControl
  * 
  * @typedef {(
  *   "data-essentials-loading-state" |
@@ -1290,7 +1300,8 @@ const JutSuperIpcKeys = {
  *   "data-is-episode-switched-automatically" |
  *   "data-inject-custom-fullscreen-exit" |
  *   "data-max-continuous-episode-switches" |
- *   "data-is-episode-switch-allowed"
+ *   "data-is-episode-switch-allowed" |
+ *   "data-locale-initialization-control"
  * )} JutSuperIpcKeysKeys
  */
 

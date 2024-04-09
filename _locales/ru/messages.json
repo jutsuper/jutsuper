@@ -4,31 +4,40 @@
     "description": "Extension name"
   },
   "extDescription": {
-    "message": "Улучшенный автопропуск опенингов/эндингов на jut.su",
+    "message": "Автопропуск опенингов/эндингов на jut.su",
     "description": "Extension description"
   },
-  "settingsSkipOptions": {
+  "skipOptions": {
     "message": "Настройки пропуска"
   },
-  "settingsOpenings": {
+  "openings": {
     "message": "Опенинги"
   },
-  "settingsEndings": {
+  "endings": {
     "message": "Эндинги"
   },
-  "settingsOrder": {
+  "order": {
     "message": "Порядок"
   },
-  "settingsFullscreen": {
+  "max": {
+    "message": "Максимум"
+  },
+  "fullscreen": {
     "message": "Фуллскрин"
   },
-  "settingsDelay": {
+  "delay": {
     "message": "Задержка"
   },
-  "settingsSecondsShort": {
+  "secondsShort": {
     "message": "с."
   },
-  "settingsCancel": {
+  "cancel": {
     "message": "Отмена"
+  },
+  "toCancel": {
+    "message": "Отменить"
+  },
+  "skipping": {
+    "message": "Пропуск"
   }
 }

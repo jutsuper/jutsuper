@@ -4,31 +4,40 @@
     "description": "Extension name"
   },
   "extDescription": {
-    "message": "Better autoskip of openings/endings on jut.su",
+    "message": "Autoskip of openings/endings on jut.su",
     "description": "Extension description"
   },
-  "settingsSkipOptions": {
+  "skipOptions": {
     "message": "Skip options"
   },
-  "settingsOpenings": {
+  "openings": {
     "message": "Openings"
   },
-  "settingsEndings": {
+  "endings": {
     "message": "Endings"
   },
-  "settingsOrder": {
+  "order": {
     "message": "Order"
   },
-  "settingsFullscreen": {
+  "max": {
+    "message": "Max"
+  },
+  "fullscreen": {
     "message": "Fullscreen"
   },
-  "settingsDelay": {
+  "delay": {
     "message": "Delay"
   },
-  "settingsSecondsShort": {
+  "secondsShort": {
     "message": "s."
   },
-  "settingsCancel": {
+  "cancel": {
     "message": "Cancel"
+  },
+  "toCancel": {
+    "message": "Cancel"
+  },
+  "skipping": {
+    "message": "Skipping"
   }
 }

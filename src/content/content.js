@@ -426,6 +426,7 @@ class JutSuperContent {
     this.listenEpisodeSwitchAllowanceRequests();
     this.listenEpisodeSwitchPrepStates();
     this.listenWindowStatesRequests();
+    this.listenLocaleInitializationRequests();
   }
 
   ////////////////////////////
@@ -808,7 +809,7 @@ class JutSuperContent {
         value: ipcAwaits.rejected
       });
     }
-    
+
     const switchesCount = typeof this.transition.get().switchesCount !== "undefined" ?
       this.transition.get().switchesCount : 0;
 
@@ -913,6 +914,84 @@ class JutSuperContent {
     }
 
     await jsuperStorage.removeTransition();
+  }
+
+  //////////////////////////////////
+  // Localization requests handle //
+  //////////////////////////////////
+
+  async listenLocaleInitializationRequests() {
+    const cfg = new JutSuperIpcRecvParamsBuilder()
+      .recvOnlyTheseKeys(ipcKeys.localeInitializationControl)
+      .build();
+
+    for await (const evt of this.ipc.recv(cfg)) {
+      jsuperLog.debug(new Error, evt);
+
+      switch (evt.value) {
+        case ipcAwaits.request:
+          await this.handleLocaleInitializationRequest();
+          break;
+        default:
+          jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
+            location: this.LOCATION,
+            target: `${evt.key}=${evt.value}`
+          }).message);
+      }
+    }
+
+    throw jsuperErrors.unexpectedEndError({
+      location: this.LOCATION,
+      target: `${this.listenLocaleInitializationRequests.name}()`
+    });
+  }
+
+  async handleLocaleInitializationRequest() {
+    const skipOptions = browser.i18n.getMessage("skipOptions");
+    const openings = browser.i18n.getMessage("openings");
+    const endings = browser.i18n.getMessage("endings");
+    const order = browser.i18n.getMessage("order");
+    const max = browser.i18n.getMessage("max");
+    const fullscreen = browser.i18n.getMessage("fullscreen");
+    const delay = browser.i18n.getMessage("delay");
+    const secondsShort = browser.i18n.getMessage("secondsShort");
+    const cancel = browser.i18n.getMessage("cancel");
+    const toCancel = browser.i18n.getMessage("toCancel");
+    const skipping = browser.i18n.getMessage("skipping");
+
+    [...document.getElementsByClassName(domClasses.textSkipOptions)].forEach(
+      (value, index, array) => value.innerHTML = skipOptions
+    );
+    [...document.getElementsByClassName(domClasses.textOpenings)].forEach(
+      (value, index, array) => value.innerHTML = openings
+    );
+    [...document.getElementsByClassName(domClasses.textEndings)].forEach(
+      (value, index, array) => value.innerHTML = endings
+    );
+    [...document.getElementsByClassName(domClasses.textOrder)].forEach(
+      (value, index, array) => value.innerHTML = order
+    );
+    [...document.getElementsByClassName(domClasses.textMax)].forEach(
+      (value, index, array) => value.innerHTML = max
+    );
+    [...document.getElementsByClassName(domClasses.textFullscreen)].forEach(
+      (value, index, array) => value.innerHTML = fullscreen
+    );
+    [...document.getElementsByClassName(domClasses.textDelay)].forEach(
+      (value, index, array) => value.innerHTML = delay
+    );
+    [...document.getElementsByClassName(domClasses.textSecondsShort)].forEach(
+      (value, index, array) => value.innerHTML = secondsShort
+    );
+    [...document.getElementsByClassName(domClasses.textCancel)].forEach(
+      (value, index, array) => value.innerHTML = cancel
+    );
+    [...document.getElementsByClassName(domClasses.textToCancel)].forEach(
+      (value, index, array) => value.innerHTML = toCancel
+    );
+    [...document.getElementsByClassName(domClasses.textSkipping)].forEach(
+      (value, index, array) => value.innerHTML = skipping
+    );
   }
 
   ////////////////////////////

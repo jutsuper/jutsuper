@@ -784,6 +784,11 @@ class JutSuper {
 
     this.settingsPopup = new JutSuperSettingsPopup(document);
     document.getElementById(domIds.skipKeyLabel).innerText = window.jsuperSettings.skipCancelKey;
+
+    this.ipc.send({
+      key: ipcKeys.localeInitializationControl,
+      value: ipcAwaits.request
+    });
   }
 
   /**
