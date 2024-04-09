@@ -63,6 +63,7 @@
         "/src/messaging.js",
         "/src/settings.js",
         "/src/browser.js",
+        "/src/transition.js",
         "/src/page/jutsuper.js",
         "/src/page/jutsuper.css",
         "/src/page/settings.js",
