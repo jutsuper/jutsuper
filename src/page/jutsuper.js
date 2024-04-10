@@ -613,6 +613,7 @@ class JutSuper {
 
   hideSkipPopup() {
     this.skipArea.classList.add(domClasses.visibilityHidden);
+    this.setSkipPopupCountdownLineWidth(100);
   }
 
   /**
