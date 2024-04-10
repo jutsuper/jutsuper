@@ -1,8 +1,8 @@
 /* Global variables */
 :root {
   --jutsuper-color-gray: rgb(150, 150, 150);
-  --jutsuper-color-light-light-gray: rgb(200, 200, 200);
-  --jutsuper-color-light-dark-gray: rgb(40, 40, 40);
+  --jutsuper-color-light-gray: rgb(200, 200, 200);
+  --jutsuper-color-dark-gray: rgb(40, 40, 40);
   --jutsuper-color-light-green: #BDF283;
   --jutsuper-color-dark-green: #9BC76C;
   --jutsuper-color-dark-green-half-transparent: #ACDD77;
@@ -847,7 +847,7 @@ button.jutsuper-numberbox-button {
 /* ///////// */
 
 .jutsuper-key-label {
-  background-color: var(--jutsuper-color-light-dark-gray);
+  background-color: var(--jutsuper-color-dark-gray);
   border-radius: 50px;
   padding: 2px;
   padding-left: 16px;

@@ -1,17 +1,231 @@
 <svg width="1024" height="576" viewBox="0 0 1024 576" fill="none" xmlns="http://www.w3.org/2000/svg">
   <style>
+    :root {
+      --jutsuper-color-gray: #969696;
+      --jutsuper-color-light-gray: #DFDFDF;
+      --jutsuper-color-dark-gray: #282828;
+      --jutsuper-color-light-green: #BDF283;
+      --jutsuper-color-dark-green: #9BC76C;
+      --jutsuper-color-dark-green-half-transparent: #ACDD77;
+      --jutsuper-color-darker-green: #8CB660;
+      --jutsuper-color-darker-green-half-transparent: #A4D471;
+    }
+
+    @keyframes settings-third-row-selector-bg-left-anim {
+      10% {
+        fill: var(--jutsuper-color-gray);
+      }
+      15% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+      100% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+    }
+
+    @keyframes settings-third-row-selector-bg-right-anim {
+      0% {
+        width: 4%;
+      }
+      10% {
+        fill: var(--jutsuper-color-gray);
+      }
+      15% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+      70% {
+        width: 4%;
+      }
+      80% {
+        width: 10%;
+      }
+      100% {
+        width: 10%;
+        fill: var(--jutsuper-color-darker-green);
+      }
+    }
+
+    @keyframes settings-second-row-third-row-switch-span-anim {
+      55% {
+        fill: var(--jutsuper-color-gray);
+      }
+      60% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+      100% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+    }
+
+    @keyframes settings-second-row-third-row-switch-tip-anim {
+      55% {
+        transform: translateX(0);
+      }
+      60% {
+        transform: translateX(28px);
+      }
+      100% {
+        transform: translateX(28px);
+      }
+    }
+
+    @keyframes settings-second-row-header-switch-span-anim {
+      25% {
+        fill: var(--jutsuper-color-gray);
+      }
+      30% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+      100% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+    }
+
+    @keyframes settings-second-row-header-switch-tip-anim {
+      25% {
+        transform: translateX(0);
+      }
+      30% {
+        transform: translateX(28px);
+      }
+      100% {
+        transform: translateX(28px);
+      }
+    }
+
+
+
+    @keyframes settings-second-row-bg-anim {
+      25% {
+        fill: var(--jutsuper-color-light-gray);
+      }
+      30% {
+        fill: var(--jutsuper-color-light-green);
+      }
+      100% {
+        fill: var(--jutsuper-color-light-green);
+      }
+    }
+
+
+    @keyframes settings-second-row-second-row-outline-anim {
+      25% {
+        stroke: var(--jutsuper-color-gray)
+      }
+      30% {
+        stroke: var(--jutsuper-color-darker-green)
+      }
+      100% {
+        stroke: var(--jutsuper-color-darker-green)
+      }
+    }
+
+    @keyframes settings-second-row-first-row-selector-3-bg-anim {
+      25% {
+        stroke: var(--jutsuper-color-gray)
+      }
+      30% {
+        stroke: var(--jutsuper-color-darker-green)
+      }
+      100% {
+        stroke: var(--jutsuper-color-darker-green)
+      }
+    }
+
+    @keyframes settings-second-row-first-row-selector-2-bg-anim {
+      25% {
+        fill: transparent;
+        stroke: var(--jutsuper-color-gray)
+      }
+      30% {
+        stroke: var(--jutsuper-color-darker-green)
+      }
+      40% {
+        fill: transparent;
+      }
+      45% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+      100% {
+        fill: var(--jutsuper-color-darker-green);
+        stroke: var(--jutsuper-color-darker-green)
+      }
+    }
+
+    @keyframes settings-second-row-first-row-selector-1-bg-anim {
+      25% {
+        fill: var(--jutsuper-color-gray);
+        stroke: var(--jutsuper-color-gray);
+      }
+      30% {
+        fill: var(--jutsuper-color-darker-green);
+        stroke: var(--jutsuper-color-darker-green);
+      }
+      40% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+      45% {
+        fill: transparent;
+      }
+      100% {
+        fill: transparent;
+        stroke: var(--jutsuper-color-darker-green);
+      }
+    }
+
+
+    @keyframes settings-third-row-selector-outline-anim {
+      10% {
+        stroke: var(--jutsuper-color-gray)
+      }
+      15% {
+        stroke: var(--jutsuper-color-darker-green)
+      }
+      100% {
+        stroke: var(--jutsuper-color-darker-green)
+      }
+    }
+
+    @keyframes settings-first-row-switch-span-anim {
+      10% {
+        fill: var(--jutsuper-color-gray);
+      }
+      15% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+      100% {
+        fill: var(--jutsuper-color-darker-green);
+      }
+    }
+
+    @keyframes settings-first-row-switch-tip-anim {
+      10% {
+        transform: translateX(0);
+      }
+      15% {
+        transform: translateX(28px);
+      }
+      100% {
+        transform: translateX(28px);
+      }
+    }
+
     @keyframes anim-top-bottom-show-hide {
       0% {
         transform: translateY(120px);
         opacity: 0;
       }
-      15% {
+      10% {
         transform: translateY(0px);
         opacity: 1;
       }
       85% {
         transform: translateY(0px);
         opacity: 1;
+      }
+      95% {
+        transform: translateY(120px);
+        opacity: 0;
       }
       100% {
         transform: translateY(120px);
@@ -29,6 +243,108 @@
       100% {
         width: 30%;
       }
+    }
+
+    #settings-third-row-selector-bg-left {
+      animation-name: settings-third-row-selector-bg-left-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-third-row-selector-bg-right {
+      animation-name: settings-third-row-selector-bg-right-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-second-row-third-row-switch-span {
+      animation-name: settings-second-row-third-row-switch-span-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-second-row-third-row-switch-tip {
+      animation-name: settings-second-row-third-row-switch-tip-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-second-row-header-switch-span {
+      animation-name: settings-second-row-header-switch-span-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-second-row-header-switch-tip {
+      animation-name: settings-second-row-header-switch-tip-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+
+
+
+    #settings-second-row-second-row-outline {
+      animation-name: settings-second-row-second-row-outline-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-second-row-first-row-selector-3-bg {
+      animation-name: settings-second-row-first-row-selector-3-bg-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-second-row-first-row-selector-2-bg {
+      animation-name: settings-second-row-first-row-selector-2-bg-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-second-row-first-row-selector-1-bg {
+      animation-name: settings-second-row-first-row-selector-1-bg-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-second-row-bg {
+      animation-name: settings-second-row-bg-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+
+    #settings-third-row-selector-outline {
+      animation-name: settings-third-row-selector-outline-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-first-row-switch-span {
+      animation-name: settings-first-row-switch-span-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+    }
+
+    #settings-first-row-switch-tip {
+      animation-name: settings-first-row-switch-tip-anim;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
     }
 
     #settings {
@@ -52,7 +368,7 @@
       <rect id="player-timeline-remaining" x="36" y="497" width="951" height="24" rx="12" fill="white"/>
       <rect id="player-timeline-watched" x="36" y="497" width="388" height="24" rx="12" fill="#9BC76C"/>
     </g>
-    <g id="settings" opacity="0.5">
+    <g id="settings">
       <mask id="mask0_0_1" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="641" y="55" width="346" height="390">
         <rect id="settings-mask" x="641" y="55" width="346" height="390" rx="30" fill="white"/>
       </mask>
@@ -122,7 +438,8 @@
           <rect id="settings-third-row-skeleton-left" x="659" y="393" width="53" height="15" rx="7.5" fill="black" fill-opacity="0.2"/>
           <g id="settings-third-row-selector">
             <rect id="settings-third-row-selector-outline" x="737.5" y="383.5" width="184" height="34" rx="17" stroke="#A7A7A7" stroke-width="3"/>
-            <path id="settings-third-row-selector-bg" d="M736 400.5C736 390.283 744.283 382 754.5 382H794V419H754.5C744.283 419 736 410.717 736 400.5V400.5Z" fill="#A7A7A7"/>
+            <rect id="settings-third-row-selector-bg-right" x="752" y="382" width="42" height="37" fill="#A7A7A7"/>
+            <path id="settings-third-row-selector-bg-left" d="M736 400.5C736 390.283 744.283 382 754.5 382H755V419H754.5C744.283 419 736 410.717 736 400.5Z" fill="#A7A7A7"/>
           </g>
           <rect id="settings-third-row-skeleton-right" x="941" y="393" width="24" height="15" rx="7.5" fill="black" fill-opacity="0.2"/>
         </g>
@@ -130,7 +447,7 @@
     </g>
   </g>
   <defs>
-    <linearGradient id="paint0_linear_0_1" x1="796" y1="66" x2="30" y2="562" gradientUnits="userSpaceOnUse">
+    <linearGradient id="paint0_linear_0_1" x1="52" y1="457" x2="605" y2="213" gradientUnits="userSpaceOnUse">
       <stop stop-color="#BDF283"/>
       <stop offset="1" stop-color="#C3E062"/>
     </linearGradient>
