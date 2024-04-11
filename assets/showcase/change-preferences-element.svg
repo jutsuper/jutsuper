@@ -287,9 +287,6 @@
       animation-direction: normal;
     }
 
-
-
-
     #settings-second-row-second-row-outline {
       animation-name: settings-second-row-second-row-outline-anim;
       animation-duration: 4s;
@@ -324,7 +321,6 @@
       animation-iteration-count: infinite;
       animation-direction: normal;
     }
-
 
     #settings-third-row-selector-outline {
       animation-name: settings-third-row-selector-outline-anim;
