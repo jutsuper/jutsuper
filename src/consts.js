@@ -410,8 +410,8 @@ const JutSuperAssetPaths = {
   constsJs: "/src/consts.js",
   /** @type {"/src/ipc.js"} */
   ipcJs: "/src/ipc.js",
-  /** @type {"/src/page/jutsuper.css"} */
-  jutsuperCss: "/src/page/jutsuper.css",
+  /** @type {"/src/jutsuper.css"} */
+  jutsuperCss: "/src/jutsuper.css",
   /** @type {"/src/page/jutsuper.js"} */
   jutsuperJs: "/src/page/jutsuper.js",
   /** @type {"/src/page/settings.js"} */
@@ -432,7 +432,7 @@ const JutSuperAssetPaths = {
  * @property {"/src/assets/icon/skip.svg"} skipSvg
  * @property {"/src/consts.js"} constsJs
  * @property {"/src/ipc.js"} ipcJs
- * @property {"/src/page/jutsuper.css"} jutsuperCss
+ * @property {"/src/jutsuper.css"} jutsuperCss
  * @property {"/src/page/jutsuper.js"} jutsuperJs
  * @property {"/src/page/settings.js"} settingsJs
  * @property {"/src/page/settings.html"} settingsHtml
@@ -447,7 +447,7 @@ const JutSuperAssetPaths = {
  *   "/src/assets/icon/skip.svg" |
  *   "/src/consts.js" |
  *   "/src/ipc.js" |
- *   "/src/page/jutsuper.css" |
+ *   "/src/jutsuper.css" |
  *   "/src/page/jutsuper.js" |
  *   "/src/page/settings.js" |
  *   "/src/page/settings.html" |
