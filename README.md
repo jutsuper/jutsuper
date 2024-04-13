@@ -56,7 +56,7 @@ npm run build
 ```
 
 # Testing
-## Blink browsers
+## Blink browsers (Chromium)
 - Google Chrome
 - Opera
 - Yandex Browser
