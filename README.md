@@ -39,13 +39,21 @@
 # Building
 1. Install [Node.js](https://nodejs.org/en/download)
 2. Clone this repository
-```git clone https://github.com/jutsuper/jutsuper```bash
-3. CD into it
-```cd jutsuper```bash
-4. Install dependencies
-```npm install```bash
-5. Build
-```npm run build```bash
+```bash
+git clone https://github.com/jutsuper/jutsuper
+```
+4. CD into it
+```bash
+cd jutsuper
+```
+5. Install dependencies
+```bash
+npm install
+```
+7. Build
+```bash
+npm run build
+```
 
 # Testing
 ## Blink browsers
