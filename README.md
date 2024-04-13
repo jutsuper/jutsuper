@@ -64,7 +64,7 @@ npm run build
 - etc.
 
 1. Open up `chrome://extensions` in your browser
-2. Enable developer mode at the top left
+2. Enable developer mode at the top right
 3. Click on `Load unpacked`
 4. Navigate to the cloned repository
 5. Select `./dist/blink` folder
