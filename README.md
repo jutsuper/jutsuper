@@ -57,10 +57,10 @@ npm run build
 
 # Loading
 ## Blink browsers (Chromium)
-- Google Chrome
-- Microsoft Edge
-- Opera
-- Yandex Browser
+- **Google Chrome**
+- **Microsoft Edge**
+- **Opera**
+- **Yandex Browser**
 - etc.
 
 1. Open up `chrome://extensions` in your browser
@@ -70,7 +70,7 @@ npm run build
 5. Select `./dist/blink` folder
 
 ## Gecko browsers
-- Firefox
+- **Firefox**
 
 1. Open up `about:debugging` in your browser
 2. Click `This Firefox` on the left
