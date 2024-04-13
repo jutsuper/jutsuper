@@ -55,7 +55,7 @@ npm install
 npm run build
 ```
 
-# Testing
+# Loading
 ## Blink browsers (Chromium)
 - Google Chrome
 - Microsoft Edge
