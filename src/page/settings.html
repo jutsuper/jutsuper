@@ -11,44 +11,26 @@
       rel="preload"
       as="image"
     >
-    <script>
-      (function setDebugFlag() {
-        window.JUTSUPER_DEBUG = true;
-      })();
-      (function injectFonts() {
-        const fonts = [
-          ["Roboto", "/src/assets/font/Roboto-Regular.ttf", "truetype", "normal"],
-          ["Roboto", "/src/assets/font/Roboto-Bold.ttf", "truetype", "bold"]
-        ]
-        const newStyle = document.createElement("style");
-
-        for (const font of fonts) {
-          const family = font[0];
-          const url = font[1];
-          const format = font[2]
-          const weight = font[3];
-
-          let ff = "";
-          ff += "@font-face {\n";
-          ff += "  font-family: \"" + family + "\";";
-          ff += "  font-weight: " + weight + ";";
-          ff += "  src: url(\"" + url + "\") format(\"" + format + "\");";
-          ff += "}";
-
-          newStyle.appendChild(document.createTextNode(ff))
-        }
-
-        document.head.appendChild(newStyle);
-      })();
-      (function injectMainScriptOnPageLoad() {
-        window.addEventListener("load", () => {
-          const script = document.createElement("script");
-          script.src = "/src/page/settings.js";
-          script.type = "module";
-          document.getElementsByTagName("head")[0].append(script);
-        });
-      })();
-    </script>
+    <script
+      src="/src/debug/setFlag.js"
+    ></script>
+    <script
+      src="/src/page/settings.js"
+      type="module"
+      defer
+    ></script>
+    <style>
+      @font-face {
+        font-family: Roboto;
+        font-weight: normal;
+        src: url("/src/assets/font/Roboto-Regular.ttf") format("truetype");
+      }
+      @font-face {
+        font-family: Roboto;
+        font-weight: bold;
+        src: url("/src/assets/font/Roboto-Bold.ttf") format("truetype");
+      }
+    </style>
   </head>
   <body class="jutsuper-dev-black-bg" style="position: absolute; height: 50vh">
     <div style="height: 50px">

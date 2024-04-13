@@ -14,6 +14,8 @@
   --jutsuper-dur-mid: .25s;
   --jutsuper-dur-slow: .50s;
   --jutsuper-curve-fast-start-slow-end: cubic-bezier(0,.86,.24,.96);
+  --jutsuper-size-popup-height: 256px;
+  --jutsuper-size-popup-width: 256px;
   /* Control the popup's border radius */
   --jutsuper-size-border-radius: 20px;
   /* Max setting's popup width */
@@ -273,6 +275,70 @@
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
   animation-direction: alternate-reverse;
+}
+
+/* /////////////// */
+/* Extension popup */
+/* /////////////// */
+
+.jutsuper-popup-area {
+  position: relative;
+  margin: 0;
+  height: var(--jutsuper-size-popup-height);
+  width: var(--jutsuper-size-popup-width);
+  font-family: "Roboto";
+  font-size: 1em;
+  color: black;
+}
+
+.jutsuper-popup-content-area {
+  clip-path: border-box;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    45deg,
+    #BDF283,
+    #C3E062
+  );
+}
+
+.jutsuper-popup-main-logo {
+  transition: all var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
+}
+
+.jutsuper-popup-main-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--jutsuper-color-dark-green);
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: 12px;
+  background-color: white;
+  border-radius: 20px;  
+}
+
+.jutsuper-popup-links-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  bottom: 0;
+  width: 100%;
+  height: 48px;
+  padding: 8px;
+  gap: 12px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  background-color: var(--jutsuper-color-dark-green);
+
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 /* /////////////// */
