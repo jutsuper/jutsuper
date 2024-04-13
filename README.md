@@ -58,6 +58,7 @@ npm run build
 # Testing
 ## Blink browsers (Chromium)
 - Google Chrome
+- Microsoft Edge
 - Opera
 - Yandex Browser
 - etc.
