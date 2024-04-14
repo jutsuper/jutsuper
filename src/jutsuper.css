@@ -277,6 +277,33 @@
   animation-direction: alternate-reverse;
 }
 
+@keyframes jutsuper-keyframes-light-dark-green-shine {
+  0% {
+    background-position: 10% 0%;
+    background: linear-gradient(
+      45deg,
+      var(--jutsuper-color-light-green),
+      var(--jutsuper-color-dark-green)
+    );
+  }
+  100% {
+    background-position: 91% 100%;
+    background: linear-gradient(
+      45deg,
+      var(--jutsuper-color-light-green),
+      var(--jutsuper-color-dark-green)
+    );
+  }
+}
+
+.jutsuper-animate-light-dark-green-shine {
+  animation-name: jutsuper-keyframes-light-dark-green-shine;
+  animation-duration: var(--jutsuper-dur-slow);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: normal;
+}
+
 /* /////////////// */
 /* Extension popup */
 /* /////////////// */
@@ -297,11 +324,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(
-    45deg,
-    #BDF283,
-    #C3E062
-  );
+  background: white;
 }
 
 .jutsuper-popup-main-logo {
@@ -312,12 +335,16 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--jutsuper-color-dark-green);
+  color: white;
   font-size: 1.5em;
   font-weight: bold;
   padding: 12px;
-  background-color: white;
-  border-radius: 20px;  
+  border-radius: 20px;
+  background: linear-gradient(
+    45deg,
+    var(--jutsuper-color-light-green),
+    var(--jutsuper-color-dark-green)
+  );
 }
 
 .jutsuper-popup-links-container {
