@@ -36,3 +36,45 @@
     />
   </p>
 </picture>
+
+# Компиляция
+1. Установи [Node.js](https://nodejs.org/en/download)
+2. Клонируй репозиторий
+```bash
+git clone https://github.com/jutsuper/jutsuper
+```
+4. Перейди в директорию
+```bash
+cd jutsuper
+```
+5. Установи зависимости
+```bash
+npm install
+```
+7. Скомпилируй
+```bash
+npm run build
+```
+
+# Временная установка
+## Браузеры Blink (Chromium)
+- **Google Chrome**
+- **Microsoft Edge**
+- **Opera**
+- **Yandex Browser**
+- и т.д.
+
+1. Открой `chrome://extensions` в браузере
+2. Включи режим разработчика в верхнем правом углу
+3. Нажми на `Load unpacked`
+4. Открой папку с репозиторием
+5. Выбери папку `./dist/blink`
+
+## Браузеры Gecko
+- **Firefox**
+
+1. Открой `about:debugging` в браузере
+2. Нажми `This Firefox` справа
+3. Нажми `Load temporary Add-on...`
+4. Открой папку с репозиторием
+5. Выбери файл `./dist/gecko/manifest.json`

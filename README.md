@@ -35,3 +35,45 @@
     />
   </p>
 </picture>
+
+# Building
+1. Install [Node.js](https://nodejs.org/en/download)
+2. Clone this repository
+```bash
+git clone https://github.com/jutsuper/jutsuper
+```
+4. CD into it
+```bash
+cd jutsuper
+```
+5. Install dependencies
+```bash
+npm install
+```
+7. Build
+```bash
+npm run build
+```
+
+# Temporary install
+## Blink browsers (Chromium)
+- **Google Chrome**
+- **Microsoft Edge**
+- **Opera**
+- **Yandex Browser**
+- etc.
+
+1. Open up `chrome://extensions` in your browser
+2. Enable developer mode at the top right
+3. Click on `Load unpacked`
+4. Navigate to the cloned repository
+5. Select `./dist/blink` folder
+
+## Gecko browsers
+- **Firefox**
+
+1. Open up `about:debugging` in your browser
+2. Click `This Firefox` on the left
+3. Click `Load temporary Add-on...`
+4. Navigate to the cloned repository
+5. Select `./dist/gecko/manifest.json`
