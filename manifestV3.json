@@ -65,7 +65,7 @@
         "/src/browser.js",
         "/src/transition.js",
         "/src/page/jutsuper.js",
-        "/src/page/jutsuper.css",
+        "/src/jutsuper.css",
         "/src/page/settings.js",
         "/src/page/settings.html",
         "/src/page/skip.js",

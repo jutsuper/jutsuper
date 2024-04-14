@@ -8,31 +8,8 @@ var BROWSER = "gecko";
 // #endif
 
 // #if "@MANIFEST" == "3"
-import {
-  JutSuperBrowsers as browsers,
-  JutSuperStorageKeys as storageKeys
-} from "/src/consts.js";
-import { jsuperLog } from "/src/log.js";
 import { JutSuperRequestsResponseMessageBuilder } from "/src/messaging.js";
 // #elif "@MANIFEST" == "2"
-/**
- * @typedef {import("/src/consts.js").JutSuperBrowsers} JutSuperBrowsers
- * @type {JutSuperBrowsers}
- */
-var browsers;
-
-/**
- * @typedef {import("/src/log.js").JutSuperLog} JutSuperLog
- * @type {JutSuperLog}
- */
-var jsuperLog;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperStorageKeys} JutSuperStorageKeys
- * @type {JutSuperStorageKeys}
- */
-var storageKeys;
-
 /**
  * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessageBuilder} JutSuperRequestsResponseMessageBuilder
  * @type {typeof import("/src/messaging.js").JutSuperRequestsResponseMessageBuilder}
@@ -42,16 +19,9 @@ var JutSuperRequestsResponseMessageBuilder;
 
 /** Import modules */
 (async function() {
-  /** @type {typeof import("/src/log.js")} */
-  const logModule = await import(browser.runtime.getURL("/src/log.js"))
-  /** @type {typeof import("/src/consts.js")} */
-  const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
   /** @type {typeof import("/src/messaging.js")} */
   const messagingModule = await import(browser.runtime.getURL("/src/messaging.js"))
 
-  browsers = constsModule.JutSuperBrowsers;
-  jsuperLog = logModule.jsuperLog;
-  storageKeys = constsModule.JutSuperStorageKeys;
   JutSuperRequestsResponseMessageBuilder = messagingModule.JutSuperRequestsResponseMessageBuilder;
 })().then(() => {
   jutsuperBackground = new JutSuperBackground();
