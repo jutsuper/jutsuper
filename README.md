@@ -74,6 +74,6 @@ npm run build
 
 1. Open up `about:debugging` in your browser
 2. Click `This Firefox` on the left
-3. Click `Load temporary Add-on...`
+3. Click `Load Temporary Add-on...`
 4. Navigate to the cloned repository
 5. Select `./dist/gecko/manifest.json`
