@@ -8,7 +8,7 @@ If you want to use it right now:
 2. Install the unpacked version (instructions below)
 3. Enable autoplay in your browser ("Sound" in Chromium browsers). Go to site settings and enable it for **jut.su**.
 
-Settings are changed directly in the player. Open up any anime and look for the <picture><img src="src/assets/logo/square-green-48.svg" width="10" /></picture> icon.
+Settings are changed directly in the player. Open up any anime and look for the <picture><img src="src/assets/logo/square-green-48.svg" width="12" /></picture> icon.
 
 Ads are not and won't be skipped, because different ad providers use diffrent layouts. Use ad-blocking extensions, if that's a problem.
 
