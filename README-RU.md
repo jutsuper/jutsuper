@@ -1,5 +1,12 @@
 [<img src="assets/flag/gb.svg" alt="GB Flag" width="20"/> English](https://github.com/kerdl/jutsuper/blob/main/README.md)
 
+# Это расширение в активной разработке
+Базовый функционал работает, но всё ещё есть пара вещей, требующих доработки.
+
+Если хочется использовать прямо сейчас:
+1. Собери эту штуку (инструкции ниже)
+2. Установи распакованную версию (инструкции ниже)
+3. Включи автоматическое воспроизведение в браузере ("Звук" в браузерах Chromium). Зайди в настройки сайтов и включи эту опцию для **jut.su**.
 
 # <picture><img src="src/assets/logo/square-green-48.svg" width="25" /></picture> Браузерный плагин автопропуска на [jut.su](https://jut.su/)
 
@@ -37,9 +44,9 @@
   </p>
 </picture>
 
-# Компиляция
+# Сборка
 1. Установи [Node.js](https://nodejs.org/en/download)
-2. Клонируй репозиторий
+2. Склонируй репозиторий
 ```bash
 git clone https://github.com/jutsuper/jutsuper
 ```
@@ -51,7 +58,7 @@ cd jutsuper
 ```bash
 npm install
 ```
-7. Скомпилируй
+7. Собери
 ```bash
 npm run build
 ```
