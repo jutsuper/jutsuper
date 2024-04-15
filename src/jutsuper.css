@@ -4,10 +4,11 @@
   --jutsuper-color-light-gray: rgb(200, 200, 200);
   --jutsuper-color-dark-gray: rgb(40, 40, 40);
   --jutsuper-color-light-green: #BDF283;
+  --jutsuper-color-light-green-half-transparent: #BDF28380;
   --jutsuper-color-dark-green: #9BC76C;
-  --jutsuper-color-dark-green-half-transparent: #ACDD77;
+  --jutsuper-color-dark-green-half-transparent: #9BC76C80;
   --jutsuper-color-darker-green: #8CB660;
-  --jutsuper-color-darker-green-half-transparent: #A4D471;
+  --jutsuper-color-darker-green-half-transparent: #8CB66080;
   --jutsuper-dur-ultra-fast: .05s;
   --jutsuper-dur-faster: .1s;
   --jutsuper-dur-fast: .15s;
@@ -196,6 +197,11 @@
   background-position-y: center;
 }
 
+/* GitHub logo */
+.jutsuper-icon-github::before {
+  content: url("/src/assets/logo/3rd/github.svg") !important;
+}
+
 /* ////////// */
 /* Animations */
 /* ////////// */
@@ -239,17 +245,17 @@
 }
 
 /* Flashing colors, used for the button that records cancel key */
-@keyframes jutsuper-keyframes-darker-to-dark-green-ht {
+@keyframes jutsuper-keyframes-dark-to-darker-green-ht {
   0% {
-    background-color: var(--jutsuper-color-darker-green);
+    background-color: var(--jutsuper-color-dark-green);
   }
   100% {
-    background-color: var(--jutsuper-color-dark-green-half-transparent);
+    background-color: var(--jutsuper-color-darker-green);
   }
 }
 
-.jutsuper-animate-darker-to-dark-green-ht {
-  animation-name: jutsuper-keyframes-darker-to-dark-green-ht;
+.jutsuper-animate-dark-to-darker-green-ht {
+  animation-name: jutsuper-keyframes-dark-to-darker-green-ht;
   animation-duration: var(--jutsuper-dur-slow);
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
@@ -277,31 +283,35 @@
   animation-direction: alternate-reverse;
 }
 
-@keyframes jutsuper-keyframes-light-dark-green-shine {
-  0% {
-    background-position: 10% 0%;
-    background: linear-gradient(
-      45deg,
-      var(--jutsuper-color-light-green),
-      var(--jutsuper-color-dark-green)
-    );
-  }
+@keyframes jutsuper-keyframes-bg-position-neg-800 {
   100% {
-    background-position: 91% 100%;
-    background: linear-gradient(
-      45deg,
-      var(--jutsuper-color-light-green),
-      var(--jutsuper-color-dark-green)
-    );
+    background-position: -800%;
   }
 }
 
-.jutsuper-animate-light-dark-green-shine {
-  animation-name: jutsuper-keyframes-light-dark-green-shine;
-  animation-duration: var(--jutsuper-dur-slow);
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+.jutsuper-animate-bg-position-neg-800 {
+  animation-name: jutsuper-keyframes-bg-position-neg-800;
+  animation-duration: 4s;
+  animation-timing-function: var(--jutsuper-curve-fast-start-slow-end);
+  animation-iteration-count: 1;
   animation-direction: normal;
+}
+
+@keyframes jutsuper-keyframes-right-left-swing {
+  0% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(2px);
+  }
+}
+
+.jutsuper-animate-jutsuper-keyframes-right-left-swing {
+  animation-name: jutsuper-keyframes-right-left-swing;
+  animation-duration: var(--jutsuper-dur-slow);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
 }
 
 /* /////////////// */
@@ -319,52 +329,106 @@
 }
 
 .jutsuper-popup-content-area {
-  clip-path: border-box;
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: white;
+  clip-path: border-box;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+
+.jutsuper-popup-content-grid {
+  display: grid;
+  position: relative;
+}
+
+.jutsuper-popup-main-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .jutsuper-popup-main-logo {
-  transition: all var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end);
+  animation-play-state: paused;
+  transition: all var(--jutsuper-dur-mid) ease-in-out;
 }
 
 .jutsuper-popup-main-heading {
-  display: flex;
+  display: grid;
   align-items: center;
   gap: 12px;
   color: white;
   font-size: 1.5em;
   font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
   padding: 12px;
   border-radius: 20px;
-  background: linear-gradient(
-    45deg,
+  grid-template-columns: max-content auto;
+  background-image: linear-gradient(
+    90deg,
     var(--jutsuper-color-light-green),
-    var(--jutsuper-color-dark-green)
+    var(--jutsuper-color-dark-green),
+    var(--jutsuper-color-light-green)
   );
+  background-size: 200% 100%;
+  box-shadow: 0px 10px 40px 20px var(--jutsuper-color-light-green-half-transparent);
+  transition: all var(--jutsuper-dur-fast) ease-out;
+
+  &:hover {
+    transform: scale(1.03);
+    .jutsuper-popup-main-logo {
+      animation-play-state: running;
+    }
+  }
 }
 
 .jutsuper-popup-links-container {
-  position: absolute;
   display: flex;
   justify-content: center;
   box-sizing: border-box;
   bottom: 0;
   width: 100%;
-  height: 48px;
+  height: auto;
   padding: 8px;
-  gap: 12px;
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
-  background-color: var(--jutsuper-color-dark-green);
+  gap: 0px;
+  z-index: 1;
+}
 
-  a {
+.jutsuper-popup-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  background-color: white;
+  padding: 8px;
+  border-radius: var(--jutsuper-size-border-radius);
+  text-decoration: none;
+  transition: all var(--jutsuper-dur-fast) ease-in-out;
+
+  &::before {
+    width: 100%;
+    height: 100%;
+    content: url("/src/assets/icon/external-link.svg");
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 6px;
+  }
+
+  &:hover {
+    box-shadow: var(--jutsuper-styling-settings-hover-tab-box-shadow);
+  }
+
+  &:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  &:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 
@@ -827,7 +891,7 @@ input.jutsuper-radio:last-child[type="radio"] {
   text-align: center;
   font-size: 0.8em;
   font-weight: bold;
-  background-color: var(--jutsuper-color-darker-green-half-transparent);
+  background-color: var(--jutsuper-color-darker-green);
   border-radius: 50px;
   cursor: pointer;
   border: none;

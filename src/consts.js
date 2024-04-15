@@ -709,8 +709,8 @@ const JutSuperDomClasses = {
   animateTopToBottom: "jutsuper-animate-top-to-bottom",
   /** @type {"jutsuper-animate-small-top-to-bottom"} */
   animateSmallTopToBottom: "jutsuper-animate-small-top-to-bottom",
-  /** @type {"jutsuper-animate-darker-to-dark-green-ht"} */
-  animateDarkerToDarkGreenHt: "jutsuper-animate-darker-to-dark-green-ht",
+  /** @type {"jutsuper-animate-dark-to-darker-green-ht"} */
+  animateDarkToDarkerGreenHt: "jutsuper-animate-dark-to-darker-green-ht",
   /** @type {"jutsuper-animate-opacity-1-to-0"} */
   animateOpacity1To0: "jutsuper-animate-opacity-1-to-0",
 
@@ -879,7 +879,7 @@ const JutSuperDomClasses = {
  * @property {"jutsuper-animate-bottom-to-top"} animateBottomToTop
  * @property {"jutsuper-animate-top-to-bottom"} animateTopToBottom
  * @property {"jutsuper-animate-small-top-to-bottom"} animateSmallTopToBottom
- * @property {"jutsuper-animate-darker-to-dark-green-ht"} animateDarkerToDarkGreenHt
+ * @property {"jutsuper-animate-dark-to-darker-green-ht"} animateDarkToDarkerGreenHt
  * @property {"jutsuper-animate-opacity-1-to-0"} animateOpacity1To0
  * @property {"jutsuper-vjs-button"} vjsButton
  * @property {"jutsuper-vjs-container"} vjsContainer
@@ -964,7 +964,7 @@ const JutSuperDomClasses = {
  *   "jutsuper-animate-bottom-to-top" |
  *   "jutsuper-animate-top-to-bottom" |
  *   "jutsuper-animate-small-top-to-bottom" |
- *   "jutsuper-animate-darker-to-dark-green-ht" |
+ *   "jutsuper-animate-dark-to-darker-green-ht" |
  *   "jutsuper-animate-opacity-1-to-0" |
  *   "jutsuper-vjs-button" |
  *   "jutsuper-vjs-container" |

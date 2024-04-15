@@ -108,7 +108,7 @@ class JutSuperSettingsPopup {
 
       if (!isInAreaRange) {
         thisArg.cancelKeyListener.isListening = false;
-        thisArg.cancelKeyListener.classList.remove(domClasses.animateDarkerToDarkGreenHt);
+        thisArg.cancelKeyListener.classList.remove(domClasses.animateDarkToDarkerGreenHt);
         thisArg.cancelKeyListenerRecCircle.classList.remove(domClasses.animateOpacity1To0);
       }
     });
@@ -524,7 +524,7 @@ class JutSuperSettingsPopup {
    */
   onCancelRecorderClick(event) {
     this.cancelKeyListener.isListening = !this.cancelKeyListener.isListening;
-    this.cancelKeyListener.classList.toggle(domClasses.animateDarkerToDarkGreenHt);
+    this.cancelKeyListener.classList.toggle(domClasses.animateDarkToDarkerGreenHt);
     this.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
   }
 
@@ -547,7 +547,7 @@ class JutSuperSettingsPopup {
     }
 
     this.cancelKeyListener.value = keyLabel;
-    this.cancelKeyListener.classList.remove(domClasses.animateDarkerToDarkGreenHt);
+    this.cancelKeyListener.classList.remove(domClasses.animateDarkToDarkerGreenHt);
     this.cancelKeyListener.isListening = false;
     this.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
   }

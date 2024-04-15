@@ -48,8 +48,8 @@ const OBJ = {
   animateTopToBottom: "jutsuper-animate-top-to-bottom",
   /** @type {"jutsuper-animate-small-top-to-bottom"} */
   animateSmallTopToBottom: "jutsuper-animate-small-top-to-bottom",
-  /** @type {"jutsuper-animate-darker-to-dark-green-ht"} */
-  animateDarkerToDarkGreenHt: "jutsuper-animate-darker-to-dark-green-ht",
+  /** @type {"jutsuper-animate-dark-to-darker-green-ht"} */
+  animateDarkToDarkerGreenHt: "jutsuper-animate-dark-to-darker-green-ht",
   /** @type {"jutsuper-animate-opacity-1-to-0"} */
   animateOpacity1To0: "jutsuper-animate-opacity-1-to-0",
 
