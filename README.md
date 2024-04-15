@@ -16,7 +16,7 @@ Open up any anime and look for the
 <picture><img src="src/assets/logo/square-green-48.svg" width="12" /></picture> 
 icon in the controls bar.
 
-Settings may have confusing names. 
+Options may have confusing names. 
 Hover over its name to get a better description.
 
 Ads are not and won't be skipped, 
