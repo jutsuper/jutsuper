@@ -17,7 +17,7 @@ Open up any anime and look for the
 icon in the controls bar.
 
 Options may have confusing names. 
-Hover over its name to get a better description.
+Hover over its name to get a description.
 
 Ads are not and won't be skipped, 
 because different ad providers use 
