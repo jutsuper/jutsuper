@@ -97,7 +97,7 @@ npm run build
 - **Firefox**
 
 1. Открой `about:debugging` в браузере
-2. Нажми `This Firefox` справа
-3. Нажми `Load Temporary Add-on...`
+2. Нажми `Этот Firefox` справа
+3. Нажми `Загрузить временное дополнение...`
 4. Открой папку с репозиторием
 5. Выбери файл `./dist/gecko/manifest.json`
