@@ -1,5 +1,12 @@
 [<img src="assets/flag/ru.svg" alt="RU Flag" width="20"/> Русский](https://github.com/kerdl/jutsuper/blob/main/README-RU.md)
 
+# This extension is in active development
+The basic functionality works, but there are still some things needed to be done.
+
+If you want to use it right now:
+1. Build the thing (instructions below)
+2. Install the unpacked version (instructions below)
+3. Enable autoplay in your browser ("Sound" in Chromium browsers). Go to site settings and enable it for **jut.su**.
 
 # <picture><img src="src/assets/logo/square-green-48.svg" width="25" /></picture> Autoskip browser plugin for [jut.su](https://jut.su/)
 
