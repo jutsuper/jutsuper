@@ -1,16 +1,28 @@
 [<img src="assets/flag/ru.svg" alt="RU Flag" width="20"/> Русский](https://github.com/kerdl/jutsuper/blob/main/README-RU.md)
 
 # This extension is in active development
-The basic functionality works, but there are still some things needed to be done.
+The basic functionality works,
+but there are still some things 
+needed to be done.
 
 If you want to use it right now:
 1. Build the thing (instructions below)
 2. Install the unpacked version (instructions below)
-3. Enable autoplay in your browser ("Sound" in Chromium browsers). Go to site settings and enable it for **jut.su**.
+3. Enable autoplay in your browser ("Sound" in Chromium browsers).
+Go to site settings and enable it for **jut.su**.
 
-Settings are changed directly in the player. Open up any anime and look for the <picture><img src="src/assets/logo/square-green-48.svg" width="12" /></picture> icon in the controls bar.
+Settings are changed directly in the player.
+Open up any anime and look for the
+<picture><img src="src/assets/logo/square-green-48.svg" width="12" /></picture> 
+icon in the controls bar.
 
-Ads are not and won't be skipped, because different ad providers use diffrent layouts. Use ad-blocking extensions, if that's a problem.
+Settings may have confusing names. 
+Hover over its name to get a better description.
+
+Ads are not and won't be skipped, 
+because different ad providers use 
+diffrent layouts. Use ad-blocking 
+extensions, if that's a problem.
 
 # <picture><img src="src/assets/logo/square-green-48.svg" width="25" /></picture> Autoskip browser plugin for [jut.su](https://jut.su/)
 
