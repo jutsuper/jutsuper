@@ -9,7 +9,7 @@ var BROWSER = "gecko";
 
 
 /**
- * @typedef {import("/src/consts.js").JutSuperBrowsers} JutSuperBrowsers
+ * @typedef {import("/src/browser.js").JutSuperBrowsers} JutSuperBrowsers
  * @type {JutSuperBrowsers}
  */
 var browsers;
@@ -154,6 +154,12 @@ var JutSuperIpc;
 var JutSuperIpcRecvParamsBuilder;
 
 /**
+ * @typedef {import("/src/browser.js").JutSuperBrowser} JutSuperBrowser
+ * @type {typeof import("/src/browser.js").JutSuperBrowser}
+ */
+var JutSuperBrowser;
+
+/**
  * @typedef {import("/src/messaging.js").JutSuperActionsMessageBuilder} JutSuperActionsMessageBuilder
  * @type {typeof import("/src/messaging.js").JutSuperActionsMessageBuilder}
  */
@@ -192,6 +198,8 @@ var JutSuperSettings;
   const logModule = await import(browser.runtime.getURL("/src/log.js"))
   /** @type {typeof import("/src/consts.js")} */
   const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
+  /** @type {typeof import("/src/browser.js")} */
+  const browserModule = await import(browser.runtime.getURL("/src/browser.js"))
   /** @type {typeof import("/src/ipc.js")} */
   const ipcModule = await import(browser.runtime.getURL("/src/ipc.js"));
   /** @type {typeof import("/src/storage.js")} */
@@ -203,7 +211,7 @@ var JutSuperSettings;
   /** @type {typeof import("/src/settings.js")} */
   const settingsModule = await import(browser.runtime.getURL("/src/settings.js"));
 
-  browsers = constsModule.JutSuperBrowsers;
+  browsers = browserModule.JutSuperBrowsers;
   jsuperErrors = errorModule.jsuperErrors;
   jsuperLog = logModule.jsuperLog;
   jsuperStorage = storageModule.jsuperStorage;
@@ -227,6 +235,7 @@ var JutSuperSettings;
   JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
   JutSuperIpc = ipcModule.JutSuperIpc;
   JutSuperIpcRecvParamsBuilder = ipcModule.JutSuperIpcRecvParamsBuilder;
+  JutSuperBrowser = browserModule.JutSuperBrowser;
   JutSuperActionsMessageBuilder = messagingModule.JutSuperActionsMessageBuilder;
   JutSuperRequestsRequestMessageBuilder = messagingModule.JutSuperRequestsRequestMessageBuilder;
   JutSuperMessageBuilder = messagingModule.JutSuperMessageBuilder;
@@ -290,6 +299,7 @@ class JutSuperContent {
 
     console.log(JutSuperContent.name);
 
+    this.browser = new JutSuperBrowser(browser, BROWSER);
     this.transition = new JutSuperTransition().setUndefined();
     this.settings = new JutSuperSettings().setUndefined();
 
@@ -342,7 +352,8 @@ class JutSuperContent {
     this.injectDocument(head, this.urlSettingsHtml, assetIds.settingsHtml);
     this.injectDocument(head, this.urlSkipHtml, assetIds.skipHtml);
 
-    this.asyncInit();
+    this.loadData();
+    this.initListeners();
   }
 
   /////////////////////////////
@@ -448,10 +459,12 @@ class JutSuperContent {
     node.appendChild(elm);
   }
 
-  async asyncInit() {
+  loadData() {
     this.loadSettingsStorage();
     this.loadTransitionStorage();
+  }
 
+  initListeners() {
     this.listenSettingsChange();
     this.listenEssentialsLoadState();
     this.listenFullscreenChange();
@@ -634,35 +647,17 @@ class JutSuperContent {
    * @returns {Promise<void>}
    */
   async handleWindowStateRequest() {
-    /** @type {BrowserWindowStatesKeys} */
-    let windowState;
-    let message = (new JutSuperMessageBuilder())
-      .requests(
-        (new JutSuperRequestsRequestMessageBuilder())
-          .getWindowState()
-          .build()
-      )
-      .build()
+    const resp = await this.browser.runtime.sendResponsiveMessage(
+      (new JutSuperMessageBuilder())
+        .requests(
+          (new JutSuperRequestsRequestMessageBuilder())
+            .getWindowState()
+            .build()
+        )
+        .build()
+    );
 
-    
-    if (BROWSER === browsers.blink) {
-      /** @type {JutSuperRequestsResponseMessage} */
-      const resp = await new Promise(resolve => {
-        browser.runtime.sendMessage(message,
-          /** @param {JutSuperRequestsResponseMessage} response */
-          (response) => {
-            resolve(response);
-          }
-        );
-      });
-      windowState = resp.windowState;
-    }
-    else if (BROWSER === browsers.gecko) {
-      /** @type {Promise<JutSuperRequestsResponseMessage>} */
-      const sendResult = await browser.runtime.sendMessage(message);
-      const resp = await sendResult;
-      windowState = resp.windowState;
-    }
+    const windowState = resp.windowState;
 
     console.log("windowState =", windowState);
 
@@ -707,15 +702,18 @@ class JutSuperContent {
   }
 
   async handleFullscreenExitRequest() {
-    await browser.runtime.sendMessage(
+    const resp = await this.browser.runtime.sendResponsiveMessage(
       (new JutSuperMessageBuilder())
         .actions(
           (new JutSuperActionsMessageBuilder())
             .isFullscreenState(false)
+            .originalWindowState(this.transition.get().originalWindowState)
             .build()
         )
         .build()
     );
+
+
   }
 
   ////////////////////////////////////////////////
@@ -848,6 +846,19 @@ class JutSuperContent {
 
     this.transition.setIsSwitchingEpisode(true);
     this.transition.setSwitchesCount(switchesCount + 1);
+    if (!this.transition.get().originalWindowState) {
+      const resp = await this.browser.runtime.sendResponsiveMessage(
+        (new JutSuperMessageBuilder())
+          .requests(
+            (new JutSuperRequestsRequestMessageBuilder())
+              .getWindowState()
+              .build()
+          )
+          .build()
+      );
+      this.transition.setOriginalWindowState(resp.windowState);
+    }
+    
     await this.commitTransitionStorage();
 
     // send callback that
@@ -864,6 +875,26 @@ class JutSuperContent {
 
     if (transition === undefined) {
       transition = {}
+    }
+
+    console.log("handleEpisodeSwitchContinuation got transition", transition);
+
+    if (!transition.originalWindowState) {
+      const resp = await this.browser.runtime.sendResponsiveMessage(
+        (new JutSuperMessageBuilder())
+          .requests(
+            (new JutSuperRequestsRequestMessageBuilder())
+              .getWindowState()
+              .build()
+          )
+          .build()
+      );
+
+      const originalWindowState = resp.windowState;
+      this.transition.setOriginalWindowState(originalWindowState);
+    }
+    else {
+      this.transition.setOriginalWindowState(transition.originalWindowState);
     }
 
     const isSwitchedAutomatically = (

@@ -1,4 +1,9 @@
-export { BrowserWindowStates };
+export {
+  JutSuperBrowsers,
+  BrowserWindowStates,
+  JutSuperBrowserRuntime,
+  JutSuperBrowser,
+};
 
 
 /**
@@ -67,6 +72,39 @@ export { BrowserWindowStates };
 
 
 /**
+ * # Browser engine names
+ * 
+ * Used for flow control
+ * based on the current browser
+ * 
+ * @readonly
+ * @enum {JutSuperBrowsersType}
+ */
+const JutSuperBrowsers = {
+  /**
+   * # Chrome, Edge, Opera, Yandex Browser, etc.
+   * @type {"blink"}
+   */
+  blink: "blink",
+  /**
+   * # Firefox
+   * @type {"gecko"}
+   */
+  gecko: "gecko",
+}
+/** 
+ * @typedef JutSuperBrowsersType
+ * @property {"blink"} blink
+ * @property {"gecko"} gecko
+ * 
+ * @typedef {(
+ *   "blink" |
+ *   "gecko"
+ * )} JutSuperBrowsersKeys
+ */
+
+
+/**
  * # Describes possible browser window states
  * @readonly
  * @enum {BrowserWindowStatesType}
@@ -99,3 +137,53 @@ const BrowserWindowStates = {
  *   "docked"
  * )} BrowserWindowStatesKeys
  */
+
+
+class JutSuperBrowserRuntime {
+  /**
+   * @param {unknown} browser 
+   * @param {string} engine 
+   */
+  constructor(browser, engine) {
+    this.browser = browser;
+    this.engine = engine;
+  }
+
+  /**
+   * @param {Record<any, any>} message 
+   * @returns {Promise<JutSuperRequestsResponseMessage>}
+   */
+  async sendResponsiveMessage(message) {
+    const thisArg = this;
+
+    if (this.engine === JutSuperBrowsers.blink) {
+      /** @type {JutSuperRequestsResponseMessage} */
+      return await new Promise(resolve => {
+        thisArg.browser.runtime.sendMessage(message,
+          /** @param {JutSuperRequestsResponseMessage} response */
+          (response) => {
+            resolve(response);
+          }
+        );
+      });
+    }
+    else if (this.engine === JutSuperBrowsers.gecko) {
+      /** @type {Promise<JutSuperRequestsResponseMessage>} */
+      const sendResult = await this.browser.runtime.sendMessage(message);
+      return await sendResult;
+    }
+  }
+}
+
+class JutSuperBrowser {
+  /**
+   * @param {unknown} browser 
+   * @param {string} engine 
+   */
+  constructor(browser, engine) {
+    this.browser = browser;
+    this.engine = engine;
+
+    this.runtime = new JutSuperBrowserRuntime(this.browser, this.engine);
+  }
+}

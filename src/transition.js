@@ -1,13 +1,18 @@
+import { BrowserWindowStates as windowStates } from "/src/browser.js";
 export {
   JutSuperTransition,
   JutSuperTransitionObjectKeys
 };
 
+/**
+ * @typedef {import("/src/browser.js").BrowserWindowStatesKeys} BrowserWindowStatesKeys
+ */
 
 /**
  * @typedef JutSuperTransitionObject
  * @property {boolean} isFullscreen
  * @property {boolean} isSwitchingEpisode
+ * @property {BrowserWindowStatesKeys} originalWindowState
  * @property {number} switchesCount
  */
 
@@ -21,18 +26,22 @@ const JutSuperTransitionObjectKeys = {
   isFullscreen: "isFullscreen",
   /** @type {"isSwitchingEpisode"} */
   isSwitchingEpisode: "isSwitchingEpisode",
+  /** @type {"originalWindowState"} */
+  originalWindowState: "originalWindowState",
   /** @type {"switchesCount"} */
-  switchesCount: "switchesCount"
+  switchesCount: "switchesCount",
 }
 /**
  * @typedef JutSuperTransitionObjectKeysType
  * @property {"isFullscreen"} isFullscreen
  * @property {"isSwitchingEpisode"} isSwitchingEpisode
+ * @property {"originalWindowState"} originalWindowState
  * @property {"switchesCount"} switchesCount
  *
  * @typedef {(
  *   "isFullscreen" |
  *   "isSwitchingEpisode" |
+ *   "originalWindowState" |
  *   "switchesCount"
  * )} JutSuperTransitionObjectKeysKeys
  */
@@ -51,6 +60,7 @@ class JutSuperTransition {
     this.#object = {
       isFullscreen: false,
       isSwitchingEpisode: false,
+      originalWindowState: windowStates.maximized,
       switchesCount: 0,
     };
     return this;
@@ -61,6 +71,7 @@ class JutSuperTransition {
     this.#object = {
       isFullscreen: undefined,
       isSwitchingEpisode: undefined,
+      originalWindowState: undefined,
       switchesCount: undefined,
     };
     return this;
@@ -97,6 +108,14 @@ class JutSuperTransition {
    */
   setIsSwitchingEpisode(value) {
     this.#object.isSwitchingEpisode = value;
+  }
+
+  /**
+   * @param {BrowserWindowStatesKeys} value 
+   * @returns {void}
+   */
+  setOriginalWindowState(value) {
+    this.#object.originalWindowState = value;
   }
 
   /**

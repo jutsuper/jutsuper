@@ -51,8 +51,6 @@ class JutSuperBackground {
     const thisArg = this;
     this.LOCATION = JutSuperBackground.name;
 
-    this.prevWindowState = undefined;
-
     browser.runtime.onMessage.addListener(
       /**
        * @param {JutSuperMessage} message 
@@ -76,7 +74,7 @@ class JutSuperBackground {
    * 
    * @param {JutSuperMessage} message 
    * @param {BrowserMessageSenderDescriptor} sender 
-   * @returns {Promise<JutSuperRequestsResponseMessage> | Promise<void>}
+   * @returns {Promise<JutSuperRequestsResponseMessage | void>}
    */
   async messageCallback(message, sender) {
     if (message.actions) {
@@ -96,6 +94,7 @@ class JutSuperBackground {
     if (actions.fullscreenState !== undefined) {
       await this.handleFullscreenRequest(
         actions.fullscreenState,
+        actions.originalWindowState,
         sender
       )
     }
@@ -103,10 +102,11 @@ class JutSuperBackground {
 
   /**
    * @param {boolean} state
+   * @param {BrowserWindowStatesKeys} originalState
    * @param {BrowserMessageSenderDescriptor} sender
    * @returns {Promise<void>}
    */
-  async handleFullscreenRequest(state, sender) {
+  async handleFullscreenRequest(state, originalState, sender) {
     /** @type {BrowserWindowDescriptor} */
     const window = await browser.windows.get(sender.tab.windowId);
 
@@ -114,15 +114,11 @@ class JutSuperBackground {
 
     switch (state) {
       case true:
-        if (this.prevWindowState === undefined) {
-          this.prevWindowState = window.state;
-        }
         browser.windows.update(window.id, { state: "fullscreen" });
         break;
       case false:
-        if (this.prevWindowState) {
-          browser.windows.update(window.id, { state: this.prevWindowState });
-          this.prevWindowState = undefined;
+        if (originalState) {
+          browser.windows.update(window.id, { state: originalState });
         } else {
           browser.windows.update(window.id, { state: "maximized" });
         }

@@ -9,7 +9,6 @@ export {
   JutSuFunctions,
   JutSuDomIds,
   JutSuDomClasses,
-  JutSuperBrowsers,
   JutSuperLogLevels,
   JutSuperLogDefaults,
   JutSuperAssetIds,
@@ -198,39 +197,6 @@ const JutSuDomClasses = {
 *   "footer"
 * )} JutSuDomClassesKeys
 */
-
-
-/**
- * # Browser engine names
- * 
- * Used for flow control
- * based on the current browser
- * 
- * @readonly
- * @enum {JutSuperBrowsersType}
- */
-const JutSuperBrowsers = {
-  /**
-   * # Chrome, Opera, Yandex Browser, etc.
-   * @type {"blink"}
-   */
-  blink: "blink",
-  /**
-   * # Firefox
-   * @type {"gecko"}
-   */
-  gecko: "gecko",
-}
-/** 
- * @typedef JutSuperBrowsersType
- * @property {"blink"} blink
- * @property {"gecko"} gecko
- * 
- * @typedef {(
- *   "blink" |
- *   "gecko"
- * )} JutSuperBrowsersKeys
- */
 
 
 /**
@@ -1573,13 +1539,20 @@ const JutSuperMessagingMessageActionsKeys = {
    * @type {"fullscreenState"}
    */
   fullscreenState: "fullscreenState",
+  /**
+   * # Denotes the original window state to restore it
+   * @type {"originalWindowState"}
+   */
+  originalWindowState: "originalWindowState"
 }
 /** 
  * @typedef JutSuperMessagingMessageActionsKeysType
  * @property {"fullscreenState"} fullscreenState
+ * @property {"originalWindowState"} originalWindowState
  * 
  * @typedef {(
- *   "fullscreenState"
+ *   "fullscreenState" |
+ *   "originalWindowState"
  * )} JutSuperMessagingMessageActionsKeysKeys
  */
 

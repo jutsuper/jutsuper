@@ -18,6 +18,7 @@ export {
 /**
  * @typedef JutSuperActionsMessage
  * @property {boolean} [fullscreenState]
+ * @property {BrowserWindowStatesKeys} [originalWindowState]
  * 
  * @typedef JutSuperRequestsRequestMessage
  * @property {boolean} [getWindowState]
@@ -46,6 +47,15 @@ class JutSuperActionsMessageBuilder {
    */
   isFullscreenState(value) {
     this.#message[msgActKeys.fullscreenState] = value;
+    return this;
+  }
+
+  /**
+   * @param {BrowserWindowStatesKeys} value 
+   * @returns {JutSuperActionsMessageBuilder}
+   */
+  originalWindowState(value) {
+    this.#message[msgActKeys.originalWindowState] = value;
     return this;
   }
 
