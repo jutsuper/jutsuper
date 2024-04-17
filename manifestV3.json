@@ -27,7 +27,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*.jut.su/*"
+        "*://*.jut.su/*"
       ],
       "js": [
         "/src/content/content.js"

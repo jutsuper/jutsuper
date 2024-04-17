@@ -64,7 +64,9 @@ class JutSuperIpc {
 
   /** @param {JutSuperIpcCreationParams} params */
   constructor(params) {
-    console.log("JutSuper IPC constructing");
+    this.LOCATION = JutSuperIpc.name;
+
+    console.log(`${this.LOCATION}: constructing`);
 
     this.nodeTag = params.nodeTag ?
       params.nodeTag : ipcDefaultNodeProps.tag;
@@ -76,8 +78,8 @@ class JutSuperIpc {
 
     if (typeof this.senderId !== ipcJsTypes.string) {
       throw new Error(
-        "JutSuper IPC: senderId should be specified " +
-        "and should be a string"
+        `${this.LOCATION}: senderId should be specified ` +
+        `and should be a string`
       );
     }
 
@@ -96,7 +98,7 @@ class JutSuperIpc {
    * @returns {void}
    */
   send(params) {
-    let encodedValue = JutSuperIpc.encodeValueWithType(params.value);
+    let encodedValue = this.encodeValueWithType(params.value);
     encodedValue = this.addSender(encodedValue);
 
     this.#node.setAttribute(params.key, encodedValue);
@@ -236,7 +238,7 @@ class JutSuperIpc {
    * @param {JutSuperIpcSupportedDataTypes} value 
    * @returns {string}
    */
-  static encodeValueWithType(value) {
+  encodeValueWithType(value) {
     /** @type {JutSuperIpcJsDataTypesKeys | string} */
     let typeOfValue = typeof value;
 
@@ -246,7 +248,7 @@ class JutSuperIpc {
 
     if (!JutSuperIpc.isTypeCompatible(typeOfValue)) {
       throw new Error(
-        `JutSuper IPC: value of type ${typeOfValue} ` +
+        `${this.LOCATION}: value of type ${typeOfValue} ` +
         `is not supported`
       )
     }
