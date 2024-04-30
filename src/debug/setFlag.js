@@ -1,3 +1,5 @@
+var wnd = /** @type {import("/src/types/window.d.ts").JutSuperWindow} */ (window);
+
 (function setDebugFlag() {
-  window.JUTSUPER_DEBUG = true;
+  wnd.JUTSUPER_DEBUG = true;
 })();

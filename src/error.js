@@ -2,6 +2,9 @@ export { JutSuperErrors, jsuperErrors }
 
 
 /**
+ * @typedef JutSuperErrorsLocation
+ * @property {string} location
+ * 
  * @typedef JutSuperErrorsLocationWithTarget
  * @property {string} location
  * @property {string} target
@@ -23,13 +26,12 @@ class JutSuperErrors {
   }
 
   /**
-   * @param {JutSuperErrorsLocationWithTarget} params
+   * @param {JutSuperErrorsLocation} params
    * @returns {Error}
    */
   unexpectedEndError(params) {
     return new Error(
-      `${params.location}: unexpected end of ` +
-      `${params.target}`
+      `${params.location}: unexpected end`
     )
   }
 }

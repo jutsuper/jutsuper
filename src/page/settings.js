@@ -1,26 +1,31 @@
+import { jsuperLog } from "/src/log.js";
+import { jsuperErrors } from "/src/error.js";
 import {
   JutSuperDomClasses as domClasses,
   JutSuperDomIds as domIds,
   JutSuperInputNames as inputNames,
-  JutSuperIpcDefaultNodeProps as ipcDefaultNodeProps,
-  JutSuperIpcIds as ipcIds,
-  JutSuperIpcSettingsKeys as ipcSettingsKeys
+  JutSuperIpcIds as ipcIds
 } from "/src/consts.js";
 import {
+  JutSuperIpcFlags as ipcFlags,
+  JutSuperIpcNamespaces as ipcNamespaces,
   JutSuperIpc,
   JutSuperIpcBuilder,
-  JutSuperIpcRecvParamsBuilder
+  JutSuperIpcRspParamsBuilder
 } from "/src/ipc.js";
 import {
   JutSuperSettings,
   JutSuperSettingsSkipOrder as skipOrder
 } from "/src/settings.js";
+import { AsyncLock } from "/src/lock.js";
 import { jsuperUtil as util } from "/src/util.js";
 export { JutSuperSettingsPopup };
 
 
 /**
- * @typedef {import("/src/settings.js").JutSuperSettingsObject} JutSuperSettingsObject
+ * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObject} JutSuperSettingsObject
+ * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectPartial} JutSuperSettingsObjectPartial
+ * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectFilter} JutSuperSettingsObjectFilter
  * @typedef {import("/src/settings.js").JutSuperSettingsSkipOrderKeys} JutSuperSettingsSkipOrderKeys
  */
 
@@ -30,7 +35,7 @@ class JutSuperSettingsPopup {
    */
   constructor(doc) {
     this.LOCATION = JutSuperSettingsPopup.name;
-    const thisArg = this;
+    const self = this;
 
     this.document = doc ? doc : document;
 
@@ -85,31 +90,31 @@ class JutSuperSettingsPopup {
     /** @type {HTMLDivElement} */
     this.cancelKeyListenerRecCircle = this.document.getElementById(domIds.settingsCancelKeyListenerRecCircle);
 
-    this.bars.forEach(bar => bar.addEventListener("change", event => thisArg.closeOtherBars(event.target)))
+    this.bars.forEach(bar => bar.addEventListener("change", event => self.closeOtherBars(event.target)))
 
     this.opSkipSwitch.addEventListener("change", event => this.onOpeningsSwitchChange(event));
     this.opSkipOrderSelector.addEventListener("change", event => this.onOpeningsSkipOrderChange(event));
     this.edSkipSwitch.addEventListener("change", event => this.onEndingsSwitchChange(event));
     this.edSkipOrderSelector.addEventListener("change", event => this.onEndingsSkipOrderChange(event));
-    this.edSkipMaxNegativeButton.addEventListener("click", event => thisArg.onEndingsSkipMaxNegative(event));
-    this.edSkipMaxPositiveButton.addEventListener("click", event => thisArg.onEndingsSkipMaxPositive(event));
+    this.edSkipMaxNegativeButton.addEventListener("click", event => self.onEndingsSkipMaxNegative(event));
+    this.edSkipMaxPositiveButton.addEventListener("click", event => self.onEndingsSkipMaxPositive(event));
     this.edSkipMaxField.addEventListener("input", event => this.onEndingsSkipMaxFieldInput(event));
     this.edSkipMaxField.addEventListener("keydown", event => this.onEndingsSkipMaxFieldKeydown(event));
     this.edFullscreenSwitch.addEventListener("change", event => this.onEndingsFullscreenSliderChange(event));
-    this.delaySlider.addEventListener("input", event => thisArg.onDelayChange(event));
-    this.cancelKeyListener.addEventListener("click", event => thisArg.onCancelRecorderClick(event));
+    this.delaySlider.addEventListener("input", event => self.onDelayChange(event));
+    this.cancelKeyListener.addEventListener("click", event => self.onCancelRecorderClick(event));
     this.cancelKeyListener.addEventListener("keydown", event => this.onCancelRecorderKeyDown(event));
 
     this.document.addEventListener("mousedown", event => {
-      const boundaries = thisArg.cancelKeyListener.getBoundingClientRect();
+      const boundaries = self.cancelKeyListener.getBoundingClientRect();
       const isInXRange = event.clientX >= boundaries.left && event.clientX <= boundaries.right;
       const isInYRange = event.clientY >= boundaries.top && event.clientY <= boundaries.bottom;
       const isInAreaRange = isInXRange && isInYRange;
 
       if (!isInAreaRange) {
-        thisArg.cancelKeyListener.isListening = false;
-        thisArg.cancelKeyListener.classList.remove(domClasses.animateDarkToDarkerGreenHt);
-        thisArg.cancelKeyListenerRecCircle.classList.remove(domClasses.animateOpacity1To0);
+        self.cancelKeyListener.isListening = false;
+        self.cancelKeyListener.classList.remove(domClasses.animateDarkToDarkerGreenHt);
+        self.cancelKeyListenerRecCircle.classList.remove(domClasses.animateOpacity1To0);
       }
     });
 
@@ -118,13 +123,37 @@ class JutSuperSettingsPopup {
     this.exposedSettings = window.jsuperSettings;
 
     if (!window.JUTSUPER_DEBUG) {
-      /** @type {JutSuperIpc} */
-      this.ipc = new JutSuperIpcBuilder()
-        .communicationNodeTagIs(ipcDefaultNodeProps.settingsTag)
-        .communicationNodeIdIs(ipcDefaultNodeProps.settingsId)
+      /**
+       * # Requesting IPC
+       * @type {JutSuperIpc<
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectFilter
+       * >}
+       */
+      this.reqIpc = new JutSuperIpcBuilder()
+        .namespaceIs(ipcNamespaces.settings)
         .identifyAs(ipcIds.page)
+        .ignoreWithoutAnyOfTheseFlags([ipcFlags.rsp])
+        .sendWithTheseFlags([ipcFlags.req])
         .build();
-      this.loadInitialIpcSettings();
+      /**
+       * # Responding IPC
+       * @type {JutSuperIpc<
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectFilter
+       * >}
+       */
+      this.rspIpc = new JutSuperIpcBuilder()
+        .namespaceIs(ipcNamespaces.settings)
+        .identifyAs(ipcIds.page)
+        .ignoreWithoutAnyOfTheseFlags([ipcFlags.req])
+        .sendWithTheseFlags([ipcFlags.rsp])
+        .build();
+      
+      this.ipcRecvReady = new AsyncLock({ oneTime: true });
+      
       this.listenIpcChanges();
     }
 
@@ -132,6 +161,41 @@ class JutSuperSettingsPopup {
     if (window.JUTSUPER_DEBUG) {
       const preloadMessage = this.document.getElementById(domIds.devPreloadMessage);
       preloadMessage.classList.add(domClasses.devHidden);
+    }
+  }
+
+  /**
+   * @param {JutSuperSettingsObjectPartial} schema 
+   * @returns {void}
+   */
+  setFromSchema(schema) {
+    if (schema.openings !== undefined && schema.openings !== this.exposedSettings.openings) {
+      if (schema.openings.doSkip !== undefined && schema.openings.doSkip !== this.exposedSettings.openings.doSkip) {
+        this.setDoSkipOpenings(schema.openings.doSkip);
+      }
+      if (schema.openings.skipOrder !== undefined && schema.openings.skipOrder !== this.exposedSettings.openings.skipOrder) {
+        this.setOpeningsSkipOrder(schema.openings.skipOrder);
+      }
+    }
+    if (schema.endings !== undefined && schema.endings !== this.exposedSettings.endings) {
+      if (schema.endings.doSkip !== undefined && schema.endings.doSkip !== this.exposedSettings.endings.doSkip) {
+        this.setDoSkipEndings(schema.endings.doSkip);
+      }
+      if (schema.endings.skipOrder !== undefined && schema.endings.skipOrder !== this.exposedSettings.endings.skipOrder) {
+        this.setEndingsSkipOrder(schema.endings.skipOrder);
+      }
+      if (schema.endings.maxSkips !== undefined && schema.endings.maxSkips !== this.exposedSettings.endings.maxSkips) {
+        this.setEndingsSkipMax(schema.endings.maxSkips);
+      }
+      if (schema.endings.doPersistFullscreen !== undefined && schema.endings.doPersistFullscreen !== this.exposedSettings.endings.doPersistFullscreen) {
+        this.setEndingsPersistFullscreen(schema.endings.doPersistFullscreen);
+      }
+    }
+    if (schema.skipDelayS !== undefined && schema.skipDelayS !== this.exposedSettings.skipDelayS) {
+      this.setDelay(schema.skipDelayS);
+    }
+    if (schema.skipCancelKey !== undefined && schema.skipCancelKey !== this.exposedSettings.skipCancelKey) {
+      this.setCancelKey(schema.skipCancelKey);
     }
   }
 
@@ -156,13 +220,12 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onOpeningsSwitchChange(event) {
-    this.exposedSettings.openings.doSkip = event.target.checked;
+    const value = event.target.checked;
+
+    this.exposedSettings.openings.doSkip = value;
 
     if (!window.JUTSUPER_DEBUG) {
-      this.ipc.send({
-        key: ipcSettingsKeys.openingsDoSkip,
-        value: event.target.checked
-      });
+      this.reqIpc.send({ openings: { doSkip: value } });
     }
   }
 
@@ -182,13 +245,12 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onOpeningsSkipOrderChange(event) {
-    this.exposedSettings.openings.skipOrder = this.getSelectedOpeningsSkipOrder();
+    const value = this.getSelectedOpeningsSkipOrder();
+
+    this.exposedSettings.openings.skipOrder = value;
 
     if (!window.JUTSUPER_DEBUG) {
-      this.ipc.send({
-        key: ipcSettingsKeys.openingsSkipOrder,
-        value: this.getSelectedOpeningsSkipOrder()
-      });
+      this.reqIpc.send({ openings: { skipOrder: value } });
     }
   }
 
@@ -235,13 +297,12 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onEndingsSwitchChange(event) {
-    this.exposedSettings.endings.doSkip = event.target.checked;
+    const value = event.target.checked;
+
+    this.exposedSettings.endings.doSkip = value;
 
     if (!window.JUTSUPER_DEBUG) {
-      this.ipc.send({
-        key: ipcSettingsKeys.endingsDoSkip,
-        value: event.target.checked
-      });
+      this.reqIpc.send({ endings: { doSkip: value } });
     }
   }
 
@@ -261,13 +322,12 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onEndingsSkipOrderChange(event) {
-    this.exposedSettings.endings.skipOrder = this.getSelectedEndingsSkipOrder();
+    const value = this.getSelectedEndingsSkipOrder();
+
+    this.exposedSettings.endings.skipOrder = value;
 
     if (!window.JUTSUPER_DEBUG) {
-      this.ipc.send({
-        key: ipcSettingsKeys.openingsSkipOrder,
-        value: this.getSelectedEndingsSkipOrder()
-      });
+      this.reqIpc.send({ endings: { skipOrder: value } });
     }
   }
 
@@ -317,10 +377,7 @@ class JutSuperSettingsPopup {
     this.exposedSettings.endings.maxSkips = value;
 
     if (!window.JUTSUPER_DEBUG) {
-      this.ipc.send({
-        key: ipcSettingsKeys.endingsMaxSkips,
-        value: value
-      });
+      this.reqIpc.send({ endings: { maxSkips: value } });
     }
   }
 
@@ -438,13 +495,12 @@ class JutSuperSettingsPopup {
    * @param {Event} event
    */
   onEndingsFullscreenSliderChange(event) {
-    this.exposedSettings.endings.doPersistFullscreen = event.target.checked;
+    const value = event.target.checked;
+
+    this.exposedSettings.endings.doPersistFullscreen = value;
 
     if (!window.JUTSUPER_DEBUG) {
-      this.ipc.send({
-        key: ipcSettingsKeys.endingsDoPersistFullscreen,
-        value: event.target.checked
-      });
+      this.reqIpc.send({ endings: { doPersistFullscreen: value } });
     }
   }
 
@@ -490,13 +546,9 @@ class JutSuperSettingsPopup {
         clearTimeout(this.delaySliderTimeoutId);
       }
       
-      const thisArg = this;
-      this.delaySliderTimeoutId = setTimeout(function() {
-        thisArg.exposedSettings.skipDelayS = newValue;
-        thisArg.ipc.send({
-          key: ipcSettingsKeys.skipDelayS,
-          value: newValue
-        });
+      this.delaySliderTimeoutId = setTimeout(() => {
+        this.exposedSettings.skipDelayS = newValue;
+        this.reqIpc.send({ skipDelayS: newValue });
       }, 500);
     }
 
@@ -511,7 +563,8 @@ class JutSuperSettingsPopup {
    * @param {number | string} value 
    */
   setDelay(value) {
-    this.delaySlider.value = value.toString();
+    const val = value !== undefined ? value : 0;
+    this.delaySlider.value = val.toString();
     this.onDelayChange(value);
   }
 
@@ -540,10 +593,7 @@ class JutSuperSettingsPopup {
 
     if (!window.JUTSUPER_DEBUG) {
       this.exposedSettings.skipCancelKey = keyLabel;
-      this.ipc.send({
-        key: ipcSettingsKeys.skipCancelKey,
-        value: keyLabel
-      });
+      this.reqIpc.send({ skipCancelKey: keyLabel });
     }
 
     this.cancelKeyListener.value = keyLabel;
@@ -568,61 +618,27 @@ class JutSuperSettingsPopup {
    * @returns {Promise<never>}
    */
   async listenIpcChanges() {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
+    const loc = `${this.LOCATION}@${this.listenIpcChanges.name}`;
+    const builder = /** @type {JutSuperIpcRspParamsBuilder<JutSuperSettingsObjectFilter>} */ (
+      new JutSuperIpcRspParamsBuilder()
+    );
+    const cfg = builder
       .build();
+
+    this.ipcRecvReady.resolve();
+    jsuperLog.debug(`${loc}: ipcRecvReady lock resolved`);
     
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt);
-
-      try {
-        switch (evt.key) {
-          case ipcSettingsKeys.openingsDoSkip:
-            this.setDoSkipOpenings(evt.value);
-            break;
-          case ipcSettingsKeys.openingsSkipOrder:
-            this.setOpeningsSkipOrder(evt.value);
-            break;
-          case ipcSettingsKeys.endingsDoSkip:
-            this.setDoSkipEndings(evt.value);
-            break;
-          case ipcSettingsKeys.endingsSkipOrder:
-            this.setEndingsSkipOrder(evt.value);
-            break;
-          case ipcSettingsKeys.endingsMaxSkips:
-            this.setEndingsSkipMax(evt.value);
-            break;
-          case ipcSettingsKeys.endingsDoPersistFullscreen:
-            this.setEndingsPersistFullscreen(evt.value);
-            break;
-          case ipcSettingsKeys.skipDelayS:
-            this.setDelay(evt.value);
-            break;
-          case ipcSettingsKeys.skipCancelKey:
-            this.setCancelKey(evt.value);
-            break;
-          default:
-            throw jsuperErrors.unhandledCaseError({
-              location: this.LOCATION,
-              target: `${evt.key}=${evt.value}`
-            });
-        }
-      } catch (e) {
-        jsuperLog.error(new Error, e);
-      }
+    for await (const evt of this.rspIpc.recv(cfg)) {
+      jsuperLog.debug(`${loc} got event:`, evt);
+      this.setFromSchema(evt);
     }
-  }
 
-  loadInitialIpcSettings() {
-    this.setDoSkipOpenings(this.ipc.get(ipcSettingsKeys.openingsDoSkip).value);
-    this.setOpeningsSkipOrder(this.ipc.get(ipcSettingsKeys.openingsSkipOrder).value);
-    this.setDoSkipEndings(this.ipc.get(ipcSettingsKeys.endingsDoSkip).value);
-    this.setEndingsSkipOrder(this.ipc.get(ipcSettingsKeys.endingsSkipOrder).value);
-    this.setEndingsSkipMax(this.ipc.get(ipcSettingsKeys.endingsMaxSkips).value);
-    this.setEndingsPersistFullscreen(this.ipc.get(ipcSettingsKeys.endingsDoPersistFullscreen).value);
-    this.setDelay(this.ipc.get(ipcSettingsKeys.skipDelayS).value);
-    this.setCancelKey(this.ipc.get(ipcSettingsKeys.skipCancelKey).value);
+    throw jsuperErrors.unexpectedEndError({
+      location: loc
+    });
   }
 }
+
 
 if (window.JUTSUPER_DEBUG) {
   window.jsuperSettingsPopup = new JutSuperSettingsPopup(document);

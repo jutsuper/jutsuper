@@ -27,6 +27,13 @@
       "runtimeArgs": ["--preserve-symlinks"],
       "program": "${workspaceFolder}/build.mjs",
       "args": ["--browser", "gecko"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch current file",
+      "runtimeArgs": ["--preserve-symlinks"],
+      "program": "${file}"
     }
   ]
 }

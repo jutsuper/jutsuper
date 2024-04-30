@@ -1,4 +1,4 @@
-[<img src="assets/flag/ru.svg" alt="RU Flag" width="20"/> Русский](https://github.com/kerdl/jutsuper/blob/main/README-RU.md)
+[<img src="assets/flag/ru.svg" alt="RU Flag" width="20"/> Русский](README.ru.md)
 
 # This extension is in active development
 The basic functionality works,

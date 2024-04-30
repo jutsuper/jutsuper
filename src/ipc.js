@@ -1,364 +1,327 @@
 import { jsuperLog } from "/src/log.js";
-import {
-  JutSuperIpcDefaultNodeProps as ipcDefaultNodeProps,
-  JutSuperIpcJsDataTypes as ipcJsTypes,
-  JutSuperIpcJsDataTypesArray as ipcJsTypesArr,
-  JutSuperIpcValueDelims as ipcDelims
-} from "/src/consts.js";
+import { ANY } from "/src/consts.js";
+import { AsyncLock } from "/src/lock.js";
+import { jsuperUtil } from "/src/util.js";
 export {
+  JutSuperIpcFlags,
+  JutSuperIpcNamespaces,
   JutSuperIpc,
   JutSuperIpcBuilder,
-  JutSuperIpcRecvParamsBuilder
+  JutSuperIpcRspParamsBuilder
 };
 
 
+console.debug("JutSuper: loading /src/ipc.js");
+
+
 /**
- * @typedef {import("/src/consts.js").JutSuperIpcSupportedDataTypes} JutSuperIpcSupportedDataTypes
- * @typedef {import("/src/consts.js").JutSuperIpcJsDataTypes} JutSuperIpcJsDataTypes
- * @typedef {import("/src/consts.js").JutSuperIpcJsDataTypesKeys} JutSuperIpcJsDataTypesKeys
- * @typedef {import("/src/consts.js").JutSuperIpcKeys} JutSuperIpcKeys
- * @typedef {import("/src/consts.js").JutSuperIpcKeysKeys} JutSuperIpcKeysKeys
- * @typedef {import("/src/consts.js").JutSuperIpcSettingsKeysKeys} JutSuperIpcSettingsKeysKeys
+ * @template Schema
+ * @typedef {import("/src/types/ipc.d.ts").JutSuperIpcMessage<Schema>} JutSuperIpcMessage<Schema>
+ */
+/** 
+ * @template Schema
+ * @typedef {import("/src/types/ipc.d.ts").JutSuperIpcRspParams<Schema>} JutSuperIpcRspParams<Schema>
  */
 /**
- * @typedef JutSuperIpcUnparsedValueDescriptor
- * @property {string | undefined} value
- * @property {JutSuperIpcJsDataTypesKeys | undefined} type
- * @property {string | undefined} sender
+ * @template Schema
+ * @typedef {import("/src/types/ipc.d.ts").JutSuperIpcInternalRspFilters<Schema>} JutSuperIpcInternalRspFilters<Schema>
  */
 /**
- * @typedef JutSuperIpcValueDescriptor
- * @property {string} [key]
- * @property {JutSuperIpcSupportedDataTypes} value
- * @property {string} sender
- */
-/**
- * @typedef JutSuperIpcCreationParams
- * @property {string} nodeTag
- * @property {string} nodeId
- * @property {boolean} doCreateNode
- * @property {string} senderId
- */
-/**
- * @typedef JutSuperIpcSendParams
- * @property {string} key
- * @property {JutSuperIpcSupportedDataTypes} value
- */
-/**
- * @typedef JutSuperIpcRecvParams
- * @property {string} [senderId]
- * @property {string[]} [senderIds]
- * @property {string} [key]
- * @property {string[]} [keys]
- * @property {string} [value]
- * @property {string[]} [values]
- * @property {boolean} [acceptFromMyself]
+ * @typedef {import("/src/types/ipc.d.ts").JutSuperIpcInternalRspFlags} JutSuperIpcInternalRspFlags
+ * @typedef {import("/src/types/ipc.d.ts").JutSuperIpcCreationParams} JutSuperIpcCreationParams
  */
 
 
+/**
+ * @readonly
+ * @enum {typeof JutSuperIpcFlags}
+ */
+const JutSuperIpcFlags = {
+  /** @type {"req"} */
+  req: "req",
+  /** @type {"rsp"} */
+  rsp: "rsp"
+}
+/** 
+ * @typedef {(
+ *   typeof JutSuperIpcFlags[keyof typeof JutSuperIpcFlags]
+ * )} JutSuperIpcFlagsKeys
+ */
+
+
+/**
+ * @readonly
+ * @enum {typeof JutSuperIpcNamespaces}
+ */
+const JutSuperIpcNamespaces = {
+  /** @type {"jutsuperIpc"} */
+  general: "jutsuperIpc",
+  /** @type {"jutsuperSettingsIpc"} */
+  settings: "jutsuperSettingsIpc",
+}
+/** 
+ * @typedef {(
+ *   typeof JutSuperIpcNamespaces[keyof typeof JutSuperIpcNamespaces]
+ * )} JutSuperIpcNamespacesKeys
+ */
+
+
+/**
+ * @template {Record<string, any>} ReqMessageMap
+ * @template {Record<string, any>} RspMessageMap
+ * @template {Record<string, any>} RspMessageMapFilter
+ */
 class JutSuperIpc {
-  /** @type {HTMLElement} */
-  #node;
-  /** @type {{attributes: true}} */
-  #defaultObserverOptions;
+  /** @type {AsyncLock<JutSuperIpcMessage<RspMessageMap>>[]} */
+  #locks;
+  /** @type {RspMessageMap} */
+  #rspMessageMap;
 
   /** @param {JutSuperIpcCreationParams} params */
   constructor(params) {
+    const self = this;
     this.LOCATION = JutSuperIpc.name;
 
-    console.log(`${this.LOCATION}: constructing`);
-
-    this.nodeTag = params.nodeTag ?
-      params.nodeTag : ipcDefaultNodeProps.tag;
-    this.nodeId = params.nodeId ?
-      params.nodeId : ipcDefaultNodeProps.id;
-    this.doCreateNode = params.doCreateNode !== undefined ?
-      params.doCreateNode : false;
+    this.namespace = params.namespace;
     this.senderId = params.senderId;
+    this.flagsWhitelist = params.flagsWhitelist !== undefined ?
+      params.flagsWhitelist : [];
+    this.sendingFlags = params.sendingFlags !== undefined ?
+      params.sendingFlags : [];
 
-    if (typeof this.senderId !== ipcJsTypes.string) {
+    this.ID_LOCATION = (
+      `${this.LOCATION} ` +
+      `(namespace=${this.namespace}, ` +
+      `senderId=${this.senderId})`
+    );
+
+    if (this.sendingFlags.length > 0) {
+      this.ID_LOCATION.substring(0, this.ID_LOCATION.length - 1);
+      this.ID_LOCATION += `, sendingFlags=[${this.sendingFlags.join(",")}])`
+    }
+
+    jsuperLog.debug(`${this.ID_LOCATION}: constructing`);
+
+    if (typeof this.senderId !== "string") {
       throw new Error(
         `${this.LOCATION}: senderId should be specified ` +
         `and should be a string`
       );
     }
 
-    this.#defaultObserverOptions = { attributes: true };
+    this.#locks = [];
+    this.#rspMessageMap = /** @type {RspMessageMap} */ ({});
 
-    if (this.doCreateNode) {
-      this.#node = this.#createNode();
-    }
-    else {
-      this.#node = this.#getNode();
-    }
+    window.addEventListener(
+      "message",
+      event => self.#handleEvent(event)
+    );
+
+    jsuperLog.debug(`${this.ID_LOCATION}: constructed`);
   }
 
   /**
-   * @param {JutSuperIpcSendParams} params
+   * @param {MessageEvent<JutSuperIpcMessage<RspMessageMap>>} rawEvent
    * @returns {void}
    */
-  send(params) {
-    let encodedValue = this.encodeValueWithType(params.value);
-    encodedValue = this.addSender(encodedValue);
+  #handleEvent(rawEvent) {
+    if (rawEvent.data === undefined) { return; }
+    if (rawEvent.data.protocol !== "jutsuperIpc") { return; }
+    if (rawEvent.data.namespace !== this.namespace) { return; }
+    if (this.flagsWhitelist.length > 0 &&
+      !this.flagsWhitelist.some(elm => rawEvent.data.flags.includes(elm))
+    ) { return; }
 
-    this.#node.setAttribute(params.key, encodedValue);
+    this.#mergeWithRspMap(rawEvent.data.data);
+    this.#locks.forEach(desc => desc.resolve(rawEvent.data));
   }
 
   /**
-   * @param {JutSuperIpcRecvParams} params 
-   * @returns {Promise<JutSuperIpcValueDescriptor>}
+   * @param {ReqMessageMap} schema
+   * @returns {void}
+   */
+  send(schema) {
+    /** @type {JutSuperIpcMessage<ReqMessageMap>} */
+    const message = {
+      protocol: "jutsuperIpc",
+      namespace: this.namespace,
+      sender: this.senderId,
+      flags: this.sendingFlags,
+      data: schema
+    };
+
+    window.postMessage(message);
+    
+    jsuperLog.debug(`${this.ID_LOCATION}: sent message:`, message.data);
+  }
+
+  /**
+   * @param {JutSuperIpcInternalRspFilters<RspMessageMapFilter>} filters 
+   * @param {JutSuperIpcInternalRspFlags} flags 
+   * @param {AsyncLock<JutSuperIpcMessage<RspMessageMap>>} lock 
+   * @returns {Promise<JutSuperIpcMessage<RspMessageMap>>}
+   */
+  async #recvOnceGeneric(filters, flags, lock) {
+    const loc = `${this.ID_LOCATION}@${this.#recvOnceGeneric.name}`;
+
+    /** @type {JutSuperIpcMessage<RspMessageMap>} */
+    let event;
+
+    while (true) {
+      event = await lock.promise;
+
+      // jsuperLog.debug(`${loc}: got event:`, event);
+
+      if (!filters.fromSelf && event.sender === this.senderId) {
+        // jsuperLog.debug(
+        //   `${loc}: discarding this event ` +
+        //   `because we cannot receive from ourselves`
+        // );
+        continue;
+      }
+
+      if (!flags.shouldRecvFromAnySenders && !filters.senders.includes(event.sender)) {
+        // jsuperLog.debug(
+        //   `${loc}: discarding this event ` +
+        //   `because the sender was filtered out`
+        // );
+        continue;
+      }
+
+      if (!flags.shouldRecvAnySchema) {
+        const intersection = jsuperUtil.objectIntersection(
+          event.data,
+          filters.schema,
+          ANY
+        );
+        const isIntersectionEmpty = jsuperUtil.isEmptyObject(intersection);
+  
+        if (isIntersectionEmpty) {
+          // jsuperLog.debug(
+          //   `${loc}: discarding this event ` +
+          //   `because no intersection was found with`, filters.schema
+          // );
+          continue;
+        }
+      }
+
+      break;
+    }
+
+    return event;
+  }
+
+  /**
+   * @param {JutSuperIpcRspParams<RspMessageMapFilter>} params 
+   * @returns {Promise<RspMessageMap>}
    */
   async recvOnce(params) {
-    /** @type {string[]} */
-    let senderIds = [];
-    /** @type {string[]} */
-    let keys = [];
-    /** @type {string[]} */
-    let values = [];
+    const filters = this.#getFiltersFromRspParams(params);
+    const flags = this.#getFlagsFromFilters(filters);
+    const lock = this.#createLock();
 
-    if (![null, undefined].includes(params.senderId)) {
-      senderIds.push(params.senderId);
-    };
-    if (![null, undefined].includes(params.senderIds)) {
-      senderIds.push(...params.senderIds);
-    };
-    if (params.acceptFromMyself) {
-      senderIds.push(this.senderId);
-    }
-    if (![null, undefined].includes(params.key)) {
-      keys.push(params.key);
-    };
-    if (![null, undefined].includes(params.keys)) {
-      keys.push(...params.keys);
-    };
-    if (![null, undefined].includes(params.value)) {
-      values.push(params.value);
-    };
-    if (![null, undefined].includes(params.values)) {
-      values.push(...params.values);
-    };
+    const event = await this.#recvOnceGeneric(filters, flags, lock);
 
-    const shouldRecvFromAnySenders = senderIds.length < 1;
-    const shouldRecvAnyKeys = keys.length < 1;
-    const shouldRecvAnyValues = values.length < 1;
+    this.#removeLock(lock.id);
 
-    const getNodeKeyUnparsed = this.#getNodeKeyUnparsed;
-    const thisArg = this;
-
-    return new Promise((resolve) => {
-      new MutationObserver(function (mutations, _observer) {
-        for (const mutation of mutations) {
-          if (!shouldRecvAnyKeys && !keys.includes(mutation.attributeName)) {
-            continue;
-          }
-
-          /** @type {JutSuperIpcUnparsedValueDescriptor} */
-          const descriptor = getNodeKeyUnparsed.call(
-            thisArg,
-            mutation.attributeName
-          );
-
-          if (descriptor.sender == thisArg.senderId && !params.acceptFromMyself) {
-            continue;
-          }
-
-          if (!shouldRecvFromAnySenders && !senderIds.includes(descriptor.sender)) {
-            continue;
-          }
-
-          const parsedValue = JutSuperIpc.decodeValueWithType(
-            descriptor.value,
-            descriptor.type
-          );
-
-          if (!shouldRecvAnyValues && !values.includes(descriptor.value)) {
-            continue;
-          }
-
-          resolve({
-            key: mutation.attributeName,
-            value: parsedValue,
-            sender: descriptor.sender
-          });
-        }
-      }).observe(thisArg.#node, thisArg.#defaultObserverOptions);
-    });
+    return event.data;
   }
 
   /**
    * @async
-   * @param {JutSuperIpcRecvParams} params 
-   * @returns {[JutSuperIpcValueDescriptor]}
+   * @generator
+   * @param {JutSuperIpcRspParams<RspMessageMapFilter>} params 
+   * @yields {RspMessageMap}
+   * @returns {AsyncGenerator<RspMessageMap, never, RspMessageMap>}
    */
   async *recv(params) {
+    const filters = this.#getFiltersFromRspParams(params);
+    const flags = this.#getFlagsFromFilters(filters);
+    const lock = this.#createLock();
+
     while (true) {
-      yield await this.recvOnce(params);
+      yield (await this.#recvOnceGeneric(filters, flags, lock)).data;
     }
+
+    this.#removeLock(lock.id);
   }
 
   /**
-   * @param {JutSuperIpcKeysKeys | JutSuperIpcSettingsKeysKeys} key
-   * @returns {JutSuperIpcValueDescriptor}
+   * @param {ReqMessageMap} txSchema
+   * @param {JutSuperIpcRspParams<RspMessageMapFilter>} rspParams
+   * @returns {Promise<RspMessageMap>}
    */
-  get(key) {
-    const raw = this.#getNodeKeyUnparsed(key);
-    if (raw) {
-      const parsedValue = JutSuperIpc.decodeValueWithType(
-        raw.value,
-        raw.type
-      );
-
-      return {
-        key: undefined,
-        value: parsedValue,
-        sender: raw.sender
-      }
-    }
-
-    return {
-      key: undefined,
-      value: undefined,
-      sender: undefined
-    }
+  async sendAndRecvOnce(txSchema, rspParams) {
+    this.send(txSchema);
+    return await this.recvOnce(rspParams);
   }
 
   /**
-   * @param {JutSuperIpcJsDataTypesKeys | string} type 
-   * @returns {boolean}
+   * @returns {RspMessageMap}
    */
-  static isTypeCompatible(type) {
-    if (type === ipcJsTypes.null || ipcJsTypes[type] !== undefined) {
-      return true;
-    }
-
-    return false;
+  getRsp() {
+    return this.#rspMessageMap;
   }
 
   /**
-   * @param {JutSuperIpcSupportedDataTypes} value 
-   * @returns {string}
+   * @returns {AsyncLock}
    */
-  encodeValueWithType(value) {
-    /** @type {JutSuperIpcJsDataTypesKeys | string} */
-    let typeOfValue = typeof value;
-
-    if (value === null) {
-      typeOfValue = ipcJsTypes.null;
-    }
-
-    if (!JutSuperIpc.isTypeCompatible(typeOfValue)) {
-      throw new Error(
-        `${this.LOCATION}: value of type ${typeOfValue} ` +
-        `is not supported`
-      )
-    }
-
-    if (value === null) {
-      return `${value}${ipcDelims.type}${ipcJsTypes.null}`;
-    }
-
-    return `${value}${ipcDelims.type}${typeof value}`;
+  #createLock() {
+    const lock = new AsyncLock();
+    this.#locks.push(lock);
+    // jsuperLog.debug(`${this.ID_LOCATION}: created lock`, lock);
+    return lock;
   }
 
   /**
-   * 
-   * @param {string} value 
-   * @param {JutSuperIpcJsDataTypesKeys} type
-   * @returns {JutSuperIpcSupportedDataTypes | undefined}
+   * @param {number} id 
    */
-  static decodeValueWithType(value, type) {
-    switch (type) {
-      case ipcJsTypes.boolean: return JutSuperIpc.#decodeBoolean(value);
-      case ipcJsTypes.number: return JutSuperIpc.#decodeNumber(value);
-      case ipcJsTypes.string: return value;
-      case ipcJsTypes.null: return null;
-      case ipcJsTypes.undefined: return undefined;
-    }
+  async #removeLock(id) {
+    this.#locks = this.#locks.filter(elm => elm.id !== id);
+    // jsuperLog.debug(`${this.ID_LOCATION}: removed lock ${id}`);
   }
 
   /**
-   * @param {string} value 
-   * @returns {string}
+   * @param {RspMessageMap} data
    */
-  addSender(value) {
-    return `${value}${ipcDelims.sender}${this.senderId}`
+  #mergeWithRspMap(data) {
+    this.#rspMessageMap = jsuperUtil.objectMergeDeep(this.#rspMessageMap, data);
+    // jsuperLog.debug(
+    //   `${this.ID_LOCATION}: merged`, data, `,`, 
+    //   `current value:`, this.#rspMessageMap
+    // );
   }
 
   /**
-   * @param {string} value
-   * @returns {JutSuperIpcUnparsedValueDescriptor}
+   * @param {JutSuperIpcRspParams<RspMessageMapFilter>} params 
+   * @returns {JutSuperIpcInternalRspFilters<RspMessageMapFilter>}
    */
-  static splitDescriptorValue(value) {
+  #getFiltersFromRspParams(params) {
     /** @type {string[]} */
-    const valueAndRest = value.split(ipcDelims.type);
-    /** @type {string[]} */
-    const typeAndSender = valueAndRest[1].split(ipcDelims.sender);
+    let senders = [];
 
-    if (!ipcJsTypesArr.includes(typeAndSender[0])) {
-      return;
-    }
+    if (![null, undefined].includes(params.senderId)) {
+      senders.push(params.senderId);
+    };
+    if (![null, undefined].includes(params.senderIds)) {
+      senders.push(...params.senderIds);
+    };
 
     return {
-      value: valueAndRest[0],
-      type: typeAndSender[0],
-      sender: typeAndSender[1],
+      senders: senders,
+      fromSelf: params.fromSelf,
+      schema: params.schema,
     }
   }
 
   /**
-   * @returns {HTMLElement}
+   * @param {JutSuperIpcInternalRspFilters<RspMessageMapFilter>} filters 
+   * @returns {JutSuperIpcInternalRspFlags}
    */
-  #createNode() {
-    const node = document.createElement(this.nodeTag);
-    node.id = this.nodeId;
-    document.getElementsByTagName("body")[0].appendChild(node);
-    return node;
-  }
-
-  /**
-   * @returns {HTMLElement}
-   */
-  #getNode() {
-    return document.getElementById(this.nodeId);
-  }
-
-  /**
-   * @param {string} key 
-   * @return {JutSuperIpcUnparsedValueDescriptor}
-   */
-  #getNodeKeyUnparsed(key) {
-    const rawValue = this.#node.getAttribute(key);
-    if (rawValue) {
-      return JutSuperIpc.splitDescriptorValue(rawValue)
-    }
-    
+  #getFlagsFromFilters(filters) {
     return {
-      value: undefined,
-      type: undefined,
-      sender: undefined
-    }
-  }
-
-  /**
-   * @param {"true" | "false" | string} value
-   * @returns {boolean | undefined}
-   */
-  static #decodeBoolean(value) {
-    switch (value) {
-      case "true": return true;
-      case "false": return false;
-    }
-  }
-
-  /**
-   * @param {string} value
-   * @returns {number | undefined}
-   */
-  static #decodeNumber(value) {
-    const num = (new Number(value)).valueOf();
-
-    if (!Number.isNaN(num)) {
-      return num;
+      shouldRecvFromAnySenders: filters.senders.length < 1,
+      shouldRecvAnySchema: filters.schema === undefined
     }
   }
 }
@@ -367,10 +330,10 @@ class JutSuperIpcBuilder {
   constructor() {
     /** @type {JutSuperIpcCreationParams} */
     this.params = {
-      nodeTag: undefined,
-      nodeId: undefined,
-      doCreateNode: undefined,
+      namespace: JutSuperIpcNamespaces.general,
       senderId: undefined,
+      flagsWhitelist: [],
+      sendingFlags: [],
     };
   }
 
@@ -378,25 +341,8 @@ class JutSuperIpcBuilder {
    * @param {string} name
    * @returns {JutSuperIpcBuilder}
    */
-  communicationNodeTagIs(name) {
-    this.params.nodeTag = name;
-    return this;
-  }
-
-  /**
-   * @param {string} name
-   * @returns {JutSuperIpcBuilder}
-   */
-  communicationNodeIdIs(name) {
-    this.params.nodeId = name;
-    return this;
-  }
-
-  /**
-   * @returns {JutSuperIpcBuilder}
-   */
-  createCommunicationNode() {
-    this.params.doCreateNode = true;
+  namespaceIs(name) {
+    this.params.namespace = name;
     return this;
   }
 
@@ -410,6 +356,24 @@ class JutSuperIpcBuilder {
   }
 
   /**
+   * @param {string[]} flags
+   * @returns {JutSuperIpcBuilder}
+   */
+  ignoreWithoutAnyOfTheseFlags(flags) {
+    this.params.flagsWhitelist = flags;
+    return this;
+  }
+
+  /**
+   * @param {string[]} flags
+   * @returns {JutSuperIpcBuilder}
+   */
+  sendWithTheseFlags(flags) {
+    this.params.sendingFlags = flags;
+    return this;
+  }
+
+  /**
    * @returns {JutSuperIpc}
    */
   build() {
@@ -417,74 +381,62 @@ class JutSuperIpcBuilder {
   }
 }
 
-class JutSuperIpcRecvParamsBuilder {
+/**
+ * @template {Record<string, any>} Schema
+ */
+class JutSuperIpcRspParamsBuilder {
   constructor() {
-    /** @type {JutSuperIpcRecvParams} */
+    /** @type {JutSuperIpcRspParams<Schema>} */
     this.params = {
       senderId: undefined,
       senderIds: [],
-      key: undefined,
-      keys: [],
-      value: undefined,
-      values: [],
-      acceptFromMyself: false,
+      fromSelf: false,
+      schema: undefined
     };
   }
 
   /**
    * @param {string | string[]} ids
-   * @returns {JutSuperIpcRecvParamsBuilder}
+   * @returns {JutSuperIpcRspParamsBuilder}
    */
   recvOnlyFrom(ids) {
     this.#append(
-      (id) => {this.params.senderId = id},
-      (ids) => {this.params.senderIds.push(...ids)},
+      id => this.params.senderId = id,
+      ids => this.params.senderIds.push(...ids),
       ids
     )
     return this;
   }
 
   /**
-   * @param {string | string[]} keys
-   * @returns {JutSuperIpcRecvParamsBuilder}
+   * @returns {JutSuperIpcRspParamsBuilder}
    */
-  recvOnlyTheseKeys(keys) {
-    this.#append(
-      (key) => {this.params.key = key},
-      (keys) => {this.params.keys.push(...keys)},
-      keys
-    )
+  recvFromSelf() {
+    this.params.fromSelf = true;
     return this;
   }
 
   /**
-   * @param {string | string[]} values
-   * @returns {JutSuperIpcRecvParamsBuilder}
+   * @param {Schema} schema 
+   * @returns {JutSuperIpcRspParamsBuilder}
    */
-  recvOnlyTheseValues(values) {
-    this.#append(
-      (val) => {this.params.value = val},
-      (vals) => {this.params.values.push(...vals)},
-      values
-    )
+  recvOnlyThisIntersection(schema) {
+    this.params.schema = schema;
     return this;
   }
 
   /**
-   * @returns {JutSuperIpcRecvParamsBuilder}
-   */
-  recvFromMyself() {
-    this.params.acceptFromMyself = true;
-    return this;
-  }
-
-  /**
-   * @returns {JutSuperIpcRecvParams}
+   * @returns {JutSuperIpcRspParams<Schema>}
    */
   build() {
     return this.params;
   }
 
+  /**
+   * @param {function(string): any} valueSingleSetter 
+   * @param {function(string[]): any} valueArraySetter 
+   * @param {string | string[]} value 
+   */
   #append(valueSingleSetter, valueArraySetter, value) {
     if (Array.isArray(value)) {
       valueArraySetter(value);

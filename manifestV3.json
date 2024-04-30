@@ -57,6 +57,7 @@
         "/src/consts.js",
         "/src/log.js",
         "/src/util.js",
+        "/src/lock.js",
         "/src/error.js",
         "/src/storage.js",
         "/src/ipc.js",

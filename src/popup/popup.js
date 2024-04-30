@@ -12,4 +12,4 @@ class JutSuperPopup {
   }
 }
 
-window.jsuperSkipPopup = new JutSuperPopup(document);
+window.jsuperPopup = new JutSuperPopup(document);

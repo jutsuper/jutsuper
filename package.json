@@ -8,6 +8,9 @@
     "glob": "^10.3.10"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.266",
+    "@types/firefox-webext-browser": "^120.0.3",
+    "@types/video.js": "^7.3.58",
     "c-preprocessor": "^0.2.13"
   },
   "scripts": {
