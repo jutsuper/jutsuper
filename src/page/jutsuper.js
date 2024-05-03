@@ -59,33 +59,13 @@ class JutSuper {
     this.LOCATION = JutSuper.name;
 
     jsuperLog.debug(`${this.LOCATION}: constructing`);
-
+    
     if (!player || !player.overlays_ || !player.on) {
       throw new Error(
         `${this.LOCATION}: player not yet initialized, ` +
         `unable to construct ${this.LOCATION}`
       );
     }
-
-    this.isFullscreen = false;
-    this.isCustomFullscreen = false;
-    /** @type {number | undefined} */
-    this.peakScreenHeight = undefined;
-    this.regionSkipCancelled = false;
-    this.awaitingSkipCancel = false;
-
-    /** @type {HTMLDivElement} */
-    this.vjsContainer = document.createElement("div");
-    /** @type {HTMLDivElement} */
-    this.skipArea = document.createElement("div");
-    /** @type {HTMLDivElement} */
-    this.skipClipArea = document.createElement("div");
-    /** @type {HTMLDivElement} */
-    this.settingsArea = document.createElement("div");
-    /** @type {HTMLDivElement} */
-    this.settingsClipArea = document.createElement("div");
-    /** @type {videojs.default.Button} */
-    this.vjsButton = undefined;
 
     /**
      * # Requesting IPC
@@ -100,6 +80,7 @@ class JutSuper {
       .ignoreWithoutAnyOfTheseFlags([ipcFlags.rsp])
       .sendWithTheseFlags([ipcFlags.req])
       .build();
+    
     /**
      * # Responding IPC
      * @type {JutSuperIpc<
@@ -127,6 +108,28 @@ class JutSuper {
       .ignoreWithoutAnyOfTheseFlags([ipcFlags.req])
       .sendWithTheseFlags([ipcFlags.rsp])
       .build();
+    
+    this.reqIpc.send({ loadingAllowed: { tell: { state: true } } });
+
+    this.isFullscreen = false;
+    this.isCustomFullscreen = false;
+    /** @type {number | undefined} */
+    this.peakScreenHeight = undefined;
+    this.regionSkipCancelled = false;
+    this.awaitingSkipCancel = false;
+
+    /** @type {HTMLDivElement} */
+    this.vjsContainer = document.createElement("div");
+    /** @type {HTMLDivElement} */
+    this.skipArea = document.createElement("div");
+    /** @type {HTMLDivElement} */
+    this.skipClipArea = document.createElement("div");
+    /** @type {HTMLDivElement} */
+    this.settingsArea = document.createElement("div");
+    /** @type {HTMLDivElement} */
+    this.settingsClipArea = document.createElement("div");
+    /** @type {videojs.default.Button} */
+    this.vjsButton = undefined;
   
     /** @type {videojs.VideoJsPlayer} */
     this.player = player;
@@ -197,6 +200,10 @@ class JutSuper {
 
   async #initPage() {
     document.addEventListener("mousedown", event => {
+      if (!this.vjsButton || !this.settingsArea) {
+        return;
+      }
+
       const vjsButtonBoundaries = this.vjsButton.el().getBoundingClientRect();
       const isInVjsButtonXRange = (
         event.clientX >= vjsButtonBoundaries.left &&
@@ -660,6 +667,12 @@ class JutSuper {
    * @returns {Promise<void>}
    */
   async injectOverlays() {
+    if (this.rspIpc.getRsp().assetsInjected === undefined) {
+      await this.rspIpc.recvOnce({ schema: { assetsInjected: { tell: { state: true } } } });
+    }
+
+    jsuperLog.debug(`${this.LOCATION}: injecting overlays`);
+
     const Button = this.player.constructor.getComponent("Button");
     const iconUrl = document.getElementById(assetIds.squareWhiteLogo48Svg).getAttribute("href");
     const buttonOptions = /** @type {videojs.default.ComponentOptions} */ ({
@@ -691,42 +704,6 @@ class JutSuper {
         this.settingsArea.classList.add(domClasses.visibilityHidden);
       }
     })
-
-    const controlBar =  /** @type {videojs.ControlBar} */ (this.player.controlBar);
-    const qualitySelectorEl =  /** @type {HTMLElement} */ (controlBar.qualitySelector.el());
-
-    controlBar.addChild(this.vjsButton);
-    /** to make quality selector list overlap jutsuper settings */
-    qualitySelectorEl.style.zIndex = "2";
-    /** to make thumbnail holder overlap jutsuper settings */
-    const thumbnailHolder = /** @type {HTMLElement} */ (
-      this.player.el().getElementsByClassName(jutsuClasses.vjsThumbnailHolder)[0]
-    );
-    thumbnailHolder.style.zIndex = "2";
-
-    const insertedButton = this.player.el()
-      .getElementsByClassName(domClasses.vjsButton)[0];
-
-    let anchorElement;
-    const shareButtons = this.player.el()
-      .getElementsByClassName(jutsuClasses.vjsShareControl);
-
-    if (shareButtons.length > 0) {
-      anchorElement = shareButtons[0]
-    }
-
-    if (anchorElement && anchorElement.nextSibling) {
-      this.player.controlBar.el().insertBefore(
-        insertedButton,
-        anchorElement.nextSibling
-      );
-    }
-    else if (anchorElement && !anchorElement.nextSibling) {
-      this.player.controlBar.el().insertBefore(
-        insertedButton,
-        anchorElement.nextSibling
-      );
-    }
 
     ///////////////
     // Skip area //
@@ -828,6 +805,13 @@ class JutSuper {
       icon.setAttribute("src", url);
     }
 
+    for (const icon of document.getElementsByClassName(domClasses.iconPlay)) {
+      const url = /** @type {HTMLAnchorElement} */ (
+        document.getElementById(assetIds.playSvg)
+      ).href;
+      icon.setAttribute("src", url);
+    }
+
     this.settingsPopup = new JutSuperSettingsPopup(document);
     jsuperLog.debug(`${this.LOCATION}: awaiting settingsPopup.ipcRecvReady lock`);
     await this.settingsPopup.ipcRecvReady.promise;
@@ -836,9 +820,48 @@ class JutSuper {
     this.skipPopup = new JutSuperSkipPopup(document);
     this.skipPopup.setCancelKey(window.jsuperSettings.skipCancelKey);
 
-    this.reqIpc.send({
-      localization: { reqLocalize: true }
-    });
+    (async () => {
+      await this.reqIpc.sendAndRecvOnce(
+        { localization: { reqLocalize: true } },
+        { schema: { localization: { rspLocalize: { isFulfilled: true } } } }
+      );
+  
+      const controlBar = /** @type {videojs.ControlBar} */ (this.player.controlBar);
+      const qualitySelectorEl = /** @type {HTMLElement} */ (controlBar.qualitySelector.el());
+  
+      controlBar.addChild(this.vjsButton);
+      /** to make quality selector list overlap jutsuper settings */
+      qualitySelectorEl.style.zIndex = "2";
+      /** to make thumbnail holder overlap jutsuper settings */
+      const thumbnailHolder = /** @type {HTMLElement} */ (
+        this.player.el().getElementsByClassName(jutsuClasses.vjsThumbnailHolder)[0]
+      );
+      thumbnailHolder.style.zIndex = "2";
+  
+      const insertedButton = this.player.el()
+        .getElementsByClassName(domClasses.vjsButton)[0];
+  
+      let anchorElement;
+      const shareButtons = this.player.el()
+        .getElementsByClassName(jutsuClasses.vjsShareControl);
+  
+      if (shareButtons.length > 0) {
+        anchorElement = shareButtons[0]
+      }
+  
+      if (anchorElement && anchorElement.nextSibling) {
+        this.player.controlBar.el().insertBefore(
+          insertedButton,
+          anchorElement.nextSibling
+        );
+      }
+      else if (anchorElement && !anchorElement.nextSibling) {
+        this.player.controlBar.el().insertBefore(
+          insertedButton,
+          anchorElement.nextSibling
+        );
+      }
+    })();
   }
 
   /**

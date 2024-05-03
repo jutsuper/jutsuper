@@ -1,30 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link
-      type="text/css"
-      rel="stylesheet"
-      href="../jutsuper.css"
-    >
-    <link
-      href="/src/assets/icon/infinity.svg"
-      rel="preload"
-      as="image"
-    >
-    <script
-      src="/src/debug/setFlag.js"
-    ></script>
-    <script
-      src="/src/page/settings.js"
-      type="module"
-      defer
-    ></script>
+    <link type="text/css" rel="stylesheet" href="../jutsuper.css" />
+    <link href="/src/assets/icon/infinity.svg" rel="preload" as="image" />
+    <script src="/src/debug/setFlag.js"></script>
+    <script src="/src/page/settings.js" type="module" defer></script>
     <style>
       @font-face {
         font-family: Roboto;
         font-weight: normal;
         src: url("/src/assets/font/Roboto-Regular.ttf") format("truetype");
       }
+
       @font-face {
         font-family: Roboto;
         font-weight: bold;
@@ -32,494 +19,388 @@
       }
     </style>
   </head>
+
   <body class="jutsuper-dev-black-bg" style="position: absolute; height: 50vh">
     <div style="height: 50px">
-      <div 
-      id="jutsuper-dev-preload-message"
-      style="
-        color: white;
-        margin-bottom: 20px;
-      "
+      <div
+        id="jutsuper-dev-preload-message"
+        style="color: white; margin-bottom: 20px"
       >
         Awaiting JavaScript...
       </div>
     </div>
     <div class="jutsuper-dev-settings-area">
       <!-- Start of the area that gets injected -->
-      <div
-        id="jutsuper-settings-root"
-        class="jutsuper-settings-frame"
-      >
-        <!-- Skip header -->
-        <div class="jutsuper-settings-heading">
-          <img
-            id="jutsuper-settings-skip-header-icon"
-            src="/src/assets/icon/skip.svg"
-            style="margin-right: 10px"
-            class="
-              jutsuper-icon-skip
-              jutsuper-no-pointer-events
-              jutsuper-no-select
-            "
-          />
-          <h class="jutsuper-text-skip-options">
-            Skip options
-          </h>
-        </div>
-        <!-- Openings bar -->
-        <input
-          id="jutsuper-settings-openings-bar"
-          class="jutsuper-display-hidden"
-          type="checkbox"
-          name="jutsuper-settings-bar"
-        >
-        <label
-          title="Openings settings"
-          id="jutsuper-settings-openings-bar-label"
-          for="jutsuper-settings-openings-bar"
-          class="
-            jutsuper-settings-section-bar
-            jutsuper-tooltip-openings-settings
-          "
-        >
-          <label
-            title="Toggle openings skip"
-            class="
-              jutsuper-slider-switch
-              jutsuper-tooltip-toggle-openings-skip
-            "
-            style="margin-right: 10px;"
-          >
-            <input
-              id="jutsuper-settings-openings-switch"
-              type="checkbox"
-            >
-            <span
-              id="jutsuper-settings-openings-slider"
-              class="jutsuper-slider-bg-area"
-            ></span>
-          </label>
-          <div
-            class="
-              jutsuper-text-openings
-              jutsuper-no-pointer-events
-              jutsuper-no-select
-            "
-          >
-            Openings
+      <div id="jutsuper-settings-root" class="jutsuper-settings-frame">
+        <!-- Skip settings -->
+        <div id="jutsuper-settings-skip">
+          <!-- Skip header -->
+          <div class="jutsuper-settings-heading">
+            <img
+              id="jutsuper-settings-skip-header-icon"
+              src="/src/assets/icon/skip.svg"
+              style="margin-right: 10px"
+              class="jutsuper-icon-skip jutsuper-no-pointer-events jutsuper-no-select"
+            />
+            <h class="jutsuper-text-skip-options"> Skip </h>
           </div>
-          <img
-            id="jutsuper-settings-openings-bar-dropdown-icon"
-            src="/src/assets/icon/dropdown.svg"
-            class="
-              jutsuper-icon-dropdown
-              jutsuper-flex-float-to-right
-              jutsuper-no-pointer-events
-              jutsuper-no-select
-            "
+          <!-- Openings bar -->
+          <input
+            id="jutsuper-settings-openings-bar"
+            class="jutsuper-display-hidden"
+            type="checkbox"
+            name="jutsuper-settings-bar"
           />
-        </label>
-        <!-- Openings settings -->
-        <div
-          id="jutsuper-settings-openings-section-clip"
-          class="jutsuper-settings-section-clip-area"
-        >
-          <div 
-            id="jutsuper-settings-openings-section"
-            class="jutsuper-settings-section-area"
+          <label
+            title="Openings settings"
+            id="jutsuper-settings-openings-bar-label"
+            for="jutsuper-settings-openings-bar"
+            class="jutsuper-settings-section-bar jutsuper-tooltip-openings-settings"
           >
-            <div class="
-              jutsuper-settings-grid-container
-              jutsuper-settings-grid-1-row
-              jutsuper-settings-grid-2-cols
-            ">
+            <label
+              title="Toggle openings skip"
+              class="jutsuper-slider-switch jutsuper-tooltip-toggle-openings-skip"
+              style="margin-right: 10px"
+            >
+              <input id="jutsuper-settings-openings-switch" type="checkbox" />
+              <span
+                id="jutsuper-settings-openings-slider"
+                class="jutsuper-slider-bg-area"
+              ></span>
+            </label>
+            <div
+              class="jutsuper-text-openings jutsuper-no-pointer-events jutsuper-no-select"
+            >
+              Openings
+            </div>
+            <img
+              id="jutsuper-settings-openings-bar-dropdown-icon"
+              src="/src/assets/icon/dropdown.svg"
+              class="jutsuper-icon-dropdown jutsuper-flex-float-to-right jutsuper-no-pointer-events jutsuper-no-select"
+            />
+          </label>
+          <!-- Openings settings -->
+          <div
+            id="jutsuper-settings-openings-section-clip"
+            class="jutsuper-settings-section-clip-area"
+          >
+            <div
+              id="jutsuper-settings-openings-section"
+              class="jutsuper-settings-section-area"
+            >
               <div
-                title="Which region to skip if multiple regions are available"
-                class="
-                  jutsuper-text-order
-                  jutsuper-tooltip-which-region-to-skip
-                "
-                style="
-                  display: flex;
-                  align-items: center;
-                "
+                class="jutsuper-settings-grid-container jutsuper-settings-grid-1-row jutsuper-settings-grid-2-cols"
               >
-                Order
-              </div>
-              <div>
                 <div
-                  id="jutsuper-settings-openings-skip-order-selector"
-                  class="jutsuper-radio-container"
+                  title="Which region to skip if multiple regions are available"
+                  class="jutsuper-text-order jutsuper-tooltip-which-region-to-skip"
+                  style="display: flex; align-items: center"
                 >
-                  <input
-                    title="Skip any region"
-                    id="jutsuper-settings-openings-skip-order-any"
-                    type="radio"
-                    name="jutsuper-settings-op-skip-order"
-                    class="
-                      jutsuper-radio
-                      jutsuper-icon-inset
-                      jutsuper-icon-order-any
-                      jutsuper-no-select
-                      jutsuper-tooltip-skip-any-region
-                    "
-                    style="
-                      width: 100%;
-                      overflow: hidden;
-                    "
-                  />
-                  <input
-                    title="Skip only first region"
-                    id="jutsuper-settings-openings-skip-order-first"
-                    type="radio"
-                    name="jutsuper-settings-op-skip-order"
-                    class="
-                      jutsuper-radio
-                      jutsuper-icon-inset
-                      jutsuper-icon-order-first
-                      jutsuper-no-select
-                      jutsuper-tooltip-skip-first-region
-                    "
-                    style="
-                      width: 100%;
-                      overflow: hidden;
-                    "
-                  />
-                  <input
-                    title="Skip only last region"
-                    id="jutsuper-settings-openings-skip-order-last"
-                    type="radio"
-                    name="jutsuper-settings-op-skip-order"
-                    class="
-                      jutsuper-radio
-                      jutsuper-icon-inset
-                      jutsuper-icon-order-last
-                      jutsuper-no-select
-                      jutsuper-tooltip-skip-last-region
-                    "
-                    style="
-                      width: 100%;
-                      overflow: hidden;
-                    "
-                  />
+                  Order
+                </div>
+                <div>
+                  <div
+                    id="jutsuper-settings-openings-skip-order-selector"
+                    class="jutsuper-radio-container"
+                  >
+                    <input
+                      title="Skip any region"
+                      id="jutsuper-settings-openings-skip-order-any"
+                      type="radio"
+                      name="jutsuper-settings-op-skip-order"
+                      class="jutsuper-radio jutsuper-icon-inset jutsuper-icon-order-any jutsuper-no-select jutsuper-tooltip-skip-any-region"
+                      style="width: 100%; overflow: hidden"
+                    />
+                    <input
+                      title="Skip only first region"
+                      id="jutsuper-settings-openings-skip-order-first"
+                      type="radio"
+                      name="jutsuper-settings-op-skip-order"
+                      class="jutsuper-radio jutsuper-icon-inset jutsuper-icon-order-first jutsuper-no-select jutsuper-tooltip-skip-first-region"
+                      style="width: 100%; overflow: hidden"
+                    />
+                    <input
+                      title="Skip only last region"
+                      id="jutsuper-settings-openings-skip-order-last"
+                      type="radio"
+                      name="jutsuper-settings-op-skip-order"
+                      class="jutsuper-radio jutsuper-icon-inset jutsuper-icon-order-last jutsuper-no-select jutsuper-tooltip-skip-last-region"
+                      style="width: 100%; overflow: hidden"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Endings bar -->
-        <input
-          id="jutsuper-settings-endings-bar"
-          class="jutsuper-display-hidden"
-          type="checkbox"
-          name="jutsuper-settings-bar"
-        >
-        <label
-          title="Endings settings"
-          id="jutsuper-settings-endings-bar-label"
-          for="jutsuper-settings-endings-bar"
-          class="
-            jutsuper-settings-section-bar
-            jutsuper-tooltip-endings-settings
-          "
-        >
-          <label
-            title="Toggle endings skip"
-            class="
-              jutsuper-slider-switch
-              jutsuper-tooltip-toggle-endings-skip
-            "
-            style="margin-right: 10px;"
-          >
-            <input
-              id="jutsuper-settings-endings-switch"
-              type="checkbox"
-            >
-            <span
-              id="jutsuper-settings-endings-slider"
-              class="jutsuper-slider-bg-area"
-            ></span>
-          </label>
-          <div
-            class="jutsuper-text-endings jutsuper-no-pointer-events jutsuper-no-select"
-          >
-            Endings
-          </div>
-          <img
-            id="jutsuper-settings-endings-bar-dropdown-icon"
-            src="/src/assets/icon/dropdown.svg"
-            class="
-              jutsuper-icon-dropdown
-              jutsuper-flex-float-to-right
-              jutsuper-no-pointer-events
-              jutsuper-no-select
-            "
+          <!-- Endings bar -->
+          <input
+            id="jutsuper-settings-endings-bar"
+            class="jutsuper-display-hidden"
+            type="checkbox"
+            name="jutsuper-settings-bar"
           />
-        </label>
-        <!-- Endings settings -->
-        <div
-          id="jutsuper-settings-endings-section-clip"
-          class="jutsuper-settings-section-clip-area"
-        >
-          <div
-            id="jutsuper-settings-endings-section"
-            class="jutsuper-settings-section-area"
+          <label
+            title="Endings settings"
+            id="jutsuper-settings-endings-bar-label"
+            for="jutsuper-settings-endings-bar"
+            class="jutsuper-settings-section-bar jutsuper-tooltip-endings-settings"
           >
-          <div class="
-            jutsuper-settings-grid-container
-            jutsuper-settings-grid-3-rows
-            jutsuper-settings-grid-2-cols
-          ">
-            <div
-              title="Which region to skip if multiple regions are available"
-              class="
-                jutsuper-text-order
-                jutsuper-tooltip-which-region-to-skip
-              "
-              style="
-                display: flex;
-                align-items: center;
-              "
+            <label
+              title="Toggle endings skip"
+              class="jutsuper-slider-switch jutsuper-tooltip-toggle-endings-skip"
+              style="margin-right: 10px"
             >
-              Order
-            </div>
+              <input id="jutsuper-settings-endings-switch" type="checkbox" />
+              <span
+                id="jutsuper-settings-endings-slider"
+                class="jutsuper-slider-bg-area"
+              ></span>
+            </label>
             <div
-              id="jutsuper-settings-endings-skip-order-selector"
-              class="jutsuper-radio-container"
+              class="jutsuper-text-endings jutsuper-no-pointer-events jutsuper-no-select"
             >
-              <input
-                title="Skip any region"
-                id="jutsuper-settings-endings-skip-order-any"
-                type="radio"
-                name="jutsuper-settings-ed-skip-order"
-                class="
-                  jutsuper-radio
-                  jutsuper-icon-inset
-                  jutsuper-icon-order-any
-                  jutsuper-no-select
-                  jutsuper-tooltip-skip-any-region
-                "
-                style="
-                  width: 100%;
-                  overflow: hidden;
-                "
-              />
-              <input
-                title="Skip only first region"
-                id="jutsuper-settings-endings-skip-order-first"
-                type="radio"
-                name="jutsuper-settings-ed-skip-order"
-                class="
-                  jutsuper-radio
-                  jutsuper-icon-inset
-                  jutsuper-icon-order-first
-                  jutsuper-no-select
-                  jutsuper-tooltip-skip-first-region
-                "
-                style="
-                  width: 100%;
-                  overflow: hidden;
-                "
-              />
-              <input
-                title="Skip only last region"
-                id="jutsuper-settings-endings-skip-order-last"
-                type="radio"
-                name="jutsuper-settings-ed-skip-order"
-                class="
-                  jutsuper-radio
-                  jutsuper-icon-inset
-                  jutsuper-icon-order-last
-                  jutsuper-no-select
-                  jutsuper-tooltip-skip-last-region
-                "
-                style="
-                  width: 100%;
-                  overflow: hidden;
-                "
-              />
+              Endings
             </div>
-            <div
-              title="Maximum continuous episode switches"
-              class="
-                jutsuper-text-max
-                jutsuper-tooltip-max-episode-switches
-              "
-              style="
-                display: flex;
-                align-items: center;
-              "
-            >
-              Max
-            </div>
-            <div
-              class="
-                jutsuper-settings-grid-container
-                jutsuper-settings-grid-no-gap
-                jutsuper-settings-grid-1-row
-                jutsuper-settings-grid-3-cols
-              "
-            >
-              <button
-                id="jutsuper-settings-endings-max-skips-negative-button"
-                class="jutsuper-numberbox-button jutsuper-icon-inset jutsuper-icon-minus"
-              ></button>
-              <input
-                id="jutsuper-settings-endings-max-skips-field"
-                type="text"
-                min="0"
-                value="0"
-                pattern="^[1-9]\d*$"
-                class="jutsuper-numberbox"
-                required
-              />
-              <button
-                id="jutsuper-settings-endings-max-skips-positive-button"
-                class="jutsuper-numberbox-button jutsuper-icon-inset jutsuper-icon-plus"
-              ></button>
-            </div>
-            <div
-              title="Persist fullscreen after episode switch"
-              class="
-                jutsuper-text-fullscreen
-                jutsuper-tooltip-persist-fullscreen
-              "
-              style="
-                display: flex;
-                align-items: center;
-              "
-            >
-              Fullscreen
-            </div>
-            <div style="display: flex">
-              <label
-                title="Toggle fullscreen persistency"
-                class="
-                  jutsuper-slider-switch
-                  jutsuper-tooltip-toggle-fullscreen-persistency
-                "
-              >
-                <input
-                  id="jutsuper-settings-endings-fullscreen-switch"
-                  type="checkbox"
-                >
-                <span
-                  id="jutsuper-settings-persist-fullscreen-slider"
-                  class="jutsuper-slider-bg-area"
-                ></span>
-              </label>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="jutsuper-settings-outer-section-area">
+            <img
+              id="jutsuper-settings-endings-bar-dropdown-icon"
+              src="/src/assets/icon/dropdown.svg"
+              class="jutsuper-icon-dropdown jutsuper-flex-float-to-right jutsuper-no-pointer-events jutsuper-no-select"
+            />
+          </label>
+          <!-- Endings settings -->
           <div
-            id="jutsuper-settings-shared-area"
-            class="
-              jutsuper-settings-grid-container
-              jutsuper-settings-grid-2-rows
-              jutsuper-settings-grid-4-cols
-            ">
+            id="jutsuper-settings-endings-section-clip"
+            class="jutsuper-settings-section-clip-area"
+          >
             <div
-              title="Delay before skipping"
-              class="
-                jutsuper-text-delay
-                jutsuper-tooltip-delay-before-skipping
-              "
-              style="
-                display: flex;
-                align-items: center;
-              "
+              id="jutsuper-settings-endings-section"
+              class="jutsuper-settings-section-area"
             >
-              Delay
-            </div>
-            <div>
-              <input
-                id="jutsuper-settings-delay-slider"
-                class="jutsuper-range"
-                type="range"
-                min="0"
-                max="10"
-                value="0"
-              >
-            </div>
-            <div style="
-              display: flex;
-              align-items: center;
-              text-align: end;
-              width: 100%;
-            ">
               <div
-                id="jutsuper-settings-delay-num"
-                class="jutsuper-animate-small-top-to-bottom"
-                style="
-                  display: inline-table;
-                  justify-content: center;
-                  width: 100%
-                "
+                class="jutsuper-settings-grid-container jutsuper-settings-grid-3-rows jutsuper-settings-grid-2-cols"
               >
-                0
+                <div
+                  title="Which region to skip if multiple regions are available"
+                  class="jutsuper-text-order jutsuper-tooltip-which-region-to-skip"
+                  style="display: flex; align-items: center"
+                >
+                  Order
+                </div>
+                <div
+                  id="jutsuper-settings-endings-skip-order-selector"
+                  class="jutsuper-radio-container"
+                >
+                  <input
+                    title="Skip any region"
+                    id="jutsuper-settings-endings-skip-order-any"
+                    type="radio"
+                    name="jutsuper-settings-ed-skip-order"
+                    class="jutsuper-radio jutsuper-icon-inset jutsuper-icon-order-any jutsuper-no-select jutsuper-tooltip-skip-any-region"
+                    style="width: 100%; overflow: hidden"
+                  />
+                  <input
+                    title="Skip only first region"
+                    id="jutsuper-settings-endings-skip-order-first"
+                    type="radio"
+                    name="jutsuper-settings-ed-skip-order"
+                    class="jutsuper-radio jutsuper-icon-inset jutsuper-icon-order-first jutsuper-no-select jutsuper-tooltip-skip-first-region"
+                    style="width: 100%; overflow: hidden"
+                  />
+                  <input
+                    title="Skip only last region"
+                    id="jutsuper-settings-endings-skip-order-last"
+                    type="radio"
+                    name="jutsuper-settings-ed-skip-order"
+                    class="jutsuper-radio jutsuper-icon-inset jutsuper-icon-order-last jutsuper-no-select jutsuper-tooltip-skip-last-region"
+                    style="width: 100%; overflow: hidden"
+                  />
+                </div>
+                <div
+                  title="Maximum continuous episode switches"
+                  class="jutsuper-text-max jutsuper-tooltip-max-episode-switches"
+                  style="display: flex; align-items: center"
+                >
+                  Max
+                </div>
+                <div
+                  class="jutsuper-settings-grid-container jutsuper-settings-grid-no-gap jutsuper-settings-grid-1-row jutsuper-settings-grid-3-cols"
+                >
+                  <button
+                    id="jutsuper-settings-endings-max-skips-negative-button"
+                    class="jutsuper-numberbox-button jutsuper-icon-inset jutsuper-icon-minus"
+                  ></button>
+                  <input
+                    id="jutsuper-settings-endings-max-skips-field"
+                    type="text"
+                    min="0"
+                    value="0"
+                    pattern="^[1-9]\d*$"
+                    class="jutsuper-numberbox"
+                    required
+                  />
+                  <button
+                    id="jutsuper-settings-endings-max-skips-positive-button"
+                    class="jutsuper-numberbox-button jutsuper-icon-inset jutsuper-icon-plus"
+                  ></button>
+                </div>
+                <div
+                  title="Persist fullscreen after episode switch"
+                  class="jutsuper-text-fullscreen jutsuper-tooltip-persist-fullscreen"
+                  style="display: flex; align-items: center"
+                >
+                  Fullscreen
+                </div>
+                <div style="display: flex">
+                  <label
+                    title="Toggle fullscreen persistency"
+                    class="jutsuper-slider-switch jutsuper-tooltip-toggle-fullscreen-persistency"
+                  >
+                    <input
+                      id="jutsuper-settings-endings-fullscreen-switch"
+                      type="checkbox"
+                    />
+                    <span
+                      id="jutsuper-settings-persist-fullscreen-slider"
+                      class="jutsuper-slider-bg-area"
+                    ></span>
+                  </label>
+                </div>
               </div>
             </div>
+          </div>
+          <!-- Common settings -->
+          <div
+            class="jutsuper-settings-outer-section-area"
+            style="padding-bottom: 10px"
+          >
             <div
-              class="jutsuper-text-seconds-short"
-              style="
-                display: flex;
-                align-items: center;
-                width: 100%;
-              "
+              id="jutsuper-settings-shared-area"
+              class="jutsuper-settings-grid-container jutsuper-settings-grid-2-rows jutsuper-settings-grid-4-cols"
             >
-              s.
-            </div>
-            <div
-              title="Key to cancel skipping"
-              class="
-                jutsuper-text-cancel
-                jutsuper-tooltip-key-to-cancel-skipping
-              "
-              style="
-                display: flex;
-                align-items: center;
-              "
-            >
-              Cancel
-            </div>
-            <div
-              id="jutsuper-settings-cancel-key-listener-container"
-              class="jutsuper-button-container"
-              style="
-                position: relative;
-              "
-            >
-              <input
-                title="Set cancellation key"
-                id="jutsuper-settings-cancel-key-listener"
-                type="button"
-                value="Null"
-                class="
-                  jutsuper-button
-                  jutsuper-no-select
-                  jutsuper-tooltip-set-cancel-key
-                "
+              <div
+                title="Delay before skipping"
+                class="jutsuper-text-delay jutsuper-tooltip-delay-before-skipping"
+                style="display: flex; align-items: center"
+              >
+                Delay
+              </div>
+              <div>
+                <input
+                  id="jutsuper-settings-delay-slider"
+                  class="jutsuper-range"
+                  type="range"
+                  min="0"
+                  max="10"
+                  value="0"
+                />
+              </div>
+              <div
                 style="
+                  display: flex;
+                  align-items: center;
+                  text-align: end;
                   width: 100%;
-                  height: 100%;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
                 "
-              />
-            </div>
-            <div
-              id="jutsuper-settings-cancel-key-listener-rec-circle"
-              class="jutsuper-record-icon"
-              style="opacity: 0;"
-            >
-            </div>
-            <div>
+              >
+                <div
+                  id="jutsuper-settings-delay-num"
+                  class="jutsuper-animate-small-top-to-bottom"
+                  style="
+                    display: inline-table;
+                    justify-content: center;
+                    width: 100%;
+                  "
+                >
+                  0
+                </div>
+              </div>
+              <div
+                class="jutsuper-text-seconds-short"
+                style="display: flex; align-items: center; width: 100%"
+              >
+                s.
+              </div>
+              <div
+                title="Key to cancel skipping"
+                class="jutsuper-text-cancel jutsuper-tooltip-key-to-cancel-skipping"
+                style="display: flex; align-items: center"
+              >
+                Cancel
+              </div>
+              <div
+                id="jutsuper-settings-cancel-key-listener-container"
+                class="jutsuper-button-container"
+                style="position: relative"
+              >
+                <input
+                  title="Set cancellation key"
+                  id="jutsuper-settings-cancel-key-listener"
+                  type="button"
+                  value="Null"
+                  class="jutsuper-button jutsuper-no-select jutsuper-tooltip-set-cancel-key"
+                  style="
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  "
+                />
+              </div>
+              <div
+                id="jutsuper-settings-cancel-key-listener-rec-circle"
+                class="jutsuper-record-icon"
+                style="opacity: 0"
+              ></div>
+              <div></div>
             </div>
           </div>
         </div>
+        <!-- Playback settings -->
+        <div id="jutsuper-settings-playback">
+          <!-- Playback header -->
+          <div class="jutsuper-settings-heading">
+            <img
+              id="jutsuper-settings-playback-header-icon"
+              src="/src/assets/icon/play.svg"
+              style="margin-right: 10px"
+              class="jutsuper-icon-play jutsuper-no-pointer-events jutsuper-no-select"
+            />
+            <h class="jutsuper-text-playback-options"> Playback </h>
+          </div>
+          <!-- Playback area -->
+          <div
+            class="jutsuper-settings-outer-section-area jutsuper-settings-no-filter-all-pointer-events"
+            style="padding-top: 5px; padding-bottom: 10px"
+          >
+            <div
+              id="jutsuper-settings-shared-area"
+              class="jutsuper-settings-grid-container jutsuper-settings-grid-1-row jutsuper-settings-grid-2-cols-auto"
+            >
+              <div
+                title="Enable or disable achievement sound"
+                class="jutsuper-text-achievement-sound jutsuper-tooltip-achievement-sound"
+                style="display: flex; align-items: center"
+              >
+                ACHV sound
+              </div>
+              <div style="display: flex">
+                <label
+                  title="Toggle achievement sound"
+                  class="jutsuper-slider-switch jutsuper-tooltip-toggle-achievement-sound"
+                >
+                  <input
+                    id="jutsuper-settings-achievement-sound-switch"
+                    type="checkbox"
+                  />
+                  <span
+                    id="jutsuper-settings-achievement-sound-slider"
+                    class="jutsuper-slider-bg-area"
+                  ></span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- End of the area that gets injected -->

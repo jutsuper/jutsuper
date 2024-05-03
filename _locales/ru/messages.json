@@ -8,7 +8,7 @@
     "description": "Extension description"
   },
   "skipOptions": {
-    "message": "Настройки пропуска"
+    "message": "Пропуск"
   },
   "openings": {
     "message": "Опенинги"
@@ -33,6 +33,12 @@
   },
   "cancel": {
     "message": "Отмена"
+  },
+  "playbackOptions": {
+    "message": "Воспроизведение"
+  },
+  "achievementSound": {
+    "message": "Звук ачивок"
   },
   "toCancel": {
     "message": "Отменить"
@@ -81,5 +87,11 @@
   },
   "setCancelKey": {
     "message": "Задать клавишу для отмены пропуска"
+  },
+  "enableOrDisableAchievementSound": {
+    "message": "Включить или отключить звук достижений"
+  },
+  "toggleAchievementSound": {
+    "message": "Переключить звук достижений"
   }
 }

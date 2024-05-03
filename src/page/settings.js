@@ -231,8 +231,9 @@ class JutSuperSettingsPopup {
 
   /**
    * @param {boolean} value 
+   * @param {boolean} [fireEvent=true]
    */
-  setDoSkipOpenings(value) {
+  setDoSkipOpenings(value, fireEvent=true) {
     this.exposedSettings.openings.doSkip = value;
     this.opSkipSwitch.checked = value;
   }
@@ -256,8 +257,9 @@ class JutSuperSettingsPopup {
 
   /**
    * @param {JutSuperSettingsSkipOrderKeys} value 
+   * @param {boolean} [fireEvent=true] 
    */
-  setOpeningsSkipOrder(value) {
+  setOpeningsSkipOrder(value, fireEvent=true) {
     this.exposedSettings.openings.skipOrder = value;
 
     switch (value) {
@@ -412,7 +414,7 @@ class JutSuperSettingsPopup {
       this.edSkipMaxField.value = asString;
     }
 
-    this.onEndingsSkipMaxChange(asNumber);
+    this.exposedSettings.endings.maxSkips = asNumber;
   }
 
   /**
@@ -506,8 +508,9 @@ class JutSuperSettingsPopup {
 
   /**
    * @param {boolean} value 
+   * @param {boolean} [fireEvent=true]
    */
-  setEndingsPersistFullscreen(value) {
+  setEndingsPersistFullscreen(value, fireEvent=true) {
     this.exposedSettings.endings.doPersistFullscreen = value;
     this.edFullscreenSwitch.checked = value;
   }
@@ -563,9 +566,10 @@ class JutSuperSettingsPopup {
    * @param {number | string} value 
    */
   setDelay(value) {
+    this.exposedSettings.skipDelayS = (new Number(value)).valueOf();
     const val = value !== undefined ? value : 0;
-    this.delaySlider.value = val.toString();
-    this.onDelayChange(value);
+    this.delaySlider.setAttribute("value", val.toString());
+    this.delayNum.innerText = value.toString();
   }
 
   //////////////////////////

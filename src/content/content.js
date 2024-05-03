@@ -235,6 +235,8 @@ var JutSuperStorage;
   LOCALE_TEXT[domClasses.textSecondsShort] = browser.i18n.getMessage("secondsShort");
   LOCALE_TEXT[domClasses.textCancel] = browser.i18n.getMessage("cancel");
   LOCALE_TEXT[domClasses.textToCancel] = browser.i18n.getMessage("toCancel");
+  LOCALE_TEXT[domClasses.textPlaybackOptions] = browser.i18n.getMessage("playbackOptions");
+  LOCALE_TEXT[domClasses.textAchievementSound] = browser.i18n.getMessage("achievementSound");
   LOCALE_TEXT[domClasses.textSkipping] = browser.i18n.getMessage("skipping");
 
   LOCALE_TOOLTIPS[domClasses.tooltipOpeningsSettings] = browser.i18n.getMessage("openingsSettings");
@@ -251,6 +253,8 @@ var JutSuperStorage;
   LOCALE_TOOLTIPS[domClasses.tooltipDelayBeforeSkipping] = browser.i18n.getMessage("delayBeforeSkipping");
   LOCALE_TOOLTIPS[domClasses.tooltipKeyToCancelSkipping] = browser.i18n.getMessage("keyToCancelSkipping");
   LOCALE_TOOLTIPS[domClasses.tooltipSetCancelKey] = browser.i18n.getMessage("setCancelKey");
+  LOCALE_TOOLTIPS[domClasses.tooltipAchievementSound] = browser.i18n.getMessage("enableOrDisableAchievementSound");
+  LOCALE_TOOLTIPS[domClasses.tooltipToggleAchievementSound] = browser.i18n.getMessage("toggleAchievementSound");
 })().then(() => {
   jutsuperContent = new JutSuperContent();
 })
@@ -285,28 +289,10 @@ class JutSuperContent {
     /** @type {string} */
     this.LOCATION = JutSuperContent.name;
 
-    jsuperLog.debug(`${this.LOCATION}: constructing`);
+    const head = document.getElementsByTagName("head")[0];
+    const urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
+    this.injectModule(head, urlJutSuperJs, assetIds.jutsuperJs);
 
-    this.browser = new JutSuperBrowser(browser, BROWSER);
-    this.storage = new JutSuperStorage(browser.storage.local);
-    this.transition = new JutSuperTransition().setUndefined();
-    this.settings = new JutSuperSettings().setUndefined();
-
-    this.initLock = new AsyncLock({ oneTime: true });
-
-    /**
-     * # Requesting IPC
-     * @type {JutSuperIpc<
-     *   JutSuperIpcReqSchema,
-     *   JutSuperIpcRspSchema,
-     *   JutSuperIpcRspSchemaFilter
-     * >}
-     */
-    this.reqIpc = new JutSuperIpcBuilder()
-      .identifyAs(ipcIds.content)
-      .ignoreWithoutAnyOfTheseFlags([ipcFlags.rsp])
-      .sendWithTheseFlags([ipcFlags.req])
-      .build();
     /**
      * # Responding IPC
      * @type {JutSuperIpc<
@@ -320,60 +306,86 @@ class JutSuperContent {
       .ignoreWithoutAnyOfTheseFlags([ipcFlags.req])
       .sendWithTheseFlags([ipcFlags.rsp])
       .build();
-    
-    /**
-     * # Requesting settings IPC
-     * @type {JutSuperIpc<
-     *   JutSuperSettingsObjectPartial,
-     *   JutSuperSettingsObjectPartial,
-     *   JutSuperSettingsObjectFilter
-     * >}
-     */
-    this.reqSettingsIpc = new JutSuperIpcBuilder()
-      .namespaceIs(ipcNamespaces.settings)
-      .identifyAs(ipcIds.content)
-      .ignoreWithoutAnyOfTheseFlags([ipcFlags.rsp])
-      .sendWithTheseFlags([ipcFlags.req])
-      .build();
-    /**
-      * # Responding settings IPC
-      * @type {JutSuperIpc<
-      *   JutSuperSettingsObjectPartial,
-      *   JutSuperSettingsObjectPartial,
-      *   JutSuperSettingsObjectFilter
-      * >}
-      */
-    this.rspSettingsIpc = new JutSuperIpcBuilder()
-      .namespaceIs(ipcNamespaces.settings)
-      .identifyAs(ipcIds.content)
-      .ignoreWithoutAnyOfTheseFlags([ipcFlags.req])
-      .sendWithTheseFlags([ipcFlags.rsp])
-      .build();
 
-    this.initListeners();
+    this.rspIpc.recvOnce({ schema: { loadingAllowed: { tell: { state: true } } } }).then(() => {
+      jsuperLog.debug(`${this.LOCATION}: received loadingAllowed, constructing`);
 
-    const head = document.getElementsByTagName("head")[0];
-    
-    const urlSquareWhiteLogo48Svg = browser.runtime.getURL(assetPaths.squareWhiteLogo48Svg);
-    const urlDropdownSvg = browser.runtime.getURL(assetPaths.dropdownSvg);
-    const urlSkipSvg = browser.runtime.getURL(assetPaths.skipSvg);
-    const urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
-    const urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
-    const urlSettingsHtml = browser.runtime.getURL(assetPaths.settingsHtml);
-    const urlSkipHtml = browser.runtime.getURL(assetPaths.skipHtml);
+      /**
+       * # Requesting IPC
+       * @type {JutSuperIpc<
+       *   JutSuperIpcReqSchema,
+       *   JutSuperIpcRspSchema,
+       *   JutSuperIpcRspSchemaFilter
+       * >}
+       */
+      this.reqIpc = new JutSuperIpcBuilder()
+        .identifyAs(ipcIds.content)
+        .ignoreWithoutAnyOfTheseFlags([ipcFlags.rsp])
+        .sendWithTheseFlags([ipcFlags.req])
+        .build();
 
-    this.injectFonts(head, defaultFonts);
-    this.injectImage(head, urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
-    this.injectImage(head, urlDropdownSvg, assetIds.dropdownSvg);
-    this.injectImage(head, urlSkipSvg, assetIds.skipSvg);
-    this.injectCss(head, urlJutSuperCss, assetIds.jutsuperCss);
-    this.injectModule(head, urlJutSuperJs, assetIds.jutsuperJs);
-    this.injectDocument(head, urlSettingsHtml, assetIds.settingsHtml);
-    this.injectDocument(head, urlSkipHtml, assetIds.skipHtml);
+      /**
+       * # Requesting settings IPC
+       * @type {JutSuperIpc<
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectFilter
+       * >}
+       */
+      this.reqSettingsIpc = new JutSuperIpcBuilder()
+        .namespaceIs(ipcNamespaces.settings)
+        .identifyAs(ipcIds.content)
+        .ignoreWithoutAnyOfTheseFlags([ipcFlags.rsp])
+        .sendWithTheseFlags([ipcFlags.req])
+        .build();
+      /**
+       * # Responding settings IPC
+       * @type {JutSuperIpc<
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectFilter
+       * >}
+       */
+      this.rspSettingsIpc = new JutSuperIpcBuilder()
+        .namespaceIs(ipcNamespaces.settings)
+        .identifyAs(ipcIds.content)
+        .ignoreWithoutAnyOfTheseFlags([ipcFlags.req])
+        .sendWithTheseFlags([ipcFlags.rsp])
+        .build();
 
-    this.#asyncInit().then(() => {
-      jsuperLog.debug(`${this.LOCATION}: constructed`);
-    });
+      this.browser = new JutSuperBrowser(browser, BROWSER);
+      this.storage = new JutSuperStorage(browser.storage.local);
+      this.transition = new JutSuperTransition().setUndefined();
+      this.settings = new JutSuperSettings().setUndefined();
+
+      this.initLock = new AsyncLock({ oneTime: true });
+
+      this.initListeners();
+      
+      const urlSquareWhiteLogo48Svg = browser.runtime.getURL(assetPaths.squareWhiteLogo48Svg);
+      const urlDropdownSvg = browser.runtime.getURL(assetPaths.dropdownSvg);
+      const urlSkipSvg = browser.runtime.getURL(assetPaths.skipSvg);
+      const urlPlaySvg = browser.runtime.getURL(assetPaths.playSvg);
+      const urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
+      const urlSettingsHtml = browser.runtime.getURL(assetPaths.settingsHtml);
+      const urlSkipHtml = browser.runtime.getURL(assetPaths.skipHtml);
+
+      this.injectFonts(head, defaultFonts);
+      this.injectImage(head, urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
+      this.injectImage(head, urlDropdownSvg, assetIds.dropdownSvg);
+      this.injectImage(head, urlSkipSvg, assetIds.skipSvg);
+      this.injectImage(head, urlPlaySvg, assetIds.playSvg);
+      this.injectCss(head, urlJutSuperCss, assetIds.jutsuperCss);
+      this.injectDocument(head, urlSettingsHtml, assetIds.settingsHtml);
+      this.injectDocument(head, urlSkipHtml, assetIds.skipHtml);
+
+      this.reqIpc.send({ assetsInjected: { tell: { state: true } } });
+      jsuperLog.debug(`${this.LOCATION}: all assets injected`);
+
+      this.#asyncInit().then(() => {
+        jsuperLog.debug(`${this.LOCATION}: constructed`);
+      });
+    })
   }
 
   async #asyncInit() {
@@ -914,6 +926,8 @@ class JutSuperContent {
         (value, index, array) => { value.setAttribute("title", tooltip); tooltipCounter++; }
       );
     }
+
+    this.rspIpc.send({ localization: { rspLocalize: { isFulfilled: true } } });
 
     jsuperLog.debug(
       `${loc}: localization complete: ` +

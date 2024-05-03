@@ -272,6 +272,8 @@ const JutSuperAssetIds = {
   dropdownSvg: "jutsuper-dropdown-svg",
   /** @type {"jutsuper-skip-svg"} */
   skipSvg: "jutsuper-skip-svg",
+  /** @type {"jutsuper-play-svg"} */
+  playSvg: "jutsuper-play-svg",
   /** @type {"jutsuper-css"} */
   jutsuperCss: "jutsuper-css",
   /** @type {"jutsuper-ipc-js"} */
@@ -314,6 +316,8 @@ const JutSuperAssetPaths = {
   dropdownSvg: "/src/assets/icon/dropdown.svg",
   /** @type {"/src/assets/icon/skip.svg"} */
   skipSvg: "/src/assets/icon/skip.svg",
+  /** @type {"/src/assets/icon/play.svg"} */
+  playSvg: "/src/assets/icon/play.svg",
   /** @type {"/src/consts.js"} */
   constsJs: "/src/consts.js",
   /** @type {"/src/ipc.js"} */
@@ -487,6 +491,8 @@ const JutSuperDomClasses = {
   iconInset: "jutsuper-icon-inset",
   /** @type {"jutsuper-icon-skip"} */
   iconSkip: "jutsuper-icon-skip",
+  /** @type {"jutsuper-icon-play"} */
+  iconPlay: "jutsuper-icon-play",
   /** @type {"jutsuper-icon-dropdown"} */
   iconDropdown: "jutsuper-icon-dropdown",
   /** @type {"jutsuper-icon-order-any"} */
@@ -619,6 +625,10 @@ const JutSuperDomClasses = {
   textCancel: "jutsuper-text-cancel",
   /** @type {"jutsuper-text-to-cancel"} */
   textToCancel: "jutsuper-text-to-cancel",
+  /** @type {"jutsuper-text-playback-options"} */
+  textPlaybackOptions: "jutsuper-text-playback-options",
+  /** @type {"jutsuper-text-achievement-sound"} */
+  textAchievementSound: "jutsuper-text-achievement-sound",
   /** @type {"jutsuper-text-skipping"} */
   textSkipping: "jutsuper-text-skipping",
 
@@ -650,7 +660,11 @@ const JutSuperDomClasses = {
   /** @type {"jutsuper-tooltip-key-to-cancel-skipping"} */
   tooltipKeyToCancelSkipping: "jutsuper-tooltip-key-to-cancel-skipping",
   /** @type {"jutsuper-tooltip-set-cancel-key"} */
-  tooltipSetCancelKey: "jutsuper-tooltip-set-cancel-key"
+  tooltipSetCancelKey: "jutsuper-tooltip-set-cancel-key",
+  /** @type {"jutsuper-tooltip-achievement-sound"} */
+  tooltipAchievementSound: "jutsuper-tooltip-achievement-sound",
+  /** @type {"jutsuper-tooltip-toggle-achievement-sound"} */
+  tooltipToggleAchievementSound: "jutsuper-tooltip-toggle-achievement-sound"
 }
 /**
  * @typedef {(

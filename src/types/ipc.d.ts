@@ -62,6 +62,16 @@ interface JutSuperIpcReasonedResponse {
 //////////////
 
 interface JutSuperIpcReqSchema {
+  loadingAllowed?: {
+    tell?: {
+      state: true;
+    };
+  };
+  assetsInjected?: {
+    tell?: {
+      state: true;
+    };
+  };
   essentialsLoaded?: {
     tell?: {
       state: true;
@@ -89,6 +99,8 @@ interface JutSuperIpcReqSchema {
 }
 
 interface JutSuperIpcRspSchema {
+  loadingAllowed?: JutSuperIpcReasonedResponse;
+  assetsInjected?: JutSuperIpcReasonedResponse;
   essentialsLoaded?: JutSuperIpcReasonedResponse;
   preEpisodeSwitch?: {
     rspIsAllowed?: boolean;
