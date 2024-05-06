@@ -1,14 +1,16 @@
+/// <reference types="chrome/index.d.ts" />
+/// <reference types="firefox-webext-browser/index.d.ts" />
+
+
 import { JutSuperTransition } from "/src/transition.js";
 import { JutSuperSettings } from "/src/settings.js";
 export {
   JutSuperStorage,
-  JutSuperStorageKeys,
-  jsuperStorage
+  JutSuperStorageKeys
 };
 
 
 /**
- * @typedef {import("/src/browser.js").BrowserStorage} BrowserStorage
  * @typedef {import("/src/transition.js").JutSuperTransitionObject} JutSuperTransitionObject
  * @typedef {import("/src/transition.js").JutSuperTransitionObjectKeys} JutSuperTransitionObjectKeys
  * @typedef {import("/src/settings.js").JutSuperSettingsObject} JutSuperSettingsObject
@@ -19,9 +21,10 @@ export {
 
 
 /**
- * # Object of a persistent extension storage
+ * # Keys of a persistent extension storage
+ * 
  * @readonly
- * @enum {JutSuperStorageKeysType}
+ * @enum {typeof JutSuperStorageKeys}
  */
 const JutSuperStorageKeys = {
   /** @type {"transition"} */
@@ -30,27 +33,28 @@ const JutSuperStorageKeys = {
   settings: "settings"
 }
 /**
- * @typedef JutSuperStorageKeysType
- * @property {"transition"} transition
- * @property {"settings"} settings
- *
+ * @typedef {(
+ *   typeof JutSuperStorageKeys[keyof typeof JutSuperStorageKeys]
+ * )} JutSuperStorageKeysKeys
+ * 
  * @typedef JutSuperStorageKeysTypes
  * @property {JutSuperTransitionObject} [transition]
  * @property {JutSuperSettingsObject} [settings]
- * 
- * @typedef {(
- *   "transition" |
- *   "settings"
- * )} JutSuperStorageKeysKeys
  */
 
 
+var storageKeys = JutSuperStorageKeys;
+
+
 class JutSuperStorage {
-  /** @type {BrowserStorage} */
+  /** @type {chrome.storage.local | browser.storage.local} */
   #storage;
 
-  constructor() {
-    this.#storage = browser.storage.local;
+  /**
+   * @param {chrome.storage.local | browser.storage.local} storage 
+   */
+  constructor(storage) {
+    this.#storage = storage;
   }
 
   ////////////////
@@ -59,6 +63,7 @@ class JutSuperStorage {
 
   /**
    * # Get `transition` object from storage
+   * 
    * @returns {Promise<JutSuperTransitionObject>}
    */
   async getTransition() {
@@ -66,6 +71,7 @@ class JutSuperStorage {
   }
   /**
    * # Set `transition` object in storage
+   * 
    * @param {JutSuperTransitionObject} value 
    */
   async setTransition(value) {
@@ -75,7 +81,8 @@ class JutSuperStorage {
   }
   /**
    * # Set default `transition` object in storage
-   * @returns
+   * 
+   * @returns {Promise<JutSuperTransitionObject>}
    */
   async setDefaultTransition() {
     const transition = new JutSuperTransition().setDefaults().get();
@@ -97,6 +104,7 @@ class JutSuperStorage {
 
   /**
    * # Get `settings` object from storage
+   * 
    * @returns {Promise<JutSuperSettingsObject>}
    */
   async getSettings() {
@@ -104,6 +112,7 @@ class JutSuperStorage {
   }
   /**
    * # Set `settings` object in storage
+   * 
    * @param {JutSuperSettingsObject} value 
    */
   async setSettings(value) {
@@ -113,6 +122,7 @@ class JutSuperStorage {
   }
   /**
    * # Set default `settings` object in storage
+   * 
    * @returns {Promise<JutSuperSettingsObject>}
    */
   async setDefaultSettings() {
@@ -135,6 +145,7 @@ class JutSuperStorage {
 
   /**
    * # Get all keys from storage
+   * 
    * @returns {Promise<JutSuperStorageKeysTypes>}
    */
   async getAll() {
@@ -142,6 +153,7 @@ class JutSuperStorage {
   }
   /**
    * # Set all keys in storage
+   * 
    * @param {JutSuperStorageKeysTypes} value 
    */
   async setAll(value) {
@@ -154,5 +166,3 @@ class JutSuperStorage {
     await this.#storage.clear();
   }
 }
-
-const jsuperStorage = new JutSuperStorage();

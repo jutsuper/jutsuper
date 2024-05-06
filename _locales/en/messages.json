@@ -8,7 +8,7 @@
     "description": "Extension description"
   },
   "skipOptions": {
-    "message": "Skip options"
+    "message": "Skip"
   },
   "openings": {
     "message": "Openings"
@@ -33,6 +33,12 @@
   },
   "cancel": {
     "message": "Cancel"
+  },
+  "playbackOptions": {
+    "message": "Playback"
+  },
+  "achievementSound": {
+    "message": "ACHV sound"
   },
   "toCancel": {
     "message": "Cancel"
@@ -81,5 +87,11 @@
   },
   "setCancelKey": {
     "message": "Set cancellation key"
+  },
+  "enableOrDisableAchievementSound": {
+    "message": "Enable or disable achievement sound"
+  },
+  "toggleAchievementSound": {
+    "message": "Toggle achievement sound"
   }
 }

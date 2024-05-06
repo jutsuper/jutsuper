@@ -574,6 +574,8 @@
 /* Section area that does not belong to a tab */
 .jutsuper-settings-outer-section-area {
   padding: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   filter: grayscale();
   pointer-events: none;
   transition: all var(--jutsuper-dur-mid) var(--jutsuper-curve-fast-start-slow-end)
@@ -645,7 +647,7 @@
   pointer-events: all;
 }
 
-#jutsuper-settings-root:has(
+#jutsuper-settings-skip:has(
   #jutsuper-settings-openings-bar-label
   .jutsuper-slider-switch
   #jutsuper-settings-openings-switch:checked,
@@ -654,6 +656,11 @@
   .jutsuper-slider-switch
   #jutsuper-settings-endings-switch:checked
 ) .jutsuper-settings-outer-section-area {
+  filter: none;
+  pointer-events: all;
+}
+
+.jutsuper-settings-no-filter-all-pointer-events {
   filter: none;
   pointer-events: all;
 }
@@ -688,6 +695,10 @@
 
 .jutsuper-settings-grid-2-cols {
   grid-template-columns: minmax(0, 50%) minmax(0, 50%);
+}
+
+.jutsuper-settings-grid-2-cols-auto {
+  grid-template-columns: minmax(auto, auto) minmax(auto, auto);
 }
 
 .jutsuper-settings-grid-3-cols {

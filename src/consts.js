@@ -6,6 +6,7 @@
 
 
 export {
+  ANY,
   JutSuFunctions,
   JutSuDomIds,
   JutSuDomClasses,
@@ -17,7 +18,6 @@ export {
   JutSuperDomClasses,
   JutSuperInputNames,
   JutSuperDefaultFonts,
-  JutSuperIpcDefaultNodeProps,
   JutSuperIpcJsDataTypes,
   JutSuperIpcJsDataTypesArray,
   JutSuperIpcIds,
@@ -26,7 +26,6 @@ export {
   JutSuperIpcLoadingStates,
   JutSuperIpcAwaitStates,
   JutSuperIpcBoolRequestStates,
-  JutSuperIpcValueDelims,
   JutSuperMessagingMessageKeys,
   JutSuperMessagingMessageActionsKeys,
   JutSuperMessagingMessageRequestsRequestKeys,
@@ -42,13 +41,21 @@ export {
 
 
 /**
+ * # A wildcard for matching any value
+ * 
+ * @type {"*"}
+ */
+const ANY = "*";
+
+
+/**
  * # Describes exposed function names on `jut.su`
  * 
  * These functions are part
  * of the `window` object
  * 
  * @readonly
- * @enum {JutsuFunctionsType}
+ * @enum {typeof JutSuFunctions}
  */
 const JutSuFunctions = {
   /**
@@ -65,14 +72,9 @@ const JutSuFunctions = {
   skipEndingFnName: "video_go_next_episode",
 }
 /** 
- * @typedef JutsuFunctionsType
- * @property {"skip_video_intro"} skipOpeningFnName
- * @property {"video_go_next_episode"} skipEndingFnName
- * 
  * @typedef {(
- *   "skip_video_intro" |
- *   "video_go_next_episode"
- * )} JutsuFunctionsKeys
+ *   typeof JutSuFunctions[keyof typeof JutSuFunctions]
+ * )} JutSuFunctionsKeys
  */
 
 
@@ -80,27 +82,24 @@ const JutSuFunctions = {
  * # Describes IDs of nodes on `jut.su`
  * 
  * @readonly
- * @enum {JutSuDomIdsType}
+ * @enum {typeof JutSuDomIds}
  */
 const JutSuDomIds = {
   /** @type {"my-player"} */
   myPlayer: "my-player"
 }
 /**
- * @typedef JutSuDomIdsType
- * @property {"my-player"} myPlayer
- *
  * @typedef {(
-*   "my-player"
-* )} JutSuDomIdsKeys
-*/
+ *   typeof JutSuDomIds[keyof typeof JutSuDomIds]
+ * )} JutSuDomIdsKeys
+ */
 
 
 /**
  * # Describes classes of nodes on `jut.su`
  * 
  * @readonly
- * @enum {JutSuDomClassesType}
+ * @enum {typeof JutSuDomClasses}
  */
 const JutSuDomClasses = {
   /**
@@ -174,35 +173,16 @@ const JutSuDomClasses = {
   footer: "footer"
 }
 /**
- * @typedef JutSuDomClassesType
- * @property {"vjs-fullscreen"} vjsFullscreen
- * @property {"vjs-fullscreen-control"} vjsFullscreenControl
- * @property {"vjs-subtitles-button"} vjsSubtitlesButton
- * @property {"vjs-share-control"} vjsShareControl
- * @property {"vjs-thumbnail-holder"} vjsThumbnailHolder
- * @property {"vjs-icon-placeholder"} vjcIconPlaceholder
- * @property {"z_fix_header"} zFixHeader
- * @property {"info_panel"} infoPanel
- * @property {"footer"} footer
- *
  * @typedef {(
-*   "vjs-fullscreen" |
-*   "vjs-fullscreen-control" |
-*   "vjs-subtitles-button" |
-*   "vjs-share-control" |
-*   "vjs-thumbnail-holder" |
-*   "vjs-icon-placeholder" |
-*   "z_fix_header" |
-*   "info_panel" |
-*   "footer"
-* )} JutSuDomClassesKeys
-*/
+ *   typeof JutSuDomClasses[keyof typeof JutSuDomClasses]
+ * )} JutSuDomClassesKeys
+ */
 
 
 /**
  * # Describes available logging levels
  * @readonly
- * @enum {JutSuperLogLevelsType}
+ * @enum {typeof JutSuperLogLevels}
  */
 const JutSuperLogLevels = {
   /** @type {"ERROR"} */
@@ -217,19 +197,8 @@ const JutSuperLogLevels = {
   debug: "DEBUG"
 }
 /** 
- * @typedef JutSuperLogLevelsType
- * @property {"ERROR"} error
- * @property {"WARN"} warn
- * @property {"LOG"} log
- * @property {"INFO"} info
- * @property {"DEBUG"} debug
- * 
  * @typedef {(
- *   "ERROR" |
- *   "WARN" |
- *   "LOG" |
- *   "INFO" |
- *   "DEBUG"
+ *   typeof JutSuperLogLevels[keyof typeof JutSuperLogLevels]
  * )} JutSuperLogLevelsKeys
  */
 
@@ -247,7 +216,7 @@ const JutSuperLogLevels = {
  * the debug level enabled.
  * 
  * @readonly
- * @enum {JutSuperLogDefaultsType}
+ * @enum {typeof JutSuperLogDefaults}
  */
 const JutSuperLogDefaults = {
   /** 
@@ -278,12 +247,6 @@ const JutSuperLogDefaults = {
     JutSuperLogLevels.debug
   ]
 }
-/** 
- * @typedef JutSuperLogDefaultsType
- * @property {boolean} enabled
- * @property {JutSuperLogLevelsKeys[]} levels
- * @property {JutSuperLogLevelsKeys[]} pathLevels
- */
 
 
 /**
@@ -296,7 +259,7 @@ const JutSuperLogDefaults = {
  * Used for easier DOM queries in the code.
  * 
  * @readonly
- * @enum {JutSuperAssetIdsType}
+ * @enum {typeof JutSuperAssetIds}
  */
 const JutSuperAssetIds = {
   /** @type {"jutsuper-square-green-logo-48-svg"} */
@@ -309,6 +272,8 @@ const JutSuperAssetIds = {
   dropdownSvg: "jutsuper-dropdown-svg",
   /** @type {"jutsuper-skip-svg"} */
   skipSvg: "jutsuper-skip-svg",
+  /** @type {"jutsuper-play-svg"} */
+  playSvg: "jutsuper-play-svg",
   /** @type {"jutsuper-css"} */
   jutsuperCss: "jutsuper-css",
   /** @type {"jutsuper-ipc-js"} */
@@ -321,29 +286,8 @@ const JutSuperAssetIds = {
   skipHtml: "jutsuper-skip-html",
 }
 /** 
- * @typedef JutSuperAssetIdsType
- * @property {"jutsuper-square-green-logo-48-svg"} squareGreenLogo48Svg
- * @property {"jutsuper-square-white-logo-48-svg"} squareWhiteLogo48Svg
- * @property {"jutsuper-square-black-logo-48-svg"} squareBlackLogo48Svg
- * @property {"jutsuper-dropdown-svg"} dropdownSvg
- * @property {"jutsuper-skip-svg"} skipSvg
- * @property {"jutsuper-css"} jutsuperCss
- * @property {"jutsuper-ipc-js"} jutsuperIpcJs
- * @property {"jutsuper-js"} jutsuperJs
- * @property {"jutsuper-settings-html"} settingsHtml
- * @property {"jutsuper-skip-html"} skipHtml
- * 
  * @typedef {(
- *   "jutsuper-square-green-logo-48-svg" |
- *   "jutsuper-square-white-logo-48-svg" |
- *   "jutsuper-square-black-logo-48-svg" |
- *   "jutsuper-dropdown-svg" |
- *   "jutsuper-skip-svg" |
- *   "jutsuper-css" |
- *   "jutsuper-ipc-js" |
- *   "jutsuper-js" |
- *   "jutsuper-settings-html" |
- *   "jutsuper-skip-html"
+ *   typeof JutSuperAssetIds[keyof typeof JutSuperAssetIds]
  * )} JutSuperAssetIdsKeys
  */
 
@@ -359,7 +303,7 @@ const JutSuperAssetIds = {
  * is not supported there.
  * 
  * @readonly
- * @enum {JutSuperAssetPathsType}
+ * @enum {typeof JutSuperAssetPaths}
  */
 const JutSuperAssetPaths = {
   /** @type {"/src/assets/logo/square-green-48.svg"} */
@@ -372,6 +316,8 @@ const JutSuperAssetPaths = {
   dropdownSvg: "/src/assets/icon/dropdown.svg",
   /** @type {"/src/assets/icon/skip.svg"} */
   skipSvg: "/src/assets/icon/skip.svg",
+  /** @type {"/src/assets/icon/play.svg"} */
+  playSvg: "/src/assets/icon/play.svg",
   /** @type {"/src/consts.js"} */
   constsJs: "/src/consts.js",
   /** @type {"/src/ipc.js"} */
@@ -390,35 +336,8 @@ const JutSuperAssetPaths = {
   skipHtml: "/src/page/skip.html",
 }
 /** 
- * @typedef JutSuperAssetPathsType
- * @property {"/src/assets/logo/square-green-48.svg"} squareGreenLogo48Svg
- * @property {"/src/assets/logo/square-white-48.svg"} squareWhiteLogo48Svg
- * @property {"/src/assets/logo/square-black-48.svg"} squareBlackLogo48Svg
- * @property {"/src/assets/icon/dropdown.svg"} dropdownSvg
- * @property {"/src/assets/icon/skip.svg"} skipSvg
- * @property {"/src/consts.js"} constsJs
- * @property {"/src/ipc.js"} ipcJs
- * @property {"/src/jutsuper.css"} jutsuperCss
- * @property {"/src/page/jutsuper.js"} jutsuperJs
- * @property {"/src/page/settings.js"} settingsJs
- * @property {"/src/page/settings.html"} settingsHtml
- * @property {"/src/page/skip.js"} skipJs
- * @property {"/src/page/skip.html"} skipHtml
- * 
  * @typedef {(
- *   "/src/assets/logo/square-green-48.svg" |
- *   "/src/assets/logo/square-white-48.svg" |
- *   "/src/assets/logo/square-black-48.svg" |
- *   "/src/assets/icon/dropdown.svg" |
- *   "/src/assets/icon/skip.svg" |
- *   "/src/consts.js" |
- *   "/src/ipc.js" |
- *   "/src/jutsuper.css" |
- *   "/src/page/jutsuper.js" |
- *   "/src/page/settings.js" |
- *   "/src/page/settings.html" |
- *   "/src/page/skip.js" |
- *   "/src/page/skip.html"
+ *   typeof JutSuperAssetPaths[keyof typeof JutSuperAssetPaths]
  * )} JutSuperAssetPathsKeys
  */
 
@@ -429,7 +348,7 @@ const JutSuperAssetPaths = {
  * Used for easier DOM queries in the code.
  * 
  * @readonly
- * @enum {JutSuperDomIdsType}
+ * @enum {typeof JutSuperDomIds}
  */
 const JutSuperDomIds = {
   /** @type {"jutsuper-vjs-button"} */
@@ -512,6 +431,8 @@ const JutSuperDomIds = {
   settingsCancelKeyListener: "jutsuper-settings-cancel-key-listener",
   /** @type {"jutsuper-settings-cancel-key-listener-rec-circle"} */
   settingsCancelKeyListenerRecCircle: "jutsuper-settings-cancel-key-listener-rec-circle",
+  /** @type {"jutsuper-settings-achievement-sound-switch"} */
+  settingsAchievementSoundSwitch: "jutsuper-settings-achievement-sound-switch",
 
   /** Skip */
   /** @type {"jutsuper-vjs-skip-area"} */
@@ -528,93 +449,8 @@ const JutSuperDomIds = {
   skipCountdownLine: "jutsuper-skip-countdown-line"
 }
 /**
- * @typedef JutSuperDomIdsType
- * @property {"jutsuper-vjs-button"} vjsButton
- * @property {"jutsuper-vjs-button-icon"} vjsButtonIcon
- * @property {"jutsuper-dev-preload-message"} devPreloadMessage
- * @property {"jutsuper-vjs-container"} vjsContainer
- * @property {"jutsuper-vjs-settings-area"} vjsSettingsArea
- * @property {"jutsuper-vjs-settings-clip-area"} vjsSettingsClipArea
- * @property {"jutsuper-settings-root"} settingsRoot
- * @property {"jutsuper-settings-skip-header-icon"} settingsSkipHeaderIcon
- * @property {"jutsuper-settings-openings-bar-label"} settingsOpeningsBarLabel
- * @property {"jutsuper-settings-openings-switch"} settingsOpeningsSwitch
- * @property {"jutsuper-settings-openings-slider"} settingsOpeningsSlider
- * @property {"jutsuper-settings-openings-bar-dropdown-icon"} settingsOpeningsBarDropdownIcon
- * @property {"jutsuper-settings-openings-section-clip"} settingsOpeningsSectionClip
- * @property {"jutsuper-settings-openings-section"} settingsOpeningsSection
- * @property {"jutsuper-settings-openings-skip-order-selector"} settingsOpeningsSkipOrderSelector
- * @property {"jutsuper-settings-openings-skip-order-any"} settingsOpeningsSkipOrderAny
- * @property {"jutsuper-settings-openings-skip-order-first"} settingsOpeningsSkipOrderFirst
- * @property {"jutsuper-settings-openings-skip-order-last"} settingsOpeningsSkipOrderLast
- * @property {"jutsuper-settings-endings-bar-label"} settingsEndingsBarLabel
- * @property {"jutsuper-settings-endings-switch"} settingsEndingsSwitch
- * @property {"jutsuper-settings-endings-slider"} settingsEndingsSlider
- * @property {"jutsuper-settings-endings-bar-dropdown-icon"} settingsEndingsBarDropdownIcon
- * @property {"jutsuper-settings-endings-section-clip"} settingsEndingsSectionClip
- * @property {"jutsuper-settings-endings-section"} settingsEndingsSection
- * @property {"jutsuper-settings-endings-skip-order-selector"} settingsEndingsSkipOrderSelector
- * @property {"jutsuper-settings-endings-skip-order-any"} settingsEndingsSkipOrderAny
- * @property {"jutsuper-settings-endings-skip-order-first"} settingsEndingsSkipOrderFirst
- * @property {"jutsuper-settings-endings-skip-order-last"} settingsEndingsSkipOrderLast
- * @property {"jutsuper-settings-endings-max-skips-positive-button"} settingsEndingsMaxSkipsPositiveButton
- * @property {"jutsuper-settings-endings-max-skips-field"} settingsEndingsMaxSkipsField
- * @property {"jutsuper-settings-endings-max-skips-negative-button"} settingsEndingsMaxSkipsNegativeButton
- * @property {"jutsuper-settings-endings-fullscreen-switch"} settingsEndingsFullscreenSwitch
- * @property {"jutsuper-settings-persist-fullscreen-slider"} settingsPersistFullscreenSlider
- * @property {"jutsuper-settings-delay-slider"} settingsDelaySlider
- * @property {"jutsuper-settings-delay-num"} settingsDelayNum
- * @property {"jutsuper-settings-cancel-key-listener"} settingsCancelKeyListener
- * @property {"jutsuper-settings-cancel-key-listener-rec-circle"} settingsCancelKeyListenerRecCircle
- * @property {"jutsuper-vjs-skip-area"} vjsSkipArea
- * @property {"jutsuper-vjs-skip-clip-area"} vjsSkipClipArea
- * @property {"jutsuper-skip-root"} skipRoot
- * @property {"jutsuper-skip-cancel-button"} skipCancelButton
- * @property {"jutsuper-skip-key-label"} skipKeyLabel
- * @property {"jutsuper-skip-countdown-line"} skipCountdownLine
- *
  * @typedef {(
- *   "jutsuper-vjs-button" |
- *   "jutsuper-vjs-button-icon" |
- *   "jutsuper-dev-preload-message" |
- *   "jutsuper-vjs-container" |
- *   "jutsuper-vjs-settings-area" |
- *   "jutsuper-vjs-settings-clip-area" |
- *   "jutsuper-settings-root" |
- *   "jutsuper-settings-skip-header-icon" |
- *   "jutsuper-settings-openings-bar-label" |
- *   "jutsuper-settings-openings-switch" |
- *   "jutsuper-settings-openings-slider" |
- *   "jutsuper-settings-openings-bar-dropdown-icon" |
- *   "jutsuper-settings-openings-section-clip" |
- *   "jutsuper-settings-openings-section" |
- *   "jutsuper-settings-openings-skip-order-selector" |
- *   "jutsuper-settings-openings-skip-order-first" |
- *   "jutsuper-settings-openings-skip-order-last" |
- *   "jutsuper-settings-endings-bar-label" |
- *   "jutsuper-settings-endings-switch" |
- *   "jutsuper-settings-endings-slider" |
- *   "jutsuper-settings-endings-bar-dropdown-icon" |
- *   "jutsuper-settings-endings-section-clip" |
- *   "jutsuper-settings-endings-section" |
- *   "jutsuper-settings-endings-skip-order-selector" |
- *   "jutsuper-settings-endings-skip-order-first" |
- *   "jutsuper-settings-endings-skip-order-last" |
- *   "jutsuper-settings-endings-max-skips-positive-button" |
- *   "jutsuper-settings-endings-max-skips-field" |
- *   "jutsuper-settings-endings-max-skips-negative-button" |
- *   "jutsuper-settings-endings-fullscreen-switch" |
- *   "jutsuper-settings-persist-fullscreen-slider" |
- *   "jutsuper-settings-delay-slider" |
- *   "jutsuper-settings-delay-num" |
- *   "jutsuper-settings-cancel-key-listener" |
- *   "jutsuper-settings-cancel-key-listener-rec-circle" |
- *   "jutsuper-vjs-skip-area" |
- *   "jutsuper-vjs-skip-clip-area" |
- *   "jutsuper-skip-root" |
- *   "jutsuper-skip-cancel-button" |
- *   "jutsuper-skip-key-label" |
- *   "jutsuper-skip-countdown-line"
+ *   typeof JutSuperDomIds[keyof typeof JutSuperDomIds]
  * )} JutSuperDomIdsKeys
  */
 
@@ -623,7 +459,7 @@ const JutSuperDomIds = {
  * # CSS styles of this extension
  * 
  * @readonly
- * @enum {JutSuperDomClassesType}
+ * @enum {typeof JutSuperDomClasses}
  */
 const JutSuperDomClasses = {
   /** Common */
@@ -657,6 +493,8 @@ const JutSuperDomClasses = {
   iconInset: "jutsuper-icon-inset",
   /** @type {"jutsuper-icon-skip"} */
   iconSkip: "jutsuper-icon-skip",
+  /** @type {"jutsuper-icon-play"} */
+  iconPlay: "jutsuper-icon-play",
   /** @type {"jutsuper-icon-dropdown"} */
   iconDropdown: "jutsuper-icon-dropdown",
   /** @type {"jutsuper-icon-order-any"} */
@@ -789,6 +627,10 @@ const JutSuperDomClasses = {
   textCancel: "jutsuper-text-cancel",
   /** @type {"jutsuper-text-to-cancel"} */
   textToCancel: "jutsuper-text-to-cancel",
+  /** @type {"jutsuper-text-playback-options"} */
+  textPlaybackOptions: "jutsuper-text-playback-options",
+  /** @type {"jutsuper-text-achievement-sound"} */
+  textAchievementSound: "jutsuper-text-achievement-sound",
   /** @type {"jutsuper-text-skipping"} */
   textSkipping: "jutsuper-text-skipping",
 
@@ -820,178 +662,15 @@ const JutSuperDomClasses = {
   /** @type {"jutsuper-tooltip-key-to-cancel-skipping"} */
   tooltipKeyToCancelSkipping: "jutsuper-tooltip-key-to-cancel-skipping",
   /** @type {"jutsuper-tooltip-set-cancel-key"} */
-  tooltipSetCancelKey: "jutsuper-tooltip-set-cancel-key"
+  tooltipSetCancelKey: "jutsuper-tooltip-set-cancel-key",
+  /** @type {"jutsuper-tooltip-achievement-sound"} */
+  tooltipAchievementSound: "jutsuper-tooltip-achievement-sound",
+  /** @type {"jutsuper-tooltip-toggle-achievement-sound"} */
+  tooltipToggleAchievementSound: "jutsuper-tooltip-toggle-achievement-sound"
 }
 /**
- * @typedef JutSuperDomClassesType
- * @property {"jutsuper-fullscreen"} fullscreen
- * @property {"jutsuper-top-index"} topIndex
- * @property {"jutsuper-visibility-hidden"} visibilityHidden
- * @property {"jutsuper-display-hidden"} displayHidden
- * @property {"jutsuper-no-pointer-events"} noPointerEvents
- * @property {"jutsuper-no-select"} noSelect
- * @property {"jutsuper-flex-float-to-right"} flexFloatToRight
- * @property {"jutsuper-dev-black-bg"} devBlackBg
- * @property {"jutsuper-dev-hidden"} devHidden
- * @property {"jutsuper-dev-settings-area"} devSettingsArea
- * @property {"jutsuper-dev-skip-area"} devSkipArea
- * @property {"jutsuper-icon-inset"} iconInset
- * @property {"jutsuper-icon-skip"} iconSkip
- * @property {"jutsuper-icon-dropdown"} iconDropdown
- * @property {"jutsuper-icon-order-any"} iconOrderAny
- * @property {"jutsuper-icon-order-first"} iconOrderFirst
- * @property {"jutsuper-icon-order-last"} iconOrderLast
- * @property {"jutsuper-animate-y-appear"} animateYAppear
- * @property {"jutsuper-animate-bottom-to-top"} animateBottomToTop
- * @property {"jutsuper-animate-top-to-bottom"} animateTopToBottom
- * @property {"jutsuper-animate-small-top-to-bottom"} animateSmallTopToBottom
- * @property {"jutsuper-animate-dark-to-darker-green-ht"} animateDarkToDarkerGreenHt
- * @property {"jutsuper-animate-opacity-1-to-0"} animateOpacity1To0
- * @property {"jutsuper-vjs-button"} vjsButton
- * @property {"jutsuper-vjs-container"} vjsContainer
- * @property {"jutsuper-vjs-popup-area"} vjsPopupArea
- * @property {"jutsuper-vjs-popup-clip-area"} vjsPopupClipArea
- * @property {"jutsuper-vjs-skip-popup-area-sized"} vjsSkipPopupAreaSized
- * @property {"jutsuper-vjs-skip-popup-area"} vjsSkipPopupArea
- * @property {"jutsuper-vjs-settings-popup-area-sized"} vjsSettingsPopupAreaSized
- * @property {"jutsuper-vjs-settings-popup-area"} vjsSettingsPopupArea
- * @property {"jutsuper-settings-frame"} settingsFrame
- * @property {"jutsuper-settings-heading"} settingsHeading
- * @property {"jutsuper-settings-section-bar"} settingsSectionBar
- * @property {"jutsuper-settings-section-clip-area"} settingsSectionClipArea
- * @property {"jutsuper-settings-section-area"} settingsSectionArea
- * @property {"jutsuper-settings-outer-section-area"} settingsOuterSectionArea
- * @property {"jutsuper-settings-dropdown-icon"} settingsDropdownIcon
- * @property {"jutsuper-settings-grid-container"} settingsGridContainer
- * @property {"jutsuper-settings-grid-1-row"} settingsGrid1Row
- * @property {"jutsuper-settings-grid-2-rows"} settingsGrid2Rows
- * @property {"jutsuper-settings-grid-3-rows"} settingsGrid3Rows
- * @property {"jutsuper-settings-grid-2-cols"} settingsGrid2Cols
- * @property {"jutsuper-settings-grid-3-cols"} settingsGrid3Cols
- * @property {"jutsuper-settings-grid-4-cols"} settingsGrid4Cols
- * @property {"jutsuper-skip-frame"} skipFrame
- * @property {"jutsuper-skip-frame-content"} skipFrameContent
- * @property {"jutsuper-skip-header"} skipHeader
- * @property {"jutsuper-skip-options-container"} skipOptionsContainer
- * @property {"jutsuper-skip-countdown-line"} skipCountdownLine
- * @property {"jutsuper-slider-switch"} sliderSwitch
- * @property {"jutsuper-slider-bg-area"} sliderBgArea
- * @property {"jutsuper-range"} range
- * @property {"jutsuper-radio-container"} radioContainer
- * @property {"jutsuper-radio"} radio
- * @property {"jutsuper-button"} button
- * @property {"jutsuper-record-icon"} recordIcon
- * @property {"jutsuper-key-label"} keyLabel
- * @property {"jutsuper-text-skip-options"} textSkipOptions
- * @property {"jutsuper-text-openings"} textOpenings
- * @property {"jutsuper-text-endings"} textEndings
- * @property {"jutsuper-text-order"} textOrder
- * @property {"jutsuper-text-max"} textMax
- * @property {"jutsuper-text-fullscreen"} textFullscreen
- * @property {"jutsuper-text-delay"} textDelay
- * @property {"jutsuper-text-seconds-short"} textSecondsShort
- * @property {"jutsuper-text-cancel"} textCancel
- * @property {"jutsuper-text-to-cancel"} textToCancel
- * @property {"jutsuper-text-skipping"} textSkipping
- * @property {"jutsuper-tooltip-openings-settings"} tooltipOpeningsSettings
- * @property {"jutsuper-tooltip-toggle-openings-skip"} tooltipToggleOpeningsSkip
- * @property {"jutsuper-tooltip-which-region-to-skip"} tooltipWhichRegionToSkip
- * @property {"jutsuper-tooltip-skip-any-region"} tooltipSkipAnyRegion
- * @property {"jutsuper-tooltip-skip-first-region"} tooltipSkipFirstRegion
- * @property {"jutsuper-tooltip-skip-last-region"} tooltipSkipLastRegion
- * @property {"jutsuper-tooltip-endings-settings"} tooltipEndingsSettings
- * @property {"jutsuper-tooltip-toggle-endings-skip"} tooltipToggleEndingsSkip
- * @property {"jutsuper-tooltip-max-episode-switches"} tooltipMaxEpisodeSwitches
- * @property {"jutsuper-tooltip-persist-fullscreen"} tooltipPersistFullscreen
- * @property {"jutsuper-tooltip-toggle-fullscreen-persistency"} tooltipToggleFullscreenPersistency
- * @property {"jutsuper-tooltip-delay-before-skipping"} tooltipDelayBeforeSkipping
- * @property {"jutsuper-tooltip-key-to-cancel-skipping"} tooltipKeyToCancelSkipping
- * @property {"jutsuper-tooltip-set-cancel-key"} tooltipSetCancelKey
- *
  * @typedef {(
- *   "jutsuper-fullscreen" |
- *   "jutsuper-top-index" |
- *   "jutsuper-visibility-hidden" |
- *   "jutsuper-display-hidden" |
- *   "jutsuper-no-pointer-events" |
- *   "jutsuper-no-select" |
- *   "jutsuper-flex-float-to-right" |
- *   "jutsuper-dev-black-bg" |
- *   "jutsuper-dev-hidden" |
- *   "jutsuper-dev-settings-area" |
- *   "jutsuper-dev-skip-area" |
- *   "jutsuper-icon-inset" |
- *   "jutsuper-icon-skip" |
- *   "jutsuper-icon-dropdown" |
- *   "jutsuper-icon-order-any" |
- *   "jutsuper-icon-order-first" |
- *   "jutsuper-icon-order-last" |
- *   "jutsuper-animate-y-appear" |
- *   "jutsuper-animate-bottom-to-top" |
- *   "jutsuper-animate-top-to-bottom" |
- *   "jutsuper-animate-small-top-to-bottom" |
- *   "jutsuper-animate-dark-to-darker-green-ht" |
- *   "jutsuper-animate-opacity-1-to-0" |
- *   "jutsuper-vjs-button" |
- *   "jutsuper-vjs-container" |
- *   "jutsuper-vjs-popup-area" |
- *   "jutsuper-vjs-popup-clip-area" |
- *   "jutsuper-vjs-skip-popup-area-sized" |
- *   "jutsuper-vjs-skip-popup-area" |
- *   "jutsuper-vjs-settings-popup-area-sized" |
- *   "jutsuper-vjs-settings-popup-area" |
- *   "jutsuper-settings-frame" |
- *   "jutsuper-settings-heading" |
- *   "jutsuper-settings-section-bar" |
- *   "jutsuper-settings-section-clip-area" |
- *   "jutsuper-settings-section-area" |
- *   "jutsuper-settings-outer-section-area" |
- *   "jutsuper-settings-dropdown-icon" |
- *   "jutsuper-settings-grid-container" |
- *   "jutsuper-settings-grid-1-row" |
- *   "jutsuper-settings-grid-2-rows" |
- *   "jutsuper-settings-grid-3-rows" |
- *   "jutsuper-settings-grid-2-cols" |
- *   "jutsuper-settings-grid-3-cols" |
- *   "jutsuper-settings-grid-4-cols" |
- *   "jutsuper-skip-frame" |
- *   "jutsuper-skip-frame-content" |
- *   "jutsuper-skip-header" |
- *   "jutsuper-skip-options-container" |
- *   "jutsuper-skip-countdown-line" |
- *   "jutsuper-slider-switch" |
- *   "jutsuper-slider-bg-area" |
- *   "jutsuper-range" |
- *   "jutsuper-radio-container" |
- *   "jutsuper-radio" |
- *   "jutsuper-button" |
- *   "jutsuper-record-icon" |
- *   "jutsuper-key-label" |
- *   "jutsuper-text-skip-options" |
- *   "jutsuper-text-openings" |
- *   "jutsuper-text-endings" |
- *   "jutsuper-text-order" |
- *   "jutsuper-text-max" |
- *   "jutsuper-text-fullscreen" |
- *   "jutsuper-text-delay" |
- *   "jutsuper-text-seconds-short" |
- *   "jutsuper-text-cancel" |
- *   "jutsuper-text-to-cancel" |
- *   "jutsuper-text-skipping" |
- *   "jutsuper-tooltip-openings-settings" |
- *   "jutsuper-tooltip-toggle-openings-skip" |
- *   "jutsuper-tooltip-which-region-to-skip" |
- *   "jutsuper-tooltip-skip-any-region" |
- *   "jutsuper-tooltip-skip-first-region" |
- *   "jutsuper-tooltip-skip-last-region" |
- *   "jutsuper-tooltip-endings-settings" |
- *   "jutsuper-tooltip-toggle-endings-skip" |
- *   "jutsuper-tooltip-max-episode-switches" |
- *   "jutsuper-tooltip-persist-fullscreen" |
- *   "jutsuper-tooltip-toggle-fullscreen-persistency" |
- *   "jutsuper-tooltip-delay-before-skipping" |
- *   "jutsuper-tooltip-key-to-cancel-skipping" |
- *   "jutsuper-tooltip-set-cancel-key"
+ *   typeof JutSuperDomClasses[keyof typeof JutSuperDomClasses]
  * )} JutSuperDomClassesKeys
  */
 
@@ -1000,7 +679,7 @@ const JutSuperDomClasses = {
  * # Names used by <input> elements in the extension's HTML
  * 
  * @readonly
- * @enum {JutSuperInputNamesType}
+ * @enum {typeof JutSuperInputNames}
  */
 const JutSuperInputNames = {
   /** @type {"jutsuper-settings-bar"} */
@@ -1011,17 +690,10 @@ const JutSuperInputNames = {
   settingsEdSkipOrder: "jutsuper-settings-ed-skip-order",
 }
 /**
- * @typedef JutSuperInputNamesType
- * @property {"jutsuper-settings-bar"} settingsBar
- * @property {"jutsuper-settings-op-skip-order"} settingsOpSkipOrder
- * @property {"jutsuper-settings-ed-skip-order"} settingsEdSkipOrder
- * 
  * @typedef {(
- *   "jutsuper-settings-bar" |
- *   "jutsuper-settings-op-skip-order" |
- *   "jutsuper-settings-ed-skip-order"
+ *   typeof JutSuperInputNames[keyof typeof JutSuperInputNames]
  * )} JutSuperInputNamesKeys
-*/
+ */
 
 
 /**
@@ -1066,46 +738,9 @@ const JutSuperDefaultFonts = [
 
 
 /**
- * # Describes default DOM node for IPC
- * 
- * IPC node is an element in the DOM,
- * is a children of `<body>` and stores
- * information in form of attributes.
- * 
- * This node will be named as `tag`
- * and will have an ID of `id`
- * 
- * @readonly
- * @enum {JutSuperIpcDefaultNodePropsType}
- */
-const JutSuperIpcDefaultNodeProps = {
-  /** @type {"jutsuper-ipc"} */
-  tag: "jutsuper-ipc",
-  /** @type {"jutsuper-ipc"} */
-  id: "jutsuper-ipc",
-  /** @type {"jutsuper-settings-ipc"} */
-  settingsTag: "jutsuper-settings-ipc",
-  /** @type {"jutsuper-settings-ipc"} */
-  settingsId: "jutsuper-settings-ipc"
-}
-/** 
- * @typedef JutSuperIpcDefaultNodePropsType
- * @property {"jutsuper-ipc"} tag
- * @property {"jutsuper-ipc"} id
- * @property {"jutsuper-settings-ipc"} settingsTag
- * @property {"jutsuper-settings-ipc"} settingsId
- * 
- * @typedef {(
- *   "jutsuper-ipc" |
- *   "jutsuper-settings-ipc"
- * )} JutSuperIpcDefaultNodePropsKeys
- */
-
-
-/**
  * # Describes data types of values in IPC
  * @readonly
- * @enum {JutSuperIpcJsDataTypesType}
+ * @enum {typeof JutSuperIpcJsDataTypes}
  */
 const JutSuperIpcJsDataTypes = {
   /** @type {"boolean"} */
@@ -1120,19 +755,8 @@ const JutSuperIpcJsDataTypes = {
   undefined: "undefined",
 }
 /** 
- * @typedef JutSuperIpcJsDataTypesType
- * @property {"boolean"} boolean
- * @property {"number"} number
- * @property {"string"} string
- * @property {"null"} null
- * @property {"undefined"} undefined
- * 
  * @typedef {(
- *   "boolean" |
- *   "number" |
- *   "string" |
- *   "null" |
- *   "undefined"
+ *   typeof JutSuperIpcJsDataTypes[keyof typeof JutSuperIpcJsDataTypes]
  * )} JutSuperIpcJsDataTypesKeys
  * @typedef {(
  *   boolean |
@@ -1162,7 +786,7 @@ const JutSuperIpcJsDataTypesArray = [
  * when listening.
  * 
  * @readonly
- * @enum {JutSuperIpcIdsType}
+ * @enum {typeof JutSuperIpcIds}
  */
 const JutSuperIpcIds = {
   /** @type {"pageMain"} */
@@ -1171,13 +795,8 @@ const JutSuperIpcIds = {
   content: "contentMain"
 }
 /** 
- * @typedef JutSuperIpcIdsType
- * @property {"pageMain"} page
- * @property {"contentMain"} content
- * 
  * @typedef {(
- *   "pageMain" |
- *   "contentMain"
+ *   typeof JutSuperIpcIds[keyof typeof JutSuperIpcIds]
  * )} JutSuperIpcIdsKeys
  */
 
@@ -1185,7 +804,7 @@ const JutSuperIpcIds = {
 /**
  * # Describes keys used in IPC
  * @readonly
- * @enum {JutSuperIpcKeysType}
+ * @enum {typeof JutSuperIpcKeys}
  */
 const JutSuperIpcKeys = {
   /**
@@ -1303,29 +922,8 @@ const JutSuperIpcKeys = {
   localeInitializationControl: "data-locale-initialization-control"
 }
 /** 
- * @typedef JutSuperIpcKeysType
- * @property {"data-essentials-loading-state"} essentialsLoadingState
- * @property {"data-is-fullscreen"} isFullscreen
- * @property {"data-window-state"} windowState
- * @property {"data-fullscreen-control"} fullscreenControl
- * @property {"data-playing-control"} playingControl
- * @property {"data-episode-switch-prep"} episodeSwitchPrep
- * @property {"data-is-episode-switched-automatically"} isEpisodeSwitchedAutomatically
- * @property {"data-inject-custom-fullscreen-exit"} injectCustomFullscreenExit
- * @property {"data-is-episode-switch-allowed"} isEpisodeSwitchAllowed
- * @property {"data-locale-initialization-control"} localeInitializationControl
- * 
  * @typedef {(
- *   "data-essentials-loading-state" |
- *   "data-is-fullscreen" |
- *   "data-fullscreen-control" |
- *   "data-playing-control" |
- *   "data-episode-switch-prep" |
- *   "data-is-episode-switched-automatically" |
- *   "data-inject-custom-fullscreen-exit" |
- *   "data-max-continuous-episode-switches" |
- *   "data-is-episode-switch-allowed" |
- *   "data-locale-initialization-control"
+ *   typeof JutSuperIpcKeys[keyof typeof JutSuperIpcKeys]
  * )} JutSuperIpcKeysKeys
  */
 
@@ -1333,7 +931,7 @@ const JutSuperIpcKeys = {
 /**
  * # Describes keys used in settings' IPC
  * @readonly
- * @enum {JutSuperIpcSettingsKeysType}
+ * @enum {typeof JutSuperIpcSettingsKeys}
  */
 const JutSuperIpcSettingsKeys = {
   /** @type {"data-openings-do-skip"} */
@@ -1354,25 +952,8 @@ const JutSuperIpcSettingsKeys = {
   skipCancelKey: "data-skip-cancel-key"
 }
 /**
- * @typedef JutSuperIpcSettingsKeysType
- * @property {"data-openings-do-skip"} openingsDoSkip
- * @property {"data-openings-skip-order"} openingsSkipOrder
- * @property {"data-endings-do-skip"} endingsDoSkip
- * @property {"data-endings-skip-order"} endingsSkipOrder
- * @property {"data-endings-max-skips"} endingsMaxSkips
- * @property {"data-endings-do-persist-fullscreen"} endingsDoPersistFullscreen
- * @property {"data-skip-delay-s"} skipDelayS
- * @property {"data-skip-cancel-key"} skipCancelKey
- *
  * @typedef {(
- *   "data-openings-do-skip" |
- *   "data-openings-skip-order" |
- *   "data-endings-do-skip" |
- *   "data-endings-skip-order" |
- *   "data-endings-max-skips" |
- *   "data-endings-do-persist-fullscreen" |
- *   "data-skip-delay-s" |
- *   "data-skip-cancel-key"
+ *   typeof JutSuperIpcSettingsKeys[keyof typeof JutSuperIpcSettingsKeys]
  * )} JutSuperIpcSettingsKeysKeys
  */
 
@@ -1380,7 +961,7 @@ const JutSuperIpcSettingsKeys = {
 /**
  * # Describes states of loading in IPC
  * @readonly
- * @enum {JutSuperIpcLoadingStatesType}
+ * @enum {typeof JutSuperIpcLoadingStates}
  */
 const JutSuperIpcLoadingStates = {
   /** @type {"loading"} */
@@ -1389,13 +970,8 @@ const JutSuperIpcLoadingStates = {
   loaded: "loaded",
 }
 /** 
- * @typedef JutSuperIpcLoadingStatesType
- * @property {"loading"} loading
- * @property {"loaded"} loaded
- * 
  * @typedef {(
- *   "loading" |
- *   "loaded"
+ *   typeof JutSuperIpcLoadingStates[keyof typeof JutSuperIpcLoadingStates]
  * )} JutSuperIpcLoadingStatesKeys
  */
 
@@ -1403,7 +979,7 @@ const JutSuperIpcLoadingStates = {
 /**
  * # Describes states of awaiting in IPC
  * @readonly
- * @enum {JutSuperIpcAwaitStatesType}
+ * @enum {typeof JutSuperIpcAwaitStates}
  */
 const JutSuperIpcAwaitStates = {
   /** @type {"idle"} */
@@ -1424,25 +1000,8 @@ const JutSuperIpcAwaitStates = {
   completed: "completed",
 }
 /** 
- * @typedef JutSuperIpcAwaitStatesType
- * @property {"idle"} idle
- * @property {"request"} request
- * @property {"awaiting"} awaiting
- * @property {"aborted"} aborted
- * @property {"rejected"} rejected
- * @property {"paused"} paused
- * @property {"continuation"} continuation
- * @property {"completed"} completed
- * 
  * @typedef {(
- *   "idle" |
- *   "request" |
- *   "awaiting" |
- *   "aborted" |
- *   "rejected" |
- *   "paused" |
- *   "continuation" |
- *   "completed"
+ *   typeof JutSuperIpcAwaitStates[keyof typeof JutSuperIpcAwaitStates]
  * )} JutSuperIpcAwaitStatesKeys
  */
 
@@ -1450,7 +1009,7 @@ const JutSuperIpcAwaitStates = {
 /**
  * # Describes states of awaiting in IPC
  * @readonly
- * @enum {JutSuperIpcBoolRequestStatesType}
+ * @enum {typeof JutSuperIpcBoolRequestStates}
  */
 const JutSuperIpcBoolRequestStates = {
   /** @type {"requestTrue"} */
@@ -1459,50 +1018,16 @@ const JutSuperIpcBoolRequestStates = {
   requestFalse: "requestFalse"
 }
 /** 
- * @typedef JutSuperIpcBoolRequestStatesType
- * @property {"requestTrue"} requestTrue
- * @property {"requestFalse"} requestFalse
- * 
  * @typedef {(
- *   "requestTrue" |
- *   "requestFalse"
+ *   typeof JutSuperIpcBoolRequestStates[keyof typeof JutSuperIpcBoolRequestStates]
  * )} JutSuperIpcBoolRequestStatesKeys
- */
-
-
-/**
- * # Describes value delimiters in IPC
- * @readonly
- * @enum {JutSuperIpcValueDelimsType}
- */
-const JutSuperIpcValueDelims = {
-  /**
-   * # Denotes the data type
-   * @type {";type="}
-   */
-  type: ";type=",
-  /**
-   * # Denotes the sender ID
-   * @type {";sender="}
-   */
-  sender: ";sender=",
-}
-/** 
- * @typedef JutSuperIpcValueDelimsType
- * @property {";type="} type
- * @property {";sender="} sender
- * 
- * @typedef {(
- *   ";type=" |
- *   ";sender="
- * )} JutSuperIpcValueDelimsKeys
  */
 
 
 /**
  * # Describes message keys in internal messaging
  * @readonly
- * @enum {JutSuperMessagingMessageKeysType}
+ * @enum {typeof JutSuperMessagingMessageKeys}
  */
 const JutSuperMessagingMessageKeys = {
   /**
@@ -1517,13 +1042,8 @@ const JutSuperMessagingMessageKeys = {
   requests: "requests",
 }
 /** 
- * @typedef JutSuperMessagingMessageKeysType
- * @property {"actions"} actions
- * @property {"requests"} requests
- * 
  * @typedef {(
- *   "actions" |
- *   "requests"
+ *   typeof JutSuperMessagingMessageKeys[keyof typeof JutSuperMessagingMessageKeys]
  * )} JutSuperMessagingMessageKeysKeys
  */
 
@@ -1531,7 +1051,7 @@ const JutSuperMessagingMessageKeys = {
 /**
  * # Describes `actions` keys in internal messaging
  * @readonly
- * @enum {JutSuperMessagingMessageActionsKeysType}
+ * @enum {typeof JutSuperMessagingMessageActionsKeys}
  */
 const JutSuperMessagingMessageActionsKeys = {
   /**
@@ -1546,13 +1066,8 @@ const JutSuperMessagingMessageActionsKeys = {
   originalWindowState: "originalWindowState"
 }
 /** 
- * @typedef JutSuperMessagingMessageActionsKeysType
- * @property {"fullscreenState"} fullscreenState
- * @property {"originalWindowState"} originalWindowState
- * 
  * @typedef {(
- *   "fullscreenState" |
- *   "originalWindowState"
+ *   typeof JutSuperMessagingMessageActionsKeys[keyof typeof JutSuperMessagingMessageActionsKeys]
  * )} JutSuperMessagingMessageActionsKeysKeys
  */
 
@@ -1560,7 +1075,7 @@ const JutSuperMessagingMessageActionsKeys = {
 /**
  * # Describes `requests` keys in a request message in internal messaging
  * @readonly
- * @enum {JutSuperMessagingMessageRequestsRequestKeysType}
+ * @enum {typeof JutSuperMessagingMessageRequestsRequestKeys}
  */
 const JutSuperMessagingMessageRequestsRequestKeys = {
   /**
@@ -1570,11 +1085,8 @@ const JutSuperMessagingMessageRequestsRequestKeys = {
   getWindowState: "getWindowState",
 }
 /** 
- * @typedef JutSuperMessagingMessageRequestsRequestKeysType
- * @property {"getWindowState"} getWindowState
- * 
  * @typedef {(
- *   "getWindowState"
+ *   typeof JutSuperMessagingMessageRequestsRequestKeys[keyof typeof JutSuperMessagingMessageRequestsRequestKeys]
  * )} JutSuperMessagingMessageRequestsRequestKeysKeys
  */
 
@@ -1582,7 +1094,7 @@ const JutSuperMessagingMessageRequestsRequestKeys = {
 /**
  * # Describes `requests` keys in a response message in internal messaging
  * @readonly
- * @enum {JutSuperMessagingMessageRequestsResponseKeysType}
+ * @enum {typeof JutSuperMessagingMessageRequestsResponseKeys}
  */
 const JutSuperMessagingMessageRequestsResponseKeys = {
   /**
@@ -1592,11 +1104,8 @@ const JutSuperMessagingMessageRequestsResponseKeys = {
   windowState: "windowState",
 }
 /** 
- * @typedef JutSuperMessagingMessageRequestsResponseKeysType
- * @property {"windowState"} windowState
- * 
  * @typedef {(
- *   "windowState"
+ *   typeof JutSuperMessagingMessageRequestsResponseKeys[keyof typeof JutSuperMessagingMessageRequestsResponseKeys]
  * )} JutSuperMessagingMessageRequestsResponseKeysKeys
  */
 

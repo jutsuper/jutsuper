@@ -4,9 +4,11 @@ export {
   JutSuperTransitionObjectKeys
 };
 
+
 /**
  * @typedef {import("/src/browser.js").BrowserWindowStatesKeys} BrowserWindowStatesKeys
  */
+
 
 /**
  * @typedef JutSuperTransitionObject
@@ -19,7 +21,7 @@ export {
 
 /**
  * @readonly
- * @enum {JutSuperTransitionObjectKeysType}
+ * @enum {typeof JutSuperTransitionObjectKeys}
  */
 const JutSuperTransitionObjectKeys = {
   /** @type {"isFullscreen"} */
@@ -32,17 +34,8 @@ const JutSuperTransitionObjectKeys = {
   switchesCount: "switchesCount",
 }
 /**
- * @typedef JutSuperTransitionObjectKeysType
- * @property {"isFullscreen"} isFullscreen
- * @property {"isSwitchingEpisode"} isSwitchingEpisode
- * @property {"originalWindowState"} originalWindowState
- * @property {"switchesCount"} switchesCount
- *
  * @typedef {(
- *   "isFullscreen" |
- *   "isSwitchingEpisode" |
- *   "originalWindowState" |
- *   "switchesCount"
+ *   typeof JutSuperTransitionObjectKeys[keyof typeof JutSuperTransitionObjectKeys]
  * )} JutSuperTransitionObjectKeysKeys
  */
 

@@ -27,7 +27,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*.jut.su/*"
+        "*://*.jut.su/*"
       ],
       "js": [
         "/src/content/content.js"
@@ -48,6 +48,7 @@
         "/src/assets/logo/square-black-48.svg",
         "/src/assets/icon/dropdown.svg",
         "/src/assets/icon/skip.svg",
+        "/src/assets/icon/play.svg",
         "/src/assets/icon/any.svg",
         "/src/assets/icon/first.svg",
         "/src/assets/icon/last.svg",
@@ -57,6 +58,7 @@
         "/src/consts.js",
         "/src/log.js",
         "/src/util.js",
+        "/src/lock.js",
         "/src/error.js",
         "/src/storage.js",
         "/src/ipc.js",

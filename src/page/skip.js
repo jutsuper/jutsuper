@@ -5,6 +5,9 @@ import {
 export { JutSuperSkipPopup };
 
 
+var wnd = /** @type {import("../types/window").JutSuperWindow} */ (window);
+
+
 class JutSuperSkipPopup {
   /**
    * @param {Document} doc 
@@ -18,11 +21,10 @@ class JutSuperSkipPopup {
     this.cancelKeyLabel = this.document.getElementById(domIds.skipKeyLabel);
     this.countdownTimeline = this.document.getElementById(domIds.skipCountdownLine);
 
-
     this.popup.addEventListener("click", event => this.onCancelButtonClick(event));
 
     // if in dev environment, hide the preload message
-    if (window.JUTSUPER_DEBUG) {
+    if (wnd.JUTSUPER_DEBUG) {
       const preloadMessage = this.document.getElementById(domIds.devPreloadMessage);
       preloadMessage.classList.add(domClasses.devHidden);
     }
@@ -50,6 +52,7 @@ class JutSuperSkipPopup {
   }
 }
 
-if (window.JUTSUPER_DEBUG) {
-  window.jsuperSkipPopup = new JutSuperSkipPopup(document);
+
+if (wnd.JUTSUPER_DEBUG) {
+  wnd.jsuperSkipPopup = new JutSuperSkipPopup(document);
 }

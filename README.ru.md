@@ -1,4 +1,4 @@
-[<img src="assets/flag/gb.svg" alt="GB Flag" width="20"/> English](https://github.com/kerdl/jutsuper/blob/main/README.md)
+[<img src="assets/flag/gb.svg" alt="GB Flag" width="20"/> English](README.md)
 
 # Это расширение в активной разработке
 Базовый функционал работает,

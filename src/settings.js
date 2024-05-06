@@ -1,3 +1,4 @@
+import { jsuperUtil } from "/src/util.js";
 export {
   JutSuperSettings,
   JutSuperSettingsEndingsObjectKeys,
@@ -8,27 +9,14 @@ export {
 
 
 /**
- * @typedef JutSuperSettingsOpeningsObject
- * @property {boolean} doSkip
- * @property {JutSuperSettingsSkipOrderKeys} skipOrder
- * 
- * @typedef JutSuperSettingsEndingsObject
- * @property {boolean} doSkip
- * @property {JutSuperSettingsSkipOrderKeys} skipOrder
- * @property {boolean} doPersistFullscreen
- * @property {number} maxSkips
- * 
- * @typedef JutSuperSettingsObject
- * @property {JutSuperSettingsOpeningsObject} openings
- * @property {JutSuperSettingsEndingsObject} endings
- * @property {number} skipDelayS
- * @property {string} skipCancelKey
+ * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObject} JutSuperSettingsObject
+ * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectPartial} JutSuperSettingsObjectPartial
  */
 
 
 /**
  * @readonly
- * @enum {JutSuperSettingsEndingsObjectKeysType}
+ * @enum {typeof JutSuperSettingsEndingsObjectKeys}
  */
 const JutSuperSettingsEndingsObjectKeys = {
   /** @type {"doSkip"} */
@@ -41,23 +29,14 @@ const JutSuperSettingsEndingsObjectKeys = {
   maxSkips: "maxSkips"
 }
 /**
- * @typedef JutSuperSettingsEndingsObjectKeysType
- * @property {"doSkip"} doSkip
- * @property {"skipOrder"} skipOrder
- * @property {"doPersistFullscreen"} doPersistFullscreen
- * @property {"maxSkips"} maxSkips
- *
  * @typedef {(
- *   "doSkip" |
- *   "skipOrder" |
- *   "doPersistFullscreen" |
- *   "maxSkips"
+ *   typeof JutSuperSettingsEndingsObjectKeys[keyof typeof JutSuperSettingsEndingsObjectKeys]
  * )} JutSuperSettingsEndingsObjectKeysKeys
  */
 
 /**
  * @readonly
- * @enum {JutSuperSettingsObjectKeysType}
+ * @enum {typeof JutSuperSettingsOpeningsObjectKeys}
  */
 const JutSuperSettingsOpeningsObjectKeys = {
   /** @type {"doSkip"} */
@@ -66,20 +45,15 @@ const JutSuperSettingsOpeningsObjectKeys = {
   skipOrder: "skipOrder"
 }
 /**
- * @typedef JutSuperSettingsOpeningsObjectKeysType
- * @property {"doSkip"} doSkip
- * @property {"skipOrder"} skipOrder
- *
  * @typedef {(
- *   "doSkip" |
- *   "skipOrder"
+ *   typeof JutSuperSettingsOpeningsObjectKeys[keyof typeof JutSuperSettingsOpeningsObjectKeys]
  * )} JutSuperSettingsOpeningsObjectKeysKeys
  */
 
 
 /**
  * @readonly
- * @enum {JutSuperSettingsObjectKeysType}
+ * @enum {typeof JutSuperSettingsObjectKeys}
  */
 const JutSuperSettingsObjectKeys = {
   /** @type {"openings"} */
@@ -92,24 +66,15 @@ const JutSuperSettingsObjectKeys = {
   skipCancelKey: "skipCancelKey"
 }
 /**
- * @typedef JutSuperSettingsObjectKeysType
- * @property {"openings"} openings
- * @property {"endings"} endings
- * @property {"skipDelayS"} skipDelayS
- * @property {"skipCancelKey"} skipCancelKey
- *
  * @typedef {(
-*   "openings" |
-*   "endings" |
-*   "skipDelayS" |
-*   "skipCancelKey"
-* )} JutSuperSettingsObjectKeysKeys
-*/
+ *   typeof JutSuperSettingsObjectKeys[keyof typeof JutSuperSettingsObjectKeys]
+ * )} JutSuperSettingsObjectKeysKeys
+ */
 
 
 /**
  * @readonly
- * @enum {JutSuperSettingsSkipOrderType}
+ * @enum {typeof JutSuperSettingsSkipOrder}
  */
 const JutSuperSettingsSkipOrder = {
   /** @type {"anyOccurrence"} */
@@ -120,15 +85,8 @@ const JutSuperSettingsSkipOrder = {
   lastOccurrence: "lastOccurrence"
 }
 /**
- * @typedef JutSuperSettingsSkipOrderType
- * @property {"anyOccurrence"} anyOccurrence
- * @property {"firstOccurrence"} firstOccurrence
- * @property {"lastOccurrence"} lastOccurrence
- * 
  * @typedef {(
- *   "anyOccurrence" |
- *   "firstOccurrence" |
- *   "lastOccurrence"
+ *   typeof JutSuperSettingsSkipOrder[keyof typeof JutSuperSettingsSkipOrder]
  * )} JutSuperSettingsSkipOrderKeys
  */
 
@@ -155,7 +113,8 @@ class JutSuperSettings {
         maxSkips: 0
       },
       skipDelayS: 3,
-      skipCancelKey: "Shift"
+      skipCancelKey: "Shift",
+      achievementSoundEnabled: true
     };
     return this;
   }
@@ -174,7 +133,8 @@ class JutSuperSettings {
         maxSkips: undefined
       },
       skipDelayS: undefined,
-      skipCancelKey: undefined
+      skipCancelKey: undefined,
+      achievementSoundEnabled: undefined
     };
     return this;
   }
@@ -194,6 +154,14 @@ class JutSuperSettings {
    */
   get() {
     return this.#object;
+  }
+
+  /**
+   * @param {JutSuperSettingsObjectPartial} obj
+   * @returns {void}
+   */
+  mergeWith(obj) {
+    jsuperUtil.objectMergeDeep(this.#object, obj);
   }
 
   //////////////

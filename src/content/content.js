@@ -1,3 +1,6 @@
+console.debug("JutSuper: loading /src/content/content.js");
+
+
 // #if "@BROWSER" == "blink"
 var BROWSER = "blink";
 var browser = chrome;
@@ -9,10 +12,10 @@ var BROWSER = "gecko";
 
 
 /**
- * @typedef {import("/src/browser.js").JutSuperBrowsers} JutSuperBrowsers
- * @type {JutSuperBrowsers}
+ * @typedef {typeof import("/src/consts.js").ANY} ANY
+ * @type {ANY}
  */
-var browsers;
+var ANY;
 
 /**
  * @typedef {import("/src/error.js").JutSuperErrors} JutSuperErrors
@@ -27,10 +30,10 @@ var jsuperErrors;
 var jsuperLog;
 
 /**
- * @typedef {import("/src/storage.js").JutSuperStorage} JutSuperStorage
- * @type {JutSuperStorage}
+ * @typedef {typeof import("/src/util.js").jsuperUtil} JutSuperUtil
+ * @type {JutSuperUtil}
  */
-var jsuperStorage;
+var jsuperUtil;
 
 /**
  * @typedef {import("/src/consts.js").JutSuperDomIds} JutSuperDomIds
@@ -63,65 +66,22 @@ var jutsuIds;
 var jutsuClasses;
 
 /**
+ * @typedef {import("/src/ipc.js").JutSuperIpcFlags} JutSuperIpcFlags
+ * @type {JutSuperIpcFlags}
+ */
+var ipcFlags;
+
+/**
+ * @typedef {import("/src/ipc.js").JutSuperIpcNamespaces} JutSuperIpcNamespaces
+ * @type {JutSuperIpcNamespaces}
+ */
+var ipcNamespaces;
+
+/**
  * @typedef {import("/src/consts.js").JutSuperIpcIds} JutSuperIpcIds
  * @type {JutSuperIpcIds}
  */
 var ipcIds;
-
-
-/**
- * @typedef {import("/src/consts.js").JutSuperIpcDefaultNodeProps} JutSuperIpcDefaultNodeProps
- * @type {JutSuperIpcDefaultNodeProps}
- */
-var ipcDefaultNodeProps;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperIpcKeys} JutSuperIpcKeys
- * @type {JutSuperIpcKeys}
- */
-var ipcKeys;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperIpcSettingsKeys} JutSuperIpcSettingsKeys
- * @type {JutSuperIpcSettingsKeys}
- */
-var ipcSettingsKeys;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperIpcAwaitStates} JutSuperIpcAwaitStates
- * @type {JutSuperIpcAwaitStates}
- */
-var ipcAwaits;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperIpcBoolRequestStates} JutSuperIpcBoolRequestStates
- * @type {JutSuperIpcBoolRequestStates}
- */
-var ipcBoolRequests;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperIpcLoadingStates} JutSuperIpcLoadingStates
- * @type {JutSuperIpcLoadingStates}
- */
-var ipcLoadingStates;
-
-/**
- * @typedef {import("/src/storage.js").JutSuperStorageKeys} JutSuperStorageKeys
- * @type {JutSuperStorageKeys}
- */
-var storageKeys;
-
-/**
- * @typedef {import("/src/transition.js").JutSuperTransitionObjectKeys} JutSuperTransitionObjectKeys
- * @type {JutSuperTransitionObjectKeys}
- */
-var transitionKeys;
-
-/**
- * @typedef {import("/src/settings.js").JutSuperSettingsObjectKeys} JutSuperSettingsObjectKeys
- * @type {JutSuperSettingsObjectKeys}
- */
-var settingsKeys;
 
 /**
  * @typedef {import("/src/consts.js").JutSuperAssetPaths} JutSuperAssetPaths
@@ -135,6 +95,19 @@ var assetPaths;
  */
 var assetIds;
 
+
+/**
+ * @typedef {import("/src/browser.js").BrowserWindowStates} BrowserWindowStates
+ * @type {BrowserWindowStates}
+ */
+var windowStates;
+
+/**
+ * @typedef {import("/src/lock.js").AsyncLock} AsyncLock
+ * @type {typeof import("/src/lock.js").AsyncLock}
+ */
+var AsyncLock;
+
 /**
  * @typedef {import("/src/ipc.js").JutSuperIpcBuilder} JutSuperIpcBuilder
  * @type {typeof import("/src/ipc.js").JutSuperIpcBuilder}
@@ -142,16 +115,20 @@ var assetIds;
 var JutSuperIpcBuilder;
 
 /**
- * @typedef {import("/src/ipc.js").JutSuperIpc} JutSuperIpc
+ * @template ReqSchema
+ * @template RspSchema
+ * @template RspFilter
+ * @typedef {import("/src/ipc.js").JutSuperIpc<ReqSchema, RspSchema, RspFilter>} JutSuperIpc<ReqSchema, RspSchema, RspFilter>
  * @type {typeof import("/src/ipc.js").JutSuperIpc}
  */
 var JutSuperIpc;
 
 /**
- * @typedef {import("/src/ipc.js").JutSuperIpcRecvParamsBuilder} JutSuperIpcRecvParamsBuilder
- * @type {typeof import("/src/ipc.js").JutSuperIpcRecvParamsBuilder}
+ * @template Schema
+ * @typedef {import("/src/ipc.js").JutSuperIpcRspParamsBuilder<Schema>} JutSuperIpcRspParamsBuilder<Schema>
+ * @type {typeof import("/src/ipc.js").JutSuperIpcRspParamsBuilder}
  */
-var JutSuperIpcRecvParamsBuilder;
+var JutSuperIpcRspParamsBuilder;
 
 /**
  * @typedef {import("/src/browser.js").JutSuperBrowser} JutSuperBrowser
@@ -189,6 +166,12 @@ var JutSuperTransition;
  */
 var JutSuperSettings;
 
+/**
+ * @typedef {typeof import("/src/storage.js").JutSuperStorage} JutSuperStorage
+ * @type {typeof import("/src/storage.js").JutSuperStorage}
+ */
+var JutSuperStorage;
+
 
 /** Import modules */
 (async function() {
@@ -196,6 +179,8 @@ var JutSuperSettings;
   const errorModule = await import(browser.runtime.getURL("/src/error.js"))
   /** @type {typeof import("/src/log.js")} */
   const logModule = await import(browser.runtime.getURL("/src/log.js"))
+  /** @type {typeof import("/src/util.js")} */
+  const utilModule = await import(browser.runtime.getURL("/src/util.js"))
   /** @type {typeof import("/src/consts.js")} */
   const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
   /** @type {typeof import("/src/browser.js")} */
@@ -210,37 +195,35 @@ var JutSuperSettings;
   const transitionModule = await import(browser.runtime.getURL("/src/transition.js"));
   /** @type {typeof import("/src/settings.js")} */
   const settingsModule = await import(browser.runtime.getURL("/src/settings.js"));
+  /** @type {typeof import("/src/lock.js")} */
+  const lockModule = await import(browser.runtime.getURL("/src/lock.js"));
 
-  browsers = browserModule.JutSuperBrowsers;
+  ANY = constsModule.ANY;
   jsuperErrors = errorModule.jsuperErrors;
   jsuperLog = logModule.jsuperLog;
-  jsuperStorage = storageModule.jsuperStorage;
+  jsuperUtil = utilModule.jsuperUtil;
   domIds = constsModule.JutSuperDomIds;
   domClasses = constsModule.JutSuperDomClasses;
   defaultFonts = constsModule.JutSuperDefaultFonts;
   jutsuIds = constsModule.JutSuDomIds;
   jutsuClasses = constsModule.JutSuDomClasses;
+  ipcFlags = ipcModule.JutSuperIpcFlags;
+  ipcNamespaces = ipcModule.JutSuperIpcNamespaces;
   ipcIds = constsModule.JutSuperIpcIds;
-  ipcDefaultNodeProps = constsModule.JutSuperIpcDefaultNodeProps;
-  ipcKeys = constsModule.JutSuperIpcKeys;
-  ipcSettingsKeys = constsModule.JutSuperIpcSettingsKeys;
-  ipcAwaits = constsModule.JutSuperIpcAwaitStates;
-  ipcBoolRequests = constsModule.JutSuperIpcBoolRequestStates;
-  ipcLoadingStates = constsModule.JutSuperIpcLoadingStates;
-  storageKeys = storageModule.JutSuperStorageKeys;
-  transitionKeys = transitionModule.JutSuperTransitionObjectKeys;
-  settingsKeys = settingsModule.JutSuperSettingsObjectKeys;
   assetPaths = constsModule.JutSuperAssetPaths;
   assetIds = constsModule.JutSuperAssetIds;
+  windowStates = browserModule.BrowserWindowStates;
+  AsyncLock = lockModule.AsyncLock;
   JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
   JutSuperIpc = ipcModule.JutSuperIpc;
-  JutSuperIpcRecvParamsBuilder = ipcModule.JutSuperIpcRecvParamsBuilder;
+  JutSuperIpcRspParamsBuilder = ipcModule.JutSuperIpcRspParamsBuilder;
   JutSuperBrowser = browserModule.JutSuperBrowser;
   JutSuperActionsMessageBuilder = messagingModule.JutSuperActionsMessageBuilder;
   JutSuperRequestsRequestMessageBuilder = messagingModule.JutSuperRequestsRequestMessageBuilder;
   JutSuperMessageBuilder = messagingModule.JutSuperMessageBuilder;
   JutSuperTransition = transitionModule.JutSuperTransition;
   JutSuperSettings = settingsModule.JutSuperSettings;
+  JutSuperStorage = storageModule.JutSuperStorage;
 
   LOCALE_TEXT[domClasses.textSkipOptions] = browser.i18n.getMessage("skipOptions");
   LOCALE_TEXT[domClasses.textOpenings] = browser.i18n.getMessage("openings");
@@ -252,6 +235,8 @@ var JutSuperSettings;
   LOCALE_TEXT[domClasses.textSecondsShort] = browser.i18n.getMessage("secondsShort");
   LOCALE_TEXT[domClasses.textCancel] = browser.i18n.getMessage("cancel");
   LOCALE_TEXT[domClasses.textToCancel] = browser.i18n.getMessage("toCancel");
+  LOCALE_TEXT[domClasses.textPlaybackOptions] = browser.i18n.getMessage("playbackOptions");
+  LOCALE_TEXT[domClasses.textAchievementSound] = browser.i18n.getMessage("achievementSound");
   LOCALE_TEXT[domClasses.textSkipping] = browser.i18n.getMessage("skipping");
 
   LOCALE_TOOLTIPS[domClasses.tooltipOpeningsSettings] = browser.i18n.getMessage("openingsSettings");
@@ -268,17 +253,24 @@ var JutSuperSettings;
   LOCALE_TOOLTIPS[domClasses.tooltipDelayBeforeSkipping] = browser.i18n.getMessage("delayBeforeSkipping");
   LOCALE_TOOLTIPS[domClasses.tooltipKeyToCancelSkipping] = browser.i18n.getMessage("keyToCancelSkipping");
   LOCALE_TOOLTIPS[domClasses.tooltipSetCancelKey] = browser.i18n.getMessage("setCancelKey");
+  LOCALE_TOOLTIPS[domClasses.tooltipAchievementSound] = browser.i18n.getMessage("enableOrDisableAchievementSound");
+  LOCALE_TOOLTIPS[domClasses.tooltipToggleAchievementSound] = browser.i18n.getMessage("toggleAchievementSound");
 })().then(() => {
   jutsuperContent = new JutSuperContent();
 })
 
 
 /**
- * @typedef {import("/src/ipc.js").JutSuperIpcValueDescriptor} JutSuperIpcValueDescriptor
  * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessage} JutSuperRequestsResponseMessage
  * @typedef {import("/src/browser.js").BrowserWindowStatesKeys} BrowserWindowStatesKeys
  * @typedef {import("/src/transition.js").JutSuperTransitionObject} JutSuperTransitionObject
- * @typedef {import("/src/settings.js").JutSuperSettingsObject} JutSuperSettingsObject
+ * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObject} JutSuperSettingsObject
+ * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectPartial} JutSuperSettingsObjectPartial
+ * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectFilter} JutSuperSettingsObjectFilter
+ * @typedef {import("/src/types/ipc.d.ts").JutSuperIpcReqSchema} JutSuperIpcReqSchema
+ * @typedef {import("/src/types/ipc.d.ts").JutSuperIpcRspSchema} JutSuperIpcRspSchema
+ * @typedef {import("/src/types/ipc.d.ts").JutSuperIpcReqSchemaFilter} JutSuperIpcReqSchemaFilter
+ * @typedef {import("/src/types/ipc.d.ts").JutSuperIpcRspSchemaFilter} JutSuperIpcRspSchemaFilter
  */
 
 
@@ -297,63 +289,108 @@ class JutSuperContent {
     /** @type {string} */
     this.LOCATION = JutSuperContent.name;
 
-    console.log(JutSuperContent.name);
-
-    this.browser = new JutSuperBrowser(browser, BROWSER);
-    this.transition = new JutSuperTransition().setUndefined();
-    this.settings = new JutSuperSettings().setUndefined();
-
-    /** @type {JutSuperIpc} */
-    this.ipc = new JutSuperIpcBuilder()
-      .createCommunicationNode()
-      .identifyAs(ipcIds.content)
-      .build();
-    /** @type {JutSuperIpc} */
-    this.settingsIpc = new JutSuperIpcBuilder()
-      .createCommunicationNode()
-      .communicationNodeTagIs(ipcDefaultNodeProps.settingsTag)
-      .communicationNodeIdIs(ipcDefaultNodeProps.settingsId)
-      .identifyAs(ipcIds.content)
-      .build();
-
-    /** @type {string} */
-    this.urlSquareGreenLogo48Svg = browser.runtime.getURL(assetPaths.squareGreenLogo48Svg);
-    /** @type {string} */
-    this.urlSquareWhiteLogo48Svg = browser.runtime.getURL(assetPaths.squareWhiteLogo48Svg);
-    /** @type {string} */
-    this.urlDropdownSvg = browser.runtime.getURL(assetPaths.dropdownSvg);
-    /** @type {string} */
-    this.urlSkipSvg = browser.runtime.getURL(assetPaths.skipSvg);
-    /** @type {string} */
-    this.urlJutSuperIpcJs = browser.runtime.getURL(assetPaths.ipcJs);
-    /** @type {string} */
-    this.urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
-    /** @type {string} */
-    this.urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
-    /** @type {string} */
-    this.urlSettingsJs = browser.runtime.getURL(assetPaths.settingsJs);
-    /** @type {string} */
-    this.urlSettingsHtml = browser.runtime.getURL(assetPaths.settingsHtml);
-    /** @type {string} */
-    this.urlSkipJs = browser.runtime.getURL(assetPaths.skipJs);
-    /** @type {string} */
-    this.urlSkipHtml = browser.runtime.getURL(assetPaths.skipHtml);
-
     const head = document.getElementsByTagName("head")[0];
+    const urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
+    this.injectModule(head, urlJutSuperJs, assetIds.jutsuperJs);
 
-    this.injectFonts(head, defaultFonts);
-    this.injectImage(head, this.urlDropdownSvg, assetIds.dropdownSvg);
-    this.injectImage(head, this.urlSkipSvg, assetIds.skipSvg);
-    this.injectImage(head, this.urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
-    this.injectImage(head, this.urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
-    this.injectCss(head, this.urlJutSuperCss, assetIds.jutsuperCss);
-    this.injectModule(head, this.urlJutSuperIpcJs, assetIds.jutsuperIpcJs);
-    this.injectModule(head, this.urlJutSuperJs, assetIds.jutsuperJs);
-    this.injectDocument(head, this.urlSettingsHtml, assetIds.settingsHtml);
-    this.injectDocument(head, this.urlSkipHtml, assetIds.skipHtml);
+    /**
+     * # Responding IPC
+     * @type {JutSuperIpc<
+     *   JutSuperIpcRspSchema,
+     *   JutSuperIpcReqSchema,
+     *   JutSuperIpcReqSchemaFilter
+     * >}
+     */
+    this.rspIpc = new JutSuperIpcBuilder()
+      .identifyAs(ipcIds.content)
+      .ignoreWithoutAnyOfTheseFlags([ipcFlags.req])
+      .sendWithTheseFlags([ipcFlags.rsp])
+      .build();
 
-    this.loadData();
-    this.initListeners();
+    this.rspIpc.recvOnce({ schema: { loadingAllowed: { tell: { state: true } } } }).then(() => {
+      jsuperLog.debug(`${this.LOCATION}: received loadingAllowed, constructing`);
+
+      /**
+       * # Requesting IPC
+       * @type {JutSuperIpc<
+       *   JutSuperIpcReqSchema,
+       *   JutSuperIpcRspSchema,
+       *   JutSuperIpcRspSchemaFilter
+       * >}
+       */
+      this.reqIpc = new JutSuperIpcBuilder()
+        .identifyAs(ipcIds.content)
+        .ignoreWithoutAnyOfTheseFlags([ipcFlags.rsp])
+        .sendWithTheseFlags([ipcFlags.req])
+        .build();
+
+      /**
+       * # Requesting settings IPC
+       * @type {JutSuperIpc<
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectFilter
+       * >}
+       */
+      this.reqSettingsIpc = new JutSuperIpcBuilder()
+        .namespaceIs(ipcNamespaces.settings)
+        .identifyAs(ipcIds.content)
+        .ignoreWithoutAnyOfTheseFlags([ipcFlags.rsp])
+        .sendWithTheseFlags([ipcFlags.req])
+        .build();
+      /**
+       * # Responding settings IPC
+       * @type {JutSuperIpc<
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectPartial,
+       *   JutSuperSettingsObjectFilter
+       * >}
+       */
+      this.rspSettingsIpc = new JutSuperIpcBuilder()
+        .namespaceIs(ipcNamespaces.settings)
+        .identifyAs(ipcIds.content)
+        .ignoreWithoutAnyOfTheseFlags([ipcFlags.req])
+        .sendWithTheseFlags([ipcFlags.rsp])
+        .build();
+
+      this.browser = new JutSuperBrowser(browser, BROWSER);
+      this.storage = new JutSuperStorage(browser.storage.local);
+      this.transition = new JutSuperTransition().setUndefined();
+      this.settings = new JutSuperSettings().setUndefined();
+
+      this.initLock = new AsyncLock({ oneTime: true });
+
+      this.initListeners();
+      
+      const urlSquareWhiteLogo48Svg = browser.runtime.getURL(assetPaths.squareWhiteLogo48Svg);
+      const urlDropdownSvg = browser.runtime.getURL(assetPaths.dropdownSvg);
+      const urlSkipSvg = browser.runtime.getURL(assetPaths.skipSvg);
+      const urlPlaySvg = browser.runtime.getURL(assetPaths.playSvg);
+      const urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
+      const urlSettingsHtml = browser.runtime.getURL(assetPaths.settingsHtml);
+      const urlSkipHtml = browser.runtime.getURL(assetPaths.skipHtml);
+
+      this.injectFonts(head, defaultFonts);
+      this.injectImage(head, urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
+      this.injectImage(head, urlDropdownSvg, assetIds.dropdownSvg);
+      this.injectImage(head, urlSkipSvg, assetIds.skipSvg);
+      this.injectImage(head, urlPlaySvg, assetIds.playSvg);
+      this.injectCss(head, urlJutSuperCss, assetIds.jutsuperCss);
+      this.injectDocument(head, urlSettingsHtml, assetIds.settingsHtml);
+      this.injectDocument(head, urlSkipHtml, assetIds.skipHtml);
+
+      this.reqIpc.send({ assetsInjected: { tell: { state: true } } });
+      jsuperLog.debug(`${this.LOCATION}: all assets injected`);
+
+      this.#asyncInit().then(() => {
+        jsuperLog.debug(`${this.LOCATION}: constructed`);
+      });
+    })
+  }
+
+  async #asyncInit() {
+    await this.loadData();
+    this.initLock.resolve();
   }
 
   /////////////////////////////
@@ -397,7 +434,7 @@ class JutSuperContent {
     };
 
     const elm = document.createElement("script");
-    JutSuperContent.applyAttrs(elm, attrs);
+    jsuperUtil.applyAttrs(elm, attrs);
 
     node.appendChild(elm);
   }
@@ -416,7 +453,7 @@ class JutSuperContent {
     };
 
     const elm = document.createElement("link");
-    JutSuperContent.applyAttrs(elm, attrs);
+    jsuperUtil.applyAttrs(elm, attrs);
 
     node.appendChild(elm);
   }
@@ -436,7 +473,7 @@ class JutSuperContent {
     };
 
     const elm = document.createElement("link");
-    JutSuperContent.applyAttrs(elm, attrs);
+    jsuperUtil.applyAttrs(elm, attrs);
 
     node.appendChild(elm);
   }
@@ -454,25 +491,26 @@ class JutSuperContent {
     };
 
     const elm = document.createElement("link");
-    JutSuperContent.applyAttrs(elm, attrs);
+    jsuperUtil.applyAttrs(elm, attrs);
 
     node.appendChild(elm);
   }
 
-  loadData() {
-    this.loadSettingsStorage();
-    this.loadTransitionStorage();
+  async loadData() {
+    await Promise.all([
+      this.loadSettingsStorage(),
+      this.loadTransitionStorageAndClear(),
+    ]);
   }
 
   initListeners() {
     this.listenSettingsChange();
     this.listenEssentialsLoadState();
-    this.listenFullscreenChange();
     this.listenFullscreenControl();
     this.listenEpisodeSwitchAllowanceRequests();
-    this.listenEpisodeSwitchPrepStates();
-    this.listenWindowStatesRequests();
-    this.listenLocaleInitializationRequests();
+    this.listenPreEpisodeSwitchRequests();
+    this.listenIsWindowFullscreenRequests();
+    this.listenLocalizationRequests();
   }
 
   ////////////////////////////
@@ -483,59 +521,29 @@ class JutSuperContent {
    * @returns {Promise<never>}
    */
   async listenSettingsChange() {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
+    const loc = `${this.LOCATION}@${this.listenSettingsChange.name}`;
+    const builder = /** @type {JutSuperIpcRspParamsBuilder<JutSuperSettingsObjectPartial>} */ (
+      new JutSuperIpcRspParamsBuilder()
+    );
+    const cfg = builder
       .build();
     
-    for await (const evt of this.settingsIpc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt);
+    for await (const evt of this.rspSettingsIpc.recv(cfg)) {
+      await this.initLock.promise;
 
-      try {
-        switch (evt.key) {
-          case ipcSettingsKeys.openingsDoSkip:
-            if (this.settings.get().openings.doSkip === evt.value) { continue }
-            this.settings.setDoSkipOpenings(evt.value);
-            break;
-          case ipcSettingsKeys.openingsSkipOrder:
-            if (this.settings.get().openings.skipOrder === evt.value) { continue }
-            this.settings.setOpeningsSkipOrder(evt.value);
-            break;
-          case ipcSettingsKeys.endingsDoSkip:
-            if (this.settings.get().endings.doSkip === evt.value) { continue }
-            this.settings.setDoSkipEndings(evt.value);
-            break;
-          case ipcSettingsKeys.endingsSkipOrder:
-            if (this.settings.get().endings.skipOrder === evt.value) { continue }
-            this.settings.setEndingsSkipOrder(evt.value);
-            break;
-          case ipcSettingsKeys.endingsMaxSkips:
-            if (this.settings.get().endings.maxSkips === evt.value) { continue }
-            this.settings.setEndingsMaxSkips(evt.value);
-            break;
-          case ipcSettingsKeys.endingsDoPersistFullscreen:
-            if (this.settings.get().endings.doPersistFullscreen === evt.value) { continue }
-            this.settings.setEndingsPersistFullscreen(evt.value);
-            break;
-          case ipcSettingsKeys.skipDelayS:
-            if (this.settings.get().skipDelayS === evt.value) { continue }
-            this.settings.setSkipDelayS(evt.value);
-            break;
-          case ipcSettingsKeys.skipCancelKey:
-            if (this.settings.get().skipCancelKey === evt.value) { continue }
-            this.settings.setSkipCancelKey(evt.value);
-            document.getElementById(domIds.skipKeyLabel).innerText = evt.value;
-            break;
-          default:
-            throw jsuperErrors.unhandledCaseError({
-              location: this.LOCATION,
-              target: `${evt.key}=${evt.value}`
-            });
-        }
-      } catch (e) {
-        jsuperLog.error(new Error, e);
+      jsuperLog.debug(`${loc} got event:`, evt);
+
+      if (evt === undefined || jsuperUtil.isEmptyObject(evt)) {
+        continue
       }
 
+      this.settings.mergeWith(evt);
       await this.commitSettingsStorage();
     }
+
+    throw jsuperErrors.unexpectedEndError({
+      location: loc
+    });
   }
 
   /////////////////////////////
@@ -543,67 +551,29 @@ class JutSuperContent {
   /////////////////////////////
 
   /**
-   * @returns {Promise<never>}
+   * @returns {Promise<void>}
    */
   async listenEssentialsLoadState() {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
-      .recvOnlyTheseKeys(ipcKeys.essentialsLoadingState)
+    const loc = `${this.LOCATION}@${this.listenEssentialsLoadState.name}`;
+    const builder = /** @type {JutSuperIpcRspParamsBuilder<JutSuperIpcReqSchemaFilter>} */ (
+      new JutSuperIpcRspParamsBuilder()
+    );
+    const cfg = builder
+      .recvOnlyThisIntersection({ essentialsLoaded: { tell: { state: true } } })
       .build();
 
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt);
-
-      switch (evt.value) {
-        case ipcLoadingStates.loaded:
-          await this.handleEssentialsLoaded();
-          break;
-        default:
-          jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
-            location: this.LOCATION,
-            target: `${evt.key}=${evt.value}`
-          }).message);
-      }
-    }
-
-    throw jsuperErrors.unexpectedEndError({
-      location: this.LOCATION,
-      target: `${this.listenEssentialsLoadState.name}()`
-    });
+    const evt = await this.rspIpc.recvOnce(cfg);
+    await this.initLock.promise;
+    jsuperLog.debug(`${loc} got event:`, evt);
+    this.handleEssentialsLoaded();
   }
 
+  /**
+   * @returns {Promise<void>}
+   */
   async handleEssentialsLoaded() {
     this.sendSettings();
-    await this.loadTransitionStorageAndClear();
-  }
-
-  ////////////////////////////////
-  // Fullscreen change handling //
-  ////////////////////////////////
-
-  /**
-   * @returns {Promise<never>}
-   */
-  async listenFullscreenChange() {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
-      .recvOnlyTheseKeys(ipcKeys.isFullscreen)
-      .build();
-
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt);
-      await this.handleFullscreenChange(evt.value);
-    }
-
-    throw jsuperErrors.unexpectedEndError({
-      location: this.LOCATION,
-      target: `${this.listenFullscreenChange.name}()`
-    });
-  }
-
-  /**
-   * @param {boolean} state 
-   */
-  async handleFullscreenChange(state) {
-    this.transition.setIsFullscreen(state);
+    this.handleEpisodeSwitchContinuation();
   }
 
   ////////////////////////////////////
@@ -613,40 +583,30 @@ class JutSuperContent {
   /**
    * @returns {Promise<never>}
    */
-  async listenWindowStatesRequests() {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
-      .recvOnlyTheseKeys(ipcKeys.windowState)
+  async listenIsWindowFullscreenRequests() {
+    const loc = `${this.LOCATION}@${this.listenIsWindowFullscreenRequests.name}`;
+    const builder = /** @type {JutSuperIpcRspParamsBuilder<JutSuperIpcReqSchemaFilter>} */ (
+      new JutSuperIpcRspParamsBuilder()
+    );
+    const cfg = builder
+      .recvOnlyThisIntersection({ fullscreen: { askIsWindowFullscreen: true } })
       .build();
 
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt);
-
-      try {
-        switch (evt.value) {
-          case ipcAwaits.request:
-            await this.handleWindowStateRequest();
-            break;
-          default:
-            throw jsuperErrors.unhandledCaseError({
-              location: this.LOCATION,
-              target: `${evt.key}=${evt.value}`
-            });
-        }
-      } catch (e) {
-        jsuperLog.error(new Error, e);
-      }
+    for await (const evt of this.rspIpc.recv(cfg)) {
+      await this.initLock.promise;
+      jsuperLog.debug(`${loc} got event:`, evt);
+      await this.handleIsWindowFullscreenRequest();
     }
 
     throw jsuperErrors.unexpectedEndError({
-      location: this.LOCATION,
-      target: `${this.listenWindowStatesRequests.name}()`
+      location: loc
     });
   }
 
   /**
    * @returns {Promise<void>}
    */
-  async handleWindowStateRequest() {
+  async handleIsWindowFullscreenRequest() {
     const resp = await this.browser.runtime.sendResponsiveMessage(
       (new JutSuperMessageBuilder())
         .requests(
@@ -657,92 +617,92 @@ class JutSuperContent {
         .build()
     );
 
-    const windowState = resp.windowState;
+    const isFullscreen = resp.windowState === windowStates.fullscreen;
 
-    console.log("windowState =", windowState);
-
-    this.ipc.send({
-      key: ipcKeys.windowState,
-      value: windowState
-    })
+    this.rspIpc.send({
+      fullscreen: { rspIsWindowFullscreen: isFullscreen }
+    });
   }
 
   ////////////////////////
   // Fullscreen control //
   ////////////////////////
 
+  /**
+   * @returns {Promise<never>}
+   */
   async listenFullscreenControl() {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
-      .recvOnlyTheseKeys(ipcKeys.fullscreenControl)
+    const loc = `${this.LOCATION}@${this.listenFullscreenControl.name}`;
+    const builder = /** @type {JutSuperIpcRspParamsBuilder<JutSuperIpcReqSchemaFilter>} */ (
+      new JutSuperIpcRspParamsBuilder()
+    );
+    const cfg = builder
+      .recvOnlyThisIntersection({ fullscreen: { reqExit: true } })
       .build();
 
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt);
-
-      try {
-        switch (evt.value) {
-          case ipcBoolRequests.requestFalse:
-            await this.handleFullscreenExitRequest();
-            break;
-          default:
-            throw jsuperErrors.unhandledCaseError({
-              location: this.LOCATION,
-              target: `${evt.key}=${evt.value}`
-            });
-        }
-      } catch (e) {
-        jsuperLog.error(new Error, e);
-      }
+    for await (const evt of this.rspIpc.recv(cfg)) {
+      await this.initLock.promise;
+      jsuperLog.debug(`${loc} got event:`, evt);
+      await this.handleFullscreenExitRequest();
     }
 
     throw jsuperErrors.unexpectedEndError({
-      location: this.LOCATION,
-      target: `${this.listenFullscreenControl.name}()`
+      location: loc
     });
   }
 
+  /**
+   * @returns {Promise<void>}
+   */
   async handleFullscreenExitRequest() {
+    const loc = `${this.LOCATION}@${this.handleFullscreenExitRequest.name}`;
+
+    const originalWindowState = this.transition.get().originalWindowState;
+
+    jsuperLog.debug(
+      `${loc}: exiting window fullscreen, originalWindowState=${originalWindowState}`
+    );
+
     const resp = await this.browser.runtime.sendResponsiveMessage(
       (new JutSuperMessageBuilder())
         .actions(
           (new JutSuperActionsMessageBuilder())
             .isFullscreenState(false)
-            .originalWindowState(this.transition.get().originalWindowState)
+            .originalWindowState(originalWindowState)
             .build()
         )
         .build()
     );
 
-
+    this.rspIpc.send({fullscreen: {rspExit: {
+      isFulfilled: true
+    }}});
   }
 
   ////////////////////////////////////////////////
   // Episode switch allowance requests handling //
   ////////////////////////////////////////////////
 
+  /**
+   * @returns {Promise<void>}
+   */
   async listenEpisodeSwitchAllowanceRequests() {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
-      .recvOnlyTheseKeys(ipcKeys.isEpisodeSwitchAllowed)
+    const loc = `${this.LOCATION}@${this.listenEpisodeSwitchAllowanceRequests.name}`;
+    const builder = /** @type {JutSuperIpcRspParamsBuilder<JutSuperIpcReqSchemaFilter>} */ (
+      new JutSuperIpcRspParamsBuilder()
+    );
+    const cfg = builder
+      .recvOnlyThisIntersection({ preEpisodeSwitch: { askIsAllowed: true } })
       .build();
 
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt);
-
-      switch (evt.value) {
-        case ipcAwaits.request:
-          await this.handleEpisodeSwitchAllowanceRequest();
-          break;
-        default:
-          jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
-            location: this.LOCATION,
-            target: `${evt.key}=${evt.value}`
-          }).message);
-      }
+    for await (const evt of this.rspIpc.recv(cfg)) {
+      await this.initLock.promise;
+      jsuperLog.debug(`${loc} got event:`, evt);
+      await this.handleEpisodeSwitchAllowanceRequest();
     }
 
     throw jsuperErrors.unexpectedEndError({
-      location: this.LOCATION,
-      target: `${this.listenEpisodeSwitchAllowanceRequests.name}()`
+      location: loc
     });
   }
 
@@ -764,10 +724,12 @@ class JutSuperContent {
     return true;
   }
 
+  /**
+   * @returns {Promise<void>}
+   */
   async handleEpisodeSwitchAllowanceRequest() {
-    this.ipc.send({
-      key: ipcKeys.isEpisodeSwitchAllowed,
-      value: this.isEpisodeSwitchAllowed()
+    this.rspIpc.send({
+      preEpisodeSwitch: { rspIsAllowed: this.isEpisodeSwitchAllowed() }
     });
   }
 
@@ -776,77 +738,68 @@ class JutSuperContent {
   ////////////////////////////////////
 
   /**
-   * @param {boolean} routeExisting 
    * @returns {Promise<never>}
    */
-  async listenEpisodeSwitchPrepStates(routeExisting = false) {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
-      .recvOnlyTheseKeys(ipcKeys.episodeSwitchPrep)
+  async listenPreEpisodeSwitchRequests() {
+    const loc = `${this.LOCATION}@${this.listenPreEpisodeSwitchRequests.name}`;
+    const builder = /** @type {JutSuperIpcRspParamsBuilder<JutSuperIpcReqSchemaFilter>} */ (
+      new JutSuperIpcRspParamsBuilder()
+    );
+    const cfg = builder
+      .recvOnlyThisIntersection({ preEpisodeSwitch: { req: ANY } })
       .build();
 
-    /**
-     * 
-     * @param {JutSuperContent} thisArg 
-     * @param {JutSuperIpcValueDescriptor} evt 
-     */
-    async function route(thisArg, evt) {
-      try {
-        switch (evt.value) {
-          case ipcAwaits.idle:
-            await thisArg.handleEpisodeSwitchIdle();
-            break;
-          case ipcAwaits.request:
-            await thisArg.handleEpisodeSwitchRequest();
-            break;
-          case ipcAwaits.continuation:
-            await thisArg.handleEpisodeSwitchContinuation();
-            break;
-          default:
-            throw jsuperErrors.unhandledCaseError({
-              location: thisArg.LOCATION,
-              target: `${evt.key}=${evt.value}`
-            });
-        }
-      } catch (e) {
-        jsuperLog.error(new Error, e);
+    for await (const evt of this.rspIpc.recv(cfg)) {
+      await this.initLock.promise;
+
+      jsuperLog.debug(`${loc} got event:`, evt);
+
+      if (jsuperUtil.isEmptyObject(evt.preEpisodeSwitch.req)) {
+        continue;
       }
-    }
+      if (evt.preEpisodeSwitch.req.state !== true) {
+        continue;
+      }
 
-    if (routeExisting) {
-      await route(this, this.ipc.get(ipcKeys.episodeSwitchPrep));
-    }
-
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt);
-      await route(this, evt);
+      await this.handleEpisodeSwitchRequest(
+        evt.preEpisodeSwitch.req.isFullscreen
+      );
     }
 
     throw jsuperErrors.unexpectedEndError({
-      location: this.LOCATION,
-      target: `${this.listenEpisodeSwitchPrepStates.name}()`
+      location: loc
     });
   }
 
-  async handleEpisodeSwitchIdle() {
-
-  }
-
-  async handleEpisodeSwitchRequest() {
+  /**
+   * @param {boolean} isFullscreen
+   * @returns {Promise<void>}
+   */
+  async handleEpisodeSwitchRequest(isFullscreen) {
     if (!this.isEpisodeSwitchAllowed()) {
       // send rejection, since
       // we have exceeded max allowed skips
-      return this.ipc.send({
-        key: ipcKeys.episodeSwitchPrep,
-        value: ipcAwaits.rejected
-      });
+      this.rspIpc.send({preEpisodeSwitch: {rsp: {
+        isFulfilled: false,
+        reason: new Error("reached max skips")
+      }}});
+
+      return;
     }
 
     const switchesCount = typeof this.transition.get().switchesCount !== "undefined" ?
       this.transition.get().switchesCount : 0;
 
     this.transition.setIsSwitchingEpisode(true);
+    this.transition.setIsFullscreen(isFullscreen);
     this.transition.setSwitchesCount(switchesCount + 1);
+
     if (!this.transition.get().originalWindowState) {
+      await this.reqIpc.sendAndRecvOnce(
+        { fullscreen: { reqPlayerFullscreenExit: true } },
+        { schema: { fullscreen: { rspPlayerFullscreenExit: ANY } } }
+      );
+
       const resp = await this.browser.runtime.sendResponsiveMessage(
         (new JutSuperMessageBuilder())
           .requests(
@@ -856,6 +809,7 @@ class JutSuperContent {
           )
           .build()
       );
+
       this.transition.setOriginalWindowState(resp.windowState);
     }
     
@@ -864,164 +818,122 @@ class JutSuperContent {
     // send callback that
     // episode switch preparations
     // are completed
-    this.ipc.send({
-      key: ipcKeys.episodeSwitchPrep,
-      value: ipcAwaits.completed
-    });
+    this.rspIpc.send({preEpisodeSwitch: {rsp: {
+      isFulfilled: true
+    }}});
   }
 
   async handleEpisodeSwitchContinuation() {
-    let transition = await jsuperStorage.getTransition();
+    const loc = `${this.LOCATION}@${this.handleEpisodeSwitchContinuation.name}`;
+    const transition = this.transition.get();
 
-    if (transition === undefined) {
-      transition = {}
+    if (transition === undefined || !transition.isSwitchingEpisode) {
+      jsuperLog.debug(`${loc}: episode was not switched automatically`);
+      return;
     }
 
-    console.log("handleEpisodeSwitchContinuation got transition", transition);
+    jsuperLog.debug(`${loc}: episode was switched automatically`);
 
-    if (!transition.originalWindowState) {
-      const resp = await this.browser.runtime.sendResponsiveMessage(
+    this.requestPlay();
+
+    if (this.settings.get().endings.doPersistFullscreen && transition.isFullscreen) {
+      const body = /** @type {HTMLBodyElement} */ (
+        document.getElementsByTagName("body")[0]
+      );
+      const playerDiv = /** @type {HTMLDivElement} */ (
+        document.getElementById(jutsuIds.myPlayer)
+      );
+      const header = /** @type {HTMLDivElement} */ (
+        document.getElementsByClassName(jutsuClasses.zFixHeader)[0]
+      );
+      const infoPanel = /** @type {HTMLDivElement} */ (
+        document.getElementsByClassName(jutsuClasses.infoPanel)[0]
+      );
+      const footer = /** @type {HTMLDivElement} */ (
+        document.getElementsByClassName(jutsuClasses.footer)[0]
+      );
+
+      // disable scrolling
+      body.style.overflow = "hidden";
+      // hide header
+      header.style.display = "none";
+      // hide info panel
+      infoPanel.style.display = "none";
+      // hide footer
+      footer.style.display = "none";
+
+      // add fullscreen styling to the player
+      playerDiv.classList.add(jutsuClasses.vjsFullscreen);
+      // make the player full window size
+      playerDiv.classList.add(domClasses.fullscreen);
+      // put the player above everything
+      playerDiv.classList.add(domClasses.topIndex);
+
+      // inject a function to be able to exit
+      // this custom fullscreen mode
+      this.reqIpc.sendAndRecvOnce(
+        { fullscreen: { reqExitInjection: true } },
+        { schema: { fullscreen: { rspExitInjection: ANY } } }
+      )
+
+      await browser.runtime.sendMessage(
         (new JutSuperMessageBuilder())
-          .requests(
-            (new JutSuperRequestsRequestMessageBuilder())
-              .getWindowState()
+          .actions(
+            (new JutSuperActionsMessageBuilder())
+              .isFullscreenState(true)
               .build()
           )
           .build()
       );
-
-      const originalWindowState = resp.windowState;
-      this.transition.setOriginalWindowState(originalWindowState);
     }
-    else {
-      this.transition.setOriginalWindowState(transition.originalWindowState);
-    }
-
-    const isSwitchedAutomatically = (
-      transition.isSwitchingEpisode !== undefined ?
-      transition.isSwitchingEpisode : false
-    );
-  
-    this.ipc.send({
-      key: ipcKeys.isEpisodeSwitchedAutomatically,
-      value: isSwitchedAutomatically,
-    });
-    this.ipc.send({
-      key: ipcKeys.episodeSwitchPrep,
-      value: ipcAwaits.completed,
-    });
-
-    if (isSwitchedAutomatically) {
-      jsuperLog.log(new Error, "episode was switched automatically");
-
-      this.requestPlay();
-
-      if (this.settings.get().endings.doPersistFullscreen && transition.isFullscreen) {
-        const body = document.getElementsByTagName(
-          "body"
-        )[0];
-        const playerDiv = document.getElementById(
-          jutsuIds.myPlayer
-        );
-        const header = document.getElementsByClassName(
-          jutsuClasses.zFixHeader
-        )[0];
-        const infoPanel = document.getElementsByClassName(
-          jutsuClasses.infoPanel
-        )[0];
-        const footer = document.getElementsByClassName(
-          jutsuClasses.footer
-        )[0];
-
-        // disable scrolling
-        body.style.overflow = "hidden";
-        // hide header
-        header.style.display = "none";
-        // hide info panel
-        infoPanel.style.display = "none";
-        // hide footer
-        footer.style.display = "none";
-
-        // add fullscreen styling to the player
-        playerDiv.classList.add(jutsuClasses.vjsFullscreen);
-        // make the player full window size
-        playerDiv.classList.add(domClasses.fullscreen);
-        // put the player above everything
-        playerDiv.classList.add(domClasses.topIndex);
-
-        // inject function to be able to exit
-        // this custom fullscreen mode
-        this.ipc.send({
-          key: ipcKeys.injectCustomFullscreenExit,
-          value: ipcBoolRequests.requestTrue
-        });
-
-        // wait for injection to complete
-        await this.ipc.recvOnce({
-          key: ipcKeys.injectCustomFullscreenExit,
-          value: ipcAwaits.completed
-        });
-
-        await browser.runtime.sendMessage(
-          (new JutSuperMessageBuilder())
-            .actions(
-              (new JutSuperActionsMessageBuilder())
-                .isFullscreenState(true)
-                .build()
-            )
-            .build()
-        );
-      }
-    }
-    else {
-      jsuperLog.log(new Error, "episode was not switched automatically");
-    }
-
-    await jsuperStorage.removeTransition();
   }
 
   //////////////////////////////////
   // Localization requests handle //
   //////////////////////////////////
 
-  async listenLocaleInitializationRequests() {
-    const cfg = new JutSuperIpcRecvParamsBuilder()
-      .recvOnlyTheseKeys(ipcKeys.localeInitializationControl)
+  /**
+   * @returns {Promise<void>}
+   */
+  async listenLocalizationRequests() {
+    const loc = `${this.LOCATION}@${this.listenLocalizationRequests.name}`;
+    const builder = /** @type {JutSuperIpcRspParamsBuilder<JutSuperIpcReqSchemaFilter>} */ (
+      new JutSuperIpcRspParamsBuilder()
+    );
+    const cfg = builder
+      .recvOnlyThisIntersection({ localization: { reqLocalize: true } })
       .build();
 
-    for await (const evt of this.ipc.recv(cfg)) {
-      jsuperLog.debug(new Error, evt);
-
-      switch (evt.value) {
-        case ipcAwaits.request:
-          await this.handleLocaleInitializationRequest();
-          break;
-        default:
-          jsuperLog.error(new Error, jsuperErrors.unhandledCaseError({
-            location: this.LOCATION,
-            target: `${evt.key}=${evt.value}`
-          }).message);
-      }
-    }
-
-    throw jsuperErrors.unexpectedEndError({
-      location: this.LOCATION,
-      target: `${this.listenLocaleInitializationRequests.name}()`
-    });
+    const evt = await this.rspIpc.recvOnce(cfg);
+    await this.initLock.promise;
+    jsuperLog.debug(`${loc} got event:`, evt);
+    await this.handleLocalizationRequest();
   }
 
-  async handleLocaleInitializationRequest() {
+  async handleLocalizationRequest() {
+    const loc = `${this.LOCATION}@${this.handleLocalizationRequest.name}`;
+
+    let textCounter = 0;
     for (const [cls, message] of Object.entries(LOCALE_TEXT)) {
       [...document.getElementsByClassName(cls)].forEach(
-        (value, index, array) => value.innerHTML = message
+        (value, index, array) => { value.innerHTML = message; textCounter++; }
       );
     }
 
+    let tooltipCounter = 0;
     for (const [cls, tooltip] of Object.entries(LOCALE_TOOLTIPS)) {
       [...document.getElementsByClassName(cls)].forEach(
-        (value, index, array) => value.setAttribute("title", tooltip)
+        (value, index, array) => { value.setAttribute("title", tooltip); tooltipCounter++; }
       );
     }
+
+    this.rspIpc.send({ localization: { rspLocalize: { isFulfilled: true } } });
+
+    jsuperLog.debug(
+      `${loc}: localization complete: ` +
+      `textCounter=${textCounter}, ` +
+      `tooltipCounter=${tooltipCounter}`
+    );
   }
 
   ////////////////////////////
@@ -1033,8 +945,9 @@ class JutSuperContent {
    * @returns {Promise<void>}
    */
   async commitTransitionStorage() {
-    await jsuperStorage.setTransition(this.transition.get());
-    jsuperLog.debug(new Error, "commited transition storage");
+    const loc = `${this.LOCATION}@${this.commitTransitionStorage.name}`;
+    await this.storage.setTransition(this.transition.get());
+    jsuperLog.debug(`${loc}: commited transition storage`, this.transition.get());
   }
 
   /**
@@ -1042,13 +955,16 @@ class JutSuperContent {
    * @returns {Promise<void>}
    */
   async loadTransitionStorage() {
-    let transition = await jsuperStorage.getTransition();
+    const loc = `${this.LOCATION}@${this.loadTransitionStorage.name}`;
+    let transition = await this.storage.getTransition();
 
     if (transition === undefined) {
       this.transition.setUndefined();
+      jsuperLog.debug(`${loc}: initialized transition`, this.transition.get());
     }
     else {
-      this.transition.set(transition)
+      this.transition.set(transition);
+      jsuperLog.debug(`${loc}: loaded transition`, this.transition.get());
     }
   }
 
@@ -1058,7 +974,7 @@ class JutSuperContent {
    */
   async loadTransitionStorageAndClear() {
     await this.loadTransitionStorage();
-    await jsuperStorage.removeTransition();
+    await this.storage.removeTransition();
   }
 
   /**
@@ -1066,8 +982,9 @@ class JutSuperContent {
    * @returns {Promise<void>}
    */
   async commitSettingsStorage() {
-    await jsuperStorage.setSettings(this.settings.get());
-    jsuperLog.debug(new Error, "commited settings storage");
+    const loc = `${this.LOCATION}@${this.commitSettingsStorage.name}`;
+    await this.storage.setSettings(this.settings.get());
+    jsuperLog.debug(`${loc}: commited settings storage`, this.settings.get());
   }
 
   /**
@@ -1075,68 +992,27 @@ class JutSuperContent {
    * @returns {Promise<void>}
    */
   async loadSettingsStorage() {
-    let settings = await jsuperStorage.getSettings();
+    const loc = `${this.LOCATION}@${this.loadSettingsStorage.name}`;
+    let settings = await this.storage.getSettings();
 
     if (settings === undefined) {
       this.settings.setDefaults();
-      await jsuperStorage.setSettings(this.settings.get());
+      await this.storage.setSettings(this.settings.get());
+      jsuperLog.debug(`${loc}: initialized settings`, this.settings.get());
     }
     else {
-      this.settings.set(settings)
+      this.settings.set(settings);
+      jsuperLog.debug(`${loc}: loaded settings`, this.settings.get());
     }
   }
 
   requestPlay() {
-    this.ipc.send({
-      key: ipcKeys.playingControl,
-      value: ipcBoolRequests.requestTrue
-    });
+    const loc = `${this.LOCATION}@${this.requestPlay.name}`;
+    this.reqIpc.send({ playing: { reqPlay: true } });
   }
 
   sendSettings() {
-    this.settingsIpc.send({
-      key: ipcSettingsKeys.openingsDoSkip,
-      value: this.settings.get().openings.doSkip
-    });
-    this.settingsIpc.send({
-      key: ipcSettingsKeys.openingsSkipOrder,
-      value: this.settings.get().openings.skipOrder
-    });
-    this.settingsIpc.send({
-      key: ipcSettingsKeys.endingsDoSkip,
-      value: this.settings.get().endings.doSkip
-    });
-    this.settingsIpc.send({
-      key: ipcSettingsKeys.endingsSkipOrder,
-      value: this.settings.get().endings.skipOrder
-    });
-    this.settingsIpc.send({
-      key: ipcSettingsKeys.endingsMaxSkips,
-      value: this.settings.get().endings.maxSkips
-    });
-    this.settingsIpc.send({
-      key: ipcSettingsKeys.endingsDoPersistFullscreen,
-      value: this.settings.get().endings.doPersistFullscreen
-    });
-    this.settingsIpc.send({
-      key: ipcSettingsKeys.skipDelayS,
-      value: this.settings.get().skipDelayS
-    });
-    this.settingsIpc.send({
-      key: ipcSettingsKeys.skipCancelKey,
-      value: this.settings.get().skipCancelKey
-    });
-  }
-
-  /**
-   * @param {HTMLElement} node
-   * @param {Object.<string, string>} attrs 
-   * @returns {void}
-   */
-  static applyAttrs(node, attrs) {
-    for (const key in attrs) {
-      const value = attrs[key];
-      node.setAttribute(key, value);
-    }
+    const loc = `${this.LOCATION}@${this.sendSettings.name}`;
+    this.reqSettingsIpc.send(this.settings.get());
   }
 }
