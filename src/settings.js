@@ -113,7 +113,8 @@ class JutSuperSettings {
         maxSkips: 0
       },
       skipDelayS: 3,
-      skipCancelKey: "Shift"
+      skipCancelKey: "Shift",
+      achievementSoundEnabled: true
     };
     return this;
   }
@@ -132,7 +133,8 @@ class JutSuperSettings {
         maxSkips: undefined
       },
       skipDelayS: undefined,
-      skipCancelKey: undefined
+      skipCancelKey: undefined,
+      achievementSoundEnabled: undefined
     };
     return this;
   }

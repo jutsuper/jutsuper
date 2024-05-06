@@ -23,6 +23,7 @@ interface JutSuperSettingsObject {
   };
   skipDelayS: number;
   skipCancelKey: string;
+  achievementSoundEnabled: boolean;
 }
 
 type JutSuperSettingsObjectPartial = JutSuperTypeDeepPartial<JutSuperSettingsObject>;

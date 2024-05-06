@@ -1148,6 +1148,9 @@ class JutSuper {
       if (evt.skipCancelKey) {
         this.handleSkipCancelKeyChange(evt.skipCancelKey);
       }
+      if (typeof evt.achievementSoundEnabled === "boolean") {
+        this.handleAchievementSoundEnabledChange(evt.achievementSoundEnabled);
+      }
     }
 
     throw jsuperErrors.unexpectedEndError({
@@ -1168,6 +1171,17 @@ class JutSuper {
    */
   handleSkipCancelKeyChange(cancelKey) {
     this.skipPopup.setCancelKey(cancelKey);
+  }
+
+  /**
+   * @param {boolean} state 
+   */
+  handleAchievementSoundEnabledChange(state) {
+    if (window.plus_settings === undefined) {
+      window.plus_settings = {};
+    }
+
+    window.plus_settings.sound = state;
   }
 }
 

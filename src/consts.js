@@ -431,6 +431,8 @@ const JutSuperDomIds = {
   settingsCancelKeyListener: "jutsuper-settings-cancel-key-listener",
   /** @type {"jutsuper-settings-cancel-key-listener-rec-circle"} */
   settingsCancelKeyListenerRecCircle: "jutsuper-settings-cancel-key-listener-rec-circle",
+  /** @type {"jutsuper-settings-achievement-sound-switch"} */
+  settingsAchievementSoundSwitch: "jutsuper-settings-achievement-sound-switch",
 
   /** Skip */
   /** @type {"jutsuper-vjs-skip-area"} */

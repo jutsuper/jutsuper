@@ -15,6 +15,9 @@ declare global {
     jutsu_new_player?: "yes";
     cur_time_cookie?: string[];
     player?: videojs.VideoJsPlayer;
+    plus_settings?: {
+      sound?: boolean
+    };
   
     jsuperSettings?: JutSuperSettingsObject;
   

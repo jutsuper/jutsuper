@@ -29,92 +29,122 @@ export { JutSuperSettingsPopup };
  * @typedef {import("/src/settings.js").JutSuperSettingsSkipOrderKeys} JutSuperSettingsSkipOrderKeys
  */
 
+
 class JutSuperSettingsPopup {
   /**
    * @param {Document} doc 
    */
   constructor(doc) {
     this.LOCATION = JutSuperSettingsPopup.name;
-    const self = this;
 
     this.document = doc ? doc : document;
 
     this.numberRegex = /[0-9]+/;
 
-    /** @type {HTMLInputElement[]} */
-    this.bars = this.document.getElementsByName(inputNames.settingsBar);
-    /** @type {HTMLInputElement} */
-    this.opSkipSwitch = this.document.getElementById(domIds.settingsOpeningsSwitch);
-    /** @type {HTMLLabelElement} */
-    this.opSectionBar = this.document.getElementById(domIds.settingsOpeningsBarLabel);
-    /** @type {HTMLDivElement} */
-    this.opClipSection = this.document.getElementById(domIds.settingsOpeningsSectionClip);
-    /** @type {HTMLDivElement} */
-    this.opSkipOrderSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderSelector);
-    /** @type {HTMLInputElement} */
-    this.opSkipOrderAnySelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderAny);
-    /** @type {HTMLInputElement} */
-    this.opSkipOrderFirstSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderFirst);
-    /** @type {HTMLInputElement} */
-    this.opSkipOrderLastSelector = this.document.getElementById(domIds.settingsOpeningsSkipOrderLast);
-    /** @type {HTMLInputElement} */
-    this.edSkipSwitch = this.document.getElementById(domIds.settingsEndingsSwitch);
-    /** @type {HTMLLabelElement} */
-    this.edSectionBar = this.document.getElementById(domIds.settingsEndingsBarLabel);
-    /** @type {HTMLDivElement} */
-    this.edClipSection = this.document.getElementById(domIds.settingsEndingsSectionClip);
-    /** @type {HTMLDivElement} */
-    this.edSkipOrderSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderSelector);
-    /** @type {HTMLInputElement} */
-    this.edSkipOrderAnySelector = this.document.getElementById(domIds.settingsEndingsSkipOrderAny);
-    /** @type {HTMLInputElement} */
-    this.edSkipOrderFirstSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderFirst);
-    /** @type {HTMLInputElement} */
-    this.edSkipOrderLastSelector = this.document.getElementById(domIds.settingsEndingsSkipOrderLast);
-    /** @type {HTMLButtonElement} */
-    this.edSkipMaxNegativeButton = this.document.getElementById(domIds.settingsEndingsMaxSkipsNegativeButton);
-    /** @type {HTMLInputElement} */
-    this.edSkipMaxField = this.document.getElementById(domIds.settingsEndingsMaxSkipsField);
-    /** @type {HTMLButtonElement} */
-    this.edSkipMaxPositiveButton = this.document.getElementById(domIds.settingsEndingsMaxSkipsPositiveButton);
-    /** @type {HTMLInputElement} */
-    this.edFullscreenSwitch = this.document.getElementById(domIds.settingsEndingsFullscreenSwitch);
-    /** @type {HTMLInputElement} */
-    this.delaySlider = this.document.getElementById(domIds.settingsDelaySlider);
+    this.bars = /** @type {NodeListOf<HTMLInputElement>} */ (
+      this.document.getElementsByName(inputNames.settingsBar)
+    );
+    this.opSkipSwitch = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsOpeningsSwitch)
+    );
+    this.opSectionBar = /** @type {HTMLLabelElement} */ (
+      this.document.getElementById(domIds.settingsOpeningsBarLabel)
+    );
+    this.opClipSection = /** @type {HTMLDivElement} */ (
+      this.document.getElementById(domIds.settingsOpeningsSectionClip)
+    );
+    this.opSkipOrderSelector = /** @type {HTMLDivElement} */ (
+      this.document.getElementById(domIds.settingsOpeningsSkipOrderSelector)
+    );
+    this.opSkipOrderAnySelector = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsOpeningsSkipOrderAny)
+    );
+    this.opSkipOrderFirstSelector = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsOpeningsSkipOrderFirst)
+    );
+    this.opSkipOrderLastSelector = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsOpeningsSkipOrderLast)
+    );
+    this.edSkipSwitch = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsEndingsSwitch)
+    );
+    this.edSectionBar = /**  @type {HTMLLabelElement} */ (
+      this.document.getElementById(domIds.settingsEndingsBarLabel)
+    );
+    this.edClipSection = /** @type {HTMLDivElement} */ (
+      this.document.getElementById(domIds.settingsEndingsSectionClip)
+    );
+    this.edSkipOrderSelector = /** @type {HTMLDivElement} */ (
+      this.document.getElementById(domIds.settingsEndingsSkipOrderSelector)
+    );
+    this.edSkipOrderAnySelector = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsEndingsSkipOrderAny)
+    );
+    this.edSkipOrderFirstSelector = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsEndingsSkipOrderFirst)
+    );
+    this.edSkipOrderLastSelector = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsEndingsSkipOrderLast)
+    );
+    this.edSkipMaxNegativeButton = /** @type {HTMLButtonElement} */ (
+      this.document.getElementById(domIds.settingsEndingsMaxSkipsNegativeButton)
+    );
+    this.edSkipMaxField = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsEndingsMaxSkipsField)
+    );
+    this.edSkipMaxPositiveButton = /** @type {HTMLButtonElement} */ (
+      this.document.getElementById(domIds.settingsEndingsMaxSkipsPositiveButton)
+    );
+    this.edFullscreenSwitch = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsEndingsFullscreenSwitch)
+    );
+    this.delaySlider = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsDelaySlider)
+    );
     this.delaySliderTimeoutId = undefined;
-    /** @type {HTMLDivElement} */
-    this.delayNum = this.document.getElementById(domIds.settingsDelayNum);
-    /** @type {HTMLInputElement} */
-    this.cancelKeyListener = this.document.getElementById(domIds.settingsCancelKeyListener);
-    this.cancelKeyListener.isListening = false;
-    /** @type {HTMLDivElement} */
-    this.cancelKeyListenerRecCircle = this.document.getElementById(domIds.settingsCancelKeyListenerRecCircle);
+    this.delayNum = /** @type {HTMLDivElement} */ (
+      this.document.getElementById(domIds.settingsDelayNum)
+    );
+    this.cancelKeyListener = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsCancelKeyListener)
+    );
+    this.isListeningCancelKey = false;
+    this.cancelKeyListenerRecCircle = /** @type {HTMLDivElement} */ (
+      this.document.getElementById(domIds.settingsCancelKeyListenerRecCircle)
+    );
+    this.achvSoundEnabledSlider = /** @type {HTMLInputElement} */ (
+      this.document.getElementById(domIds.settingsAchievementSoundSwitch)
+    );
 
-    this.bars.forEach(bar => bar.addEventListener("change", event => self.closeOtherBars(event.target)))
+    this.bars.forEach(bar => bar.addEventListener("change", event => {
+      const target = /** @type {HTMLInputElement} */ (event.target);
+      this.closeOtherBars(target);
+    }));
 
     this.opSkipSwitch.addEventListener("change", event => this.onOpeningsSwitchChange(event));
     this.opSkipOrderSelector.addEventListener("change", event => this.onOpeningsSkipOrderChange(event));
     this.edSkipSwitch.addEventListener("change", event => this.onEndingsSwitchChange(event));
     this.edSkipOrderSelector.addEventListener("change", event => this.onEndingsSkipOrderChange(event));
-    this.edSkipMaxNegativeButton.addEventListener("click", event => self.onEndingsSkipMaxNegative(event));
-    this.edSkipMaxPositiveButton.addEventListener("click", event => self.onEndingsSkipMaxPositive(event));
+    this.edSkipMaxNegativeButton.addEventListener("click", event => this.onEndingsSkipMaxNegative(event));
+    this.edSkipMaxPositiveButton.addEventListener("click", event => this.onEndingsSkipMaxPositive(event));
     this.edSkipMaxField.addEventListener("input", event => this.onEndingsSkipMaxFieldInput(event));
     this.edSkipMaxField.addEventListener("keydown", event => this.onEndingsSkipMaxFieldKeydown(event));
     this.edFullscreenSwitch.addEventListener("change", event => this.onEndingsFullscreenSliderChange(event));
-    this.delaySlider.addEventListener("input", event => self.onDelayChange(event));
-    this.cancelKeyListener.addEventListener("click", event => self.onCancelRecorderClick(event));
+    this.delaySlider.addEventListener("input", event => this.onDelayChange(event));
+    this.cancelKeyListener.addEventListener("click", event => this.onCancelRecorderClick(event));
     this.cancelKeyListener.addEventListener("keydown", event => this.onCancelRecorderKeyDown(event));
+    this.achvSoundEnabledSlider.addEventListener("change", event => this.onAchievementSoundSliderChange(event));
 
     this.document.addEventListener("mousedown", event => {
-      const boundaries = self.cancelKeyListener.getBoundingClientRect();
+      const boundaries = this.cancelKeyListener.getBoundingClientRect();
       const isInXRange = event.clientX >= boundaries.left && event.clientX <= boundaries.right;
       const isInYRange = event.clientY >= boundaries.top && event.clientY <= boundaries.bottom;
       const isInAreaRange = isInXRange && isInYRange;
 
       if (!isInAreaRange) {
-        self.cancelKeyListener.isListening = false;
-        self.cancelKeyListener.classList.remove(domClasses.animateDarkToDarkerGreenHt);
-        self.cancelKeyListenerRecCircle.classList.remove(domClasses.animateOpacity1To0);
+        this.isListeningCancelKey = false;
+        this.cancelKeyListener.classList.remove(domClasses.animateDarkToDarkerGreenHt);
+        this.cancelKeyListenerRecCircle.classList.remove(domClasses.animateOpacity1To0);
       }
     });
 
@@ -197,6 +227,9 @@ class JutSuperSettingsPopup {
     if (schema.skipCancelKey !== undefined && schema.skipCancelKey !== this.exposedSettings.skipCancelKey) {
       this.setCancelKey(schema.skipCancelKey);
     }
+    if (schema.achievementSoundEnabled !== undefined && schema.achievementSoundEnabled !== this.exposedSettings.achievementSoundEnabled) {
+      this.setAchievementSoundEnabled(schema.achievementSoundEnabled);
+    }
   }
 
   /**
@@ -220,7 +253,8 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onOpeningsSwitchChange(event) {
-    const value = event.target.checked;
+    const target = /** @type {HTMLInputElement} */ (event.target);
+    const value = target.checked;
 
     this.exposedSettings.openings.doSkip = value;
 
@@ -299,7 +333,8 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onEndingsSwitchChange(event) {
-    const value = event.target.checked;
+    const target = /** @type {HTMLInputElement} */ (event.target);
+    const value = target.checked;
 
     this.exposedSettings.endings.doSkip = value;
 
@@ -497,7 +532,8 @@ class JutSuperSettingsPopup {
    * @param {Event} event
    */
   onEndingsFullscreenSliderChange(event) {
-    const value = event.target.checked;
+    const target = /** @type {HTMLInputElement} */ (event.target);
+    const value = target.checked;
 
     this.exposedSettings.endings.doPersistFullscreen = value;
 
@@ -535,9 +571,10 @@ class JutSuperSettingsPopup {
       this.delaySlider.setAttribute("value", `${event}`);
     }
     else {
-      newValue = new Number(event.target.value).valueOf();
-      this.delayNum.innerText = event.target.value;
-      this.delaySlider.setAttribute("value", `${event.target.value}`);
+      const target = /** @type {HTMLInputElement} */ (event.target);
+      newValue = new Number(target.value).valueOf();
+      this.delayNum.innerText = target.value;
+      this.delaySlider.setAttribute("value", `${target.value}`);
     }
     
     if (!window.JUTSUPER_DEBUG) {
@@ -580,16 +617,16 @@ class JutSuperSettingsPopup {
    * @param {Event} event 
    */
   onCancelRecorderClick(event) {
-    this.cancelKeyListener.isListening = !this.cancelKeyListener.isListening;
+    this.isListeningCancelKey = !this.isListeningCancelKey;
     this.cancelKeyListener.classList.toggle(domClasses.animateDarkToDarkerGreenHt);
     this.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
   }
 
   /**
-   * @param {Event} event 
+   * @param {KeyboardEvent} event 
    */
   onCancelRecorderKeyDown(event) {
-    if (!this.cancelKeyListener.isListening) {
+    if (!this.isListeningCancelKey) {
       return
     }
 
@@ -602,7 +639,7 @@ class JutSuperSettingsPopup {
 
     this.cancelKeyListener.value = keyLabel;
     this.cancelKeyListener.classList.remove(domClasses.animateDarkToDarkerGreenHt);
-    this.cancelKeyListener.isListening = false;
+    this.isListeningCancelKey = false;
     this.cancelKeyListenerRecCircle.classList.toggle(domClasses.animateOpacity1To0);
   }
 
@@ -612,6 +649,33 @@ class JutSuperSettingsPopup {
   setCancelKey(value) {
     this.exposedSettings.skipCancelKey = util.getKeyLabelFromRawLabel(value);
     this.cancelKeyListener.value = util.getKeyLabelFromRawLabel(value);
+  }
+
+
+  //////////////////////////////
+  // Achievement sound slider //
+  //////////////////////////////
+
+  /**
+   * @param {Event} event
+   */
+  onAchievementSoundSliderChange(event) {
+    const target = /** @type {HTMLInputElement} */ (event.target);
+    const value = target.checked;
+
+    this.exposedSettings.achievementSoundEnabled = value;
+
+    if (!window.JUTSUPER_DEBUG) {
+      this.reqIpc.send({ achievementSoundEnabled: value });
+    }
+  }
+
+  /**
+   * @param {boolean} value 
+   */
+  setAchievementSoundEnabled(value) {
+    this.exposedSettings.achievementSoundEnabled = value;
+    this.achvSoundEnabledSlider.checked = value;
   }
 
   /////////////////////////
