@@ -1019,6 +1019,8 @@ class JutSuper {
    * @returns {void}
    */
   customFullscreenExit(event = undefined) {
+    const loc = `${this.LOCATION}@${this.customFullscreenExit.name}`;
+
     if (event && this.isCustomFullscreen) {
       event.stopImmediatePropagation();
     }
@@ -1044,21 +1046,29 @@ class JutSuper {
 
     // enable scrolling
     body.style.overflow = null;
+    jsuperLog.debug(`${loc}: enabled scrolling`);
     // show header
     header.style.display = null;
+    jsuperLog.debug(`${loc}: show header`);
     // show info panel
     infoPanel.style.display = null;
+    jsuperLog.debug(`${loc}: show info panel`);
     // show footer
     footer.style.display = null;
+    jsuperLog.debug(`${loc}: show footer`);
 
     // remove fullscreen styling from the player
     playerDiv.classList.remove(jutsuClasses.vjsFullscreen);
+    jsuperLog.debug(`${loc}: removed fullscreen class from the player`);
     // make the player regular size
     playerDiv.classList.remove(domClasses.fullscreen);
+    jsuperLog.debug(`${loc}: removed fullscreen styling from the player`);
     // put the player in a normal position
     playerDiv.classList.remove(domClasses.topIndex);
+    jsuperLog.debug(`${loc}: removed top Z-index from the player`);
 
     this.player.isFullscreen(false);
+    jsuperLog.debug(`${loc}: set player fullscreen flag to false`);
     this.isCustomFullscreen = false;
 
     this.reqIpc.send(
@@ -1109,8 +1119,11 @@ class JutSuper {
    * @returns {void}
    */
   handleCustomFullscreenExitInject() {
+    const loc = `${this.LOCATION}@${this.handleCustomFullscreenExitInject.name}`;
+
     this.isCustomFullscreen = true;
     this.player.isFullscreen(true);
+    jsuperLog.debug(`${loc}: set player fullscreen flag to true`);
 
     const fullscreenButton = /** @type {HTMLButtonElement} */ (
       document.getElementsByClassName(jutsuClasses.vjsFullscreenControl)[0]
@@ -1123,6 +1136,8 @@ class JutSuper {
     );
 
     this.listenResolutionChange();
+
+    jsuperLog.debug(`${this.LOCATION}: custom fullscreen exit injection completed`);
   }
 
   /**

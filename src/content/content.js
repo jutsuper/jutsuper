@@ -837,6 +837,8 @@ class JutSuperContent {
     this.requestPlay();
 
     if (this.settings.get().endings.doPersistFullscreen && transition.isFullscreen) {
+      jsuperLog.debug(`${loc}: setting up custom fullscreen`);
+
       const body = /** @type {HTMLBodyElement} */ (
         document.getElementsByTagName("body")[0]
       );
@@ -855,19 +857,26 @@ class JutSuperContent {
 
       // disable scrolling
       body.style.overflow = "hidden";
+      jsuperLog.debug(`${loc}: disabled scrolling`);
       // hide header
       header.style.display = "none";
+      jsuperLog.debug(`${loc}: hide header`);
       // hide info panel
       infoPanel.style.display = "none";
+      jsuperLog.debug(`${loc}: hide info panel`);
       // hide footer
       footer.style.display = "none";
+      jsuperLog.debug(`${loc}: hide footer`);
 
       // add fullscreen styling to the player
       playerDiv.classList.add(jutsuClasses.vjsFullscreen);
+      jsuperLog.debug(`${loc}: added fullscreen class to the player`);
       // make the player full window size
       playerDiv.classList.add(domClasses.fullscreen);
+      jsuperLog.debug(`${loc}: added fullscreen styling to the player`);
       // put the player above everything
       playerDiv.classList.add(domClasses.topIndex);
+      jsuperLog.debug(`${loc}: added top Z-index to the player`);
 
       // inject a function to be able to exit
       // this custom fullscreen mode
