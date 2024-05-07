@@ -446,7 +446,17 @@ const JutSuperDomIds = {
   /** @type {"jutsuper-skip-key-label"} */
   skipKeyLabel: "jutsuper-skip-key-label",
   /** @type {"jutsuper-skip-countdown-line"} */
-  skipCountdownLine: "jutsuper-skip-countdown-line"
+  skipCountdownLine: "jutsuper-skip-countdown-line",
+
+  /** Notification */
+  /**  @type {"jutsuper-vjs-notification-area"} */
+  vjsNotificationArea: "jutsuper-vjs-notification-area",
+  /**  @type {"jutsuper-vjs-notification-clip-area"} */
+  vjsNotificationClipArea: "jutsuper-vjs-notification-clip-area",
+  /**  @type {"jutsuper-notification-root"} */
+  notificationRoot: "jutsuper-notification-root",
+  /**  @type {"jutsuper-notification-content"} */
+  notificationContent: "jutsuper-notification-content"
 }
 /**
  * @typedef {(
@@ -633,6 +643,14 @@ const JutSuperDomClasses = {
   textAchievementSound: "jutsuper-text-achievement-sound",
   /** @type {"jutsuper-text-skipping"} */
   textSkipping: "jutsuper-text-skipping",
+  /** @type {"jutsuper-text-cant-start-playback"} */
+  textCantStartPlayback: "jutsuper-text-cant-start-playback",
+  /** @type {"jutsuper-text-possibly-browser-settings"} */
+  textPossiblyBrowserSettings: "jutsuper-text-possibly-browser-settings",
+  /** @type {"jutsuper-text-see"} */
+  textSee: "jutsuper-text-see",
+  /** @type {"jutsuper-text-autoplay-faq"} */
+  textAutoplayFaq: "jutsuper-text-autoplay-faq",
 
   /** Tooltips */
   /** @type {"jutsuper-tooltip-openings-settings"} */

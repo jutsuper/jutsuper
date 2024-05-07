@@ -3,7 +3,7 @@
   <head>
     <link type="text/css" rel="stylesheet" href="../jutsuper.css" />
     <script src="/src/debug/setFlag.js"></script>
-    <script src="/src/page/skip.js" type="module" defer></script>
+    <script src="/src/page/notification.js" type="module" defer></script>
     <style>
       @font-face {
         font-family: Roboto;
@@ -26,30 +26,12 @@
         Awaiting JavaScript...
       </div>
     </div>
-    <div class="jutsuper-dev-skip-area">
+    <div class="jutsuper-dev-notification-area">
       <!-- Start of the area that gets injected -->
-      <div id="jutsuper-skip-root" class="jutsuper-skip-frame">
-        <div class="jutsuper-skip-frame-content">
-          <div class="jutsuper-skip-header">
-            <img
-              src="/src/assets/icon/skip.svg"
-              width="15px"
-              class="jutsuper-icon-skip jutsuper-no-pointer-events jutsuper-no-select"
-            />
-            <div class="jutsuper-text-skipping">Skipping</div>
-          </div>
-          <div class="jutsuper-skip-options-container">
-            <div class="jutsuper-text-to-cancel">Cancel</div>
-            <div id="jutsuper-skip-key-label" class="jutsuper-key-label">
-              Null
-            </div>
-          </div>
+      <div id="jutsuper-notification-root" class="jutsuper-notification-frame">
+        <div id="jutsuper-notification-content" class="jutsuper-notification-frame-content">
+
         </div>
-        <div
-          id="jutsuper-skip-countdown-line"
-          class="jutsuper-skip-countdown-line"
-          style="width: 100%"
-        ></div>
       </div>
       <!-- End of the area that gets injected -->
     </div>

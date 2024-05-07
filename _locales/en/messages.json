@@ -93,5 +93,17 @@
   },
   "toggleAchievementSound": {
     "message": "Toggle achievement sound"
+  },
+  "cantStartPlayback": {
+    "message": "Can't start playback"
+  },
+  "possiblyBrowserSettings": {
+    "message": "Possibly because of browser settings."
+  },
+  "see": {
+    "message": "See"
+  },
+  "autoplayFaq": {
+    "message": "autoplay FAQ"
   }
 }

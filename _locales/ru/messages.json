@@ -93,5 +93,17 @@
   },
   "toggleAchievementSound": {
     "message": "Переключить звук достижений"
+  },
+  "cantStartPlayback": {
+    "message": "Воспроизведение невозможно"
+  },
+  "possiblyBrowserSettings": {
+    "message": "Вероятно, из-за настроек браузера."
+  },
+  "see": {
+    "message": "Смотри"
+  },
+  "autoplayFaq": {
+    "message": "FAQ по воспроизведению"
   }
 }
