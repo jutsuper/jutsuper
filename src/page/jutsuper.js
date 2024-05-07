@@ -963,7 +963,7 @@ class JutSuper {
    */
   async handlePlayerFullscreenExitRequest() {
     if (!this.isFullscreen) {
-      this.rspIpc.send({fullscreen: { rspPlayerFullscreenExit: {
+      this.rspIpc.send({ fullscreen: { rspPlayerFullscreenExit: {
         isFulfilled: false,
         reason: new Error("not in fullscreen")
       }}});
@@ -975,7 +975,7 @@ class JutSuper {
     // immediately
     await document.exitFullscreen();
 
-    this.rspIpc.send({fullscreen: { rspPlayerFullscreenExit: {
+    this.rspIpc.send({ fullscreen: { rspPlayerFullscreenExit: {
       isFulfilled: true
     }}});
   }
