@@ -26,11 +26,12 @@ extensions, if that's a problem.
 
 # <picture><img src="src/assets/logo/square-green-48.svg" width="25" /></picture> Autoskip browser plugin for [jut.su](https://jut.su/)
 
+
 ### Skip openings and endings, play automatically
 <picture>
   <p align="left">
     <img
-      src="assets/showcase/autoskip-element.svg"
+      src="assets/showcase/automatically-skip.svg"
       width="500px"
       alt="Opening and ending skip with autoplay animation"
     />
@@ -41,7 +42,7 @@ extensions, if that's a problem.
 <picture>
   <p align="left">
     <img
-      src="assets/showcase/persistent-fullscreen-element.svg"
+      src="assets/showcase/persistent-fullscreen.svg"
       width="500px"
       alt="Persistent fullscreen animation"
     />
@@ -52,7 +53,7 @@ extensions, if that's a problem.
 <picture>
   <p align="left">
     <img
-      src="assets/showcase/change-preferences-element.svg"
+      src="assets/showcase/change-preferences.svg"
       width="500px"
       alt="Changing preferences animation"
     />

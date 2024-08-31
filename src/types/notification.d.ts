@@ -1,5 +1,6 @@
 export { JutSuperNotificationUrls };
 
 interface JutSuperNotificationUrls {
-  autoplayError: string;
+  skipping: string;
+  autoplayUnavailable: string;
 }

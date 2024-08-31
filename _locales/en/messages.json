@@ -8,7 +8,7 @@
     "description": "Extension description"
   },
   "skipOptions": {
-    "message": "Skip"
+    "message": "Skipping"
   },
   "openings": {
     "message": "Openings"
@@ -53,16 +53,16 @@
     "message": "Toggle openings skip"
   },
   "whichRegionToSkip": {
-    "message": "Which region to skip if multiple regions are available"
+    "message": "Which fragment to skip if multiple fragments are available"
   },
   "skipAnyRegion": {
-    "message": "Skip any region"
+    "message": "Skip any fragment"
   },
   "skipFirstRegion": {
-    "message": "Skip only first region"
+    "message": "Skip only first fragment"
   },
   "skipLastRegion": {
-    "message": "Skip only last region"
+    "message": "Skip only last fragment"
   },
   "endingsSettings": {
     "message": "Endings settings"
@@ -95,7 +95,7 @@
     "message": "Toggle achievement sound"
   },
   "cantStartPlayback": {
-    "message": "Can't start playback"
+    "message": "Playback error"
   },
   "possiblyBrowserSettings": {
     "message": "Possibly because of browser settings."
@@ -105,5 +105,17 @@
   },
   "autoplayFaq": {
     "message": "autoplay FAQ"
+  },
+  "autoplayUnavailable": {
+    "message": "Autoplay unavailable"
+  },
+  "changeYourBrowserSettings": {
+    "message": "Change your browser settings."
+  },
+  "seeInstructions": {
+    "message": "See instructions"
+  },
+  "here": {
+    "message": "here"
   }
 }

@@ -2,7 +2,7 @@
 
 # Это расширение в активной разработке
 Базовый функционал работает,
-но всё ещё есть пара вещей, требующих доработки.
+но всё ещё есть пара вещей, требующие доработки.
 
 Если хочется использовать прямо сейчас:
 1. Собери эту штуку (инструкции ниже)
@@ -31,7 +31,7 @@
 <picture>
   <p align="left">
     <img
-      src="assets/showcase/autoskip-element.svg"
+      src="assets/showcase/automatically-skip.svg"
       width="500px"
       alt="Анимация пропуска опенингов и эндингов с автоматическим воспроизведением"
     />
@@ -42,7 +42,7 @@
 <picture>
   <p align="left">
     <img
-      src="assets/showcase/persistent-fullscreen-element.svg"
+      src="assets/showcase/persistent-fullscreen.svg"
       width="500px"
       alt="Анимация сохранения полноэкранного режима"
     />
@@ -53,7 +53,7 @@
 <picture>
   <p align="left">
     <img
-      src="assets/showcase/change-preferences-element.svg"
+      src="assets/showcase/change-preferences.svg"
       width="500px"
       alt="Анимация настройки"
     />

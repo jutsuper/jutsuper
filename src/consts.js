@@ -13,14 +13,12 @@ export {
   JutSuperLogLevels,
   JutSuperLogDefaults,
   JutSuperAssetIds,
-  JutSuperAssetPaths,
   JutSuperDomIds,
   JutSuperDomClasses,
   JutSuperInputNames,
   JutSuperDefaultFonts,
   JutSuperIpcJsDataTypes,
   JutSuperIpcJsDataTypesArray,
-  JutSuperIpcIds,
   JutSuperIpcKeys,
   JutSuperIpcSettingsKeys,
   JutSuperIpcLoadingStates,
@@ -270,8 +268,8 @@ const JutSuperAssetIds = {
   squareBlackLogo48Svg: "jutsuper-square-black-logo-48-svg",
   /** @type {"jutsuper-dropdown-svg"} */
   dropdownSvg: "jutsuper-dropdown-svg",
-  /** @type {"jutsuper-skip-svg"} */
-  skipSvg: "jutsuper-skip-svg",
+  /** @type {"jutsuper-skipping-svg"} */
+  skipSvg: "jutsuper-skipping-svg",
   /** @type {"jutsuper-play-svg"} */
   playSvg: "jutsuper-play-svg",
   /** @type {"jutsuper-css"} */
@@ -282,63 +280,13 @@ const JutSuperAssetIds = {
   jutsuperJs: "jutsuper-js",
   /** @type {"jutsuper-settings-html"} */
   settingsHtml: "jutsuper-settings-html",
-  /** @type {"jutsuper-skip-html"} */
-  skipHtml: "jutsuper-skip-html",
+  /** @type {"jutsuper-skipping-html"} */
+  skipHtml: "jutsuper-skipping-html",
 }
 /** 
  * @typedef {(
  *   typeof JutSuperAssetIds[keyof typeof JutSuperAssetIds]
  * )} JutSuperAssetIdsKeys
- */
-
-
-/**
- * # Describes paths to public assets used by this extension
- * 
- * These paths are only used in content script
- * when injecting stuff into the page.
- * 
- * For importing, content script uses hardcoded paths,
- * since the `import {...} from "..."` syntax
- * is not supported there.
- * 
- * @readonly
- * @enum {typeof JutSuperAssetPaths}
- */
-const JutSuperAssetPaths = {
-  /** @type {"/src/assets/logo/square-green-48.svg"} */
-  squareGreenLogo48Svg: "/src/assets/logo/square-green-48.svg",
-  /** @type {"/src/assets/logo/square-white-48.svg"} */
-  squareWhiteLogo48Svg: "/src/assets/logo/square-white-48.svg",
-  /** @type {"/src/assets/logo/square-black-48.svg"} */
-  squareBlackLogo48Svg: "/src/assets/logo/square-black-48.svg",
-  /** @type {"/src/assets/icon/dropdown.svg"} */
-  dropdownSvg: "/src/assets/icon/dropdown.svg",
-  /** @type {"/src/assets/icon/skip.svg"} */
-  skipSvg: "/src/assets/icon/skip.svg",
-  /** @type {"/src/assets/icon/play.svg"} */
-  playSvg: "/src/assets/icon/play.svg",
-  /** @type {"/src/consts.js"} */
-  constsJs: "/src/consts.js",
-  /** @type {"/src/ipc.js"} */
-  ipcJs: "/src/ipc.js",
-  /** @type {"/src/jutsuper.css"} */
-  jutsuperCss: "/src/jutsuper.css",
-  /** @type {"/src/page/jutsuper.js"} */
-  jutsuperJs: "/src/page/jutsuper.js",
-  /** @type {"/src/page/settings.js"} */
-  settingsJs: "/src/page/settings.js",
-  /** @type {"/src/page/settings.html"} */
-  settingsHtml: "/src/page/settings.html",
-  /** @type {"/src/page/skip.js"} */
-  skipJs: "/src/page/skip.js",
-  /** @type {"/src/page/skip.html"} */
-  skipHtml: "/src/page/skip.html",
-}
-/** 
- * @typedef {(
- *   typeof JutSuperAssetPaths[keyof typeof JutSuperAssetPaths]
- * )} JutSuperAssetPathsKeys
  */
 
 
@@ -434,29 +382,27 @@ const JutSuperDomIds = {
   /** @type {"jutsuper-settings-achievement-sound-switch"} */
   settingsAchievementSoundSwitch: "jutsuper-settings-achievement-sound-switch",
 
-  /** Skip */
-  /** @type {"jutsuper-vjs-skip-area"} */
-  vjsSkipArea: "jutsuper-vjs-skip-area",
-  /** @type {"jutsuper-vjs-skip-clip-area"} */
-  vjsSkipClipArea: "jutsuper-vjs-skip-clip-area",
-  /** @type {"jutsuper-skip-root"} */
-  skipRoot: "jutsuper-skip-root",
-  /** @type {"jutsuper-skip-cancel-button"} */
-  skipCancelButton: "jutsuper-skip-cancel-button",
-  /** @type {"jutsuper-skip-key-label"} */
-  skipKeyLabel: "jutsuper-skip-key-label",
-  /** @type {"jutsuper-skip-countdown-line"} */
-  skipCountdownLine: "jutsuper-skip-countdown-line",
-
   /** Notification */
-  /**  @type {"jutsuper-vjs-notification-area"} */
-  vjsNotificationArea: "jutsuper-vjs-notification-area",
-  /**  @type {"jutsuper-vjs-notification-clip-area"} */
-  vjsNotificationClipArea: "jutsuper-vjs-notification-clip-area",
-  /**  @type {"jutsuper-notification-root"} */
-  notificationRoot: "jutsuper-notification-root",
-  /**  @type {"jutsuper-notification-content"} */
-  notificationContent: "jutsuper-notification-content"
+  /** @type {"jutsuper-vjs-notif-area"} */
+  vjsNotifArea: "jutsuper-vjs-notif-area",
+  /** @type {"jutsuper-vjs-notif-clip-area"} */
+  vjsNotifClipArea: "jutsuper-vjs-notif-clip-area",
+  /** @type {"jutsuper-notif-root"} */
+  notifRoot: "jutsuper-notif-root",
+
+  /** Autoplay error */
+  /** @type {"jutsuper-notif-autoplayerr-root"} */
+  autoplayErrorRoot: "jutsuper-notif-autoplayerr-root",
+
+  /** Skipping */
+  /** @type {"jutsuper-notif-skipping-root"} */
+  skippingRoot: "jutsuper-notif-skipping-root",
+  /** @type {"jutsuper-skipping-cancel-button"} */
+  skippingCancelButton: "jutsuper-skipping-cancel-button",
+  /** @type {"jutsuper-notif-skipping-key-label"} */
+  skippingKeyLabel: "jutsuper-notif-skipping-key-label",
+  /** @type {"jutsuper-notif-skipping-countdown-line"} */
+  skippingCountdownLine: "jutsuper-notif-skipping-countdown-line"
 }
 /**
  * @typedef {(
@@ -533,8 +479,8 @@ const JutSuperDomClasses = {
   vjsButton: "jutsuper-vjs-button",
   /** @type {"jutsuper-vjs-container"} */
   vjsContainer: "jutsuper-vjs-container",
-  /** @type {"jutsuper-vjs-popup-area"} */
-  vjsPopupArea: "jutsuper-vjs-popup-area",
+  /** @type {"jutsuper-vjs-popup"} */
+  vjsPopup: "jutsuper-vjs-popup",
   /** @type {"jutsuper-vjs-popup-clip-area"} */
   vjsPopupClipArea: "jutsuper-vjs-popup-clip-area",
   /** @type {"jutsuper-vjs-skip-popup-area-sized"} */
@@ -577,16 +523,16 @@ const JutSuperDomClasses = {
   settingsGrid4Cols: "jutsuper-settings-grid-4-cols",
 
   /** Skip popup */
-  /** @type {"jutsuper-skip-frame"} */
-  skipFrame: "jutsuper-skip-frame",
-  /** @type {"jutsuper-skip-frame-content"} */
-  skipFrameContent: "jutsuper-skip-frame-content",
-  /** @type {"jutsuper-skip-header"} */
-  skipHeader: "jutsuper-skip-header",
-  /** @type {"jutsuper-skip-options-container"} */
-  skipOptionsContainer: "jutsuper-skip-options-container",
-  /** @type {"jutsuper-skip-countdown-line"} */
-  skipCountdownLine: "jutsuper-skip-countdown-line",
+  /** @type {"jutsuper-skipping-frame"} */
+  skipFrame: "jutsuper-skipping-frame",
+  /** @type {"jutsuper-skipping-frame-content"} */
+  skipFrameContent: "jutsuper-skipping-frame-content",
+  /** @type {"jutsuper-skipping-header"} */
+  skipHeader: "jutsuper-skipping-header",
+  /** @type {"jutsuper-notif-skipping-description"} */
+  skipOptionsContainer: "jutsuper-notif-skipping-description",
+  /** @type {"jutsuper-notif-skipping-countdown-line"} */
+  skipCountdownLine: "jutsuper-notif-skipping-countdown-line",
 
   /** Toggle slider */
   /** @type {"jutsuper-slider-switch"} */
@@ -651,20 +597,28 @@ const JutSuperDomClasses = {
   textSee: "jutsuper-text-see",
   /** @type {"jutsuper-text-autoplay-faq"} */
   textAutoplayFaq: "jutsuper-text-autoplay-faq",
+  /** @type {"jutsuper-text-autoplay-unavailable"} */
+  textAutoplayUnavailable: "jutsuper-text-autoplay-unavailable",
+  /** @type {"jutsuper-text-dont-forget-to-enable-autoplay-in-browser"} */
+  textChangeYourBrowserSettings: "jutsuper-text-dont-forget-to-enable-autoplay-in-browser",
+  /** @type {"jutsuper-text-see-instructions"} */
+  textSeeInstructions: "jutsuper-text-see-instructions",
+  /** @type {"jutsuper-text-here"} */
+  textHere: "jutsuper-text-here",
 
   /** Tooltips */
   /** @type {"jutsuper-tooltip-openings-settings"} */
   tooltipOpeningsSettings: "jutsuper-tooltip-openings-settings",
   /** @type {"jutsuper-tooltip-toggle-openings-skip"} */
   tooltipToggleOpeningsSkip: "jutsuper-tooltip-toggle-openings-skip",
-  /** @type {"jutsuper-tooltip-which-region-to-skip"} */
-  tooltipWhichRegionToSkip: "jutsuper-tooltip-which-region-to-skip",
-  /** @type {"jutsuper-tooltip-skip-any-region"} */
-  tooltipSkipAnyRegion: "jutsuper-tooltip-skip-any-region",
-  /** @type {"jutsuper-tooltip-skip-first-region"} */
-  tooltipSkipFirstRegion: "jutsuper-tooltip-skip-first-region",
-  /** @type {"jutsuper-tooltip-skip-last-region"} */
-  tooltipSkipLastRegion: "jutsuper-tooltip-skip-last-region",
+  /** @type {"jutsuper-tooltip-which-fragment-to-skip"} */
+  tooltipWhichRegionToSkip: "jutsuper-tooltip-which-fragment-to-skip",
+  /** @type {"jutsuper-tooltip-skip-any-fragment"} */
+  tooltipSkipAnyRegion: "jutsuper-tooltip-skip-any-fragment",
+  /** @type {"jutsuper-tooltip-skip-first-fragment"} */
+  tooltipSkipFirstRegion: "jutsuper-tooltip-skip-first-fragment",
+  /** @type {"jutsuper-tooltip-skip-last-fragment"} */
+  tooltipSkipLastRegion: "jutsuper-tooltip-skip-last-fragment",
   /** @type {"jutsuper-tooltip-endings-settings"} */
   tooltipEndingsSettings: "jutsuper-tooltip-endings-settings",
   /** @type {"jutsuper-tooltip-toggle-endings-skip"} */
@@ -794,29 +748,6 @@ const JutSuperIpcJsDataTypesArray = [
   JutSuperIpcJsDataTypes.null,
   JutSuperIpcJsDataTypes.undefined
 ]
-
-
-/**
- * # Describes IPC instances' ID's
- * 
- * IPC instances can have their own ID
- * so that they won't receive their own events
- * when listening.
- * 
- * @readonly
- * @enum {typeof JutSuperIpcIds}
- */
-const JutSuperIpcIds = {
-  /** @type {"pageMain"} */
-  page: "pageMain",
-  /** @type {"contentMain"} */
-  content: "contentMain"
-}
-/** 
- * @typedef {(
- *   typeof JutSuperIpcIds[keyof typeof JutSuperIpcIds]
- * )} JutSuperIpcIdsKeys
- */
 
 
 /**

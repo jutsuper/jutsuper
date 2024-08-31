@@ -4,11 +4,11 @@ import {
   JutSuperDomClasses as domClasses,
   JutSuperDomIds as domIds,
   JutSuperInputNames as inputNames,
-  JutSuperIpcIds as ipcIds
 } from "/src/consts.js";
 import {
   JutSuperIpcFlags as ipcFlags,
   JutSuperIpcNamespaces as ipcNamespaces,
+  JutSuperIpcIds as ipcIds,
   JutSuperIpc,
   JutSuperIpcBuilder,
   JutSuperIpcRspParamsBuilder
@@ -22,6 +22,9 @@ import { jsuperUtil as util } from "/src/util.js";
 export { JutSuperSettingsPopup };
 
 
+console.debug("JutSuper: loading /src/settings.js");
+
+
 /**
  * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObject} JutSuperSettingsObject
  * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectPartial} JutSuperSettingsObjectPartial
@@ -32,88 +35,86 @@ export { JutSuperSettingsPopup };
 
 class JutSuperSettingsPopup {
   /**
-   * @param {Document} doc 
+   * @param {HTMLDivElement} root 
    */
-  constructor(doc) {
+  constructor(root) {
     this.LOCATION = JutSuperSettingsPopup.name;
 
-    this.document = doc ? doc : document;
-
+    this.root = root;
     this.numberRegex = /[0-9]+/;
-
     this.bars = /** @type {NodeListOf<HTMLInputElement>} */ (
-      this.document.getElementsByName(inputNames.settingsBar)
+      this.root.querySelectorAll(`input[name="${inputNames.settingsBar}"]`)
     );
     this.opSkipSwitch = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsOpeningsSwitch)
+      this.root.querySelector("#" + domIds.settingsOpeningsSwitch)
     );
     this.opSectionBar = /** @type {HTMLLabelElement} */ (
-      this.document.getElementById(domIds.settingsOpeningsBarLabel)
+      this.root.querySelector("#" + domIds.settingsOpeningsBarLabel)
     );
     this.opClipSection = /** @type {HTMLDivElement} */ (
-      this.document.getElementById(domIds.settingsOpeningsSectionClip)
+      this.root.querySelector("#" + domIds.settingsOpeningsSectionClip)
     );
     this.opSkipOrderSelector = /** @type {HTMLDivElement} */ (
-      this.document.getElementById(domIds.settingsOpeningsSkipOrderSelector)
+      this.root.querySelector("#" + domIds.settingsOpeningsSkipOrderSelector)
     );
     this.opSkipOrderAnySelector = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsOpeningsSkipOrderAny)
+      this.root.querySelector("#" + domIds.settingsOpeningsSkipOrderAny)
     );
     this.opSkipOrderFirstSelector = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsOpeningsSkipOrderFirst)
+      this.root.querySelector("#" + domIds.settingsOpeningsSkipOrderFirst)
     );
     this.opSkipOrderLastSelector = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsOpeningsSkipOrderLast)
+      this.root.querySelector("#" + domIds.settingsOpeningsSkipOrderLast)
     );
     this.edSkipSwitch = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsEndingsSwitch)
+      this.root.querySelector("#" + domIds.settingsEndingsSwitch)
     );
     this.edSectionBar = /**  @type {HTMLLabelElement} */ (
-      this.document.getElementById(domIds.settingsEndingsBarLabel)
+      this.root.querySelector("#" + domIds.settingsEndingsBarLabel)
     );
     this.edClipSection = /** @type {HTMLDivElement} */ (
-      this.document.getElementById(domIds.settingsEndingsSectionClip)
+      this.root.querySelector("#" + domIds.settingsEndingsSectionClip)
     );
     this.edSkipOrderSelector = /** @type {HTMLDivElement} */ (
-      this.document.getElementById(domIds.settingsEndingsSkipOrderSelector)
+      this.root.querySelector("#" + domIds.settingsEndingsSkipOrderSelector)
     );
     this.edSkipOrderAnySelector = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsEndingsSkipOrderAny)
+      this.root.querySelector("#" + domIds.settingsEndingsSkipOrderAny)
     );
     this.edSkipOrderFirstSelector = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsEndingsSkipOrderFirst)
+      this.root.querySelector("#" + domIds.settingsEndingsSkipOrderFirst)
     );
     this.edSkipOrderLastSelector = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsEndingsSkipOrderLast)
+      this.root.querySelector("#" + domIds.settingsEndingsSkipOrderLast)
     );
     this.edSkipMaxNegativeButton = /** @type {HTMLButtonElement} */ (
-      this.document.getElementById(domIds.settingsEndingsMaxSkipsNegativeButton)
+      this.root.querySelector("#" + domIds.settingsEndingsMaxSkipsNegativeButton)
     );
     this.edSkipMaxField = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsEndingsMaxSkipsField)
+      this.root.querySelector("#" + domIds.settingsEndingsMaxSkipsField)
     );
     this.edSkipMaxPositiveButton = /** @type {HTMLButtonElement} */ (
-      this.document.getElementById(domIds.settingsEndingsMaxSkipsPositiveButton)
+      this.root.querySelector("#" + domIds.settingsEndingsMaxSkipsPositiveButton)
     );
     this.edFullscreenSwitch = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsEndingsFullscreenSwitch)
+      this.root.querySelector("#" + domIds.settingsEndingsFullscreenSwitch)
     );
     this.delaySlider = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsDelaySlider)
+      this.root.querySelector("#" + domIds.settingsDelaySlider)
     );
     this.delaySliderTimeoutId = undefined;
     this.delayNum = /** @type {HTMLDivElement} */ (
-      this.document.getElementById(domIds.settingsDelayNum)
+      this.root.querySelector("#" + domIds.settingsDelayNum)
     );
     this.cancelKeyListener = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsCancelKeyListener)
+      this.root.querySelector("#" + domIds.settingsCancelKeyListener)
     );
     this.isListeningCancelKey = false;
     this.cancelKeyListenerRecCircle = /** @type {HTMLDivElement} */ (
-      this.document.getElementById(domIds.settingsCancelKeyListenerRecCircle)
+      this.root.querySelector("#" + domIds.settingsCancelKeyListenerRecCircle)
     );
     this.achvSoundEnabledSlider = /** @type {HTMLInputElement} */ (
-      this.document.getElementById(domIds.settingsAchievementSoundSwitch)
+      this.root.querySelector("#" + domIds.settingsAchievementSoundSwitch)
     );
 
     this.bars.forEach(bar => bar.addEventListener("change", event => {
@@ -135,7 +136,7 @@ class JutSuperSettingsPopup {
     this.cancelKeyListener.addEventListener("keydown", event => this.onCancelRecorderKeyDown(event));
     this.achvSoundEnabledSlider.addEventListener("change", event => this.onAchievementSoundSliderChange(event));
 
-    this.document.addEventListener("mousedown", event => {
+    this.root.ownerDocument.addEventListener("mousedown", event => {
       const boundaries = this.cancelKeyListener.getBoundingClientRect();
       const isInXRange = event.clientX >= boundaries.left && event.clientX <= boundaries.right;
       const isInYRange = event.clientY >= boundaries.top && event.clientY <= boundaries.bottom;
@@ -151,6 +152,13 @@ class JutSuperSettingsPopup {
     window.jsuperSettings = new JutSuperSettings().setUndefined().get();
     /** @type {JutSuperSettingsObject} */
     this.exposedSettings = window.jsuperSettings;
+
+    this.root.addEventListener("animationend", event => {
+      if (this.isActive()) {
+        return;
+      }
+      this.root.classList.add(domClasses.displayHidden);
+    });
 
     if (!window.JUTSUPER_DEBUG) {
       /**
@@ -189,9 +197,13 @@ class JutSuperSettingsPopup {
 
     // if in dev environment, hide the preload message
     if (window.JUTSUPER_DEBUG) {
-      const preloadMessage = this.document.getElementById(domIds.devPreloadMessage);
+      const preloadMessage = this.root.ownerDocument.querySelector("#" + domIds.devPreloadMessage);
       preloadMessage.classList.add(domClasses.devHidden);
     }
+  }
+
+  isActive() {
+    return this.root.classList.contains("jutsuper-visible");
   }
 
   /**
@@ -705,9 +717,21 @@ class JutSuperSettingsPopup {
       location: loc
     });
   }
+
+  hide() {
+    this.root.classList.remove("jutsuper-visible");
+  }
+
+  show() {
+    this.root.classList.remove(domClasses.displayHidden);
+    this.root.offsetHeight; // flush
+    this.root.classList.add("jutsuper-visible");
+  }
 }
 
 
 if (window.JUTSUPER_DEBUG) {
-  window.jsuperSettingsPopup = new JutSuperSettingsPopup(document);
+  window.jsuperSettingsPopup = new JutSuperSettingsPopup(
+    /** @type {HTMLDivElement} */ (document.getElementById(domIds.settingsRoot))
+  );
 }

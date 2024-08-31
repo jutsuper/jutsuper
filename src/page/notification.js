@@ -2,6 +2,8 @@ import {
   JutSuperDomClasses as domClasses,
   JutSuperDomIds as domIds
 } from "/src/consts.js";
+import { JutSuperSkippingPopup } from "/src/page/notifications/skipping.js";
+import { JutSuperAutoplayUnavailablePopup } from "./notifications/autoplayUnavailable.js";
 export { JutSuperNotificationPopup };
 
 
@@ -12,32 +14,39 @@ export { JutSuperNotificationPopup };
 
 class JutSuperNotificationPopup {
   /**
-   * @param {Document} doc
+   * @param {HTMLDivElement} root
    * @param {JutSuperNotificationUrls} notifUrls
    */
-  constructor(doc, notifUrls) {
+  constructor(root, notifUrls) {
     this.LOCATION = JutSuperNotificationPopup.name;
 
-    this.document = doc ? doc : document;
     this.notifUrls = notifUrls;
-
-    this.popup = this.document.getElementById(domIds.notificationRoot);
-    this.content = this.document.getElementById(domIds.notificationContent);
+    this.root = root;
 
     // if in dev environment, hide the preload message
     if (window.JUTSUPER_DEBUG) {
-      const preloadMessage = this.document.getElementById(domIds.devPreloadMessage);
+      const preloadMessage = document.getElementById(domIds.devPreloadMessage);
       preloadMessage.classList.add(domClasses.devHidden);
-      this.setAutoplayErrorContent();
+      this.setAutoplayUnavailableContent();
     }
   }
 
   /**
-   * @returns {Promise<void>}
+   * @returns {Promise<JutSuperSkippingPopup>}
    */
-  async setAutoplayErrorContent() {
-    const text = await (await fetch(this.notifUrls.autoplayError)).text();
-    this.content.innerHTML = text;
+  async setSkippingContent() {
+    const text = await (await fetch(this.notifUrls.skipping)).text();
+    this.root.innerHTML = text;
+    return new JutSuperSkippingPopup(this.root);
+  }
+
+  /**
+   * @returns {Promise<JutSuperAutoplayUnavailablePopup>}
+   */
+  async setAutoplayUnavailableContent() {
+    const text = await (await fetch(this.notifUrls.autoplayUnavailable)).text();
+    this.root.innerHTML = text;
+    return new JutSuperAutoplayUnavailablePopup(this.root);
   }
 }
 
@@ -45,7 +54,11 @@ class JutSuperNotificationPopup {
 if (window.JUTSUPER_DEBUG) {
   /** @type {JutSuperNotificationUrls} */
   const notifUrls = {
-    autoplayError: "notifications/autoplayError.html"
+    skipping: "notifications/skipping.html",
+    autoplayUnavailable: "notifications/autoplayUnavailable.html"
   };
-  window.jsuperNotificationPopup = new JutSuperNotificationPopup(document, notifUrls);
+  window.jsuperNotifPopup = new JutSuperNotificationPopup(
+    /** @type {HTMLDivElement} */ (document.getElementById(domIds.notifRoot)),
+    notifUrls
+  );
 }
