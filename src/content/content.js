@@ -1,3 +1,37 @@
+import { jsuperLog } from "/src/log.js";
+import { jsuperErrors } from "/src/error.js";
+import {
+  ANY,
+  JutSuDomIds as jutsuIds,
+  JutSuDomClasses as jutsuClasses,
+  JutSuperDomClasses as domClasses,
+  JutSuperDefaultFonts as defaultFonts,
+  JutSuperAssetIds as assetIds,
+} from "/src/consts.js";
+import { JutSuperTransition } from "/src/transition.js";
+import { JutSuperSettings } from "/src/settings.js";
+import { JutSuperStorage } from "/src/storage.js";
+import {
+  JutSuperMessageBuilder,
+  JutSuperActionsMessageBuilder,
+  JutSuperRequestsRequestMessageBuilder
+} from "/src/messaging.js";
+import {
+  BrowserWindowStates as windowStates,
+  JutSuperBrowser
+} from "/src/browser.js";
+import { jsuperUtil } from "/src/util.js";
+import { AsyncLock } from "/src/lock.js";
+import {
+  JutSuperIpcFlags as ipcFlags,
+  JutSuperIpcNamespaces as ipcNamespaces,
+  JutSuperIpcIds as ipcIds,
+  JutSuperIpc,
+  JutSuperIpcBuilder,
+  JutSuperIpcRspParamsBuilder
+} from "/src/ipc.js";
+
+
 console.debug("JutSuper: loading /src/content/content.js");
 
 
@@ -12,258 +46,6 @@ var BROWSER = "gecko";
 
 
 /**
- * @typedef {typeof import("/src/consts.js").ANY} ANY
- * @type {ANY}
- */
-var ANY;
-
-/**
- * @typedef {import("/src/error.js").JutSuperErrors} JutSuperErrors
- * @type {JutSuperErrors}
- */
-var jsuperErrors;
-
-/**
- * @typedef {import("/src/log.js").JutSuperLog} JutSuperLog
- * @type {JutSuperLog}
- */
-var jsuperLog;
-
-/**
- * @typedef {typeof import("/src/util.js").jsuperUtil} JutSuperUtil
- * @type {JutSuperUtil}
- */
-var jsuperUtil;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperDomIds} JutSuperDomIds
- * @type {JutSuperDomIds}
- */
-var domIds;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperDomClasses} JutSuperDomClasses
- * @type {JutSuperDomClasses}
- */
-var domClasses;
-
-/**
- * @typedef {import("/src/consts.js").FontDescriptor} FontDescriptor
- * @type {FontDescriptor[]}
- */
-var defaultFonts;
-
-/**
- * @typedef {import("/src/consts.js").JutSuDomIds} JutSuDomIds
- * @type {JutSuDomIds}
- */
-var jutsuIds;
-
-/**
- * @typedef {import("/src/consts.js").JutSuDomClasses} JutSuDomClasses
- * @type {JutSuDomClasses}
- */
-var jutsuClasses;
-
-/**
- * @typedef {import("/src/ipc.js").JutSuperIpcFlags} JutSuperIpcFlags
- * @type {JutSuperIpcFlags}
- */
-var ipcFlags;
-
-/**
- * @typedef {import("/src/ipc.js").JutSuperIpcNamespaces} JutSuperIpcNamespaces
- * @type {JutSuperIpcNamespaces}
- */
-var ipcNamespaces;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperIpcIds} JutSuperIpcIds
- * @type {JutSuperIpcIds}
- */
-var ipcIds;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperAssetPaths} JutSuperAssetPaths
- * @type {JutSuperAssetPaths}
- */
-var assetPaths;
-
-/**
- * @typedef {import("/src/consts.js").JutSuperAssetIds} JutSuperAssetIds
- * @type {JutSuperAssetIds}
- */
-var assetIds;
-
-
-/**
- * @typedef {import("/src/browser.js").BrowserWindowStates} BrowserWindowStates
- * @type {BrowserWindowStates}
- */
-var windowStates;
-
-/**
- * @typedef {import("/src/lock.js").AsyncLock} AsyncLock
- * @type {typeof import("/src/lock.js").AsyncLock}
- */
-var AsyncLock;
-
-/**
- * @typedef {import("/src/ipc.js").JutSuperIpcBuilder} JutSuperIpcBuilder
- * @type {typeof import("/src/ipc.js").JutSuperIpcBuilder}
- */
-var JutSuperIpcBuilder;
-
-/**
- * @template ReqSchema
- * @template RspSchema
- * @template RspFilter
- * @typedef {import("/src/ipc.js").JutSuperIpc<ReqSchema, RspSchema, RspFilter>} JutSuperIpc<ReqSchema, RspSchema, RspFilter>
- * @type {typeof import("/src/ipc.js").JutSuperIpc}
- */
-var JutSuperIpc;
-
-/**
- * @template Schema
- * @typedef {import("/src/ipc.js").JutSuperIpcRspParamsBuilder<Schema>} JutSuperIpcRspParamsBuilder<Schema>
- * @type {typeof import("/src/ipc.js").JutSuperIpcRspParamsBuilder}
- */
-var JutSuperIpcRspParamsBuilder;
-
-/**
- * @typedef {import("/src/browser.js").JutSuperBrowser} JutSuperBrowser
- * @type {typeof import("/src/browser.js").JutSuperBrowser}
- */
-var JutSuperBrowser;
-
-/**
- * @typedef {import("/src/messaging.js").JutSuperActionsMessageBuilder} JutSuperActionsMessageBuilder
- * @type {typeof import("/src/messaging.js").JutSuperActionsMessageBuilder}
- */
-var JutSuperActionsMessageBuilder;
-
-/**
- * @typedef {import("/src/messaging.js").JutSuperRequestsRequestMessageBuilder} JutSuperRequestsRequestMessageBuilder
- * @type {typeof import("/src/messaging.js").JutSuperRequestsRequestMessageBuilder}
- */
-var JutSuperRequestsRequestMessageBuilder;
-
-/**
- * @typedef {import("/src/messaging.js").JutSuperMessageBuilder} JutSuperMessageBuilder
- * @type {typeof import("/src/messaging.js").JutSuperMessageBuilder}
- */
-var JutSuperMessageBuilder;
-
-/**
- * @typedef {import("/src/transition.js").JutSuperTransition} JutSuperTransition
- * @type {typeof import("/src/transition.js").JutSuperTransition}
- */
-var JutSuperTransition;
-
-/**
- * @typedef {import("/src/settings.js").JutSuperSettings} JutSuperSettings
- * @type {typeof import("/src/settings.js").JutSuperSettings}
- */
-var JutSuperSettings;
-
-/**
- * @typedef {typeof import("/src/storage.js").JutSuperStorage} JutSuperStorage
- * @type {typeof import("/src/storage.js").JutSuperStorage}
- */
-var JutSuperStorage;
-
-
-/** Import modules */
-(async function() {
-  /** @type {typeof import("/src/error.js")} */
-  const errorModule = await import(browser.runtime.getURL("/src/error.js"))
-  /** @type {typeof import("/src/log.js")} */
-  const logModule = await import(browser.runtime.getURL("/src/log.js"))
-  /** @type {typeof import("/src/util.js")} */
-  const utilModule = await import(browser.runtime.getURL("/src/util.js"))
-  /** @type {typeof import("/src/consts.js")} */
-  const constsModule = await import(browser.runtime.getURL("/src/consts.js"))
-  /** @type {typeof import("/src/browser.js")} */
-  const browserModule = await import(browser.runtime.getURL("/src/browser.js"))
-  /** @type {typeof import("/src/ipc.js")} */
-  const ipcModule = await import(browser.runtime.getURL("/src/ipc.js"));
-  /** @type {typeof import("/src/storage.js")} */
-  const storageModule = await import(browser.runtime.getURL("/src/storage.js"));
-  /** @type {typeof import("/src/messaging.js")} */
-  const messagingModule = await import(browser.runtime.getURL("/src/messaging.js"));
-  /** @type {typeof import("/src/transition.js")} */
-  const transitionModule = await import(browser.runtime.getURL("/src/transition.js"));
-  /** @type {typeof import("/src/settings.js")} */
-  const settingsModule = await import(browser.runtime.getURL("/src/settings.js"));
-  /** @type {typeof import("/src/lock.js")} */
-  const lockModule = await import(browser.runtime.getURL("/src/lock.js"));
-
-  ANY = constsModule.ANY;
-  jsuperErrors = errorModule.jsuperErrors;
-  jsuperLog = logModule.jsuperLog;
-  jsuperUtil = utilModule.jsuperUtil;
-  domIds = constsModule.JutSuperDomIds;
-  domClasses = constsModule.JutSuperDomClasses;
-  defaultFonts = constsModule.JutSuperDefaultFonts;
-  jutsuIds = constsModule.JutSuDomIds;
-  jutsuClasses = constsModule.JutSuDomClasses;
-  ipcFlags = ipcModule.JutSuperIpcFlags;
-  ipcNamespaces = ipcModule.JutSuperIpcNamespaces;
-  ipcIds = constsModule.JutSuperIpcIds;
-  assetPaths = constsModule.JutSuperAssetPaths;
-  assetIds = constsModule.JutSuperAssetIds;
-  windowStates = browserModule.BrowserWindowStates;
-  AsyncLock = lockModule.AsyncLock;
-  JutSuperIpcBuilder = ipcModule.JutSuperIpcBuilder;
-  JutSuperIpc = ipcModule.JutSuperIpc;
-  JutSuperIpcRspParamsBuilder = ipcModule.JutSuperIpcRspParamsBuilder;
-  JutSuperBrowser = browserModule.JutSuperBrowser;
-  JutSuperActionsMessageBuilder = messagingModule.JutSuperActionsMessageBuilder;
-  JutSuperRequestsRequestMessageBuilder = messagingModule.JutSuperRequestsRequestMessageBuilder;
-  JutSuperMessageBuilder = messagingModule.JutSuperMessageBuilder;
-  JutSuperTransition = transitionModule.JutSuperTransition;
-  JutSuperSettings = settingsModule.JutSuperSettings;
-  JutSuperStorage = storageModule.JutSuperStorage;
-
-  LOCALE_TEXT[domClasses.textSkipOptions] = browser.i18n.getMessage("skipOptions");
-  LOCALE_TEXT[domClasses.textOpenings] = browser.i18n.getMessage("openings");
-  LOCALE_TEXT[domClasses.textEndings] = browser.i18n.getMessage("endings");
-  LOCALE_TEXT[domClasses.textOrder] = browser.i18n.getMessage("order");
-  LOCALE_TEXT[domClasses.textMax] = browser.i18n.getMessage("max");
-  LOCALE_TEXT[domClasses.textFullscreen] = browser.i18n.getMessage("fullscreen");
-  LOCALE_TEXT[domClasses.textDelay] = browser.i18n.getMessage("delay");
-  LOCALE_TEXT[domClasses.textSecondsShort] = browser.i18n.getMessage("secondsShort");
-  LOCALE_TEXT[domClasses.textCancel] = browser.i18n.getMessage("cancel");
-  LOCALE_TEXT[domClasses.textToCancel] = browser.i18n.getMessage("toCancel");
-  LOCALE_TEXT[domClasses.textPlaybackOptions] = browser.i18n.getMessage("playbackOptions");
-  LOCALE_TEXT[domClasses.textAchievementSound] = browser.i18n.getMessage("achievementSound");
-  LOCALE_TEXT[domClasses.textSkipping] = browser.i18n.getMessage("skipping");
-
-  LOCALE_TOOLTIPS[domClasses.tooltipOpeningsSettings] = browser.i18n.getMessage("openingsSettings");
-  LOCALE_TOOLTIPS[domClasses.tooltipToggleOpeningsSkip] = browser.i18n.getMessage("toggleOpeningsSkip");
-  LOCALE_TOOLTIPS[domClasses.tooltipWhichRegionToSkip] = browser.i18n.getMessage("whichRegionToSkip");
-  LOCALE_TOOLTIPS[domClasses.tooltipSkipAnyRegion] = browser.i18n.getMessage("skipAnyRegion");
-  LOCALE_TOOLTIPS[domClasses.tooltipSkipFirstRegion] = browser.i18n.getMessage("skipFirstRegion");
-  LOCALE_TOOLTIPS[domClasses.tooltipSkipLastRegion] = browser.i18n.getMessage("skipLastRegion");
-  LOCALE_TOOLTIPS[domClasses.tooltipEndingsSettings] = browser.i18n.getMessage("endingsSettings");
-  LOCALE_TOOLTIPS[domClasses.tooltipToggleEndingsSkip] = browser.i18n.getMessage("toggleEndingsSkip");
-  LOCALE_TOOLTIPS[domClasses.tooltipMaxEpisodeSwitches] = browser.i18n.getMessage("maxEpisodeSwitches");
-  LOCALE_TOOLTIPS[domClasses.tooltipPersistFullscreen] = browser.i18n.getMessage("persistFullscreen");
-  LOCALE_TOOLTIPS[domClasses.tooltipToggleFullscreenPersistency] = browser.i18n.getMessage("toggleFullscreenPersistency");
-  LOCALE_TOOLTIPS[domClasses.tooltipDelayBeforeSkipping] = browser.i18n.getMessage("delayBeforeSkipping");
-  LOCALE_TOOLTIPS[domClasses.tooltipKeyToCancelSkipping] = browser.i18n.getMessage("keyToCancelSkipping");
-  LOCALE_TOOLTIPS[domClasses.tooltipSetCancelKey] = browser.i18n.getMessage("setCancelKey");
-  LOCALE_TOOLTIPS[domClasses.tooltipAchievementSound] = browser.i18n.getMessage("enableOrDisableAchievementSound");
-  LOCALE_TOOLTIPS[domClasses.tooltipToggleAchievementSound] = browser.i18n.getMessage("toggleAchievementSound");
-})().then(() => {
-  jutsuperContent = new JutSuperContent();
-})
-
-
-/**
- * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessage} JutSuperRequestsResponseMessage
- * @typedef {import("/src/browser.js").BrowserWindowStatesKeys} BrowserWindowStatesKeys
- * @typedef {import("/src/transition.js").JutSuperTransitionObject} JutSuperTransitionObject
  * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObject} JutSuperSettingsObject
  * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectPartial} JutSuperSettingsObjectPartial
  * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectFilter} JutSuperSettingsObjectFilter
@@ -279,9 +61,44 @@ const LOCALE_TEXT = {};
 /** @type {Record<string, string>} */
 const LOCALE_TOOLTIPS = {};
 
+LOCALE_TEXT[domClasses.textSkipOptions] = browser.i18n.getMessage("skipOptions");
+LOCALE_TEXT[domClasses.textOpenings] = browser.i18n.getMessage("openings");
+LOCALE_TEXT[domClasses.textEndings] = browser.i18n.getMessage("endings");
+LOCALE_TEXT[domClasses.textOrder] = browser.i18n.getMessage("order");
+LOCALE_TEXT[domClasses.textMax] = browser.i18n.getMessage("max");
+LOCALE_TEXT[domClasses.textFullscreen] = browser.i18n.getMessage("fullscreen");
+LOCALE_TEXT[domClasses.textDelay] = browser.i18n.getMessage("delay");
+LOCALE_TEXT[domClasses.textSecondsShort] = browser.i18n.getMessage("secondsShort");
+LOCALE_TEXT[domClasses.textCancel] = browser.i18n.getMessage("cancel");
+LOCALE_TEXT[domClasses.textToCancel] = browser.i18n.getMessage("toCancel");
+LOCALE_TEXT[domClasses.textPlaybackOptions] = browser.i18n.getMessage("playbackOptions");
+LOCALE_TEXT[domClasses.textAchievementSound] = browser.i18n.getMessage("achievementSound");
+LOCALE_TEXT[domClasses.textSkipping] = browser.i18n.getMessage("skipping");
+LOCALE_TEXT[domClasses.textCantStartPlayback] = browser.i18n.getMessage("cantStartPlayback");
+LOCALE_TEXT[domClasses.textPossiblyBrowserSettings] = browser.i18n.getMessage("possiblyBrowserSettings");
+LOCALE_TEXT[domClasses.textSee] = browser.i18n.getMessage("see");
+LOCALE_TEXT[domClasses.textAutoplayFaq] = browser.i18n.getMessage("autoplayFaq");
+LOCALE_TEXT[domClasses.textAutoplayUnavailable] = browser.i18n.getMessage("autoplayUnavailable");
+LOCALE_TEXT[domClasses.textChangeYourBrowserSettings] = browser.i18n.getMessage("changeYourBrowserSettings");
+LOCALE_TEXT[domClasses.textSeeInstructions] = browser.i18n.getMessage("seeInstructions");
+LOCALE_TEXT[domClasses.textHere] = browser.i18n.getMessage("here");
 
-/** @type {JutSuperContent} */
-var jutsuperContent;
+LOCALE_TOOLTIPS[domClasses.tooltipOpeningsSettings] = browser.i18n.getMessage("openingsSettings");
+LOCALE_TOOLTIPS[domClasses.tooltipToggleOpeningsSkip] = browser.i18n.getMessage("toggleOpeningsSkip");
+LOCALE_TOOLTIPS[domClasses.tooltipWhichRegionToSkip] = browser.i18n.getMessage("whichRegionToSkip");
+LOCALE_TOOLTIPS[domClasses.tooltipSkipAnyRegion] = browser.i18n.getMessage("skipAnyRegion");
+LOCALE_TOOLTIPS[domClasses.tooltipSkipFirstRegion] = browser.i18n.getMessage("skipFirstRegion");
+LOCALE_TOOLTIPS[domClasses.tooltipSkipLastRegion] = browser.i18n.getMessage("skipLastRegion");
+LOCALE_TOOLTIPS[domClasses.tooltipEndingsSettings] = browser.i18n.getMessage("endingsSettings");
+LOCALE_TOOLTIPS[domClasses.tooltipToggleEndingsSkip] = browser.i18n.getMessage("toggleEndingsSkip");
+LOCALE_TOOLTIPS[domClasses.tooltipMaxEpisodeSwitches] = browser.i18n.getMessage("maxEpisodeSwitches");
+LOCALE_TOOLTIPS[domClasses.tooltipPersistFullscreen] = browser.i18n.getMessage("persistFullscreen");
+LOCALE_TOOLTIPS[domClasses.tooltipToggleFullscreenPersistency] = browser.i18n.getMessage("toggleFullscreenPersistency");
+LOCALE_TOOLTIPS[domClasses.tooltipDelayBeforeSkipping] = browser.i18n.getMessage("delayBeforeSkipping");
+LOCALE_TOOLTIPS[domClasses.tooltipKeyToCancelSkipping] = browser.i18n.getMessage("keyToCancelSkipping");
+LOCALE_TOOLTIPS[domClasses.tooltipSetCancelKey] = browser.i18n.getMessage("setCancelKey");
+LOCALE_TOOLTIPS[domClasses.tooltipAchievementSound] = browser.i18n.getMessage("enableOrDisableAchievementSound");
+LOCALE_TOOLTIPS[domClasses.tooltipToggleAchievementSound] = browser.i18n.getMessage("toggleAchievementSound");
 
 
 class JutSuperContent {
@@ -290,7 +107,7 @@ class JutSuperContent {
     this.LOCATION = JutSuperContent.name;
 
     const head = document.getElementsByTagName("head")[0];
-    const urlJutSuperJs = browser.runtime.getURL(assetPaths.jutsuperJs);
+    const urlJutSuperJs = browser.runtime.getURL("/src/page/jutsuper.js");
     this.injectModule(head, urlJutSuperJs, assetIds.jutsuperJs);
 
     /**
@@ -362,13 +179,13 @@ class JutSuperContent {
 
       this.initListeners();
       
-      const urlSquareWhiteLogo48Svg = browser.runtime.getURL(assetPaths.squareWhiteLogo48Svg);
-      const urlDropdownSvg = browser.runtime.getURL(assetPaths.dropdownSvg);
-      const urlSkipSvg = browser.runtime.getURL(assetPaths.skipSvg);
-      const urlPlaySvg = browser.runtime.getURL(assetPaths.playSvg);
-      const urlJutSuperCss = browser.runtime.getURL(assetPaths.jutsuperCss);
-      const urlSettingsHtml = browser.runtime.getURL(assetPaths.settingsHtml);
-      const urlSkipHtml = browser.runtime.getURL(assetPaths.skipHtml);
+      const urlSquareWhiteLogo48Svg = browser.runtime.getURL("/src/assets/logo/square-white-48.svg");
+      const urlDropdownSvg = browser.runtime.getURL("/src/assets/icon/dropdown.svg");
+      const urlSkipSvg = browser.runtime.getURL("/src/assets/icon/skip.svg");
+      const urlPlaySvg = browser.runtime.getURL("/src/assets/icon/play.svg");
+      const urlJutSuperCss = browser.runtime.getURL("/src/jutsuper.css");
+      const urlSettingsHtml = browser.runtime.getURL("/src/page/settings.html");
+      const urlSkipHtml = browser.runtime.getURL("/src/page/skip.html");
 
       this.injectFonts(head, defaultFonts);
       this.injectImage(head, urlSquareWhiteLogo48Svg, assetIds.squareWhiteLogo48Svg);
@@ -379,7 +196,14 @@ class JutSuperContent {
       this.injectDocument(head, urlSettingsHtml, assetIds.settingsHtml);
       this.injectDocument(head, urlSkipHtml, assetIds.skipHtml);
 
-      this.reqIpc.send({ assetsInjected: { tell: { state: true } } });
+      const extensionUrl = browser.runtime.getURL("");
+
+      this.reqIpc.send({ assetsInjected: { tell: {
+        state: true,
+        extensionUrl: extensionUrl.endsWith("/") ?
+          extensionUrl.substring(0, extensionUrl.length - 1) : extensionUrl
+      }}});
+
       jsuperLog.debug(`${this.LOCATION}: all assets injected`);
 
       this.#asyncInit().then(() => {
@@ -400,7 +224,7 @@ class JutSuperContent {
   /**
    * 
    * @param {HTMLElement} node 
-   * @param {FontDescriptor[]} fonts 
+   * @param {typeof defaultFonts} fonts 
    */
   injectFonts(node, fonts) {
     const style = document.createElement("style");
@@ -818,9 +642,9 @@ class JutSuperContent {
     // send callback that
     // episode switch preparations
     // are completed
-    this.rspIpc.send({preEpisodeSwitch: {rsp: {
+    this.rspIpc.send({ preEpisodeSwitch: { rsp: {
       isFulfilled: true
-    }}});
+    } } });
   }
 
   async handleEpisodeSwitchContinuation() {
@@ -835,8 +659,12 @@ class JutSuperContent {
     jsuperLog.debug(`${loc}: episode was switched automatically`);
 
     this.requestPlay();
+    let playRsp = await this.reqIpc.recvOnce({ schema: { playing: { rspPlay: ANY } } });
 
-    if (this.settings.get().endings.doPersistFullscreen && transition.isFullscreen) {
+    if (
+      playRsp.playing.rspPlay.isFulfilled &&
+      (this.settings.get().endings.doPersistFullscreen && transition.isFullscreen)
+    ) {
       jsuperLog.debug(`${loc}: setting up custom fullscreen`);
 
       const body = /** @type {HTMLBodyElement} */ (
@@ -940,8 +768,8 @@ class JutSuperContent {
 
     jsuperLog.debug(
       `${loc}: localization complete: ` +
-      `textCounter=${textCounter}, ` +
-      `tooltipCounter=${tooltipCounter}`
+      `texts = ${textCounter}, ` +
+      `tooltips = ${tooltipCounter}`
     );
   }
 
@@ -1025,3 +853,6 @@ class JutSuperContent {
     this.reqSettingsIpc.send(this.settings.get());
   }
 }
+
+/** @type {JutSuperContent} */
+const jutsuperContent = new JutSuperContent();

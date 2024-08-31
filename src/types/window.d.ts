@@ -7,7 +7,7 @@
 import { JutSuperSettingsObject } from "/src/settings.js";
 import { JutSuperPopup } from "/src/popup/popup.js";
 import { JutSuperSettingsPopup } from "/src/page/settings.js";
-import { JutSuperSkipPopup } from "/src/page/skip.js";
+import { JutSuperNotificationPopup } from "/src/page/notification.js";
 
 
 declare global {
@@ -25,6 +25,6 @@ declare global {
     JUTSUPER_DEBUG?: boolean;
     jsuperPopup?: JutSuperPopup;
     jsuperSettingsPopup?: JutSuperSettingsPopup;
-    jsuperSkipPopup?: JutSuperSkipPopup;
+    jsuperNotifPopup?: JutSuperNotificationPopup;
   }
 }

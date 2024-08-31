@@ -53,16 +53,16 @@
     "message": "Переключить пропуск опенингов"
   },
   "whichRegionToSkip": {
-    "message": "Какой регион пропускать если доступно несколько регионов"
+    "message": "Какой отрывок пропускать если доступно несколько отрывков"
   },
   "skipAnyRegion": {
-    "message": "Пропускать любой регион"
+    "message": "Пропускать любой отрывок"
   },
   "skipFirstRegion": {
-    "message": "Пропускать только первый регион"
+    "message": "Пропускать только первый отрывок"
   },
   "skipLastRegion": {
-    "message": "Пропускать только последний регион"
+    "message": "Пропускать только последний отрывок"
   },
   "endingsSettings": {
     "message": "Настройки эндингов"
@@ -93,5 +93,29 @@
   },
   "toggleAchievementSound": {
     "message": "Переключить звук достижений"
+  },
+  "cantStartPlayback": {
+    "message": "Ошибка воспроизведения"
+  },
+  "possiblyBrowserSettings": {
+    "message": "Вероятно, из-за настроек браузера."
+  },
+  "see": {
+    "message": "Смотри"
+  },
+  "autoplayFaq": {
+    "message": "FAQ по автовоспроизведению"
+  },
+  "autoplayUnavailable": {
+    "message": "Автовоспроизведение недоступно"
+  },
+  "changeYourBrowserSettings": {
+    "message": "Необходимо изменить настройки браузера."
+  },
+  "seeInstructions": {
+    "message": "Смотри инструкции"
+  },
+  "here": {
+    "message": "здесь"
   }
 }

@@ -5,6 +5,7 @@ import { jsuperUtil } from "/src/util.js";
 export {
   JutSuperIpcFlags,
   JutSuperIpcNamespaces,
+  JutSuperIpcIds,
   JutSuperIpc,
   JutSuperIpcBuilder,
   JutSuperIpcRspParamsBuilder
@@ -63,6 +64,29 @@ const JutSuperIpcNamespaces = {
  * @typedef {(
  *   typeof JutSuperIpcNamespaces[keyof typeof JutSuperIpcNamespaces]
  * )} JutSuperIpcNamespacesKeys
+ */
+
+
+/**
+ * # Describes IPC instances' ID's
+ * 
+ * IPC instances can have their own ID
+ * so that they won't receive their own events
+ * when listening.
+ * 
+ * @readonly
+ * @enum {typeof JutSuperIpcIds}
+ */
+const JutSuperIpcIds = {
+  /** @type {"pageMain"} */
+  page: "pageMain",
+  /** @type {"contentMain"} */
+  content: "contentMain"
+}
+/** 
+ * @typedef {(
+ *   typeof JutSuperIpcIds[keyof typeof JutSuperIpcIds]
+ * )} JutSuperIpcIdsKeys
  */
 
 

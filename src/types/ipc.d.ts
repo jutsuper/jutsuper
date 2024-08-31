@@ -70,6 +70,7 @@ interface JutSuperIpcReqSchema {
   assetsInjected?: {
     tell?: {
       state: true;
+      extensionUrl: string;
     };
   };
   essentialsLoaded?: {

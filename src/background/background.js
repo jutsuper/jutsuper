@@ -1,54 +1,18 @@
 /// <reference types="video.js/index.d.ts" />
 
+import { JutSuperBrowsers as browsers } from "/src/browser.js";
+import { BrowserWindowStates as windowStates } from "/src/browser.js";
+import { JutSuperRequestsResponseMessageBuilder } from "/src/messaging.js";
+
+
+console.debug("JutSuper: loading /src/background/background.js");
+
+
 // #if "@BROWSER" == "blink"
 var BROWSER = "blink";
 var browser = chrome;
 // #elif "@BROWSER" == "gecko"
 var BROWSER = "gecko";
-// #else
-// #error
-// #endif
-
-// #if "@MANIFEST" == "3"
-// @ts-ignore
-import { JutSuperBrowsers as browsers } from "/src/browser.js";
-// @ts-ignore
-import { BrowserWindowStates as windowStates } from "/src/browser.js";
-// @ts-ignore
-import { JutSuperRequestsResponseMessageBuilder } from "/src/messaging.js";
-// #elif "@MANIFEST" == "2"
-/**
- * @typedef {import("/src/browser.js").JutSuperBrowsers} JutSuperBrowsers
- * @type {typeof import("/src/browser.js").JutSuperBrowsers}
- */
-var browsers;
-
-/**
- * @typedef {import("/src/browser.js").BrowserWindowStates} BrowserWindowStates
- * @type {typeof import("/src/browser.js").BrowserWindowStates}
- */
-var windowStates;
-
-/**
- * @typedef {import("/src/messaging.js").JutSuperRequestsResponseMessageBuilder} JutSuperRequestsResponseMessageBuilder
- * @type {typeof import("/src/messaging.js").JutSuperRequestsResponseMessageBuilder}
- */
-var JutSuperRequestsResponseMessageBuilder;
-
-
-/** Import modules */
-(async function() {
-  /** @type {typeof import("/src/browser.js")} */
-  const browserModule = await import(browser.runtime.getURL("/src/browser.js"));
-  /** @type {typeof import("/src/messaging.js")} */
-  const messagingModule = await import(browser.runtime.getURL("/src/messaging.js"));
-
-  browsers = browserModule.JutSuperBrowsers;
-  windowStates = browserModule.BrowserWindowStates;
-  JutSuperRequestsResponseMessageBuilder = messagingModule.JutSuperRequestsResponseMessageBuilder;
-})().then(() => {
-  jutsuperBackground = new JutSuperBackground();
-})
 // #else
 // #error
 // #endif
@@ -63,23 +27,18 @@ var JutSuperRequestsResponseMessageBuilder;
  */
 
 
-/** @type {JutSuperBackground} */
-var jutsuperBackground;
-
-
 class JutSuperBackground {
   constructor() {
-    const self = this;
     this.LOCATION = JutSuperBackground.name;
-
+    
     browser.runtime.onMessage.addListener(
       /**
        * @param {JutSuperMessage} message 
        * @returns {boolean}
        */
-      function(message, sender, sendResponse) {
+      (message, sender, sendResponse) => {
         (async () => {
-          const resp = await self.messageCallback(message, sender);
+          const resp = await this.messageCallback(message, sender);
           sendResponse(resp);
         })();
 
@@ -166,6 +125,4 @@ class JutSuperBackground {
   }
 }
 
-// #if "@MANIFEST" == "3"
-jutsuperBackground = new JutSuperBackground();
-// #endif
+const jutsuperBackground = new JutSuperBackground();

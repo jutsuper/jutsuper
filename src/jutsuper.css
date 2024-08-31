@@ -9,6 +9,7 @@
   --jutsuper-color-dark-green-half-transparent: #9BC76C80;
   --jutsuper-color-darker-green: #8CB660;
   --jutsuper-color-darker-green-half-transparent: #8CB66080;
+  --jutsuper-color-red: #ea1424;
   --jutsuper-dur-ultra-fast: .05s;
   --jutsuper-dur-faster: .1s;
   --jutsuper-dur-fast: .15s;
@@ -29,6 +30,8 @@
   --jutsuper-size-settings-openings-section-height: 39px;
   /* Control the "Endings" section height */
   --jutsuper-size-settings-endings-section-height: 99px;
+  --jutsuper-size-notif-min-height: 80px;
+  --jutsuper-styling-popup-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
   /* Control the `border-box` filling of a settings section tab when hovering */
   --jutsuper-styling-settings-hover-tab-box-shadow: inset 0 -6px 0px -2px var(--jutsuper-color-light-green);
   /* Control the `border-box` filling of a settings section tab when opened */
@@ -77,6 +80,10 @@
   display: none !important;
 }
 
+.jutsuper-pointer {
+  cursor: pointer;
+}
+
 /* Disable pointer events for the element */
 .jutsuper-no-pointer-events {
   pointer-events: none;
@@ -102,45 +109,36 @@
   filter: grayscale();
 }
 
+.jutsuper-green-text {
+  color: var(--jutsuper-color-darker-green) !important;
+}
+
+.jutsuper-black-text {
+  color: black !important;
+}
+
+.jutsuper-no-text-decoration {
+  text-decoration: none !important;
+  ::hover {
+    text-decoration: none !important;
+  }
+}
+
 /* /// */
 /* Dev */
 /* /// */
 
-.jutsuper-dev-black-bg {
-  background-color: black;
+.jutsuper-dev-bg {
+  background-color: var(--jutsuper-color-dark-green);
 }
 
 .jutsuper-dev-hidden {
   display: none;
 }
 
-.jutsuper-dev-settings-area {
+.jutsuper-dev-area {
   position: absolute;
   bottom: 0;
-  background-color: white;
-  clip-path: border-box;
-  width: 220px;
-  border-radius: var(--jutsuper-size-border-radius);
-  overflow: hidden;
-  justify-content: left;
-  font-family: "Roboto";
-  font-size: 1em;
-  color: black;
-}
-
-.jutsuper-dev-skip-area {
-  position: absolute;
-  bottom: 0;
-  background-color: white;
-  clip-path: border-box;
-  width: max-content;
-  height: max-content;
-  border-radius: var(--jutsuper-size-border-radius);
-  overflow: hidden;
-  justify-content: left;
-  font-family: "Roboto";
-  font-size: 1em;
-  color: black;
 }
 
 /* ///// */
@@ -306,12 +304,56 @@
   }
 }
 
-.jutsuper-animate-jutsuper-keyframes-right-left-swing {
+.jutsuper-animate-right-left-swing {
   animation-name: jutsuper-keyframes-right-left-swing;
   animation-duration: var(--jutsuper-dur-slow);
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
   animation-direction: alternate-reverse;
+}
+
+@keyframes jutsuper-keyframes-margin-top-appear {
+  0% {
+    margin-top: -90px;
+    opacity: 0%;
+  }
+  100% {
+    margin-top: 0px;
+    opacity: 100%;
+  }
+}
+
+@keyframes jutsuper-keyframes-margin-top-disappear {
+  0% {
+    margin-top: 0px;
+    opacity: 100%;
+  }
+  100% {
+    margin-top: -90px;
+    opacity: 0%;
+  }
+}
+
+@keyframes jutsuper-keyframes-margin-bottom-appear {
+  0% {
+    margin-bottom: -90px;
+    opacity: 0%;
+  }
+  100% {
+    margin-bottom: 0px;
+    opacity: 100%;
+  }
+}
+
+@keyframes jutsuper-keyframes-margin-bottom-disappear {
+  0% {
+    margin-bottom: 0px;
+    opacity: 100%;
+  }
+  100% {
+    margin-bottom: -90px;
+    opacity: 0%;
+  }
 }
 
 /* /////////////// */
@@ -453,26 +495,49 @@
   padding: 20px;
   justify-content: right;
   pointer-events: none;
+  clip-path: border-box;
+}
+
+.jutsuper-vjs-notif-area {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-right: 20px;
+}
+
+.jutsuper-vjs-settings-area {
+  display: flex;
+  align-items: end;
+  width: auto;
 }
 
 /* Props for all extension popups */
-.jutsuper-vjs-popup-area {
+.jutsuper-vjs-popup {
   pointer-events: all;
   background-color: white;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--jutsuper-styling-popup-box-shadow);
+  border-radius: var(--jutsuper-size-border-radius);
   font-family: "Roboto";
   font-size: 1em;
   font-weight: normal;
   color: black;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.jutsuper-vjs-popup::-webkit-scrollbar {
+  display: none;
 }
 
 /* Clip the popup area to hide inner overflows */
 .jutsuper-vjs-popup-clip-area {
   clip-path: border-box;
-  overflow-y: hidden;
-  overflow-x: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  border-radius: var(--jutsuper-size-border-radius);
 }
 
 /* Hide scrollbar for webkit */
@@ -518,12 +583,29 @@
 /* Settings popup */
 /* ////////////// */
 
+.jutsuper-settings-popup {
+  height: auto;
+  max-height: 100%;
+  width: 220px;
+  animation-name: jutsuper-keyframes-margin-bottom-appear;
+  animation-duration: var(--jutsuper-dur-fast);
+  animation-timing-function: var(--jutsuper-curve-fast-start-slow-end);
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+
+  &:not(.jutsuper-visible) {
+    animation-name: jutsuper-keyframes-margin-bottom-disappear;
+  }
+}
+
 /* Inner frame of the popup */
 .jutsuper-settings-frame {
   height: inherit;
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  border-radius: var(--jutsuper-size-border-radius);
+  background-color: white;
 }
 
 /* Hide scrollbar for webkit */
@@ -709,44 +791,111 @@
   grid-template-columns: min-content minmax(0, 1fr) 16px 12px;
 }
 
-/* ////////// */
-/* Skip popup */
-/* ////////// */
+/* ////////////////// */
+/* Notification popup */
+/* ////////////////// */
 
-.jutsuper-skip-frame {
-  position: relative;
+.jutsuper-notif-actions-bar {
+  display: flex;
+  align-items: right;
+  flex-direction: row;
+}
+
+.jutsuper-notif-close {
+  cursor: pointer;
+  transition: all var(--jutsuper-dur-fast) linear;
+  margin-left: auto;
+}
+
+.jutsuper-notif-frame {
   height: inherit;
   overflow: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  padding-bottom: 10px;
+  animation-name: jutsuper-keyframes-margin-top-appear;
+  animation-duration: var(--jutsuper-dur-fast);
+  animation-timing-function: var(--jutsuper-curve-fast-start-slow-end);
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+
+  &:not(.jutsuper-visible) {
+    animation-name: jutsuper-keyframes-margin-top-disappear;
+  }
 }
 
-.jutsuper-skip-frame-content {
-  height: 100%;
-  box-sizing: border-box;
-  align-items: center;
-  padding: 14px;
-  cursor: pointer;
-}
-
-.jutsuper-skip-header {
+.jutsuper-notif-shaping {
   display: flex;
-  gap: 6px;
-  margin-bottom: 12px;
+  clip-path: border-box;
+  border-radius: var(--jutsuper-size-border-radius);
+  overflow: hidden;
+  position: relative;
+  width: max-content;
+  height: max-content;
+  pointer-events: all;
+  min-height: var(--jutsuper-size-notif-min-height);
 }
 
-.jutsuper-skip-options-container {
+.jutsuper-notif-styling {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto";
+  font-size: 1em;
+  background-color: white;
+  color: black;
+}
+
+.jutsuper-notif-inner-sizing {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  height: 100%;
+}
+
+.jutsuper-notif-column-box {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.jutsuper-notif-gap-vcenter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.jutsuper-notif-header {
+  display: flex;
+  font-weight: bold;
+  box-sizing: content-box !important;
+  align-items: center;
+  height: 25px;
+}
+
+.jutsuper-notif-description {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  line-height: normal;
+}
+
+/* ////////// */
+/* Skip popup */
+/* ////////// */
+
+.jutsuper-notif-skipping-description {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.jutsuper-skip-countdown-line {
-  background-color: var(--jutsuper-color-darker-green);
+.jutsuper-notif-skipping-countdown-line {
   position: absolute;
   bottom: 0;
-  height: 5px;
-  transition: all var(--jutsuper-dur-slow) var(--jutsuper-curve-fast-start-slow-end);
+  background-color: var(--jutsuper-color-darker-green);
+  height: 6px;
 }
 
 /* ///////////// */

@@ -14,7 +14,21 @@ class JutSuperUtil {
    * @returns {Promise<void>}
    */
   asyncSleep(ms) {
-    return new Promise(r => setTimeout(r, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /**
+   * # Sleep for `ms` milliseconds in async with ability to cancel
+   * 
+   * @param {number} ms
+   * @returns {[number, Promise<void>]}
+   */
+  cancelableAsyncSleep(ms) {
+    let timeoutId = undefined;
+    let promise = new Promise(resolve => {
+      timeoutId = setTimeout(resolve, ms)
+    });
+    return [timeoutId, promise]
   }
 
   /**
@@ -152,6 +166,19 @@ class JutSuperUtil {
     for (const key in attrs) {
       const value = attrs[key];
       node.setAttribute(key, value);
+    }
+  }
+
+  /**
+   * @param {Element} parent 
+   * @param {HTMLCollection} nodes 
+   */
+  insertNodesFirst(parent, nodes) {
+    for (const child of Array.from(nodes).reverse()) {
+      parent.insertBefore(
+        child,
+        parent.firstChild
+      );
     }
   }
 }

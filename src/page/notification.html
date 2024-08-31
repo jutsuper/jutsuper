@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="../jutsuper.css" />
+    <script src="/src/debug/setFlag.js"></script>
+    <script src="/src/page/notification.js" type="module" defer></script>
+    <style>
+      @font-face {
+        font-family: Roboto;
+        font-weight: normal;
+        src: url("/src/assets/font/Roboto-Regular.ttf") format("truetype");
+      }
+      @font-face {
+        font-family: Roboto;
+        font-weight: bold;
+        src: url("/src/assets/font/Roboto-Bold.ttf") format("truetype");
+      }
+    </style>
+  </head>
+  <body class="jutsuper-dev-bg" style="position: absolute; height: 50vh">
+    <div style="height: 50px">
+      <div
+        id="jutsuper-dev-preload-message"
+        style="color: white; margin-bottom: 20px"
+      >
+        Awaiting JavaScript...
+      </div>
+    </div>
+    <div class="jutsuper-dev-area">
+      <!-- Start of the area that gets injected -->
+      <div id="jutsuper-notif-root" class="jutsuper-notif-frame jutsuper-visible">
+
+      </div>
+      <!-- End of the area that gets injected -->
+    </div>
+  </body>
+</html>

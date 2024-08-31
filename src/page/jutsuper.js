@@ -5,6 +5,7 @@ import { jsuperErrors } from "/src/error.js";
 import {
   JutSuperIpcFlags as ipcFlags,
   JutSuperIpcNamespaces as ipcNamespaces,
+  JutSuperIpcIds as ipcIds,
   JutSuperIpc,
   JutSuperIpcBuilder,
   JutSuperIpcRspParamsBuilder,
@@ -17,20 +18,15 @@ import {
   JutSuperAssetIds as assetIds,
   JutSuperDomIds as domIds,
   JutSuperDomClasses as domClasses,
-  JutSuperIpcIds as ipcIds,
 } from "/src/consts.js";
-import {
-  JutSuperSettingsSkipOrder as skipOrder
-} from "/src/settings.js";
-import {
-  JutSuperSkipPopup
-} from "/src/page/skip.js";
-import {
-  JutSuperSettingsPopup
-} from "/src/page/settings.js";
-import {
-  jsuperUtil
-} from "/src/util.js";
+import { JutSuperSettingsSkipOrder as skipOrder } from "/src/settings.js";
+import { JutSuperSkippingPopup } from "/src/page/notifications/skipping.js";
+import { JutSuperAutoplayUnavailablePopup } from "/src/page/notifications/autoplayUnavailable.js";
+import { JutSuperSettingsPopup } from "/src/page/settings.js";
+import { JutSuperNotificationPopup } from "/src/page/notification.js";
+import { AsyncLock } from "/src/lock.js";
+import { AsyncSleepReason } from "/src/sleep.js";
+import { jsuperUtil } from "/src/util.js";
 
 
 console.debug("JutSuper: loading /src/page/jutsuper.js");
@@ -44,6 +40,8 @@ console.debug("JutSuper: loading /src/page/jutsuper.js");
  * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObject} JutSuperSettingsObject
  * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectPartial} JutSuperSettingsObjectPartial
  * @typedef {import("/src/types/settings.d.ts").JutSuperSettingsObjectFilter} JutSuperSettingsObjectFilter
+ * @typedef {import("/src/types/notification.d.ts").JutSuperNotificationUrls} JutSuperNotificationUrls
+ * @typedef {import("/src/sleep.js").AsyncSleepReasonKeys} AsyncSleepReasonKeys
  */
 
 
@@ -111,6 +109,10 @@ class JutSuper {
     
     this.reqIpc.send({ loadingAllowed: { tell: { state: true } } });
 
+    this.assetsInjectedLock = new AsyncLock({ oneTime: true });
+    /** @type {string | undefined} */
+    this.extensionUrl = undefined;
+
     this.isFullscreen = false;
     this.isCustomFullscreen = false;
     /** @type {number | undefined} */
@@ -119,25 +121,25 @@ class JutSuper {
     this.awaitingSkipCancel = false;
 
     /** @type {HTMLDivElement} */
-    this.vjsContainer = document.createElement("div");
+    this.vjsContainer = null;
+
+    /** @type {JutSuperAutoplayUnavailablePopup} */
+    this.autoplayUnavailableNotif = undefined;
+    /** @type {JutSuperSkippingPopup} */
+    this.skippingNotif = undefined;
+
     /** @type {HTMLDivElement} */
-    this.skipArea = document.createElement("div");
-    /** @type {HTMLDivElement} */
-    this.skipClipArea = document.createElement("div");
-    /** @type {HTMLDivElement} */
-    this.settingsArea = document.createElement("div");
+    this.settingsArea = null;
     /** @type {HTMLDivElement} */
     this.settingsClipArea = document.createElement("div");
     /** @type {videojs.default.Button} */
     this.vjsButton = undefined;
   
-    /** @type {videojs.VideoJsPlayer} */
     this.player = player;
-    /** @type {HTMLElement} */
-    this.playerDiv = document.getElementById(jutsuIds.myPlayer);
-    /** @type {boolean} */
+    this.playerDiv = /** @type {HTMLElement} */ (
+      document.getElementById(jutsuIds.myPlayer)
+    );
     this.openingTriggered = false;
-    /** @type {boolean} */
     this.endingTriggered = false;
     /**
      * # Time ranges when it's possible to skip the opening
@@ -171,6 +173,7 @@ class JutSuper {
     this.endingSkipperRngs = this.sortOverlayRngs(this.getOverlayRngsByFunctionName(
       jutsuFns.skipEndingFnName
     ));
+    this.seekedAutomatically = false;
 
     jsuperLog.debug(`${this.LOCATION}: opening skipper ranges:`, this.openingSkipperRngs);
     jsuperLog.debug(`${this.LOCATION}: ending skipper ranges:`, this.endingSkipperRngs);
@@ -185,9 +188,10 @@ class JutSuper {
         return;
       }
 
-      this.regionSkipCancelled = true;
+      this.skippingNotif.end();
     });
 
+    this.listenAssetsInjected();
     this.listenPlayingRequests();
     this.listenPlayerFullscreenExitRequests();
     this.listenFullscreenExitInjectionRequest();
@@ -239,7 +243,25 @@ class JutSuper {
 
       if (!isInSettingsAreaRange) {
         // hide settings area
-        this.settingsArea.classList.add(domClasses.visibilityHidden);
+        this.settingsArea.classList.remove("jutsuper-visible");
+      }
+    });
+    this.player.on("seeking", () => {
+      if (this.settingsPopup.isActive() && !this.seekedAutomatically) {
+        this.settingsPopup.hide();
+      }
+
+      this.seekedAutomatically = false;
+
+      if (this.skippingNotif && this.skippingNotif.isActive()) {
+        this.openingTriggered = false;
+        this.endingTriggered = false;
+        this.skippingNotif.end();
+      }
+    });
+    this.player.on("play", () => {
+      if (this.autoplayUnavailableNotif && this.autoplayUnavailableNotif.isActive()) {
+        this.autoplayUnavailableNotif.hide();
       }
     });
     
@@ -367,6 +389,8 @@ class JutSuper {
       return;
     }
 
+    this.seekedAutomatically = true;
+
     window[jutsuFns.skipOpeningFnName]();
   }
 
@@ -375,10 +399,7 @@ class JutSuper {
    * @returns {void}
    */
   stopSkippingOpening() {
-    if (this.awaitingSkipCancel) {
-      this.regionSkipCancelled = true;
-    }
-
+    this.skippingNotif.end();
     jsuperLog.debug(`${this.LOCATION}: not skipping opening anymore`);
   }
   
@@ -409,7 +430,7 @@ class JutSuper {
 
     const actionResult = await this.startSkipAction();
 
-    if (actionResult === "cancelled") {
+    if (actionResult === AsyncSleepReason.cancelled) {
       return;
     }
 
@@ -433,6 +454,8 @@ class JutSuper {
       );
     }
 
+    this.seekedAutomatically = true;
+
     window[jutsuFns.skipEndingFnName]();
   }
   
@@ -441,15 +464,12 @@ class JutSuper {
    * @returns {void}
    */
   stopSkippingEnding() {
-    if (this.awaitingSkipCancel) {
-      this.regionSkipCancelled = true;
-    }
-
+    this.skippingNotif.end();
     jsuperLog.debug(`${this.LOCATION}: not skipping ending anymore`);
   }
 
   /**
-   * @returns {Promise<"timeout" | "cancelled">}
+   * @returns {Promise<AsyncSleepReasonKeys>}
    */
   async startSkipAction() {
     this.awaitingSkipCancel = true;
@@ -458,31 +478,12 @@ class JutSuper {
       window.jsuperSettings.skipDelayS : 0;
 
     if (delay < 1) {
-      return "timeout";
+      return AsyncSleepReason.timeout;
     }
 
-    this.showSkipPopup();
-
-    const delayArray = Array.from({length: delay * 10}, (_, i) => i + 1).reverse();
-
-    for (let i = 0; i <= delayArray.length; i++) {
-      const percentage = 100 * i / delayArray.length;
-      this.skipPopup.setCountdownTimelineWidth(100 - percentage);
-
-      if (this.regionSkipCancelled) {
-        this.regionSkipCancelled = false;
-        this.awaitingSkipCancel = false;
-        this.hideSkipPopup();
-        return "cancelled";
-      }
-
-      await jsuperUtil.asyncSleep(100);
-    }
-
-    this.regionSkipCancelled = false;
-    this.awaitingSkipCancel = false;
-    this.hideSkipPopup();
-    return "timeout";
+    let result = await this.skippingNotif.start();
+    jsuperLog.debug(`${this.LOCATION}: skipping action returns`, result);
+    return result
   }
 
   /**
@@ -647,15 +648,6 @@ class JutSuper {
     );
   }
 
-  showSkipPopup() {
-    this.skipArea.classList.remove(domClasses.visibilityHidden);
-  }
-
-  hideSkipPopup() {
-    this.skipArea.classList.add(domClasses.visibilityHidden);
-    this.skipPopup.setCountdownTimelineWidth(100);
-  }
-
   /**
    * @param {Event} event 
    */
@@ -667,181 +659,110 @@ class JutSuper {
    * @returns {Promise<void>}
    */
   async injectOverlays() {
-    if (this.rspIpc.getRsp().assetsInjected === undefined) {
-      await this.rspIpc.recvOnce({ schema: { assetsInjected: { tell: { state: true } } } });
-    }
+    await this.assetsInjectedLock.promise;
 
     jsuperLog.debug(`${this.LOCATION}: injecting overlays`);
 
-    const Button = this.player.constructor.getComponent("Button");
-    const iconUrl = document.getElementById(assetIds.squareWhiteLogo48Svg).getAttribute("href");
-    const buttonOptions = /** @type {videojs.default.ComponentOptions} */ ({
-      name: "JutSuperButton"
+    this.notifUrls = /** @type {JutSuperNotificationUrls} */ ({
+      skipping: this.extensionUrl + "/src/page/notifications/skipping.html",
+      autoplayUnavailable: this.extensionUrl + "/src/page/notifications/autoplayUnavailable.html"
     });
 
-    this.vjsButton = new Button(this.player, buttonOptions);
-    this.vjsButton.addClass(domClasses.vjsButton);
-
-    const iconPlaceholder = /** @type {HTMLElement} */ (
-      this.vjsButton.el().getElementsByClassName(
-        jutsuClasses.vjcIconPlaceholder
-      )[0]
+    const vjsContainer = new DOMParser().parseFromString(
+      await (await fetch(`${this.extensionUrl}/src/page/vjsContainer.html`)).text(), "text/html"
     );
-    
-    iconPlaceholder.id = domIds.vjsButtonIcon;
-    iconPlaceholder.title = "JutSuper";
-    iconPlaceholder.style.content = `url(${iconUrl})`;
-    iconPlaceholder.style.width = "20px";
 
-    this.vjsButton.on("click", event => {
-      this.settingsArea.classList.toggle(domClasses.visibilityHidden);
-    });
+    this.vjsNotifArea = /** @type {HTMLDivElement} */ (
+      vjsContainer.getElementById(domIds.vjsNotifArea)
+    );
+    const vjsSettingsArea = /** @type {HTMLDivElement} */ (
+      vjsContainer.getElementById(domIds.vjsSettingsArea)
+    );
+
+    ////// settings //////
+
+    const settingsDoc = new DOMParser().parseFromString(
+      await (await fetch(`${this.extensionUrl}/src/page/settings.html`)).text(), "text/html"
+    );
+    this.settingsArea = /** @type {HTMLDivElement} */ (
+      settingsDoc.getElementById(domIds.settingsRoot)
+    );
+    this.settingsArea.classList.remove("jutsuper-visible");
+    this.settingsArea.classList.add(domClasses.displayHidden);
+    this.settingsPopup = new JutSuperSettingsPopup(this.settingsArea);
+    await this.settingsPopup.ipcRecvReady.promise;
+    vjsSettingsArea.append(this.settingsArea);
+
+    const skippingNotifDoc = new DOMParser().parseFromString(
+      await (await fetch(`${this.extensionUrl}/src/page/notification.html`)).text(), "text/html"
+    );
+    const skippingNotifRoot = /** @type {HTMLDivElement} */ (
+      skippingNotifDoc.getElementById(domIds.notifRoot)
+    );
+    skippingNotifRoot.classList.remove("jutsuper-visible");
+    skippingNotifRoot.classList.add(domClasses.displayHidden);
+    this.skippingNotif = await new JutSuperNotificationPopup(
+      skippingNotifRoot,
+      this.notifUrls
+    ).setSkippingContent();
+    this.vjsNotifArea.append(skippingNotifRoot);
+
+    ////// autoplay unavailable //////
+
+    const autoplayUnavailableNotifDoc = new DOMParser().parseFromString(
+      await (await fetch(`${this.extensionUrl}/src/page/notification.html`)).text(), "text/html"
+    );
+    const autoplayUnavailableNotifRoot = /** @type {HTMLDivElement} */ (
+      autoplayUnavailableNotifDoc.getElementById(domIds.notifRoot)
+    );
+    autoplayUnavailableNotifRoot.classList.remove("jutsuper-visible");
+    autoplayUnavailableNotifRoot.classList.add(domClasses.displayHidden);
+    this.autoplayUnavailableNotif = await new JutSuperNotificationPopup(
+      autoplayUnavailableNotifRoot,
+      this.notifUrls
+    ).setAutoplayUnavailableContent();
+    this.vjsNotifArea.append(autoplayUnavailableNotifRoot);
+
+    this.replaceImgSources(vjsContainer);
+    jsuperUtil.insertNodesFirst(this.player.el(), vjsContainer.body.children);
+
     this.player.on("userinactive", event => {
       if (this.player.paused()) {
         return;
       }
-      if (!this.settingsArea.classList.contains(domClasses.visibilityHidden)) {
-        this.settingsArea.classList.add(domClasses.visibilityHidden);
-      }
-    })
-
-    ///////////////
-    // Skip area //
-    ///////////////
-
-    const skipAreaHtmlUrl = /** @type {HTMLAnchorElement} */ (
-      document.getElementById(assetIds.skipHtml)
-    ).href;
-
-    const skipAreaHtmlTemplate = document.createElement("template");
-    const skipAreaHtmlString = await (await fetch(skipAreaHtmlUrl)).text();
-    skipAreaHtmlTemplate.innerHTML = skipAreaHtmlString;
-    const skipContent = skipAreaHtmlTemplate
-      .content
-      .getElementById(domIds.skipRoot);
-
-    ///////////////////
-    // Settings area //
-    ///////////////////
-
-    const settingsAreaHtmlUrl = /** @type {HTMLAnchorElement} */ (
-      document.getElementById(assetIds.settingsHtml)
-    ).href;
-
-    const settingsAreaHtmlTemplate = document.createElement("template");
-    const settingsAreaHtmlString = await (await fetch(settingsAreaHtmlUrl)).text();
-    settingsAreaHtmlTemplate.innerHTML = settingsAreaHtmlString;
-    const settingsContent = settingsAreaHtmlTemplate
-      .content
-      .getElementById(domIds.settingsRoot);
-
-    ///////////////////
-
-    this.vjsContainer.id = domIds.vjsContainer;
-    this.vjsContainer.classList.add(domClasses.vjsContainer);
-
-    this.skipArea.id = domIds.vjsSkipArea;
-    this.skipArea.classList.add(domClasses.vjsSkipPopupAreaSized);
-    this.skipArea.classList.add(domClasses.vjsPopupArea);
-    this.skipArea.classList.add(domClasses.vjsSkipPopupArea);
-    this.skipArea.classList.add(domClasses.animateYAppear);
-    this.skipArea.classList.add(domClasses.animateTopToBottom);
-    this.skipArea.classList.add(domClasses.visibilityHidden);
-    this.skipArea.style.scrollbarWidth = "none";
-
-    this.skipClipArea.id = domIds.vjsSkipClipArea;
-    this.skipClipArea.classList.add(domClasses.vjsSkipPopupAreaSized);
-    this.skipClipArea.classList.add(domClasses.vjsPopupClipArea);
-    this.skipClipArea.style.height = "max-content";
-    this.skipClipArea.style.width = "max-content";
-    this.skipClipArea.append(skipContent);
-    this.skipArea.append(this.skipClipArea);
-
-    this.settingsArea.id = domIds.vjsSettingsArea;
-    this.settingsArea.classList.add(domClasses.vjsSettingsPopupAreaSized);
-    this.settingsArea.classList.add(domClasses.vjsPopupArea);
-    this.settingsArea.classList.add(domClasses.vjsSettingsPopupArea);
-    this.settingsArea.classList.add(domClasses.animateYAppear);
-    this.settingsArea.classList.add(domClasses.animateBottomToTop);
-    this.settingsArea.classList.add(domClasses.visibilityHidden);
-    this.settingsArea.style.height = "auto";
-    this.settingsArea.style.maxHeight = "100%";
-    this.settingsArea.style.overflowY = "auto";
-    this.settingsArea.style.scrollbarWidth = "none";
-
-    this.settingsClipArea.id = domIds.vjsSettingsClipArea;
-    this.settingsClipArea.classList.add(domClasses.vjsSettingsPopupAreaSized);
-    this.settingsClipArea.classList.add(domClasses.vjsPopupClipArea);
-    this.settingsClipArea.style.height = "auto";
-    this.settingsClipArea.style.maxHeight = "inherit";
-    this.settingsClipArea.style.overflowY = "auto";
-    this.settingsClipArea.append(settingsContent);
-    this.settingsArea.append(this.settingsClipArea);
-
-    this.player.el().insertBefore(
-      this.vjsContainer,
-      this.player.el().firstChild
-    )
-
-    const vjsContainer = document.getElementById(domIds.vjsContainer);
-    vjsContainer.append(this.skipArea);
-    vjsContainer.append(this.settingsArea);
-
-    document.getElementById(domIds.skipRoot).addEventListener(
-      "click", event => this.onSkipPopupCancelClick(event)
-    );
-
-    for (const icon of document.getElementsByClassName(domClasses.iconDropdown)) {
-      const url = /** @type {HTMLAnchorElement} */ (
-        document.getElementById(assetIds.dropdownSvg)
-      ).href;
-      icon.setAttribute("src", url);
-    }
-
-    for (const icon of document.getElementsByClassName(domClasses.iconSkip)) {
-      const url = /** @type {HTMLAnchorElement} */ (
-        document.getElementById(assetIds.skipSvg)
-      ).href;
-      icon.setAttribute("src", url);
-    }
-
-    for (const icon of document.getElementsByClassName(domClasses.iconPlay)) {
-      const url = /** @type {HTMLAnchorElement} */ (
-        document.getElementById(assetIds.playSvg)
-      ).href;
-      icon.setAttribute("src", url);
-    }
-
-    this.settingsPopup = new JutSuperSettingsPopup(document);
-    jsuperLog.debug(`${this.LOCATION}: awaiting settingsPopup.ipcRecvReady lock`);
-    await this.settingsPopup.ipcRecvReady.promise;
-    jsuperLog.debug(`${this.LOCATION}: settingsPopup.ipcRecvReady lock awaited`);
-
-    this.skipPopup = new JutSuperSkipPopup(document);
-    this.skipPopup.setCancelKey(window.jsuperSettings.skipCancelKey);
+      this.settingsArea.classList.remove("jutsuper-visible");
+    });
 
     (async () => {
+      // request localization and wait
       await this.reqIpc.sendAndRecvOnce(
         { localization: { reqLocalize: true } },
         { schema: { localization: { rspLocalize: { isFulfilled: true } } } }
       );
   
-      const controlBar = /** @type {videojs.ControlBar} */ (this.player.controlBar);
-      const qualitySelectorEl = /** @type {HTMLElement} */ (controlBar.qualitySelector.el());
-  
+      const controlBar = /** @type {videojs.ControlBar} */ (
+        this.player.controlBar
+      );
+      const qualitySelectorEl = /** @type {HTMLElement} */ (
+        controlBar.qualitySelector.el()
+      );
+      const thumbnailHolder = /** @type {HTMLElement} */ (
+        this.player.el().getElementsByClassName(jutsuClasses.vjsThumbnailHolder)[0]
+      );
+      
+      this.vjsButton = this.constructVjsButton();
+
+      /** add jutsuper button to the control bar */
       controlBar.addChild(this.vjsButton);
       /** to make quality selector list overlap jutsuper settings */
       qualitySelectorEl.style.zIndex = "2";
       /** to make thumbnail holder overlap jutsuper settings */
-      const thumbnailHolder = /** @type {HTMLElement} */ (
-        this.player.el().getElementsByClassName(jutsuClasses.vjsThumbnailHolder)[0]
-      );
       thumbnailHolder.style.zIndex = "2";
   
       const insertedButton = this.player.el()
         .getElementsByClassName(domClasses.vjsButton)[0];
   
-      let anchorElement;
+      let anchorElement = undefined;
       const shareButtons = this.player.el()
         .getElementsByClassName(jutsuClasses.vjsShareControl);
   
@@ -862,6 +783,95 @@ class JutSuper {
         );
       }
     })();
+  }
+
+  /**
+   * @return {videojs.default.Button}
+   */
+  constructVjsButton() {
+    const Button = this.player.constructor.getComponent("Button");
+    const buttonOptions = /** @type {videojs.default.ComponentOptions} */ ({
+      name: "JutSuperButton"
+    });
+
+    const button = new Button(this.player, buttonOptions);
+    button.addClass(domClasses.vjsButton);
+
+    const iconPlaceholder = /** @type {HTMLElement} */ (
+      button.el().getElementsByClassName(
+        jutsuClasses.vjcIconPlaceholder
+      )[0]
+    );
+    
+    const iconUrl = `${this.extensionUrl}/src/assets/logo/square-white-48.svg`;
+
+    iconPlaceholder.id = domIds.vjsButtonIcon;
+    iconPlaceholder.title = "JutSuper";
+    iconPlaceholder.style.content = `url(${iconUrl})`;
+    iconPlaceholder.style.width = "20px";
+
+    button.on("click", event => {
+      if (this.settingsPopup.isActive()) {
+        this.settingsPopup.hide();
+      }
+      else {
+        this.settingsPopup.show();
+      }
+    });
+
+    return button;
+  }
+
+  /**
+   * @param {string} domClass 
+   * @param {string} attr
+   * @param {string} value 
+   */
+  replaceAttrForClasses(domClass, attr, value) {
+    for (const img of document.getElementsByClassName(domClass)) {
+      img.setAttribute(attr, value);
+    }
+  }
+
+  /**
+   * @param {Document} doc 
+   */
+  replaceImgSources(doc) {
+    const icons = /** @type {NodeListOf<HTMLImageElement>} */ (
+      doc.querySelectorAll("[class^='jutsuper-icon']")
+    );
+
+    for (const iconElm of icons) {
+      const originalSrc = iconElm.getAttribute("src");
+      const cleanSrc = originalSrc.startsWith("/") ?
+        originalSrc.substring(1) : originalSrc;
+
+      iconElm.setAttribute("src", `${this.extensionUrl}/${cleanSrc}`);
+    }
+  }
+
+  /**
+   * @param {string} id
+   * @returns {string}
+   */
+  getHrefOfNodeById(id) {
+    return /** @type {HTMLAnchorElement} */ (document.getElementById(id)).href;
+  }
+
+  async listenAssetsInjected() {
+    const loc = `${this.LOCATION}@${this.listenAssetsInjected.name}`;
+    const builder = /** @type {JutSuperIpcRspParamsBuilder<JutSuperIpcReqSchemaFilter>} */ (
+      new JutSuperIpcRspParamsBuilder()
+    );
+    const cfg = builder
+      .recvOnlyThisIntersection({ assetsInjected: { tell: { state: true, extensionUrl: ANY } } })
+      .build();
+
+    const evt = await this.rspIpc.recvOnce(cfg);
+    jsuperLog.debug(`${loc} got event:`, evt);
+
+    this.extensionUrl = evt.assetsInjected.tell.extensionUrl;
+    this.assetsInjectedLock.resolve();
   }
 
   /**
@@ -897,7 +907,7 @@ class JutSuper {
       try {
         switch (request.reqPlay) {
           case true:
-            this.handlePlayRequest();
+            await this.handlePlayRequest();
             break;
           default:
             const unhandled = jsuperErrors.unhandledCaseError({
@@ -912,6 +922,7 @@ class JutSuper {
       catch (e) {
         response.playing.rspPlay.isFulfilled = false;
         response.playing.rspPlay.reason = e;
+        this.autoplayUnavailableNotif.show();
       }
 
       this.rspIpc.send(response);
@@ -923,10 +934,10 @@ class JutSuper {
   }
 
   /**
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  handlePlayRequest() {
-    this.player.play();
+  async handlePlayRequest() {
+    await this.player.play();
   }
 
   /**
@@ -963,7 +974,7 @@ class JutSuper {
    */
   async handlePlayerFullscreenExitRequest() {
     if (!this.isFullscreen) {
-      this.rspIpc.send({fullscreen: { rspPlayerFullscreenExit: {
+      this.rspIpc.send({ fullscreen: { rspPlayerFullscreenExit: {
         isFulfilled: false,
         reason: new Error("not in fullscreen")
       }}});
@@ -975,7 +986,7 @@ class JutSuper {
     // immediately
     await document.exitFullscreen();
 
-    this.rspIpc.send({fullscreen: { rspPlayerFullscreenExit: {
+    this.rspIpc.send({ fullscreen: { rspPlayerFullscreenExit: {
       isFulfilled: true
     }}});
   }
@@ -1049,13 +1060,13 @@ class JutSuper {
     jsuperLog.debug(`${loc}: enabled scrolling`);
     // show header
     header.style.display = null;
-    jsuperLog.debug(`${loc}: show header`);
+    jsuperLog.debug(`${loc}: shown header`);
     // show info panel
     infoPanel.style.display = null;
-    jsuperLog.debug(`${loc}: show info panel`);
+    jsuperLog.debug(`${loc}: shown info panel`);
     // show footer
     footer.style.display = null;
-    jsuperLog.debug(`${loc}: show footer`);
+    jsuperLog.debug(`${loc}: shown footer`);
 
     // remove fullscreen styling from the player
     playerDiv.classList.remove(jutsuClasses.vjsFullscreen);
@@ -1160,6 +1171,9 @@ class JutSuper {
           this.handleEndingsMaxSkipsChange(evt.endings.maxSkips);
         }
       }
+      if (evt.skipDelayS) {
+        this.handleSkipDelayChange(evt.skipDelayS);
+      }
       if (evt.skipCancelKey) {
         this.handleSkipCancelKeyChange(evt.skipCancelKey);
       }
@@ -1182,10 +1196,17 @@ class JutSuper {
   }
 
   /**
+   * @param {number} delayS 
+   */
+  handleSkipDelayChange(delayS) {
+    this.skippingNotif.setDelay(delayS);
+  }
+
+  /**
    * @param {string} cancelKey 
    */
   handleSkipCancelKeyChange(cancelKey) {
-    this.skipPopup.setCancelKey(cancelKey);
+    this.skippingNotif.setCancelKey(cancelKey);
   }
 
   /**
@@ -1208,7 +1229,7 @@ class JutSuper {
  * required to parse opening and ending time regions
  * - `player.on`: event registrar, required for us to
  * subscribe for `timeupdate` events and check if
- * we are currently in either opening or ending time region
+ * we are currently in either opening or ending time fragment
  */
 (function() {
   const playerPollIntervalId = setInterval(() => {
