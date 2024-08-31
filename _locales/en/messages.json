@@ -94,18 +94,6 @@
   "toggleAchievementSound": {
     "message": "Toggle achievement sound"
   },
-  "cantStartPlayback": {
-    "message": "Playback error"
-  },
-  "possiblyBrowserSettings": {
-    "message": "Possibly because of browser settings."
-  },
-  "see": {
-    "message": "See"
-  },
-  "autoplayFaq": {
-    "message": "autoplay FAQ"
-  },
   "autoplayUnavailable": {
     "message": "Autoplay unavailable"
   },
@@ -117,5 +105,8 @@
   },
   "here": {
     "message": "here"
+  },
+  "dontShow": {
+    "message": "Don't show"
   }
 }

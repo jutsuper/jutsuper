@@ -24,6 +24,11 @@ interface JutSuperSettingsObject {
   skipDelayS: number;
   skipCancelKey: string;
   achievementSoundEnabled: boolean;
+  notifications: {
+    autoplayUnavailable: {
+      doShow: boolean;
+    }
+  };
 }
 
 type JutSuperSettingsObjectPartial = JutSuperTypeDeepPartial<JutSuperSettingsObject>;

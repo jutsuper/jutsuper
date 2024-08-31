@@ -114,7 +114,12 @@ class JutSuperSettings {
       },
       skipDelayS: 3,
       skipCancelKey: "Shift",
-      achievementSoundEnabled: true
+      achievementSoundEnabled: true,
+      notifications: {
+        autoplayUnavailable: {
+          doShow: true,
+        },
+      },
     };
     return this;
   }
@@ -134,7 +139,12 @@ class JutSuperSettings {
       },
       skipDelayS: undefined,
       skipCancelKey: undefined,
-      achievementSoundEnabled: undefined
+      achievementSoundEnabled: undefined,
+      notifications: {
+        autoplayUnavailable: {
+          doShow: undefined,
+        },
+      },
     };
     return this;
   }
@@ -238,5 +248,17 @@ class JutSuperSettings {
    */
   setSkipCancelKey(value) {
     this.#object.skipCancelKey = value;
+  }
+
+  ///////////////////
+  // Notifications //
+  ///////////////////
+
+  /**
+   * @param {boolean} value 
+   * @returns {void}
+   */
+  setNotifAutoplayUnavailableDoShow(value) {
+    this.#object.notifications.autoplayUnavailable.doShow = value;
   }
 }

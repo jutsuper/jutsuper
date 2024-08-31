@@ -605,6 +605,8 @@ const JutSuperDomClasses = {
   textSeeInstructions: "jutsuper-text-see-instructions",
   /** @type {"jutsuper-text-here"} */
   textHere: "jutsuper-text-here",
+  /** @type {"jutsuper-text-dont-show"} */
+  textDontShow: "jutsuper-text-dont-show",
 
   /** Tooltips */
   /** @type {"jutsuper-tooltip-openings-settings"} */
