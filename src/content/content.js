@@ -74,14 +74,11 @@ LOCALE_TEXT[domClasses.textToCancel] = browser.i18n.getMessage("toCancel");
 LOCALE_TEXT[domClasses.textPlaybackOptions] = browser.i18n.getMessage("playbackOptions");
 LOCALE_TEXT[domClasses.textAchievementSound] = browser.i18n.getMessage("achievementSound");
 LOCALE_TEXT[domClasses.textSkipping] = browser.i18n.getMessage("skipping");
-LOCALE_TEXT[domClasses.textCantStartPlayback] = browser.i18n.getMessage("cantStartPlayback");
-LOCALE_TEXT[domClasses.textPossiblyBrowserSettings] = browser.i18n.getMessage("possiblyBrowserSettings");
-LOCALE_TEXT[domClasses.textSee] = browser.i18n.getMessage("see");
-LOCALE_TEXT[domClasses.textAutoplayFaq] = browser.i18n.getMessage("autoplayFaq");
 LOCALE_TEXT[domClasses.textAutoplayUnavailable] = browser.i18n.getMessage("autoplayUnavailable");
 LOCALE_TEXT[domClasses.textChangeYourBrowserSettings] = browser.i18n.getMessage("changeYourBrowserSettings");
 LOCALE_TEXT[domClasses.textSeeInstructions] = browser.i18n.getMessage("seeInstructions");
 LOCALE_TEXT[domClasses.textHere] = browser.i18n.getMessage("here");
+LOCALE_TEXT[domClasses.textDontShow] = browser.i18n.getMessage("dontShow");
 
 LOCALE_TOOLTIPS[domClasses.tooltipOpeningsSettings] = browser.i18n.getMessage("openingsSettings");
 LOCALE_TOOLTIPS[domClasses.tooltipToggleOpeningsSkip] = browser.i18n.getMessage("toggleOpeningsSkip");

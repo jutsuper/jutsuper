@@ -242,6 +242,13 @@ class JutSuperSettingsPopup {
     if (schema.achievementSoundEnabled !== undefined && schema.achievementSoundEnabled !== this.exposedSettings.achievementSoundEnabled) {
       this.setAchievementSoundEnabled(schema.achievementSoundEnabled);
     }
+    if (schema.notifications !== undefined && schema.notifications !== this.exposedSettings.notifications) {
+      if (schema.notifications.autoplayUnavailable !== undefined && schema.notifications.autoplayUnavailable !== this.exposedSettings.notifications.autoplayUnavailable) {
+        if (schema.notifications.autoplayUnavailable.doShow !== undefined && schema.notifications.autoplayUnavailable.doShow !== this.exposedSettings.notifications.autoplayUnavailable.doShow) {
+          this.exposedSettings.notifications.autoplayUnavailable.doShow = schema.notifications.autoplayUnavailable.doShow;
+        }
+      }
+    }
   }
 
   /**

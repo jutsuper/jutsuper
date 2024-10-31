@@ -92,6 +92,22 @@ class JutSuper {
       .ignoreWithoutAnyOfTheseFlags([ipcFlags.req])
       .sendWithTheseFlags([ipcFlags.rsp])
       .build();
+  
+    /**
+     * # Responding settings IPC
+     * @type {JutSuperIpc<
+     *   JutSuperSettingsObjectPartial,
+     *   JutSuperSettingsObjectPartial,
+     *   JutSuperSettingsObjectFilter
+     * >}
+     */
+    this.reqSettingsIpc = new JutSuperIpcBuilder()
+      .namespaceIs(ipcNamespaces.settings)
+      .identifyAs(ipcIds.page)
+      .ignoreWithoutAnyOfTheseFlags([ipcFlags.rsp])
+      .sendWithTheseFlags([ipcFlags.req])
+      .build();
+  
     /**
      * # Responding settings IPC
      * @type {JutSuperIpc<
@@ -122,11 +138,14 @@ class JutSuper {
 
     /** @type {HTMLDivElement} */
     this.vjsContainer = null;
+    this.testVideo = document.createElement("video");
+    /** @type {boolean | undefined} */
+    this.isAutoplayAvailable = undefined;
 
-    /** @type {JutSuperAutoplayUnavailablePopup} */
-    this.autoplayUnavailableNotif = undefined;
     /** @type {JutSuperSkippingPopup} */
     this.skippingNotif = undefined;
+    /** @type {JutSuperAutoplayUnavailablePopup} */
+    this.autoplayUnavailableNotif = undefined;
 
     /** @type {HTMLDivElement} */
     this.settingsArea = null;
@@ -269,7 +288,33 @@ class JutSuper {
     this.injectTimeupdateListener();
     await this.injectOverlays();
 
+    this.autoplayUnavailableNotif.dontShowButton.addEventListener("click", event => {
+      this.reqSettingsIpc.send({
+        notifications: { autoplayUnavailable: { doShow: false } }
+      })
+    });
+
     await this.tellEssentialsLoaded();
+  }
+
+  /**
+   * @param {boolean} doShowNotif
+   * @returns {Promise<boolean>}
+   */
+  async testAutoplay(doShowNotif) {
+    try {
+      await this.testVideo.play();
+    }
+    catch (e) {
+      this.isAutoplayAvailable = false;
+      if (
+        doShowNotif &&
+        !this.autoplayUnavailableNotif.isActive()
+      ) {
+        this.autoplayUnavailableNotif.show();
+      }
+      return this.isAutoplayAvailable;
+    }
   }
 
   /**
@@ -922,7 +967,12 @@ class JutSuper {
       catch (e) {
         response.playing.rspPlay.isFulfilled = false;
         response.playing.rspPlay.reason = e;
-        this.autoplayUnavailableNotif.show();
+        if (
+          window.jsuperSettings.notifications.autoplayUnavailable.doShow &&
+          !this.autoplayUnavailableNotif.isActive()
+        ) {
+          this.autoplayUnavailableNotif.show();
+        }
       }
 
       this.rspIpc.send(response);
@@ -1165,7 +1215,11 @@ class JutSuper {
     
     for await (const evt of this.rspSettingsIpc.recv(cfg)) {
       jsuperLog.debug(`${loc} got event:`, evt);
-      
+
+      if (typeof this.isAutoplayAvailable === "undefined" && evt.notifications.autoplayUnavailable.doShow) {
+        this.testAutoplay(evt.notifications.autoplayUnavailable.doShow);
+      }
+
       if (evt.endings) {
         if (evt.endings.maxSkips) {
           this.handleEndingsMaxSkipsChange(evt.endings.maxSkips);

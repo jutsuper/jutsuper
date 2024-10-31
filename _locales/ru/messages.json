@@ -94,18 +94,6 @@
   "toggleAchievementSound": {
     "message": "Переключить звук достижений"
   },
-  "cantStartPlayback": {
-    "message": "Ошибка воспроизведения"
-  },
-  "possiblyBrowserSettings": {
-    "message": "Вероятно, из-за настроек браузера."
-  },
-  "see": {
-    "message": "Смотри"
-  },
-  "autoplayFaq": {
-    "message": "FAQ по автовоспроизведению"
-  },
   "autoplayUnavailable": {
     "message": "Автовоспроизведение недоступно"
   },
@@ -117,5 +105,8 @@
   },
   "here": {
     "message": "здесь"
+  },
+  "dontShow": {
+    "message": "Не показывать"
   }
 }

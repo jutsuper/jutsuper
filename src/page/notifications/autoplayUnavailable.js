@@ -16,8 +16,14 @@ class JutSuperAutoplayUnavailablePopup {
     this.closeButton = /** @type {HTMLDivElement} */ (
       this.root.querySelector("#" + "jutsuper-notif-autoplay-unavailable-close-button")
     );
+    this.dontShowButton = /** @type {HTMLAnchorElement} */ (
+      this.root.querySelector("#" + "jutsuper-notif-autoplay-unavailable-dont-show-button")
+    );
 
     this.closeButton.addEventListener("click", event => {
+      this.hide();
+    });
+    this.dontShowButton.addEventListener("click", event => {
       this.hide();
     });
     this.root.addEventListener("animationend", event => {

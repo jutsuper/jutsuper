@@ -9,6 +9,8 @@
   --jutsuper-color-dark-green-half-transparent: #9BC76C80;
   --jutsuper-color-darker-green: #8CB660;
   --jutsuper-color-darker-green-half-transparent: #8CB66080;
+  --jutsuper-color-darkest-green: #6d8d4d;
+  --jutsuper-color-darkest-green-half-transparent: #6d8d4d80;
   --jutsuper-color-red: #ea1424;
   --jutsuper-dur-ultra-fast: .05s;
   --jutsuper-dur-faster: .1s;
@@ -110,7 +112,7 @@
 }
 
 .jutsuper-green-text {
-  color: var(--jutsuper-color-darker-green) !important;
+  color: var(--jutsuper-color-darkest-green) !important;
 }
 
 .jutsuper-black-text {
@@ -122,6 +124,12 @@
   ::hover {
     text-decoration: none !important;
   }
+}
+
+.jutsuper-overflow-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* /// */
@@ -500,6 +508,7 @@
 
 .jutsuper-vjs-notif-area {
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   width: 100%;
   margin-right: 20px;
@@ -508,7 +517,7 @@
 .jutsuper-vjs-settings-area {
   display: flex;
   align-items: end;
-  width: auto;
+  min-width: var(--jutsuper-size-settings-max-width);
 }
 
 /* Props for all extension popups */
@@ -808,6 +817,7 @@
 }
 
 .jutsuper-notif-frame {
+  width: fit-content;
   height: inherit;
   overflow: hidden;
   scrollbar-width: none;
@@ -830,14 +840,13 @@
   border-radius: var(--jutsuper-size-border-radius);
   overflow: hidden;
   position: relative;
-  width: max-content;
-  height: max-content;
   pointer-events: all;
   min-height: var(--jutsuper-size-notif-min-height);
 }
 
 .jutsuper-notif-styling {
   display: flex;
+  width: 100%;
   flex-direction: column;
   font-family: "Roboto";
   font-size: 1em;
@@ -854,7 +863,6 @@
 
 .jutsuper-notif-column-box {
   display: flex;
-  align-items: center;
   flex-direction: column;
   justify-content: center;
   height: 100%;
@@ -879,6 +887,7 @@
   flex-direction: column;
   align-items: start;
   line-height: normal;
+  text-align: left;
 }
 
 /* ////////// */
