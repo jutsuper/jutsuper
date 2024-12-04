@@ -673,6 +673,9 @@ class JutSuperContent {
       const header = /** @type {HTMLDivElement} */ (
         document.getElementsByClassName(jutsuClasses.zFixHeader)[0]
       );
+      const logoB = /** @type {HTMLDivElement} */ (
+        document.getElementsByClassName(jutsuClasses.logoB)[0]
+      );
       const infoPanel = /** @type {HTMLDivElement} */ (
         document.getElementsByClassName(jutsuClasses.infoPanel)[0]
       );
@@ -686,6 +689,9 @@ class JutSuperContent {
       // hide header
       header.style.display = "none";
       jsuperLog.debug(`${loc}: hide header`);
+      // hide logo b
+      logoB.style.display = "none";
+      jsuperLog.debug(`${loc}: hide logo b`);
       // hide info panel
       infoPanel.style.display = "none";
       jsuperLog.debug(`${loc}: hide info panel`);

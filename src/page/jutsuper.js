@@ -1098,6 +1098,9 @@ class JutSuper {
     const header = /** @type {HTMLElement} */ (
       document.getElementsByClassName(jutsuClasses.zFixHeader)[0]
     );
+    const logoB = /** @type {HTMLElement} */ (
+      document.getElementsByClassName(jutsuClasses.logoB)[0]
+    );
     const infoPanel = /** @type {HTMLElement} */ (
       document.getElementsByClassName(jutsuClasses.infoPanel)[0]
     );
@@ -1111,6 +1114,9 @@ class JutSuper {
     // show header
     header.style.display = null;
     jsuperLog.debug(`${loc}: shown header`);
+    // show logo b
+    logoB.style.display = null;
+    jsuperLog.debug(`${loc}: shown logo b`);
     // show info panel
     infoPanel.style.display = null;
     jsuperLog.debug(`${loc}: shown info panel`);

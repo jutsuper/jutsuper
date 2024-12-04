@@ -148,6 +148,17 @@ const JutSuDomClasses = {
    */
   zFixHeader: "z_fix_header",
   /**
+   * # Class name of a page logo header
+   *
+   * Used to get the page header and apply "display: none"
+   * style to it (basically, hiding it)
+   * so it won't overlap with a player
+   * in a custom fullscreen mode
+   * 
+   * @type {"logo_b"}
+   */
+  logoB: "logo_b",
+  /**
    * # Class name of info panel with a search bar
    * 
    * Used to get the page info panel and apply "display: none"
