@@ -240,9 +240,9 @@ const JutSuperLogDefaults = {
   levels: [
     JutSuperLogLevels.error,
     JutSuperLogLevels.warn,
-    JutSuperLogLevels.log,
-    JutSuperLogLevels.info,
-    JutSuperLogLevels.debug
+    //JutSuperLogLevels.log,
+    //JutSuperLogLevels.info,
+    //JutSuperLogLevels.debug
   ],
   /**
    * # Path to log location is shown only on these levels
