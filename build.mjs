@@ -8,6 +8,7 @@ import { globSync } from "glob";
 import path from "path";
 import { program } from "commander";
 import { compile } from "c-preprocessor";
+import archiver from "archiver";
 
 
 const BLINK = "blink";
@@ -22,17 +23,21 @@ const SUPPORTED_BROWSERS_COMMA_SEP = (
 );
 const SUPPORTED_BROWSERS_WITH_ALL_COMMA_SEP = (
   SUPPORTED_BROWSERS_COMMA_SEP + ",all"
-)
+);
 
 const MANIFEST_FILE_NAME = "manifest.json";
 const MANIFEST2_FILE_NAME = "manifestV2.json";
 const MANIFEST3_FILE_NAME = "manifestV3.json";
-const MANIFEST_VER_MAP = {}
-MANIFEST_VER_MAP[BLINK] = 3
-MANIFEST_VER_MAP[GECKO] = 2
-const MANIFEST_FILE_MAP = {}
-MANIFEST_FILE_MAP[3] = MANIFEST3_FILE_NAME
-MANIFEST_FILE_MAP[2] = MANIFEST2_FILE_NAME
+const MANIFEST_VER_MAP = {};
+MANIFEST_VER_MAP[BLINK] = 3;
+MANIFEST_VER_MAP[GECKO] = 2;
+const MANIFEST_FILE_MAP = {};
+MANIFEST_FILE_MAP[3] = MANIFEST3_FILE_NAME;
+MANIFEST_FILE_MAP[2] = MANIFEST2_FILE_NAME;
+
+const IGNORED_EXTENSIONS = [
+  ".fig"
+];
 
 /**
  * # Where extension locales are stored
@@ -87,10 +92,10 @@ function replaceCommentDirectives(code) {
     const trimmed = line.trim();
 
     if (trimmed.startsWith("//#")) {
-      processedLine = line.replace(/^(\/\/#)/, "#")
+      processedLine = line.replace(/^(\/\/#)/, "#");
     }
     else if (trimmed.startsWith("// #")) {
-      processedLine = line.replace(/^(\/\/ #)/, "#")
+      processedLine = line.replace(/^(\/\/ #)/, "#");
     }
     else {
       processedLine = line;
@@ -131,7 +136,17 @@ function build() {
     }
   }
   
-  const srcFilePaths = globSync(SRC_GLOB);
+  const srcFilePathsUnfiltered = globSync(SRC_GLOB);
+  const srcFilePaths = [];
+
+  for (const filePath of srcFilePathsUnfiltered) {
+    const filePathParsed = path.parse(filePath);
+    if (IGNORED_EXTENSIONS.includes(filePathParsed.ext)) {
+      continue;
+    }
+
+    srcFilePaths.push(filePath);
+  }
 
   for (const browser of browsers) {
     /**
@@ -148,12 +163,17 @@ function build() {
     const compilerOptions = {
       constants: {},
       commentEscape: false
-    }
+    };
     compilerOptions.constants[COMPILER_BROWSER_KEY] = browser;
     compilerOptions.constants[COMPILER_MANIFEST_KEY] = manifestVer.toString();
   
     // DIST_DIR_NAME/targetBrowser
     const targetDirPath = path.join(DIST_DIR_NAME, browser);
+    const targetPackedPath = path.join(DIST_DIR_NAME, `${browser}.zip`);
+
+    if (fs.existsSync(targetPackedPath)) {
+      fs.unlinkSync(targetPackedPath);
+    }
   
     if (!fs.existsSync(targetDirPath)) {
       fs.mkdirSync(targetDirPath, { recursive: true });
@@ -256,12 +276,21 @@ function build() {
   
         fs.writeFileSync(distPath, result);
   
-        console.log("compiled:", distPath)
+        console.log("compiled:", distPath);
       })
     }
   
     fs.cpSync(LOCALES_DIR_NAME, path.join(targetDirPath, LOCALES_DIR_NAME), { recursive: true });
     fs.cpSync(manifestFile, path.join(targetDirPath, MANIFEST_FILE_NAME));
+
+    const archiveOutput = fs.createWriteStream(targetPackedPath);
+    const archive = archiver("zip", {
+      zlib: { level: 9 }
+    });
+
+    archive.pipe(archiveOutput);
+    archive.directory(targetDirPath, false);
+    archive.finalize();
   }
 }
 
