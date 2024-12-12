@@ -1222,7 +1222,11 @@ class JutSuper {
     for await (const evt of this.rspSettingsIpc.recv(cfg)) {
       jsuperLog.debug(`${loc} got event:`, evt);
 
-      if (typeof this.isAutoplayAvailable === "undefined" && evt.notifications.autoplayUnavailable.doShow) {
+      if (
+        typeof this.isAutoplayAvailable === "undefined" &&
+        evt.notifications &&
+        evt.notifications.autoplayUnavailable.doShow
+      ) {
         this.testAutoplay(evt.notifications.autoplayUnavailable.doShow);
       }
 
